@@ -9,10 +9,12 @@ public class SnapConfigurationBuilder {
 	}// SnapConfigurationBuilder()
 	
 	public SnapConfigurationBuilder setClientId(String clientId) {
+		this.snapConfiguration.setClientId(clientId);
 		return this;
 	}// setClientId()
 	
 	public SnapConfigurationBuilder setRedirectUri(String redirectUri) {
+		this.snapConfiguration.setRedirectUri(redirectUri);
 		return this;
 	}// setRedirectUri()
 	
