@@ -2,7 +2,7 @@ package snap.api.enums;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public enum TypeUserEnum {
+public enum TypeOrganizationEnum {
 	
 	@JsonProperty("ENTERPRISE")
 	ENTERPRISE,

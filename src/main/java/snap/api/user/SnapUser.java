@@ -1,21 +1,20 @@
 package snap.api.user;
 
-import java.util.List;
+import java.net.http.HttpClient;
 
-import snap.api.model.user.Organization;
+import snap.api.utils.FileProperties;
 
 public class SnapUser implements SnapUserInterface {
 
-  @Override
-  public List<Organization> getAllOrganizations(boolean withAdAccounts) {
-    // TODO Auto-generated method stub
-    return null;
-  }
+  private FileProperties fp;
 
-  @Override
-  public Organization getSpecificOrganization() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-	
-}
+  private String apiUrl;
+
+  private HttpClient httpClient;
+
+  public SnapUser() {
+    this.fp = new FileProperties();
+    this.apiUrl = (String) fp.getProperties().get("api.url.user.me");
+    this.httpClient = HttpClient.newHttpClient();
+  } // SnapUser()
+} // SnapUser
