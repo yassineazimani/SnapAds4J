@@ -1,1 +1,1 @@
-[![Build Status](https://travis-ci.org/yassineazimani/snap-api.png?branch=master)](https://travis-ci.org/yassineazimani/snap-api)
+![Build Status](https://api.travis-ci.com/yassineazimani/)
