@@ -6,6 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * SnapInnerOrganizations
+ *
+ * @author Yassine
+ */
 @Getter
 @Setter
 @NoArgsConstructor

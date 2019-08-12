@@ -8,8 +8,20 @@ import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Http Utils
+ *
+ * @author Yassine
+ */
 public class HttpUtils {
 
+  /**
+   * Prepare GET request HTTP
+   *
+   * @param url url
+   * @param oAuthAccessToken oAuthAccessToken
+   * @return HttpRequest
+   */
   public static HttpRequest prepareGetRequest(String url, String oAuthAccessToken) {
     return HttpRequest.newBuilder()
         .uri(URI.create(url))
@@ -18,6 +30,14 @@ public class HttpUtils {
         .build();
   } // prepareGetRequest()
 
+  /**
+   * Prepare POST request HTTP
+   *
+   * @param url url
+   * @param oAuthAccessToken oAuthAccessToken
+   * @params args Data to send (Only String, no binary)
+   * @return HttpRequest
+   */
   public static HttpRequest preparePostRequest(String url, Map<String, String> args)
       throws JsonProcessingException {
     ObjectMapper mapper = new ObjectMapper();
@@ -29,6 +49,14 @@ public class HttpUtils {
         .build();
   } // preparePostRequest()
 
+  /**
+   * Prepare POST request HTTP
+   *
+   * @param url url
+   * @param oAuthAccessToken oAuthAccessToken
+   * @params args Data to send (Only String, no binary)
+   * @return HttpRequest
+   */
   public static HttpRequest preparePostRequest(
       String url, String oAuthAccessToken, Map<String, String> args)
       throws JsonProcessingException {

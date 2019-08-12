@@ -8,25 +8,33 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Authenticated user informations
+ *
+ * @author Yassine
+ */
 @Getter
 @Setter
 @ToString
 public class AuthenticatedUser {
 
+  /** User ID */
   private String id;
-  
-  @JsonFormat
-  (shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+
+  /** Last date update of the user */
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
   private Date updatedAt;
-  
-  @JsonFormat
-  (shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+
+  /** Date creation of the user */
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
   private Date createdAt;
-  
+
+  /** Email */
   private String email;
-  
+
+  /** Organization ID */
   private String organizationId;
-  
+
+  /** Display name */
   private String displayName;
-  
 } // AuthenticatedUser

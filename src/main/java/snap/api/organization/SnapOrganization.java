@@ -50,6 +50,15 @@ public class SnapOrganization implements SnapOrganizationInterface {
     this.httpClient = HttpClient.newHttpClient();
   } // SnapOrganization()
 
+  /**
+   * Get all organizations
+   *
+   * @see <a href="https://developers.snapchat.com/api/docs/#organizations">All organizations</a>
+   * @param oAuthAccessToken oAuthAccessToken
+   * @return All organizations
+   * @throws SnapResponseErrorException
+   * @throws SnapOAuthAccessTokenException
+   */
   @Override
   public List<Organization> getAllOrganizations(String oAuthAccessToken)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException {
@@ -81,6 +90,16 @@ public class SnapOrganization implements SnapOrganizationInterface {
     return organizations;
   } // getAllOrganizations()
 
+  /**
+   * Get all organizations with ad accounts
+   *
+   * @see <a href="https://developers.snapchat.com/api/docs/#organizations">All organizations with
+   *     ad accounts</a>
+   * @param oAuthAccessToken oAuthAccessToken
+   * @return All organizations
+   * @throws SnapResponseErrorException
+   * @throws SnapOAuthAccessTokenException
+   */
   @Override
   public List<OrganizationWithAdAccount> getAllOrganizationsWithAdAccounts(String oAuthAccessToken)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException {
@@ -112,6 +131,17 @@ public class SnapOrganization implements SnapOrganizationInterface {
     return organizations;
   } // getAllOrganizationsWithAdAccounts()
 
+  /**
+   * Get specific organization
+   *
+   * @see <a href="https://developers.snapchat.com/api/docs/#organizations">Specific
+   *     organization</a>
+   * @param oAuthAccessToken oAuthAccessToken
+   * @param id Organization ID
+   * @return All organizations
+   * @throws SnapResponseErrorException
+   * @throws SnapOAuthAccessTokenException
+   */
   @Override
   public Optional<Organization> getSpecificOrganization(String oAuthAccessToken, String id)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {

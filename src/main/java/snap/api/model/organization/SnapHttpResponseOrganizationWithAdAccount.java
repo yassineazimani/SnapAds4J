@@ -9,6 +9,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import snap.api.model.SnapHttpResponse;
 
+/**
+ * SnapHttpResponseOrganizationWithAdAccount
+ *
+ * @author Yassine
+ */
 @Getter
 @Setter
 @NoArgsConstructor

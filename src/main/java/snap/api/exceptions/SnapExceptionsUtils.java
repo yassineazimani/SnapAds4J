@@ -1,7 +1,18 @@
 package snap.api.exceptions;
 
+/**
+ * Utils for the exceptions.
+ *
+ * @author Yassine
+ */
 public class SnapExceptionsUtils {
 
+  /**
+   * Throw a SnapResponseErrorException according the status code HTTP given.
+   *
+   * @param statusCode status code HTTP
+   * @return SnapResponseErrorException
+   */
   public static SnapResponseErrorException getResponseExceptionByStatusCode(int statusCode) {
     SnapResponseErrorException ex;
     switch (statusCode) {
