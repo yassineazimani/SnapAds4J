@@ -455,7 +455,7 @@ public class SnapOrganizationTest {
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
     Mockito.when(httpResponse.statusCode()).thenReturn(200);
-    Mockito.when(httpResponse.body()).thenReturn(SnapResponseUtils.getSnapSpecificOrganization(id));
+    Mockito.when(httpResponse.body()).thenReturn(SnapResponseUtils.getSnapSpecificOrganization());
     Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
         .thenReturn(httpResponse);
     Optional<Organization> organization =

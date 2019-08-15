@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +19,6 @@ import snap.api.model.SnapHttpResponse;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class SnapHttpResponseOrganization extends SnapHttpResponse {
 
   private List<SnapInnerOrganizations> organizations;
