@@ -1,20 +1,80 @@
 package snap.api.user;
 
+import java.io.IOException;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.Getter;
+import lombok.Setter;
+import snap.api.exceptions.SnapExceptionsUtils;
+import snap.api.exceptions.SnapOAuthAccessTokenException;
+import snap.api.exceptions.SnapResponseErrorException;
+import snap.api.model.user.AuthenticatedUser;
+import snap.api.model.user.SnapHttpResponseUser;
 import snap.api.utils.FileProperties;
+import snap.api.utils.HttpUtils;
 
+@Getter
+@Setter
 public class SnapUser implements SnapUserInterface {
 
   private FileProperties fp;
 
   private String apiUrl;
 
+  private String endpointMe;
+
   private HttpClient httpClient;
 
+  /** Constructor */
   public SnapUser() {
     this.fp = new FileProperties();
-    this.apiUrl = (String) fp.getProperties().get("api.url.user.me");
+    this.apiUrl = (String) fp.getProperties().get("api.url");
+    this.endpointMe = this.apiUrl + (String) fp.getProperties().get("api.url.user.me");
     this.httpClient = HttpClient.newHttpClient();
   } // SnapUser()
+
+  /**
+   * Get informations about the authenticated user.
+   *
+   * @see <a href="https://developers.snapchat.com/api/docs/#user">User</a>
+   * @param oAuthAccessToken oAuthAccessToken
+   * @return AuthenticatedUser {@link #AuthenticatedUser}
+   * @throws SnapOAuthAccessTokenException
+   * @throws SnapResponseErrorException
+   */
+  @Override
+  public Optional<AuthenticatedUser> aboutMe(String oAuthAccessToken)
+      throws SnapOAuthAccessTokenException, SnapResponseErrorException {
+    if (StringUtils.isEmpty(oAuthAccessToken)) {
+      throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
+    }
+    Optional<AuthenticatedUser> result = Optional.empty();
+    HttpRequest request = HttpUtils.prepareGetRequest(this.endpointMe, oAuthAccessToken);
+    try {
+      HttpResponse<String> response = this.httpClient.send(request, BodyHandlers.ofString());
+      int statusCode = response.statusCode();
+      String body = response.body();
+      if (statusCode >= 300) {
+        SnapResponseErrorException ex =
+            SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+        throw ex;
+      }
+      ObjectMapper mapper = new ObjectMapper();
+      SnapHttpResponseUser responseFromJson = mapper.readValue(body, SnapHttpResponseUser.class);
+      if (responseFromJson != null) {
+        result = Optional.ofNullable(responseFromJson.getMe());
+      }
+    } catch (IOException | InterruptedException e) {
+      e.printStackTrace();
+    }
+    return result;
+  } // aboutMe()
 } // SnapUser

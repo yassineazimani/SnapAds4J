@@ -9,6 +9,11 @@ import snap.api.exceptions.SnapResponseErrorException;
 import snap.api.model.organization.Organization;
 import snap.api.model.organization.OrganizationWithAdAccount;
 
+/**
+ * SnapOrganizationInterface
+ *
+ * @author Yassine
+ */
 public interface SnapOrganizationInterface {
 
   /**
@@ -16,7 +21,7 @@ public interface SnapOrganizationInterface {
    *
    * @see <a href="https://developers.snapchat.com/api/docs/#organizations">All organizations</a>
    * @param oAuthAccessToken oAuthAccessToken
-   * @return All organizations
+   * @return All organizations {@link #Organization}
    * @throws SnapResponseErrorException
    * @throws SnapOAuthAccessTokenException
    */
@@ -30,7 +35,7 @@ public interface SnapOrganizationInterface {
    *     organization</a>
    * @param oAuthAccessToken oAuthAccessToken
    * @param id Organization ID
-   * @return All organizations
+   * @return specific organization {@link #Organization}
    * @throws SnapResponseErrorException
    * @throws SnapOAuthAccessTokenException
    */
@@ -43,7 +48,7 @@ public interface SnapOrganizationInterface {
    * @see <a href="https://developers.snapchat.com/api/docs/#organizations">All organizations with
    *     ad accounts</a>
    * @param oAuthAccessToken oAuthAccessToken
-   * @return All organizations
+   * @return All organizations {@link #Organization}
    * @throws SnapResponseErrorException
    * @throws SnapOAuthAccessTokenException
    */
