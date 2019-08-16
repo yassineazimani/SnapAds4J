@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,6 +45,8 @@ public class SnapFundingSource implements SnapFundingSourceInterface {
   private String endpointSpecificFundingSource;
 
   private HttpClient httpClient;
+
+  private static final Logger LOGGER = LogManager.getLogger(SnapFundingSource.class);
 
   /** Constructor */
   public SnapFundingSource() {
@@ -96,7 +100,7 @@ public class SnapFundingSource implements SnapFundingSourceInterface {
         fundingSources = responseFromJson.getAllFundingSource();
       }
     } catch (IOException | InterruptedException e) {
-      e.printStackTrace();
+      LOGGER.error("Impossible to get all funding source, organizationID = {}", organizationID, e);
     }
     return fundingSources;
   } // getAllFundingSource()
@@ -142,7 +146,7 @@ public class SnapFundingSource implements SnapFundingSourceInterface {
         result = responseFromJson.getSpecificFundingSource();
       }
     } catch (IOException | InterruptedException e) {
-      e.printStackTrace();
+      LOGGER.error("Impossible to get specific funding source, id = {}", id, e);
     }
     return result;
   } // getSpecificFundingSource()

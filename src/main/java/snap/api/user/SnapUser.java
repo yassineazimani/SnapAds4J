@@ -8,6 +8,8 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,6 +34,8 @@ public class SnapUser implements SnapUserInterface {
   private String endpointMe;
 
   private HttpClient httpClient;
+
+  private static final Logger LOGGER = LogManager.getLogger(SnapUser.class);
 
   /** Constructor */
   public SnapUser() {
@@ -73,7 +77,7 @@ public class SnapUser implements SnapUserInterface {
         result = Optional.ofNullable(responseFromJson.getMe());
       }
     } catch (IOException | InterruptedException e) {
-      e.printStackTrace();
+      LOGGER.error("Impossible to get informations about me", e);
     }
     return result;
   } // aboutMe()

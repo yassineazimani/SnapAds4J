@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,6 +42,8 @@ public class SnapOrganization implements SnapOrganizationInterface {
   private String endpointSpecificOrganization;
 
   private HttpClient httpClient;
+
+  private static final Logger LOGGER = LogManager.getLogger(SnapOrganization.class);
 
   public SnapOrganization() {
     this.fp = new FileProperties();
@@ -85,7 +89,7 @@ public class SnapOrganization implements SnapOrganizationInterface {
         organizations = responseFromJson.getAllOrganizations();
       }
     } catch (IOException | InterruptedException e) {
-      e.printStackTrace();
+      LOGGER.error("Impossible to get all organizations", e);
     }
     return organizations;
   } // getAllOrganizations()
@@ -126,7 +130,7 @@ public class SnapOrganization implements SnapOrganizationInterface {
         organizations = responseFromJson.getAllOrganizations();
       }
     } catch (IOException | InterruptedException e) {
-      e.printStackTrace();
+      LOGGER.error("Impossible to get all organizations with Ad-accounts", e);
     }
     return organizations;
   } // getAllOrganizationsWithAdAccounts()
@@ -171,7 +175,7 @@ public class SnapOrganization implements SnapOrganizationInterface {
         result = responseFromJson.getOrganization();
       }
     } catch (IOException | InterruptedException e) {
-      e.printStackTrace();
+      LOGGER.error("Impossible to get specific organization with id = {}", id, e);
     }
     return result;
   } // getSpecificOrganization()

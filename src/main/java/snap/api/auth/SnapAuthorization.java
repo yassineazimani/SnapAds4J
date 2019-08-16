@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -37,6 +39,8 @@ public class SnapAuthorization {
   private String apiUrl;
 
   private HttpClient httpClient;
+
+  private static final Logger LOGGER = LogManager.getLogger(SnapAuthorization.class);
 
   public SnapAuthorization(SnapConfiguration configuration) {
     this.configuration = configuration;
@@ -100,7 +104,7 @@ public class SnapAuthorization {
       mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
       responseFromJson = mapper.readValue(response.body(), TokenResponse.class);
     } catch (IOException | InterruptedException e) {
-      e.printStackTrace();
+      LOGGER.error("Impossible to get OAuthAccessToken with oauthCode {}", oauthCode, e);
     }
     return responseFromJson;
   } // getOAuthAccessToken()
@@ -142,7 +146,7 @@ public class SnapAuthorization {
       mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
       responseFromJson = mapper.readValue(response.body(), TokenResponse.class);
     } catch (IOException | InterruptedException e) {
-      e.printStackTrace();
+      LOGGER.error("Impossible to get refresh token with old refresh token {}", refreshToken, e);
     }
     return responseFromJson;
   } // refreshToken()
