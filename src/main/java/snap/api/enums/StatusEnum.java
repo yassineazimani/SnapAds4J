@@ -8,9 +8,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Yassine
  */
 public enum StatusEnum {
-  /** Status active */
+  /** Status actived */
   @JsonProperty("ACTIVE")
   ACTIVE,
+  /** Status paused */
+  @JsonProperty("PAUSE")
+  PAUSE,
   /** Status redemmed */
   @JsonProperty("REDEEMED")
   REDEEMED,
