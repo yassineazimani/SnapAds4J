@@ -6,11 +6,18 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * SnapHttpResponseCampaign
  *
  * @author Yassine
  */
+@Getter
+@Setter
+@NoArgsConstructor
 public class SnapHttpResponseCampaign {
 
   private List<SnapInnerCampaign> campaigns;

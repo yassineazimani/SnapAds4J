@@ -17,5 +17,5 @@ import lombok.Setter;
 @JsonIgnoreProperties(value = {"sub_request_status"})
 public class SnapInnerAdAccount {
 
-  private AdAccount adAccount;
+  private AdAccount adaccount;
 } // SnapInnerAdAccount

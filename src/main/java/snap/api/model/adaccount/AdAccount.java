@@ -68,4 +68,8 @@ public class AdAccount {
   /** List of Funding Source IDs */
   @JsonProperty("funding_source_ids")
   private List<String> fundingSourceIds;
+
+  /** Brand name */
+  @JsonProperty("brand_name")
+  private String brandName;
 } // AdAccount

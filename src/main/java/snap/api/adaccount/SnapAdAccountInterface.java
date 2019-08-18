@@ -3,6 +3,8 @@ package snap.api.adaccount;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import snap.api.exceptions.SnapArgumentException;
 import snap.api.exceptions.SnapOAuthAccessTokenException;
 import snap.api.exceptions.SnapResponseErrorException;
@@ -16,12 +18,14 @@ public interface SnapAdAccountInterface {
    * @see <a href="https://developers.snapchat.com/api/docs/#get-all-ad-accounts">All Ad
    *     Accounts</a>
    * @param oAuthAccessToken oAuthAccessToken
+   * @param organizationID Organization ID
    * @return All ad accounts
    * @throws SnapResponseErrorException
    * @throws SnapOAuthAccessTokenException
+   * @throws SnapArgumentException
    */
-  public List<AdAccount> getAllAdAccounts(String oAuthAccessToken)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException;
+  public List<AdAccount> getAllAdAccounts(String oAuthAccessToken, String organizationID)
+      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
 
   /**
    * Get specific ad account
@@ -40,11 +44,17 @@ public interface SnapAdAccountInterface {
   /**
    * Update a specific ad account
    *
+   * @see <a
+   *     href="https://developers.snapchat.com/api/docs/#update-an-ad-accounts-lifetime-spend-cap">Update
+   *     Ad Account</a>
+   * @param oAuthAccessToken oAuthAccessToken
    * @param adAccount ad account to update
    * @throws SnapResponseErrorException
    * @throws SnapOAuthAccessTokenException
    * @throws SnapArgumentException
+   * @throws JsonProcessingException
    */
-  public void updateAdAccount(AdAccount adAccount)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
+  public void updateAdAccount(String oAuthAccessToken, AdAccount adAccount)
+      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+          JsonProcessingException;
 } // SnapAdAccountInterface

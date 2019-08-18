@@ -1,10 +1,14 @@
+snap.api.adaccount
 snap.api.auth
+snap.api.campaigns
 snap.api.config
 snap.api.enums
 snap.api.exceptions
 snap.api.fundingsource
 snap.api.model
+snap.api.model.adaccount
 snap.api.model.auth
+snap.api.model.campaigns
 snap.api.model.config
 snap.api.model.fundingsource
 snap.api.model.organization

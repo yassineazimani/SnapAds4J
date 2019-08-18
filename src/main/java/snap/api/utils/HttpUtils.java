@@ -69,4 +69,25 @@ public class HttpUtils {
         .header("Content-Type", "application/json")
         .build();
   } // preparePostRequest()
+
+  /**
+   * Prepare PUT request HTTP
+   *
+   * @param url url
+   * @param oAuthAccessToken oAuthAccessToken
+   * @params args Data to send (Only String, no binary)
+   * @return HttpRequest
+   */
+  public static HttpRequest preparePutRequest(
+      String url, String oAuthAccessToken, Map<String, String> args)
+      throws JsonProcessingException {
+    ObjectMapper mapper = new ObjectMapper();
+    String requestBody = mapper.writeValueAsString(args);
+    return HttpRequest.newBuilder()
+        .uri(URI.create(url))
+        .PUT(BodyPublishers.ofString(requestBody))
+        .header("Authorization", "Bearer " + oAuthAccessToken)
+        .header("Content-Type", "application/json")
+        .build();
+  } // preparePutRequest()
 } // HttpUtils
