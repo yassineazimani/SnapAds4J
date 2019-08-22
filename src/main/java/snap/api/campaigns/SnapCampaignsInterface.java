@@ -3,6 +3,8 @@ package snap.api.campaigns;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import snap.api.exceptions.SnapArgumentException;
 import snap.api.exceptions.SnapOAuthAccessTokenException;
 import snap.api.exceptions.SnapResponseErrorException;
@@ -24,9 +26,11 @@ public interface SnapCampaignsInterface {
    * @throws SnapResponseErrorException
    * @throws SnapOAuthAccessTokenException
    * @throws SnapArgumentException
+   * @throws JsonProcessingException
    */
   public void createCampaign(String oAuthAccessToken, Campaign campaign)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;;
+      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+          JsonProcessingException;
 
   /**
    * Update a campaign.
@@ -37,9 +41,11 @@ public interface SnapCampaignsInterface {
    * @throws SnapResponseErrorException
    * @throws SnapOAuthAccessTokenException
    * @throws SnapArgumentException
+   * @throws JsonProcessingException
    */
   public void updateCampaign(String oAuthAccessToken, Campaign campaign)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;;
+      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+          JsonProcessingException;
 
   /**
    * Get all campaigns of an ad account.

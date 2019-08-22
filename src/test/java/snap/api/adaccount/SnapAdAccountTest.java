@@ -114,14 +114,14 @@ public class SnapAdAccountTest {
   public void test_getAlladAccount_should_throw_SnapArgumentException_1() {
     assertThatThrownBy(() -> adAccount.getAllAdAccounts(oAuthAccessToken, null))
         .isInstanceOf(SnapArgumentException.class)
-        .hasMessage("The Ad Account ID is mandatory");
+        .hasMessage("The organization ID is mandatory");
   } // test_getAlladAccount_should_throw_SnapArgumentException_1()
 
   @Test
   public void test_getAlladAccount_should_throw_SnapArgumentException_2() {
     assertThatThrownBy(() -> adAccount.getAllAdAccounts(oAuthAccessToken, ""))
         .isInstanceOf(SnapArgumentException.class)
-        .hasMessage("The Ad Account ID is mandatory");
+        .hasMessage("The organization ID is mandatory");
   } // test_getAlladAccount_should_throw_SnapArgumentException_2()
 
   @Test
@@ -266,9 +266,9 @@ public class SnapAdAccountTest {
     Mockito.when(httpResponse.body()).thenReturn(SnapResponseUtils.getSnapSpecificAdAccount());
     Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
         .thenReturn(httpResponse);
-    Optional<AdAccount> optFundingSource = adAccount.getSpecificAdAccount(oAuthAccessToken, id);
-    assertThat(optFundingSource.isPresent()).isTrue();
-    optFundingSource.ifPresent(
+    Optional<AdAccount> optAdAccount = adAccount.getSpecificAdAccount(oAuthAccessToken, id);
+    assertThat(optAdAccount.isPresent()).isTrue();
+    optAdAccount.ifPresent(
         f -> {
           assertThat(f.getId()).isEqualTo("8adc3db7-8148-4fbf-999c-8d2266369d74");
           assertThat(f.getType()).isEqualTo(AdAccountTypeEnum.PARTNER);

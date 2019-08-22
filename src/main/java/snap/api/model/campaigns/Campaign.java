@@ -46,14 +46,14 @@ public class Campaign {
   private Double dailyBudgetMicro;
 
   /** Start time */
-  @JsonProperty("start_date")
+  @JsonProperty("start_time")
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date startDate;
+  private Date startTime;
 
   /** End time */
-  @JsonProperty("end_date")
+  @JsonProperty("end_time")
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date endDate;
+  private Date endTime;
 
   /** Campaign name */
   private String name;
@@ -64,7 +64,7 @@ public class Campaign {
 
   /** The apps to be tracked for this campaign */
   @JsonProperty("measurement_spec")
-  private MeasurementSpec measurementSpecEnum;
+  private MeasurementSpec measurementSpec;
 
   /** Objective of the Campaign */
   private ObjectiveCampaignEnum objective;

@@ -71,6 +71,26 @@ public class HttpUtils {
   } // preparePostRequest()
 
   /**
+   * Prepare POST request HTTP
+   *
+   * @param url url
+   * @param oAuthAccessToken oAuthAccessToken
+   * @params args Data to send (Only String, no binary)
+   * @return HttpRequest
+   */
+  public static HttpRequest preparePostRequestObject(
+      String url, String oAuthAccessToken, Object args) throws JsonProcessingException {
+    ObjectMapper mapper = new ObjectMapper();
+    String requestBody = mapper.writeValueAsString(args);
+    return HttpRequest.newBuilder()
+        .uri(URI.create(url))
+        .POST(BodyPublishers.ofString(requestBody))
+        .header("Authorization", "Bearer " + oAuthAccessToken)
+        .header("Content-Type", "application/json")
+        .build();
+  } // preparePostRequest()
+
+  /**
    * Prepare PUT request HTTP
    *
    * @param url url
@@ -90,4 +110,39 @@ public class HttpUtils {
         .header("Content-Type", "application/json")
         .build();
   } // preparePutRequest()
+
+  /**
+   * Prepare PUT request HTTP
+   *
+   * @param url url
+   * @param oAuthAccessToken oAuthAccessToken
+   * @params args Data to send (Only String, no binary)
+   * @return HttpRequest
+   */
+  public static HttpRequest preparePutRequestObject(
+      String url, String oAuthAccessToken, Object args) throws JsonProcessingException {
+    ObjectMapper mapper = new ObjectMapper();
+    String requestBody = mapper.writeValueAsString(args);
+    return HttpRequest.newBuilder()
+        .uri(URI.create(url))
+        .PUT(BodyPublishers.ofString(requestBody))
+        .header("Authorization", "Bearer " + oAuthAccessToken)
+        .header("Content-Type", "application/json")
+        .build();
+  } // preparePutRequest()
+
+  /**
+   * Prepare DELETE request HTTP
+   *
+   * @param url url
+   * @param oAuthAccessToken oAuthAccessToken
+   * @return HttpRequest
+   */
+  public static HttpRequest prepareDeleteRequest(String url, String oAuthAccessToken) {
+    return HttpRequest.newBuilder()
+        .uri(URI.create(url))
+        .DELETE()
+        .header("Authorization", "Bearer " + oAuthAccessToken)
+        .build();
+  } // prepareDeleteRequest()
 } // HttpUtils

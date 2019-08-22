@@ -27,6 +27,7 @@ import snap.api.exceptions.SnapExceptionsUtils;
 import snap.api.exceptions.SnapOAuthAccessTokenException;
 import snap.api.exceptions.SnapResponseErrorException;
 import snap.api.model.adaccount.AdAccount;
+import snap.api.model.adaccount.SnapHttpRequestAdAccount;
 import snap.api.model.adaccount.SnapHttpResponseAdAccount;
 import snap.api.utils.FileProperties;
 import snap.api.utils.HttpUtils;
@@ -86,7 +87,7 @@ public class SnapAdAccount implements SnapAdAccountInterface {
       throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
     }
     if (StringUtils.isEmpty(organizationID)) {
-      throw new SnapArgumentException("The Ad Account ID is mandatory");
+      throw new SnapArgumentException("The organization ID is mandatory");
     }
     List<AdAccount> adAccounts = new ArrayList<>();
     final String url = this.endpointAllAdAccounts.replace("{organization-id}", organizationID);
@@ -153,7 +154,7 @@ public class SnapAdAccount implements SnapAdAccountInterface {
         result = responseFromJson.getSpecificAdAccount();
       }
     } catch (IOException | InterruptedException e) {
-      LOGGER.error("Impossible to get specific funding source, id = {}", id, e);
+      LOGGER.error("Impossible to get specific ad account, id = {}", id, e);
     }
     return result;
   } // getSpecificAdAccount()
@@ -181,8 +182,9 @@ public class SnapAdAccount implements SnapAdAccountInterface {
     this.checkAdAccount(adAccount);
     final String url =
         this.endpointUpdateAdAccount.replace("{organization-id}", adAccount.getOrganizationId());
-    HttpRequest request =
-        HttpUtils.preparePutRequest(url, oAuthAccessToken, this.convertAdAccountToMap(adAccount));
+    SnapHttpRequestAdAccount reqBody = new SnapHttpRequestAdAccount();
+    reqBody.addAdAccount(this.convertAdAccountToMap(adAccount));
+    HttpRequest request = HttpUtils.preparePutRequestObject(url, oAuthAccessToken, reqBody);
     try {
       HttpResponse<String> response = this.httpClient.send(request, BodyHandlers.ofString());
       int statusCode = response.statusCode();
@@ -293,6 +295,7 @@ public class SnapAdAccount implements SnapAdAccountInterface {
       if (adAccount.getType() != null) {
         result.put("type", adAccount.getType().toString());
       }
+      LOGGER.debug("convertAdAccountToMap {}", result);
     }
     return result;
   } // convertAdAccountToMap()
