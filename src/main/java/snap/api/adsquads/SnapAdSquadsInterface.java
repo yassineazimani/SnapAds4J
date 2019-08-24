@@ -3,6 +3,8 @@ package snap.api.adsquads;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import snap.api.exceptions.SnapArgumentException;
 import snap.api.exceptions.SnapOAuthAccessTokenException;
 import snap.api.exceptions.SnapResponseErrorException;
@@ -10,9 +12,13 @@ import snap.api.model.adsquads.AdSquad;
 
 public interface SnapAdSquadsInterface {
 
-  public void createAdSquad(String oAuthAccessToken, AdSquad adSquad);
+  public void createAdSquad(String oAuthAccessToken, AdSquad adSquad)
+      throws SnapOAuthAccessTokenException, JsonProcessingException, SnapResponseErrorException,
+          SnapArgumentException;
 
-  public void updateAdSquad(String oAuthAccessToken, AdSquad adSquad);
+  public void updateAdSquad(String oAuthAccessToken, AdSquad adSquad)
+      throws SnapOAuthAccessTokenException, JsonProcessingException, SnapResponseErrorException,
+          SnapArgumentException;
 
   public List<AdSquad> getAllAdSquadsFromCampaign(String oAuthAccessToken, String campaignId);
 
