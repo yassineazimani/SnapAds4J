@@ -314,13 +314,15 @@ public class SnapCampaigns implements SnapCampaignsInterface {
         result.put("buy_model", campaign.getBuyModel().toString());
       }
       if (campaign.getMeasurementSpec() != null) {
-        String mspec =
-            "{\"ios_app_id\": \" "
-                + campaign.getMeasurementSpec().getIosAppId()
-                + " \", \"android_app_url\":\" "
-                + campaign.getMeasurementSpec().getAndroidAppUrl()
-                + " \"}";
-        result.put("measurement_spec", mspec);
+        Map<String, String> measurementSpec = new HashMap<>();
+        measurementSpec.put("ios_app_id", campaign.getMeasurementSpec().getIosAppId());
+        measurementSpec.put("android_app_url", campaign.getMeasurementSpec().getAndroidAppUrl());
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+          result.put("measurement_spec", mapper.writeValueAsString(measurementSpec));
+        } catch (JsonProcessingException e) {
+          LOGGER.error("Impossible to write measurement_spec {}", measurementSpec);
+        }
       }
     }
     return result;

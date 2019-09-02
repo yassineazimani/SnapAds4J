@@ -1,56 +1,46 @@
 package snap.api.model.targeting;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import snap.api.model.demographics.Demographics;
+import snap.api.model.device.Device;
+import snap.api.model.geolocation.GeoLocation;
+import snap.api.model.interest.Interest;
+import snap.api.model.segment.SegmentRequestTargeting;
 
 @Getter
 @Setter
 @ToString
+@JsonInclude(Include.NON_NULL)
 public class Targeting {
 
-  public Targeting() {
-    this.demographics = new ArrayList<>();
-    this.devices = new ArrayList<>();
-    this.geos = new ArrayList<>();
-    this.interests = new ArrayList<>();
-    this.segments = new ArrayList<>();
-  }
+  /** List of Demographic Targets. */
+  private List<Demographics> demographics;
 
-  /**
-   * Demographics. <br>
-   * Example : "demographics": [{ "age_groups": [ "21-24", "25-34" ], "gender": "MALE" }]
-   * demographics.put("age_groups", new String[]{"21-24", "25-34"}); demographics.put("gender",
-   * "MALE");
-   */
-  private List<Map<String, Object>> demographics;
+  /** List of Device Targets */
+  private List<Device> devices;
 
-  /**
-   * Devices <br>
-   * Example : [{ "os_type": "iOS", "os_version_min": "9.0", "os_version_max": "10.3.2" }]
-   */
-  private List<Map<String, Object>> devices;
+  /** List of Geo Targets */
+  private List<GeoLocation> geos;
 
-  /**
-   * Geo <br>
-   * Example : [{ "country_code": "us" }]
-   */
-  private List<Map<String, Object>> geos;
+  /** List of Location Targets */
+  private List<Map<String, Object>> locations;
 
-  /**
-   * Interests <br>
-   * Example : [{ "category_id": ["DLXS_1"] }]
-   */
-  private List<Map<String, Object>> interests;
+  /** List of Interest Targets */
+  private List<Interest> interests;
 
+  /** Flag to mark content within the Ad Squad as Regulated Content */
   @JsonProperty("regulated_content")
-  private boolean regulated_content;
+  private boolean regulatedContent;
 
-  private List<Map<String, Object>> segments;
+  /** List of Snap Audience Match Segment Targets */
+  private List<SegmentRequestTargeting> segments;
 } // Targeting
