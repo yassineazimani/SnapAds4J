@@ -54,4 +54,144 @@ public class SnapResponseUtils {
   public static String getSnapSpecificCampaign() {
     return "{\r\n  \"request_status\": \"success\",\r\n  \"request_id\": \"57b0049c00ff0e8cb21af5199c0001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010107\",\r\n  \"campaigns\": [\r\n    {\r\n      \"sub_request_status\": \"success\",\r\n      \"campaign\": {\r\n        \"id\": \"92e1c28a-a331-45b4-8c26-fd3e0eea8c39\",\r\n        \"updated_at\": \"2016-08-14T05:36:46.441Z\",\r\n        \"created_at\": \"2016-08-14T05:33:33.876Z\",\r\n        \"name\": \"Cool Campaign\",\r\n        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n        \"status\": \"PAUSED\",\r\n        \"start_time\": \"2016-08-11T22:03:58.869Z\",\r\n        \"end_time\": \"2016-08-22T05:03:58.869Z\"\r\n      }\r\n    }\r\n  ]\r\n}";
   } // getSnapSpecificCampaign()
+  
+  public static String getSnapSpecificAdSquad() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57b00bd200ff0a1092e59e2ec90001737e616473617069736300016275696c642d35396264653638322d312d31312d370001010d\",\r\n" + 
+      	"  \"adsquads\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"adsquad\": {\r\n" + 
+      	"        \"id\": \"23995202-bfbc-45a0-9702-dd6841af52fe\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T05:58:55.409Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T05:58:55.409Z\",\r\n" + 
+      	"        \"name\": \"Ad Squad Uno\",\r\n" + 
+      	"        \"status\": \"ACTIVE\",\r\n" + 
+      	"        \"campaign_id\": \"6cf25572-048b-4447-95d1-eb48231751be\",\r\n" + 
+      	"        \"type\": \"SNAP_ADS\",\r\n" + 
+      	"        \"targeting\": {\r\n" + 
+      	"          \"geos\": [\r\n" + 
+      	"            {\r\n" + 
+      	"              \"country_code\": \"us\"\r\n" + 
+      	"            }\r\n" + 
+      	"          ]\r\n" + 
+      	"        },\r\n" + 
+      	"        \"placement\": \"SNAP_ADS\",\r\n" + 
+      	"        \"billing_event\": \"IMPRESSION\",\r\n" + 
+      	"        \"bid_micro\": 1000000,\r\n" + 
+      	"        \"daily_budget_micro\": 1000000000,\r\n" + 
+      	"        \"start_time\": \"2016-08-11T22:03:58.869Z\",\r\n" + 
+      	"        \"optimization_goal\": \"IMPRESSIONS\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapSpecificAdSquad()
+  
+  public static String getSnapAllAdSquadForCampaign() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57b00b1500ff0476bcfb96faa20001737e616473617069736300016275696c642d35396264653638322d312d31312d370001010b\",\r\n" + 
+      	"  \"adsquads\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"adsquad\": {\r\n" + 
+      	"        \"id\": \"0633e159-0f41-4675-a0ba-224fbd70ac4d\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T05:52:45.186Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T05:52:45.186Z\",\r\n" + 
+      	"        \"name\": \"Ad Squad Apples\",\r\n" + 
+      	"        \"status\": \"PAUSED\",\r\n" + 
+      	"        \"campaign_id\": \"6cf25572-048b-4447-95d1-eb48231751be\",\r\n" + 
+      	"        \"type\": \"SNAP_ADS\",\r\n" + 
+      	"        \"targeting\": {},\r\n" + 
+      	"        \"placement\": \"SNAP_ADS\",\r\n" + 
+      	"        \"billing_event\": \"IMPRESSION\",\r\n" + 
+      	"        \"bid_micro\": 1000000,\r\n" + 
+      	"        \"daily_budget_micro\": 1000000000,\r\n" + 
+      	"        \"start_time\": \"2016-08-11T22:03:58.869Z\",\r\n" + 
+      	"        \"optimization_goal\": \"IMPRESSIONS\"\r\n" + 
+      	"      }\r\n" + 
+      	"    },\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"adsquad\": {\r\n" + 
+      	"        \"id\": \"23995202-bfbc-45a0-9702-dd6841af52fe\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T05:58:55.409Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T05:58:55.409Z\",\r\n" + 
+      	"        \"name\": \"Ad Squad Uno\",\r\n" + 
+      	"        \"status\": \"ACTIVE\",\r\n" + 
+      	"        \"campaign_id\": \"6cf25572-048b-4447-95d1-eb48231751be\",\r\n" + 
+      	"        \"type\": \"SNAP_ADS\",\r\n" + 
+      	"        \"targeting\": {\r\n" + 
+      	"          \"geos\": [\r\n" + 
+      	"            {\r\n" + 
+      	"              \"country_code\": \"us\"\r\n" + 
+      	"            }\r\n" + 
+      	"          ]\r\n" + 
+      	"        },\r\n" + 
+      	"        \"placement\": \"SNAP_ADS\",\r\n" + 
+      	"        \"billing_event\": \"IMPRESSION\",\r\n" + 
+      	"        \"bid_micro\": 1000000,\r\n" + 
+      	"        \"daily_budget_micro\": 1000000000,\r\n" + 
+      	"        \"start_time\": \"2016-08-11T22:03:58.869Z\",\r\n" + 
+      	"        \"optimization_goal\": \"IMPRESSIONS\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapAllAdSquadForCampaign()
+  
+  public static String getSnapAllAdSquadForAdAccount() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57b00b1500ff0476bcfb96faa20001737e616473617069736300016275696c642d35396264653638322d312d31312d370001010b\",\r\n" + 
+      	"  \"adsquads\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"adsquad\": {\r\n" + 
+      	"        \"id\": \"0633e159-0f41-4675-a0ba-224fbd70ac4d\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T05:52:45.186Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T05:52:45.186Z\",\r\n" + 
+      	"        \"name\": \"Ad Squad Apples\",\r\n" + 
+      	"        \"status\": \"PAUSED\",\r\n" + 
+      	"        \"campaign_id\": \"6cf25572-048b-4447-95d1-eb48231751be\",\r\n" + 
+      	"        \"type\": \"SNAP_ADS\",\r\n" + 
+      	"        \"targeting\": {},\r\n" + 
+      	"        \"placement\": \"SNAP_ADS\",\r\n" + 
+      	"        \"billing_event\": \"IMPRESSION\",\r\n" + 
+      	"        \"bid_micro\": 1000000,\r\n" + 
+      	"        \"daily_budget_micro\": 1000000000,\r\n" + 
+      	"        \"start_time\": \"2016-08-11T22:03:58.869Z\",\r\n" + 
+      	"        \"optimization_goal\": \"IMPRESSIONS\"\r\n" + 
+      	"      }\r\n" + 
+      	"    },\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"adsquad\": {\r\n" + 
+      	"        \"id\": \"23995202-bfbc-45a0-9702-dd6841af52fe\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T05:58:55.409Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T05:58:55.409Z\",\r\n" + 
+      	"        \"name\": \"Ad Squad Uno\",\r\n" + 
+      	"        \"status\": \"ACTIVE\",\r\n" + 
+      	"        \"campaign_id\": \"6cf25572-048b-4447-95d1-eb48231751be\",\r\n" + 
+      	"        \"type\": \"SNAP_ADS\",\r\n" + 
+      	"        \"targeting\": {\r\n" + 
+      	"          \"geos\": [\r\n" + 
+      	"            {\r\n" + 
+      	"              \"country_code\": \"us\"\r\n" + 
+      	"            }\r\n" + 
+      	"          ]\r\n" + 
+      	"        },\r\n" + 
+      	"        \"placement\": \"SNAP_ADS\",\r\n" + 
+      	"        \"billing_event\": \"IMPRESSION\",\r\n" + 
+      	"        \"bid_micro\": 1000000,\r\n" + 
+      	"        \"daily_budget_micro\": 1000000000,\r\n" + 
+      	"        \"start_time\": \"2016-08-11T22:03:58.869Z\",\r\n" + 
+      	"        \"optimization_goal\": \"IMPRESSIONS\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapAllAdSquadForAdAccount()
 } // SnapResponseUtils

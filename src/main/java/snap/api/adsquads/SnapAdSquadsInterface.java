@@ -20,11 +20,11 @@ public interface SnapAdSquadsInterface {
       throws SnapOAuthAccessTokenException, JsonProcessingException, SnapResponseErrorException,
           SnapArgumentException;
 
-  public List<AdSquad> getAllAdSquadsFromCampaign(String oAuthAccessToken, String campaignId);
+  public List<AdSquad> getAllAdSquadsFromCampaign(String oAuthAccessToken, String campaignId) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException;
 
-  public List<AdSquad> getAllAdSquadsFromAdAccount(String oAuthAccessToken, String adAccountId);
+  public List<AdSquad> getAllAdSquadsFromAdAccount(String oAuthAccessToken, String adAccountId) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException;
 
-  public Optional<AdSquad> getSpecificAdSquad(String oAuthAccessToken, String id);
+  public Optional<AdSquad> getSpecificAdSquad(String oAuthAccessToken, String id) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException;
 
   /**
    * Deletes a specific ad squad.
