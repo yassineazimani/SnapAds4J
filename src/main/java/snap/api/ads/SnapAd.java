@@ -1,4 +1,4 @@
-package snap.api.adsquads;
+package snap.api.ads;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
@@ -19,70 +19,70 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Getter;
 import lombok.Setter;
-import snap.api.enums.CheckAdSquadEnum;
+import snap.api.adsquads.SnapAdSquads;
+import snap.api.enums.CheckAdEnum;
 import snap.api.exceptions.SnapArgumentException;
 import snap.api.exceptions.SnapExceptionsUtils;
 import snap.api.exceptions.SnapOAuthAccessTokenException;
 import snap.api.exceptions.SnapResponseErrorException;
-import snap.api.model.adsquads.AdSquad;
-import snap.api.model.adsquads.SnapHttpRequestAdSquad;
-import snap.api.model.adsquads.SnapHttpResponseAdSquad;
+import snap.api.model.ads.Ad;
+import snap.api.model.ads.SnapHttpRequestAd;
+import snap.api.model.ads.SnapHttpResponseAd;
 import snap.api.utils.FileProperties;
 import snap.api.utils.HttpUtils;
 
 /**
- * SnapAdSquads
+ * 
+ * @author yassine
  *
- * @author Yassine
  */
 @Getter
 @Setter
-public class SnapAdSquads implements SnapAdSquadsInterface {
+public class SnapAd implements SnapAdInterface {
 
 	private FileProperties fp;
 
 	private String apiUrl;
 
-	private String endpointAllAdSquadsCampaign;
+	private String endpointCreateAd;
 
-	private String endpointAllAdSquadsAdAccount;
-
-	private String endpointSpecificAdSquad;
-
-	private String endpointCreationAdSquad;
-
-	private String endpointUpdateAdSquad;
-
-	private String endpointDeleteAdSquad;
+	private String endpointUpdateAd;
+	
+	private String endpointDeleteAd;
+	
+	private String endpointSpecificAd;
+	
+	private String endpointAllAdsAdSquad;
+	
+	private String endpointAllAdsAdAccount;
 
 	private HttpClient httpClient;
 
 	private static final Logger LOGGER = LogManager.getLogger(SnapAdSquads.class);
 
-	/** Constructor */
-	public SnapAdSquads() {
+	public SnapAd() {
 		this.fp = new FileProperties();
 		this.apiUrl = (String) fp.getProperties().get("api.url");
-		this.endpointAllAdSquadsCampaign = this.apiUrl + (String) fp.getProperties().get("api.url.adsquads.all");
-		this.endpointAllAdSquadsAdAccount = this.apiUrl + (String) fp.getProperties().get("api.url.adsquads.all2");
-		this.endpointSpecificAdSquad = this.apiUrl + (String) fp.getProperties().get("api.url.adsquads.one");
-		this.endpointCreationAdSquad = this.apiUrl + (String) fp.getProperties().get("api.url.adsquads.create");
-		this.endpointUpdateAdSquad = this.apiUrl + (String) fp.getProperties().get("api.url.adsquads.update");
-		this.endpointDeleteAdSquad = this.apiUrl + (String) fp.getProperties().get("api.url.adsquads.delete");
+		this.endpointCreateAd = this.apiUrl + (String) fp.getProperties().get("api.url.ad.create");
+		this.endpointUpdateAd = this.apiUrl + (String) fp.getProperties().get("api.url.ad.update");
+		this.endpointDeleteAd = this.apiUrl + (String) fp.getProperties().get("api.url.ad.delete");
+		this.endpointAllAdsAdSquad = this.apiUrl + (String) fp.getProperties().get("api.url.ad.all");
+		this.endpointAllAdsAdAccount = this.apiUrl + (String) fp.getProperties().get("api.url.ad.all2");
+		this.endpointSpecificAd = this.apiUrl + (String) fp.getProperties().get("api.url.ad.one");
 		this.httpClient = HttpClient.newHttpClient();
-	} // SnapAdSquads()
+	}// SnapAd()
 
 	@Override
-	public void createAdSquad(String oAuthAccessToken, AdSquad adSquad) throws JsonProcessingException,
-			SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException {
+	public void createAd(String oAuthAccessToken, Ad ad) throws SnapOAuthAccessTokenException, JsonProcessingException,
+			SnapResponseErrorException, SnapArgumentException {
 		if (StringUtils.isEmpty(oAuthAccessToken)) {
 			throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 		}
-		checkAdSquad(adSquad, CheckAdSquadEnum.CREATION);
-		final String url = this.endpointCreationAdSquad.replace("{campaign_id}", adSquad.getCampaignId());
-		SnapHttpRequestAdSquad reqBody = new SnapHttpRequestAdSquad();
-		reqBody.addAdSquad(adSquad);
-		LOGGER.info("Body create ad squad => {}", reqBody);
+		checkSnapAd(ad, CheckAdEnum.CREATION);
+		final String url = this.endpointCreateAd.replace("{ad_squad_id}", ad.getAdSquadId());
+		SnapHttpRequestAd reqBody = new SnapHttpRequestAd();
+		reqBody.addAd(ad);
+		LOGGER.info("Body create ad => {}", reqBody);
 		HttpRequest request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, reqBody);
 		try {
 			HttpResponse<String> response = this.httpClient.send(request, BodyHandlers.ofString());
@@ -92,20 +92,23 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 				throw ex;
 			}
 		} catch (IOException | InterruptedException e) {
-			LOGGER.error("Impossible to create ad squad, campaign_id = {}", adSquad.getCampaignId(), e);
+			LOGGER.error("Impossible to create ad, ad_squad_id = {}", ad.getAdSquadId(), e);
 		}
-	} // createAdSquad()
+	}// createAd()
 
 	@Override
-	public void updateAdSquad(String oAuthAccessToken, AdSquad adSquad) throws SnapOAuthAccessTokenException,
-			JsonProcessingException, SnapResponseErrorException, SnapArgumentException {
+	public void updateAd(String oAuthAccessToken, Ad ad) throws SnapOAuthAccessTokenException, JsonProcessingException,
+			SnapResponseErrorException, SnapArgumentException {
 		if (StringUtils.isEmpty(oAuthAccessToken)) {
 			throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 		}
-		checkAdSquad(adSquad, CheckAdSquadEnum.UPDATE);
-		final String url = this.endpointUpdateAdSquad.replace("{campaign_id}", adSquad.getCampaignId());
-		SnapHttpRequestAdSquad reqBody = new SnapHttpRequestAdSquad();
-		reqBody.addAdSquad(adSquad);
+		if (StringUtils.isEmpty(oAuthAccessToken)) {
+			throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
+		}
+		checkSnapAd(ad, CheckAdEnum.UPDATE);
+		final String url = this.endpointUpdateAd.replace("{ad_squad_id}", ad.getAdSquadId());
+		SnapHttpRequestAd reqBody = new SnapHttpRequestAd();
+		reqBody.addAd(ad);
 		LOGGER.info("Body update ad squad => {}", reqBody);
 		HttpRequest request = HttpUtils.preparePutRequestObject(url, oAuthAccessToken, reqBody);
 		try {
@@ -116,21 +119,21 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 				throw ex;
 			}
 		} catch (IOException | InterruptedException e) {
-			LOGGER.error("Impossible to update ad squad, id = {}", adSquad.getId(), e);
+			LOGGER.error("Impossible to update ad, id = {}", ad.getId(), e);
 		}
-	} // updateAdSquad()
+	}// updateAd()
 
 	@Override
-	public List<AdSquad> getAllAdSquadsFromCampaign(String oAuthAccessToken, String campaignId)
+	public List<Ad> getAllAdsFromAdSquad(String oAuthAccessToken, String adSquadId)
 			throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException {
 		if (StringUtils.isEmpty(oAuthAccessToken)) {
 			throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 		}
-		if (StringUtils.isEmpty(campaignId)) {
-			throw new SnapArgumentException("The Campaign ID is mandatory");
+		if (StringUtils.isEmpty(adSquadId)) {
+			throw new SnapArgumentException("The AdSquad ID is mandatory");
 		}
-		List<AdSquad> results = new ArrayList<>();
-		final String url = this.endpointAllAdSquadsCampaign.replace("{campaign_id}", campaignId);
+		List<Ad> results = new ArrayList<>();
+		final String url = this.endpointAllAdsAdSquad.replace("{ad_squad_id}", adSquadId);
 		HttpRequest request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
 		try {
 			HttpResponse<String> response = this.httpClient.send(request, BodyHandlers.ofString());
@@ -142,18 +145,18 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 			}
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			SnapHttpResponseAdSquad responseFromJson = mapper.readValue(body, SnapHttpResponseAdSquad.class);
+			SnapHttpResponseAd responseFromJson = mapper.readValue(body, SnapHttpResponseAd.class);
 			if (responseFromJson != null) {
-				results = responseFromJson.getAllAdSquads();
+				results = responseFromJson.getAllAd();
 			}
 		} catch (IOException | InterruptedException e) {
-			LOGGER.error("Impossible to get all adsquads, campaignId = {}", campaignId, e);
+			LOGGER.error("Impossible to get all ads, adSquadId = {}", adSquadId, e);
 		}
 		return results;
-	} // getAllAdSquadsFromCampaign()
+	}// getAllAdsFromAdSquad()
 
 	@Override
-	public List<AdSquad> getAllAdSquadsFromAdAccount(String oAuthAccessToken, String adAccountId)
+	public List<Ad> getAllAdsFromAdAccount(String oAuthAccessToken, String adAccountId)
 			throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException {
 		if (StringUtils.isEmpty(oAuthAccessToken)) {
 			throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
@@ -161,8 +164,8 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 		if (StringUtils.isEmpty(adAccountId)) {
 			throw new SnapArgumentException("The AdAccount ID is mandatory");
 		}
-		List<AdSquad> results = new ArrayList<>();
-		final String url = this.endpointAllAdSquadsAdAccount.replace("{ad_account_id}", adAccountId);
+		List<Ad> results = new ArrayList<>();
+		final String url = this.endpointAllAdsAdAccount.replace("{ad_account_id}", adAccountId);
 		HttpRequest request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
 		try {
 			HttpResponse<String> response = this.httpClient.send(request, BodyHandlers.ofString());
@@ -174,18 +177,18 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 			}
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			SnapHttpResponseAdSquad responseFromJson = mapper.readValue(body, SnapHttpResponseAdSquad.class);
+			SnapHttpResponseAd responseFromJson = mapper.readValue(body, SnapHttpResponseAd.class);
 			if (responseFromJson != null) {
-				results = responseFromJson.getAllAdSquads();
+				results = responseFromJson.getAllAd();
 			}
 		} catch (IOException | InterruptedException e) {
-			LOGGER.error("Impossible to get all adsquads, adAccountId = {}", adAccountId, e);
+			LOGGER.error("Impossible to get all ads, adAccountId = {}", adAccountId, e);
 		}
 		return results;
-	} // getAllAdSquadsFromAdAccount()
+	}// getAllAdsFromAdAccount()
 
 	@Override
-	public Optional<AdSquad> getSpecificAdSquad(String oAuthAccessToken, String id)
+	public Optional<Ad> getSpecificAd(String oAuthAccessToken, String id)
 			throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException {
 		if (StringUtils.isEmpty(oAuthAccessToken)) {
 			throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
@@ -193,8 +196,8 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 		if (StringUtils.isEmpty(id)) {
 			throw new SnapArgumentException("The AdSquad ID is mandatory");
 		}
-		Optional<AdSquad> result = Optional.empty();
-		final String url = this.endpointSpecificAdSquad + id;
+		Optional<Ad> result = Optional.empty();
+		final String url = this.endpointSpecificAd + id;
 		HttpRequest request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
 		try {
 			HttpResponse<String> response = this.httpClient.send(request, BodyHandlers.ofString());
@@ -206,26 +209,26 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 			}
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			SnapHttpResponseAdSquad responseFromJson = mapper.readValue(body, SnapHttpResponseAdSquad.class);
+			SnapHttpResponseAd responseFromJson = mapper.readValue(body, SnapHttpResponseAd.class);
 			if (responseFromJson != null) {
-				result = responseFromJson.getSpecificAdSquad();
+				result = responseFromJson.getSpecificAd();
 			}
 		} catch (IOException | InterruptedException e) {
-			LOGGER.error("Impossible to get specific AdSquad, id = {}", id, e);
+			LOGGER.error("Impossible to get specific Ad, id = {}", id, e);
 		}
 		return result;
-	} // getSpecificAdSquad()
+	}// getSpecificAd()
 
 	@Override
-	public void deleteAdSquad(String oAuthAccessToken, String id)
+	public void deleteAd(String oAuthAccessToken, String id)
 			throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 		if (StringUtils.isEmpty(oAuthAccessToken)) {
 			throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 		}
 		if (StringUtils.isEmpty(id)) {
-			throw new SnapArgumentException("The Ad Squad ID is mandatory");
+			throw new SnapArgumentException("The Ad ID is mandatory");
 		}
-		final String url = this.endpointDeleteAdSquad + id;
+		final String url = this.endpointDeleteAd + id;
 		HttpRequest request = HttpUtils.prepareDeleteRequest(url, oAuthAccessToken);
 		try {
 			HttpResponse<String> response = this.httpClient.send(request, BodyHandlers.ofString());
@@ -235,65 +238,37 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 				throw ex;
 			}
 		} catch (IOException | InterruptedException e) {
-			LOGGER.error("Impossible to delete specific ad squad, id = {}", id, e);
+			LOGGER.error("Impossible to delete specific ad, id = {}", id, e);
 		}
-	} // deleteAdSquad()
+	}// deleteAd()
 
-	private void checkAdSquad(AdSquad adSquad, CheckAdSquadEnum check) throws SnapArgumentException {
+	private void checkSnapAd(Ad ad, CheckAdEnum check) throws SnapArgumentException {
 		if (check == null) {
-			throw new SnapArgumentException("Please give type of checking Ad Squad");
+			throw new SnapArgumentException("Please give type of checking Ad");
 		}
 		StringBuilder sb = new StringBuilder();
-		if (adSquad != null) {
-			if (check == CheckAdSquadEnum.UPDATE) {
-				if (StringUtils.isEmpty(adSquad.getId())) {
-					sb.append("The Ad Squad ID is required,");
-				}
-				if (adSquad.getBillingEvent() == null) {
-					sb.append("The Billing event is required,");
-				}
-			} else {
-				if (adSquad.getOptimizationGoal() == null) {
-					sb.append("The optimization goal is required,");
-				}
-				if (adSquad.getPlacement() == null) {
-					sb.append("The placement is required,");
-				}
-				if (adSquad.getType() == null) {
-					sb.append("The type is required,");
-				}
-			}
-			if (StringUtils.isEmpty(adSquad.getCampaignId())) {
-				sb.append("The Campaign ID is required,");
-			}
-			if (adSquad.getBidMicro() == null) {
-				sb.append("The bid micro is required,");
-			}
-			if (adSquad.getDailyBudgetMicro() == null) {
-				sb.append("The daily budget micro is required,");
-			}
-			if (adSquad.getDailyBudgetMicro() != null && adSquad.getDailyBudgetMicro() < 20000000) {
-				sb.append("The daily budget micro minimum value is 20000000,");
-			}
-			if (adSquad.getLifetimeBudgetMicro() == null) {
-				sb.append("The lifetime budget micro is required,");
-			}
-			if (StringUtils.isEmpty(adSquad.getName())) {
-				sb.append("The Ad Squad name is required,");
-			}
-			if (adSquad.getStatus() == null) {
-				sb.append("The status is required,");
-			}
-			if (adSquad.getTargeting() == null) {
-				sb.append("The targeting is required,");
-			}
+		if (ad == null) {
+			sb.append("Ad parameter is not given,");
 		} else {
-			sb.append("Ad squad parameter is not given,");
+			if(check == CheckAdEnum.UPDATE) {
+				if (StringUtils.isEmpty(ad.getId())) {
+					sb.append("The Ad ID is required,");
+				}
+			}
+			if (StringUtils.isEmpty(ad.getAdSquadId())) {
+				sb.append("Ad Squad ID parameter is not given,");
+			}
+			if (StringUtils.isEmpty(ad.getName())) {
+				sb.append("Ad's name parameter is not given,");
+			}
+			if (ad.getStatus() == null) {
+				sb.append("Ad's status parameter is not given,");
+			}
 		}
 		String finalErrors = sb.toString();
 		if (!StringUtils.isEmpty(finalErrors)) {
 			finalErrors = finalErrors.substring(0, finalErrors.length() - 1);
 			throw new SnapArgumentException(finalErrors);
 		}
-	} // checkAdSquad()
-} // SnapAdSquads
+	}// checkSnapAd()
+}// SnapAd

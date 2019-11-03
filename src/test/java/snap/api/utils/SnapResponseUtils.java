@@ -194,4 +194,96 @@ public class SnapResponseUtils {
       	"  ]\r\n" + 
       	"}";
   }// getSnapAllAdSquadForAdAccount()
+  
+  public static String getSnapSpecificAd() { 
+	  return "{\r\n" + 
+  		"  \"request_status\": \"success\",\r\n" + 
+  		"  \"request_id\": \"57b01adc00ff0a5290ad9d42c00001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010103\",\r\n" + 
+  		"  \"ads\": [\r\n" + 
+  		"    {\r\n" + 
+  		"      \"sub_request_status\": \"success\",\r\n" + 
+  		"      \"ad\": {\r\n" + 
+  		"        \"id\": \"e8d6217f-32ab-400f-9e54-39a86a7963e4\",\r\n" + 
+  		"        \"updated_at\": \"2016-08-14T07:14:45.174Z\",\r\n" + 
+  		"        \"created_at\": \"2016-08-14T07:07:50.241Z\",\r\n" + 
+  		"        \"name\": \"Ad One\",\r\n" + 
+  		"        \"ad_squad_id\": \"23995202-bfbc-45a0-9702-dd6841af52fe\",\r\n" + 
+  		"        \"creative_id\": \"c1e6e929-acec-466f-b023-852b8cacc18f\",\r\n" + 
+  		"        \"status\": \"ACTIVE\",\r\n" + 
+  		"        \"type\": \"SNAP_AD\"\r\n" + 
+  		"      }\r\n" + 
+  		"    }\r\n" + 
+  		"  ]\r\n" + 
+  		"}"; 
+  }// getSnapSpecificAd()
+  
+  public static String getSnapAllAdForAdSquad() {
+	  return "{\r\n" + 
+	  		"  \"request_status\": \"success\",\r\n" + 
+	  		"  \"request_id\": \"57b01b3400ff0608a82948df6b0001737e616473617069736300016275696c642d35396264653638322d312d31312d370001010d\",\r\n" + 
+	  		"  \"ads\": [\r\n" + 
+	  		"    {\r\n" + 
+	  		"      \"sub_request_status\": \"success\",\r\n" + 
+	  		"      \"ad\": {\r\n" + 
+	  		"        \"id\": \"2ded6d53-0805-4ff8-b984-54a7eb5c8918\",\r\n" + 
+	  		"        \"updated_at\": \"2016-08-14T07:18:05.699Z\",\r\n" + 
+	  		"        \"created_at\": \"2016-08-14T07:18:05.699Z\",\r\n" + 
+	  		"        \"name\": \"Ad Two\",\r\n" + 
+	  		"        \"ad_squad_id\": \"23995202-bfbc-45a0-9702-dd6841af52fe\",\r\n" + 
+	  		"        \"creative_id\": \"c1e6e929-acec-466f-b023-852b8cacc18f\",\r\n" + 
+	  		"        \"status\": \"PAUSED\",\r\n" + 
+	  		"        \"type\": \"SNAP_AD\"\r\n" + 
+	  		"      }\r\n" + 
+	  		"    },\r\n" + 
+	  		"    {\r\n" + 
+	  		"      \"sub_request_status\": \"success\",\r\n" + 
+	  		"      \"ad\": {\r\n" + 
+	  		"        \"id\": \"e8d6217f-32ab-400f-9e54-39a86a7963e4\",\r\n" + 
+	  		"        \"updated_at\": \"2016-08-14T07:14:45.174Z\",\r\n" + 
+	  		"        \"created_at\": \"2016-08-14T07:07:50.241Z\",\r\n" + 
+	  		"        \"name\": \"Ad One\",\r\n" + 
+	  		"        \"ad_squad_id\": \"23995202-bfbc-45a0-9702-dd6841af52fe\",\r\n" + 
+	  		"        \"creative_id\": \"c1e6e929-acec-466f-b023-852b8cacc18f\",\r\n" + 
+	  		"        \"status\": \"ACTIVE\",\r\n" + 
+	  		"        \"type\": \"SNAP_AD\"\r\n" + 
+	  		"      }\r\n" + 
+	  		"    }\r\n" + 
+	  		"  ]\r\n" + 
+	  		"}";
+  }// getSnapAllAdForAdSquad()
+  
+  public static String getSnapAllAdForAdAccount() {
+	  return "{\r\n" + 
+	  		"  \"request_status\": \"success\",\r\n" + 
+	  		"  \"request_id\": \"57b01b3400ff0608a82948df6b0001737e616473617069736300016275696c642d35396264653638322d312d31312d370001010d\",\r\n" + 
+	  		"  \"ads\": [\r\n" + 
+	  		"    {\r\n" + 
+	  		"      \"sub_request_status\": \"success\",\r\n" + 
+	  		"      \"ad\": {\r\n" + 
+	  		"        \"id\": \"2ded6d53-0805-4ff8-b984-54a7eb5c8918\",\r\n" + 
+	  		"        \"updated_at\": \"2016-08-14T07:18:05.699Z\",\r\n" + 
+	  		"        \"created_at\": \"2016-08-14T07:18:05.699Z\",\r\n" + 
+	  		"        \"name\": \"Ad Two\",\r\n" + 
+	  		"        \"ad_squad_id\": \"23995202-bfbc-45a0-9702-dd6841af52fe\",\r\n" + 
+	  		"        \"creative_id\": \"c1e6e929-acec-466f-b023-852b8cacc18f\",\r\n" + 
+	  		"        \"status\": \"PAUSED\",\r\n" + 
+	  		"        \"type\": \"SNAP_AD\"\r\n" + 
+	  		"      }\r\n" + 
+	  		"    },\r\n" + 
+	  		"    {\r\n" + 
+	  		"      \"sub_request_status\": \"success\",\r\n" + 
+	  		"      \"ad\": {\r\n" + 
+	  		"        \"id\": \"e8d6217f-32ab-400f-9e54-39a86a7963e4\",\r\n" + 
+	  		"        \"updated_at\": \"2016-08-14T07:14:45.174Z\",\r\n" + 
+	  		"        \"created_at\": \"2016-08-14T07:07:50.241Z\",\r\n" + 
+	  		"        \"name\": \"Ad One\",\r\n" + 
+	  		"        \"ad_squad_id\": \"23995202-bfbc-45a0-9702-dd6841af52fe\",\r\n" + 
+	  		"        \"creative_id\": \"c1e6e929-acec-466f-b023-852b8cacc18f\",\r\n" + 
+	  		"        \"status\": \"ACTIVE\",\r\n" + 
+	  		"        \"type\": \"SNAP_AD\"\r\n" + 
+	  		"      }\r\n" + 
+	  		"    }\r\n" + 
+	  		"  ]\r\n" + 
+	  		"}";
+  }// getSnapAllAdForAdAccount()
 } // SnapResponseUtils

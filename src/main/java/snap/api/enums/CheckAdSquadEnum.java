@@ -6,8 +6,8 @@ package snap.api.enums;
  * @author Yassine
  */
 public enum CheckAdSquadEnum {
-  /** For creation campaign */
+  /** For creation Ad Squad */
   CREATION,
-  /** For update campaign */
+  /** For update Ad Squad */
   UPDATE;
-} // CheckCampaignEnum
+} // CheckAdSquadEnum
