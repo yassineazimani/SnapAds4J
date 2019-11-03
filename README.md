@@ -4,7 +4,9 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-This is unofficial SnapChat Marketing API binding library allows you to integrate into your Java application.
+This is unofficial SnapChat Marketing API binding library allows you to integrate into your Java application (or Web Application Java).
+
+URL Marketing API SnapChat : https://developers.snapchat.com/ads/
 
 ## Features
 
