@@ -1,5 +1,6 @@
 package snap.api.adaccount;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,8 +54,9 @@ public interface SnapAdAccountInterface {
    * @throws SnapOAuthAccessTokenException
    * @throws SnapArgumentException
    * @throws JsonProcessingException
+   * @throws UnsupportedEncodingException 
    */
   public void updateAdAccount(String oAuthAccessToken, AdAccount adAccount)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-          JsonProcessingException;
+          JsonProcessingException, UnsupportedEncodingException;
 } // SnapAdAccountInterface

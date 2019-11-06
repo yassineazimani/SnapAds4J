@@ -1,10 +1,7 @@
 package snap.api.adaccount;
 
 import java.io.IOException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +10,12 @@ import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,6 +32,7 @@ import snap.api.exceptions.SnapResponseErrorException;
 import snap.api.model.adaccount.AdAccount;
 import snap.api.model.adaccount.SnapHttpRequestAdAccount;
 import snap.api.model.adaccount.SnapHttpResponseAdAccount;
+import snap.api.utils.EntityUtilsWrapper;
 import snap.api.utils.FileProperties;
 import snap.api.utils.HttpUtils;
 
@@ -51,7 +55,9 @@ public class SnapAdAccount implements SnapAdAccountInterface {
 
   private String endpointUpdateAdAccount;
 
-  private HttpClient httpClient;
+  private CloseableHttpClient httpClient;
+  
+  private EntityUtilsWrapper entityUtilsWrapper;
 
   private static final Logger LOGGER = LogManager.getLogger(SnapAdAccount.class);
 
@@ -65,7 +71,8 @@ public class SnapAdAccount implements SnapAdAccountInterface {
         this.apiUrl + (String) fp.getProperties().get("api.url.adaccount.one");
     this.endpointUpdateAdAccount =
         this.apiUrl + (String) fp.getProperties().get("api.url.adaccount.update");
-    this.httpClient = HttpClient.newHttpClient();
+    this.httpClient = HttpClients.createDefault();
+    this.entityUtilsWrapper = new EntityUtilsWrapper();
   } // SnapAdAccount()
 
   /**
@@ -91,24 +98,26 @@ public class SnapAdAccount implements SnapAdAccountInterface {
     }
     List<AdAccount> adAccounts = new ArrayList<>();
     final String url = this.endpointAllAdAccounts.replace("{organization-id}", organizationID);
-    HttpRequest request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-    try {
-      HttpResponse<String> response = this.httpClient.send(request, BodyHandlers.ofString());
-      int statusCode = response.statusCode();
-      String body = response.body();
-      if (statusCode >= 300) {
-        SnapResponseErrorException ex =
-            SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
-        throw ex;
+    HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+    try (CloseableHttpResponse response = httpClient.execute(request)) {
+      int statusCode = response.getStatusLine().getStatusCode();
+      HttpEntity entity = response.getEntity();
+      if(entity != null) {
+          String body = entityUtilsWrapper.toString(entity);
+          if (statusCode >= 300) {
+            SnapResponseErrorException ex =
+                SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+            throw ex;
+          }
+          ObjectMapper mapper = new ObjectMapper();
+          mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+          SnapHttpResponseAdAccount responseFromJson =
+              mapper.readValue(body, SnapHttpResponseAdAccount.class);
+          if (responseFromJson != null) {
+            adAccounts = responseFromJson.getAllAdAccounts();
+          }
       }
-      ObjectMapper mapper = new ObjectMapper();
-      mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-      SnapHttpResponseAdAccount responseFromJson =
-          mapper.readValue(body, SnapHttpResponseAdAccount.class);
-      if (responseFromJson != null) {
-        adAccounts = responseFromJson.getAllAdAccounts();
-      }
-    } catch (IOException | InterruptedException e) {
+    } catch (IOException e) {
       LOGGER.error("Impossible to get all ad accounts, organizationID = {}", organizationID, e);
     }
     return adAccounts;
@@ -136,24 +145,26 @@ public class SnapAdAccount implements SnapAdAccountInterface {
     }
     Optional<AdAccount> result = Optional.empty();
     final String url = this.endpointSpecificAdAccount + id;
-    HttpRequest request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-    try {
-      HttpResponse<String> response = this.httpClient.send(request, BodyHandlers.ofString());
-      int statusCode = response.statusCode();
-      String body = response.body();
-      if (statusCode >= 300) {
-        SnapResponseErrorException ex =
-            SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
-        throw ex;
+    HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+    try (CloseableHttpResponse response = httpClient.execute(request)) {
+	int statusCode = response.getStatusLine().getStatusCode();
+	HttpEntity entity = response.getEntity();
+	if(entity != null) {
+	    String body = entityUtilsWrapper.toString(entity);
+	    if (statusCode >= 300) {
+		SnapResponseErrorException ex =
+			SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		throw ex;
+	    }
+	    ObjectMapper mapper = new ObjectMapper();
+	    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	    SnapHttpResponseAdAccount responseFromJson =
+		    mapper.readValue(body, SnapHttpResponseAdAccount.class);
+	    if (responseFromJson != null) {
+		result = responseFromJson.getSpecificAdAccount();
+	    }
       }
-      ObjectMapper mapper = new ObjectMapper();
-      mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-      SnapHttpResponseAdAccount responseFromJson =
-          mapper.readValue(body, SnapHttpResponseAdAccount.class);
-      if (responseFromJson != null) {
-        result = responseFromJson.getSpecificAdAccount();
-      }
-    } catch (IOException | InterruptedException e) {
+    } catch (IOException e) {
       LOGGER.error("Impossible to get specific ad account, id = {}", id, e);
     }
     return result;
@@ -171,11 +182,12 @@ public class SnapAdAccount implements SnapAdAccountInterface {
    * @throws SnapOAuthAccessTokenException
    * @throws SnapArgumentException
    * @throws JsonProcessingException
+   * @throws UnsupportedEncodingException 
    */
   @Override
   public void updateAdAccount(String oAuthAccessToken, AdAccount adAccount)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-          JsonProcessingException {
+          JsonProcessingException, UnsupportedEncodingException {
     if (StringUtils.isEmpty(oAuthAccessToken)) {
       throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
     }
@@ -184,16 +196,18 @@ public class SnapAdAccount implements SnapAdAccountInterface {
         this.endpointUpdateAdAccount.replace("{organization-id}", adAccount.getOrganizationId());
     SnapHttpRequestAdAccount reqBody = new SnapHttpRequestAdAccount();
     reqBody.addAdAccount(this.convertAdAccountToMap(adAccount));
-    HttpRequest request = HttpUtils.preparePutRequestObject(url, oAuthAccessToken, reqBody);
-    try {
-      HttpResponse<String> response = this.httpClient.send(request, BodyHandlers.ofString());
-      int statusCode = response.statusCode();
-      if (statusCode >= 300) {
-        SnapResponseErrorException ex =
-            SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
-        throw ex;
+    HttpPut request = HttpUtils.preparePutRequestObject(url, oAuthAccessToken, reqBody);
+    try (CloseableHttpResponse response = httpClient.execute(request)){
+	int statusCode = response.getStatusLine().getStatusCode();
+	HttpEntity entity = response.getEntity();
+	if(entity != null) {
+          if (statusCode >= 300) {
+            SnapResponseErrorException ex =
+                SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+            throw ex;
+          }
       }
-    } catch (IOException | InterruptedException e) {
+    } catch (IOException e) {
       LOGGER.error("Impossible to update ad account, id = {}", adAccount.getId(), e);
     }
   } // updateAdAccount()

@@ -1,5 +1,6 @@
 package snap.api.adsquads;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,11 +15,11 @@ public interface SnapAdSquadsInterface {
 
   public void createAdSquad(String oAuthAccessToken, AdSquad adSquad)
       throws SnapOAuthAccessTokenException, JsonProcessingException, SnapResponseErrorException,
-          SnapArgumentException;
+          SnapArgumentException, UnsupportedEncodingException;
 
   public void updateAdSquad(String oAuthAccessToken, AdSquad adSquad)
       throws SnapOAuthAccessTokenException, JsonProcessingException, SnapResponseErrorException,
-          SnapArgumentException;
+          SnapArgumentException, UnsupportedEncodingException;
 
   public List<AdSquad> getAllAdSquadsFromCampaign(String oAuthAccessToken, String campaignId) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException;
 

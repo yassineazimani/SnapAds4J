@@ -4,14 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandler;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.StatusLine;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,18 +31,25 @@ import snap.api.exceptions.SnapArgumentException;
 import snap.api.exceptions.SnapOAuthAccessTokenException;
 import snap.api.exceptions.SnapResponseErrorException;
 import snap.api.model.adaccount.AdAccount;
+import snap.api.utils.EntityUtilsWrapper;
 import snap.api.utils.SnapResponseUtils;
 
 /** Unit tests mocked for SnapAdAccountTest. */
 @RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("unchecked")
 public class SnapAdAccountTest {
 
   @Spy private SnapAdAccount adAccount;
+  
+  @Mock private HttpEntity httpEntity;
+  
+  @Mock private CloseableHttpClient httpClient;
 
-  @Mock private HttpClient httpClient;
-
-  @Mock private HttpResponse<String> httpResponse;
+  @Mock private CloseableHttpResponse httpResponse;
+  
+  @Mock private StatusLine statusLine;
+  
+  @Mock
+  private EntityUtilsWrapper entityUtilsWrapper;
 
   private final String oAuthAccessToken = "meowmeowmeow";
 
@@ -52,16 +61,18 @@ public class SnapAdAccountTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     adAccount.setHttpClient(httpClient);
+    adAccount.setEntityUtilsWrapper(entityUtilsWrapper);
   } // setUp()
 
   @Test
   public void test_getAllAdAccounts_should_success()
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
           IOException, InterruptedException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(200);
-    Mockito.when(httpResponse.body()).thenReturn(SnapResponseUtils.getSnapAllAdAccounts());
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(200);
+    Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+    Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapAllAdAccounts());
     List<AdAccount> adAccounts = adAccount.getAllAdAccounts(oAuthAccessToken, organizationId);
     assertThat(adAccounts).isNotNull();
     assertThat(adAccounts).isNotEmpty();
@@ -128,9 +139,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_401_getAlladAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(401);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(401);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getAllAdAccounts(oAuthAccessToken, organizationId))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Unauthorized - Check your API key");
@@ -140,10 +153,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_403_getAlladAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-
-    Mockito.when(httpResponse.statusCode()).thenReturn(403);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(403);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getAllAdAccounts(oAuthAccessToken, organizationId))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Access Forbidden");
@@ -153,10 +167,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_404_getAlladAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-
-    Mockito.when(httpResponse.statusCode()).thenReturn(404);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(404);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getAllAdAccounts(oAuthAccessToken, organizationId))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Not Found");
@@ -166,9 +181,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_405_getAlladAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(405);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(405);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getAllAdAccounts(oAuthAccessToken, organizationId))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Method Not Allowed");
@@ -178,9 +195,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_406_getAlladAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(406);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(406);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getAllAdAccounts(oAuthAccessToken, organizationId))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Not Acceptable");
@@ -190,9 +209,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_410_getAlladAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(410);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(410);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getAllAdAccounts(oAuthAccessToken, organizationId))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Gone");
@@ -202,9 +223,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_418_getAlladAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(418);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(418);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getAllAdAccounts(oAuthAccessToken, organizationId))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("I'm a teapot");
@@ -214,9 +237,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_429_getAlladAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(429);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(429);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getAllAdAccounts(oAuthAccessToken, organizationId))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Too Many Requests / Rate limit reached");
@@ -226,9 +251,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_500_getAlladAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(500);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(500);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getAllAdAccounts(oAuthAccessToken, organizationId))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Internal Server Error");
@@ -238,9 +265,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_503_getAlladAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(503);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(503);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getAllAdAccounts(oAuthAccessToken, organizationId))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Service Unavailable");
@@ -250,9 +279,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_1337_getAlladAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(1337);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getAllAdAccounts(oAuthAccessToken, organizationId))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Error 1337");
@@ -262,10 +293,14 @@ public class SnapAdAccountTest {
   public void test_getSpecificAdAccount_should_success()
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
           IOException, InterruptedException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(200);
-    Mockito.when(httpResponse.body()).thenReturn(SnapResponseUtils.getSnapSpecificAdAccount());
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+      Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(200);
+    Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapSpecificAdAccount());
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+   
+    
     Optional<AdAccount> optAdAccount = adAccount.getSpecificAdAccount(oAuthAccessToken, id);
     assertThat(optAdAccount.isPresent()).isTrue();
     optAdAccount.ifPresent(
@@ -317,9 +352,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_401_getSpecificAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(401);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(401);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getSpecificAdAccount(oAuthAccessToken, id))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Unauthorized - Check your API key");
@@ -329,10 +366,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_403_getSpecificAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-
-    Mockito.when(httpResponse.statusCode()).thenReturn(403);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(403);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getSpecificAdAccount(oAuthAccessToken, id))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Access Forbidden");
@@ -342,10 +380,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_404_getSpecificAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-
-    Mockito.when(httpResponse.statusCode()).thenReturn(404);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(404);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getSpecificAdAccount(oAuthAccessToken, id))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Not Found");
@@ -355,9 +394,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_405_getSpecificAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(405);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(405);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getSpecificAdAccount(oAuthAccessToken, id))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Method Not Allowed");
@@ -367,9 +408,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_406_getSpecificAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(406);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(406);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getSpecificAdAccount(oAuthAccessToken, id))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Not Acceptable");
@@ -379,9 +422,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_410_getSpecificAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(410);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(410);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getSpecificAdAccount(oAuthAccessToken, id))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Gone");
@@ -391,9 +436,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_418_getSpecificAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(418);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(418);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getSpecificAdAccount(oAuthAccessToken, id))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("I'm a teapot");
@@ -403,9 +450,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_429_getSpecificAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(429);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(429);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getSpecificAdAccount(oAuthAccessToken, id))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Too Many Requests / Rate limit reached");
@@ -415,9 +464,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_500_getSpecificAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(500);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(500);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getSpecificAdAccount(oAuthAccessToken, id))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Internal Server Error");
@@ -427,9 +478,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_503_getSpecificAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(503);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(503);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getSpecificAdAccount(oAuthAccessToken, id))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Service Unavailable");
@@ -439,9 +492,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_1337_getSpecificAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(1337);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpGet.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.getSpecificAdAccount(oAuthAccessToken, id))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Error 1337");
@@ -451,9 +506,11 @@ public class SnapAdAccountTest {
   public void test_updateAdAccount_should_success()
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
           IOException, InterruptedException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(200);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(200);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     Assertions.assertThatCode(
             () -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
         .doesNotThrowAnyException();
@@ -582,9 +639,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_401_updateAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(401);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(401);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Unauthorized - Check your API key");
@@ -594,10 +653,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_403_updateAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-
-    Mockito.when(httpResponse.statusCode()).thenReturn(403);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(403);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Access Forbidden");
@@ -607,10 +667,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_404_updateAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-
-    Mockito.when(httpResponse.statusCode()).thenReturn(404);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(404);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Not Found");
@@ -620,9 +681,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_405_updateAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(405);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(405);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Method Not Allowed");
@@ -632,9 +695,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_406_updateAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(406);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(406);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Not Acceptable");
@@ -644,9 +709,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_410_updateAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(410);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(410);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Gone");
@@ -656,9 +723,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_418_updateAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(418);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(418);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("I'm a teapot");
@@ -668,9 +737,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_429_updateAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(429);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(429);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Too Many Requests / Rate limit reached");
@@ -680,9 +751,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_500_updateAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(500);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(500);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Internal Server Error");
@@ -692,9 +765,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_503_updateAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(503);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(503);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Service Unavailable");
@@ -704,9 +779,11 @@ public class SnapAdAccountTest {
   public void should_throw_exception_1337_updateAdAccount()
       throws IOException, InterruptedException, SnapResponseErrorException,
           SnapOAuthAccessTokenException, SnapArgumentException {
-    Mockito.when(httpResponse.statusCode()).thenReturn(1337);
-    Mockito.when(httpClient.send(Mockito.isA(HttpRequest.class), Mockito.isA(BodyHandler.class)))
-        .thenReturn(httpResponse);
+      Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
+    Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+    Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
+    Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
     assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Error 1337");

@@ -1,15 +1,16 @@
 package snap.api.fundingsource;
 
 import java.io.IOException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,6 +25,7 @@ import snap.api.exceptions.SnapOAuthAccessTokenException;
 import snap.api.exceptions.SnapResponseErrorException;
 import snap.api.model.fundingsource.FundingSource;
 import snap.api.model.fundingsource.SnapHttpResponseFundingSource;
+import snap.api.utils.EntityUtilsWrapper;
 import snap.api.utils.FileProperties;
 import snap.api.utils.HttpUtils;
 
@@ -44,7 +46,9 @@ public class SnapFundingSource implements SnapFundingSourceInterface {
 
   private String endpointSpecificFundingSource;
 
-  private HttpClient httpClient;
+  private CloseableHttpClient httpClient;
+  
+  private EntityUtilsWrapper entityUtilsWrapper;
 
   private static final Logger LOGGER = LogManager.getLogger(SnapFundingSource.class);
 
@@ -56,7 +60,8 @@ public class SnapFundingSource implements SnapFundingSourceInterface {
         this.apiUrl + (String) fp.getProperties().get("api.url.funding.source.all");
     this.endpointSpecificFundingSource =
         this.apiUrl + (String) fp.getProperties().get("api.url.funding.source.one");
-    this.httpClient = HttpClient.newHttpClient();
+    this.httpClient = HttpClients.createDefault();
+    this.entityUtilsWrapper = new EntityUtilsWrapper();
   } // SnapFundingSource()
 
   /**
@@ -82,11 +87,12 @@ public class SnapFundingSource implements SnapFundingSourceInterface {
     }
     List<FundingSource> fundingSources = new ArrayList<>();
     final String url = this.endpointAllFundingSource.replace("{organization-id}", organizationID);
-    HttpRequest request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-    try {
-      HttpResponse<String> response = this.httpClient.send(request, BodyHandlers.ofString());
-      int statusCode = response.statusCode();
-      String body = response.body();
+    HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+    try(CloseableHttpResponse response = httpClient.execute(request)) {
+      int statusCode = response.getStatusLine().getStatusCode();
+      HttpEntity entity = response.getEntity();
+      if(entity != null) {
+          String body = entityUtilsWrapper.toString(entity);
       if (statusCode >= 300) {
         SnapResponseErrorException ex =
             SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
@@ -98,8 +104,8 @@ public class SnapFundingSource implements SnapFundingSourceInterface {
           mapper.readValue(body, SnapHttpResponseFundingSource.class);
       if (responseFromJson != null) {
         fundingSources = responseFromJson.getAllFundingSource();
-      }
-    } catch (IOException | InterruptedException e) {
+      }}
+    } catch (IOException e) {
       LOGGER.error("Impossible to get all funding source, organizationID = {}", organizationID, e);
     }
     return fundingSources;
@@ -128,11 +134,12 @@ public class SnapFundingSource implements SnapFundingSourceInterface {
     }
     Optional<FundingSource> result = Optional.empty();
     final String url = this.endpointSpecificFundingSource + id;
-    HttpRequest request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-    try {
-      HttpResponse<String> response = this.httpClient.send(request, BodyHandlers.ofString());
-      int statusCode = response.statusCode();
-      String body = response.body();
+    HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+    try(CloseableHttpResponse response = httpClient.execute(request)) {
+      int statusCode = response.getStatusLine().getStatusCode();
+      HttpEntity entity = response.getEntity();
+      if(entity != null) {
+          String body = entityUtilsWrapper.toString(entity);
       if (statusCode >= 300) {
         SnapResponseErrorException ex =
             SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
@@ -144,8 +151,8 @@ public class SnapFundingSource implements SnapFundingSourceInterface {
           mapper.readValue(body, SnapHttpResponseFundingSource.class);
       if (responseFromJson != null) {
         result = responseFromJson.getSpecificFundingSource();
-      }
-    } catch (IOException | InterruptedException e) {
+      }}
+    } catch (IOException e) {
       LOGGER.error("Impossible to get specific funding source, id = {}", id, e);
     }
     return result;

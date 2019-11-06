@@ -1,5 +1,6 @@
 package snap.api.ads;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,9 +27,10 @@ public interface SnapAdInterface {
 	 * @throws JsonProcessingException
 	 * @throws SnapResponseErrorException
 	 * @throws SnapArgumentException
+	 * @throws UnsupportedEncodingException 
 	 */
 	public void createAd(String oAuthAccessToken, Ad ad) throws SnapOAuthAccessTokenException, JsonProcessingException,
-			SnapResponseErrorException, SnapArgumentException;
+			SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException;
 
 	/**
 	 * Update an Ad
@@ -39,9 +41,10 @@ public interface SnapAdInterface {
 	 * @throws JsonProcessingException
 	 * @throws SnapResponseErrorException
 	 * @throws SnapArgumentException
+	 * @throws UnsupportedEncodingException 
 	 */
 	public void updateAd(String oAuthAccessToken, Ad ad) throws SnapOAuthAccessTokenException, JsonProcessingException,
-			SnapResponseErrorException, SnapArgumentException;
+			SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException;
 
 	/**
 	 * 

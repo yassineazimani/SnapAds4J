@@ -1,5 +1,6 @@
 package snap.api.campaigns;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,10 +28,11 @@ public interface SnapCampaignsInterface {
    * @throws SnapOAuthAccessTokenException
    * @throws SnapArgumentException
    * @throws JsonProcessingException
+ * @throws UnsupportedEncodingException 
    */
   public void createCampaign(String oAuthAccessToken, Campaign campaign)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-          JsonProcessingException;
+          JsonProcessingException, UnsupportedEncodingException;
 
   /**
    * Update a campaign.
@@ -42,10 +44,11 @@ public interface SnapCampaignsInterface {
    * @throws SnapOAuthAccessTokenException
    * @throws SnapArgumentException
    * @throws JsonProcessingException
+ * @throws UnsupportedEncodingException 
    */
   public void updateCampaign(String oAuthAccessToken, Campaign campaign)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-          JsonProcessingException;
+          JsonProcessingException, UnsupportedEncodingException;
 
   /**
    * Get all campaigns of an ad account.
