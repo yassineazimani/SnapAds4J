@@ -10,6 +10,17 @@
 
 	<name>api</name>
 	<url>http://maven.apache.org</url>
+	
+	<developers>
+	    <developer>
+	      <name>Yassine AZIMANI</name>
+	      <id>yassine.azimani</id>
+	      <email>yassine.azimani@hotmail.fr</email>
+	      <roles>
+	        <role>Java Developer</role>
+	      </roles>
+    	</developer>
+    </developers>
 
 	<properties>
 		<version.mockito>2.23.4</version.mockito>
@@ -83,19 +94,6 @@
 	</dependencies>
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.4</version>
-				<executions>
-					<execution>
-						<id>prepare-agent</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.eluder.coveralls</groupId>
 				<artifactId>coveralls-maven-plugin</artifactId>
