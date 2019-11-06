@@ -23,6 +23,7 @@
     </developers>
 
 	<properties>
+		<commons.cobertura.version>2.7</commons.cobertura.version>
 		<version.mockito>2.23.4</version.mockito>
 		<version.assertj>3.11.0</version.assertj>
 		<version.lombok>1.18.2</version.lombok>
@@ -100,14 +101,19 @@
 	<build>
 		<plugins>
 			<plugin>
+	            <groupId>org.codehaus.mojo</groupId>
+	            <artifactId>cobertura-maven-plugin</artifactId>
+	            <version>${commons.cobertura.version}</version>
+	            <configuration>
+	              <formats>
+	                <format>xml</format>
+	              </formats>
+	            </configuration>
+          	</plugin>
+			<plugin>
 				<groupId>org.eluder.coveralls</groupId>
 				<artifactId>coveralls-maven-plugin</artifactId>
 				<version>4.3.0</version>
-				<configuration>
-	              	<formats>
-	                	<format>xml</format>
-	              	</formats>
-              	</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
