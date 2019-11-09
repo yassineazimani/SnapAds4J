@@ -63,7 +63,7 @@ public interface SnapCampaignsInterface {
    * @return all campaigns {@link #Campaign}
    */
   public List<Campaign> getAllCampaigns(String oAuthAccessToken, String adAccountId)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;;
+      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
 
   /**
    * Get specific campaign.
@@ -78,7 +78,7 @@ public interface SnapCampaignsInterface {
    * @return campaign {@link #Campaign}
    */
   public Optional<Campaign> getSpecificCampaign(String oAuthAccessToken, String id)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;;
+      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
 
   /**
    * Delete a specific campaign.
@@ -92,5 +92,5 @@ public interface SnapCampaignsInterface {
    * @throws SnapArgumentException
    */
   public void deleteCampaign(String oAuthAccessToken, String id)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;;
+      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
 } // SnapCampaignsInterface

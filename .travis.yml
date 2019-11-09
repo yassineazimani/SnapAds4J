@@ -1,5 +1,9 @@
 language: java
 jdk:
   - openjdk8
+branches:
+only: 
+  - master
+  - develop
 after_success:
   - mvn clean test cobertura:cobertura coveralls:report
