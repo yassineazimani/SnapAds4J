@@ -1,13 +1,17 @@
 package snap.api.utils;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -90,6 +94,24 @@ public class HttpUtils {
 	request.addHeader("Authorization", "Bearer " + oAuthAccessToken);
 	return request;
     } // preparePostRequest()
+    
+    /**
+     * Prepare POST request HTTP (Upload file)
+     * @param url
+     * @param oAuthAccessToken
+     * @param fileToUpload
+     * @return
+     */
+    public static HttpPost preparePostUpload(String url, String oAuthAccessToken, File fileToUpload) {
+	HttpPost request = new HttpPost(url);
+	request.addHeader("Content-Type", "multipart/form-data");
+	request.addHeader("Authorization", "Bearer " + oAuthAccessToken);
+	MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+	builder.addBinaryBody(FileUtils.getFilenameWithoutExtension(fileToUpload), fileToUpload, ContentType.MULTIPART_FORM_DATA, fileToUpload.getName());
+	HttpEntity multipart = builder.build();
+	request.setEntity(multipart);
+	return request;
+    }// preparePostUpload()
 
     /**
      * Prepare PUT request HTTP
