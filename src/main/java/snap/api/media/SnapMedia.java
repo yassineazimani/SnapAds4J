@@ -49,6 +49,8 @@ public class SnapMedia implements SnapMediaInterface {
     private String endpointCreation;
     
     private String endpointUploadVideo;
+    
+    private String endpointUploadImage;
 
     private final long maxLengthVideo;
 
@@ -67,6 +69,7 @@ public class SnapMedia implements SnapMediaInterface {
 	this.apiUrl = (String) fp.getProperties().get("api.url");
 	this.endpointCreation = this.apiUrl + (String) fp.getProperties().get("api.url.media.create");
 	this.endpointUploadVideo = this.apiUrl + fp.getProperties().getProperty("api.url.media.upload.video");
+	this.endpointUploadImage = this.apiUrl + fp.getProperties().getProperty("api.url.media.upload.image");
 	this.httpClient = HttpClients.createDefault();
 	this.entityUtilsWrapper = new EntityUtilsWrapper();
 	this.minWidthAppIcon = Integer.valueOf((String) fp.getProperties().get("api.app.icon.min.width"));
@@ -131,7 +134,21 @@ public class SnapMedia implements SnapMediaInterface {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
+	if (StringUtils.isEmpty(mediaId)) {
+	    throw new SnapArgumentException("Media ID is missing");
+	}
 	checkUploadMedia(fileImage, MediaTypeEnum.IMAGE, typeImage);
+	final String url = this.endpointUploadImage.replace("{media_id}", mediaId);
+	HttpPost request = HttpUtils.preparePostUpload(url, oAuthAccessToken, fileImage);
+	try(CloseableHttpResponse response = httpClient.execute(request)){
+	    int statusCode = response.getStatusLine().getStatusCode();
+	    if (statusCode >= 300) {
+		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		throw ex;
+	    }
+	}catch(IOException e) {
+	    LOGGER.error("Impossible to upload media image, mediaId = {}", mediaId, e);
+	}
     }// uploadMediaImage()
 
     @Override
@@ -291,7 +308,7 @@ public class SnapMedia implements SnapMediaInterface {
 	    // Must be square (ratio 1:1) :
 	    try {
 		if (!FileUtils.testEqualityWidthHeight(mediaFile)) {
-		    sb.append("Media parameter is missing,");
+		    sb.append("Media Image must have a ratio 1:1,");
 		}
 	    } catch (IOException e) {
 		sb.append("Impossible to check media image file,");
@@ -324,8 +341,8 @@ public class SnapMedia implements SnapMediaInterface {
 	if (sb != null) {
 	    // Must be only png, jpg or jpeg image :
 	    if (!FileUtils.getExtensionFile(mediaFile).equalsIgnoreCase("png")
-		    || !FileUtils.getExtensionFile(mediaFile).equalsIgnoreCase("jpg")
-		    || !FileUtils.getExtensionFile(mediaFile).equalsIgnoreCase("jpeg")) {
+		    && !FileUtils.getExtensionFile(mediaFile).equalsIgnoreCase("jpg")
+		    && !FileUtils.getExtensionFile(mediaFile).equalsIgnoreCase("jpeg")) {
 		sb.append("Media Image must be a (png/jpg/jpeg) file,");
 	    }
 	    // Minimum resolution - 1080 x 1920 pixels :

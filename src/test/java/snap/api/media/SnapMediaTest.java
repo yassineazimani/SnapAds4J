@@ -23,6 +23,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import snap.api.enums.MediaTypeEnum;
+import snap.api.enums.MediaTypeImageEnum;
 import snap.api.exceptions.SnapArgumentException;
 import snap.api.exceptions.SnapOAuthAccessTokenException;
 import snap.api.exceptions.SnapResponseErrorException;
@@ -335,6 +336,76 @@ public class SnapMediaTest {
 	assertThatThrownBy(() -> snapMedia.uploadMediaVideo(oAuthAccessToken, null, null)).isInstanceOf(SnapArgumentException.class)
 	.hasMessage("Media ID is missing");
     }// test_upload_media_video_should_throw_SnapArgumentException_4()
+    
+    @Test
+    public void test_upload_media_image_should_success_1() throws SnapArgumentException, ClientProtocolException, IOException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	Optional<File> optFile = new FileUtils().getFileFromResources("images/app-icon-1.png", "app-icon-1.png");
+	optFile.ifPresent((mediaFile) -> {
+	    Assertions.assertThatCode(() -> snapMedia.uploadMediaImage(oAuthAccessToken, mediaID, mediaFile, MediaTypeImageEnum.APP_ICON)).doesNotThrowAnyException();
+	});
+	FileUtils.deleteFile("app-icon-1.png");
+    }// test_upload_media_image_should_success_1()
+    
+    @Test
+    public void test_upload_media_image_should_success_2() throws SnapArgumentException, ClientProtocolException, IOException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	Optional<File> optFile = new FileUtils().getFileFromResources("images/app-icon-2.jpg", "app-icon-2.jpg");
+	optFile.ifPresent((mediaFile) -> {
+	    Assertions.assertThatCode(() -> snapMedia.uploadMediaImage(oAuthAccessToken, mediaID, mediaFile, MediaTypeImageEnum.TOP_SNAP)).doesNotThrowAnyException();
+	});
+	FileUtils.deleteFile("app-icon-2.jpg");
+    }// test_upload_media_image_should_success_2()
+    
+    @Test
+    public void test_upload_media_image_should_success_3() throws SnapArgumentException, ClientProtocolException, IOException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	Optional<File> optFile = new FileUtils().getFileFromResources("images/app-icon-4.png", "app-icon-4.png");
+	optFile.ifPresent((mediaFile) -> {
+	    Assertions.assertThatCode(() -> snapMedia.uploadMediaImage(oAuthAccessToken, mediaID, mediaFile, MediaTypeImageEnum.TOP_SNAP)).doesNotThrowAnyException();
+	});
+	FileUtils.deleteFile("app-icon-4.png");
+    }// test_upload_media_image_should_success_3()
+    
+    @Test
+    public void test_upload_media_image_should_success_4() throws SnapArgumentException, ClientProtocolException, IOException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	Optional<File> optFile = new FileUtils().getFileFromResources("images/app-icon-5.jpeg", "app-icon-5.jpg");
+	optFile.ifPresent((mediaFile) -> {
+	    Assertions.assertThatCode(() -> snapMedia.uploadMediaImage(oAuthAccessToken, mediaID, mediaFile, MediaTypeImageEnum.TOP_SNAP)).doesNotThrowAnyException();
+	});
+	FileUtils.deleteFile("app-icon-5.jpeg");
+    }// test_upload_media_image_should_success_4()
+    
+    @Test
+    public void test_upload_media_image_should_throw_SnapOAuthAccessTokenException_1() {
+	Optional<File> optFile = new FileUtils().getFileFromResources("images/app-icon-3.jpeg", "app-icon-3.jpeg");
+	optFile.ifPresent((mediaFile) -> {
+	assertThatThrownBy(() -> snapMedia.uploadMediaImage(null, mediaID, mediaFile, MediaTypeImageEnum.APP_ICON))
+		.isInstanceOf(SnapOAuthAccessTokenException.class)
+		.hasMessage("The OAuthAccessToken must to be given");
+	});
+	FileUtils.deleteFile("app-icon-3.jpeg");
+    }// test_upload_media_image_should_throw_SnapOAuthAccessTokenException_1()
+
+    @Test
+    public void test_upload_media_image_should_throw_SnapOAuthAccessTokenException_2() {
+	Optional<File> optFile = new FileUtils().getFileFromResources("images/app-icon-3.jpeg", "app-icon-3.jpeg");
+	optFile.ifPresent((mediaFile) -> {
+	assertThatThrownBy(() -> snapMedia.uploadMediaImage("", mediaID, mediaFile, MediaTypeImageEnum.TOP_SNAP))
+		.isInstanceOf(SnapOAuthAccessTokenException.class)
+		.hasMessage("The OAuthAccessToken must to be given");
+	});
+	FileUtils.deleteFile("app-icon-3.jpeg");
+    }// test_upload_media_image_should_throw_SnapOAuthAccessTokenException_2()
     
     /**
      * Initialize a creative media
