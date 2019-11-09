@@ -47,5 +47,11 @@ public class CreativeMedia {
     private String name;
     
     private MediaTypeEnum type;
+    
+    /**
+     * Doesn't know contents, it doesn't exist in the documentation API.
+     */
+    @JsonProperty("lens_package_metadata")
+    private String lensPackageMetadata;
 
 }// CreativeMedia

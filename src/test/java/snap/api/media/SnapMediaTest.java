@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -20,7 +21,9 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import snap.api.enums.MediaTypeEnum;
+import snap.api.exceptions.SnapArgumentException;
 import snap.api.exceptions.SnapOAuthAccessTokenException;
+import snap.api.exceptions.SnapResponseErrorException;
 import snap.api.model.media.CreativeMedia;
 import snap.api.utils.EntityUtilsWrapper;
 
@@ -53,12 +56,15 @@ public class SnapMediaTest {
     
     private CreativeMedia media;
     
+    private CreativeMedia mediaFail;
+    
     @Before
     public void setUp() {
       MockitoAnnotations.initMocks(this);
       snapMedia.setHttpClient(httpClient);
       snapMedia.setEntityUtilsWrapper(entityUtilsWrapper);
       media = initializeCreativeMedia("Media A - Video", MediaTypeEnum.VIDEO);
+      mediaFail = initializeCreativeMedia("Media A - Video", MediaTypeEnum.VIDEO);
     } // setUp()
     
     @Test
@@ -81,6 +87,187 @@ public class SnapMediaTest {
 		.hasMessage("The OAuthAccessToken must to be given");
     }// test_create_ad_should_throw_SnapOAuthAccessTokenException_2()
 
+    @Test
+    public void test_create_media_should_throw_SnapArgumentException_1() {
+	assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, null)).isInstanceOf(SnapArgumentException.class)
+		.hasMessage("Media parameter is missing");
+    }// test_create_ad_should_throw_SnapOAuthAccessTokenException_1()
+    
+    @Test
+    public void test_create_media_should_throw_SnapArgumentException_2() {
+	mediaFail.setName(null);
+	assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, mediaFail)).isInstanceOf(SnapArgumentException.class)
+		.hasMessage("The media's name is required");
+    }// test_create_ad_should_throw_SnapOAuthAccessTokenException_2()
+    
+    @Test
+    public void test_create_media_should_throw_SnapArgumentException_3() {
+	mediaFail.setName("");
+	assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, mediaFail)).isInstanceOf(SnapArgumentException.class)
+		.hasMessage("The media's name is required");
+    }// test_create_ad_should_throw_SnapOAuthAccessTokenException_3()
+    
+    @Test
+    public void test_create_media_should_throw_SnapArgumentException_4() {
+	mediaFail.setType(null);
+	assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, mediaFail)).isInstanceOf(SnapArgumentException.class)
+		.hasMessage("The media's type is required");
+    }// test_create_ad_should_throw_SnapOAuthAccessTokenException_4()
+    
+    @Test
+    public void test_create_media_should_throw_SnapArgumentException_5() {
+	mediaFail.setAdAccountId(null);
+	assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, mediaFail)).isInstanceOf(SnapArgumentException.class)
+		.hasMessage("The Ad Account ID is required");
+    }// test_create_ad_should_throw_SnapOAuthAccessTokenException_5()
+    
+    @Test
+    public void test_create_media_should_throw_SnapArgumentException_6() {
+	mediaFail.setAdAccountId("");
+	assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, mediaFail)).isInstanceOf(SnapArgumentException.class)
+		.hasMessage("The Ad Account ID is required");
+    }// test_create_ad_should_throw_SnapOAuthAccessTokenException_6()
+    
+    @Test
+    public void test_create_media_should_throw_IOException() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
+	snapMedia.createMedia(oAuthAccessToken, media);
+    }// test_create_media_should_throw_IOException()
+    
+    @Test
+    public void should_throw_exception_401_create_media()
+        throws IOException, InterruptedException, SnapResponseErrorException,
+            SnapOAuthAccessTokenException, SnapArgumentException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+  	Mockito.when(statusLine.getStatusCode()).thenReturn(401);
+  	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+      assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, media))
+          .isInstanceOf(SnapResponseErrorException.class)
+          .hasMessage("Unauthorized - Check your API key");
+    } // should_throw_exception_401_create_media()
+
+    @Test
+    public void should_throw_exception_403_create_media()
+        throws IOException, InterruptedException, SnapResponseErrorException,
+            SnapOAuthAccessTokenException, SnapArgumentException {
+
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+  	Mockito.when(statusLine.getStatusCode()).thenReturn(403);
+  	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+      assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, media))
+          .isInstanceOf(SnapResponseErrorException.class)
+          .hasMessage("Access Forbidden");
+    } // should_throw_exception_403_create_media()
+
+    @Test
+    public void should_throw_exception_404_create_media()
+        throws IOException, InterruptedException, SnapResponseErrorException,
+            SnapOAuthAccessTokenException, SnapArgumentException {
+
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+  	Mockito.when(statusLine.getStatusCode()).thenReturn(404);
+  	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+      assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, media))
+          .isInstanceOf(SnapResponseErrorException.class)
+          .hasMessage("Not Found");
+    } // should_throw_exception_404_create_media()
+
+    @Test
+    public void should_throw_exception_405_create_media()
+        throws IOException, InterruptedException, SnapResponseErrorException,
+            SnapOAuthAccessTokenException, SnapArgumentException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+  	Mockito.when(statusLine.getStatusCode()).thenReturn(405);
+  	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+      assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, media))
+          .isInstanceOf(SnapResponseErrorException.class)
+          .hasMessage("Method Not Allowed");
+    } // should_throw_exception_405_create_media()
+
+    @Test
+    public void should_throw_exception_406_create_media()
+        throws IOException, InterruptedException, SnapResponseErrorException,
+            SnapOAuthAccessTokenException, SnapArgumentException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+  	Mockito.when(statusLine.getStatusCode()).thenReturn(406);
+  	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+      assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, media))
+          .isInstanceOf(SnapResponseErrorException.class)
+          .hasMessage("Not Acceptable");
+    } // should_throw_exception_406_create_media()
+
+    @Test
+    public void should_throw_exception_410_create_media()
+        throws IOException, InterruptedException, SnapResponseErrorException,
+            SnapOAuthAccessTokenException, SnapArgumentException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+  	Mockito.when(statusLine.getStatusCode()).thenReturn(410);
+  	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+      assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, media))
+          .isInstanceOf(SnapResponseErrorException.class)
+          .hasMessage("Gone");
+    } // should_throw_exception_410_create_media()
+
+    @Test
+    public void should_throw_exception_418_create_media()
+        throws IOException, InterruptedException, SnapResponseErrorException,
+            SnapOAuthAccessTokenException, SnapArgumentException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+  	Mockito.when(statusLine.getStatusCode()).thenReturn(418);
+  	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+      assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, media))
+          .isInstanceOf(SnapResponseErrorException.class)
+          .hasMessage("I'm a teapot");
+    } // should_throw_exception_418_create_media()
+
+    @Test
+    public void should_throw_exception_429_create_media()
+        throws IOException, InterruptedException, SnapResponseErrorException,
+            SnapOAuthAccessTokenException, SnapArgumentException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+  	Mockito.when(statusLine.getStatusCode()).thenReturn(429);
+  	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+      assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, media))
+          .isInstanceOf(SnapResponseErrorException.class)
+          .hasMessage("Too Many Requests / Rate limit reached");
+    } // should_throw_exception_429_create_media()
+
+    @Test
+    public void should_throw_exception_500_create_media()
+        throws IOException, InterruptedException, SnapResponseErrorException,
+            SnapOAuthAccessTokenException, SnapArgumentException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+  	Mockito.when(statusLine.getStatusCode()).thenReturn(500);
+  	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+      assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, media))
+          .isInstanceOf(SnapResponseErrorException.class)
+          .hasMessage("Internal Server Error");
+    } // should_throw_exception_500_create_media()
+
+    @Test
+    public void should_throw_exception_503_create_media()
+        throws IOException, InterruptedException, SnapResponseErrorException,
+            SnapOAuthAccessTokenException, SnapArgumentException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+  	Mockito.when(statusLine.getStatusCode()).thenReturn(503);
+  	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+      assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, media))
+          .isInstanceOf(SnapResponseErrorException.class)
+          .hasMessage("Service Unavailable");
+    } // should_throw_exception_503_create_media()
+
+    @Test
+    public void should_throw_exception_1337_create_media()
+        throws IOException, InterruptedException, SnapResponseErrorException,
+            SnapOAuthAccessTokenException, SnapArgumentException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+  	Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
+  	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+      assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, media))
+          .isInstanceOf(SnapResponseErrorException.class)
+          .hasMessage("Error 1337");
+    } // should_throw_exception_1337_create_media()
+    
     /**
      * Initialize a creative media
      * @param name Name

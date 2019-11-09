@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -120,6 +121,12 @@ public class SnapAdTest {
 	assertThatThrownBy(() -> ad.createAd(oAuthAccessToken, adModelCreateFailure))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("Ad Squad ID parameter is not given");
     }// test_create_ad_should_throw_SnapArgumentException_2()
+    
+    @Test
+    public void test_create_ad_should_throw_IOException() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
+	ad.createAd(oAuthAccessToken, adModel);
+    }// test_create_ad_should_throw_IOException()
 
     @Test
     public void test_create_ad_should_throw_SnapArgumentException_3() {
@@ -273,6 +280,12 @@ public class SnapAdTest {
 	assertThatThrownBy(() -> ad.updateAd("", adModel)).isInstanceOf(SnapOAuthAccessTokenException.class)
 		.hasMessage("The OAuthAccessToken must to be given");
     }// test_update_ad_should_throw_SnapOAuthAccessTokenException_2()
+    
+    @Test
+    public void test_update_ad_should_throw_IOException() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpPut.class)))).thenThrow(IOException.class);
+	ad.updateAd(oAuthAccessToken, adModelUpdate);
+    }// test_update_ad_should_throw_IOException()
 
     @Test
     public void test_update_ad_should_throw_SnapArgumentException_1() {
@@ -448,6 +461,12 @@ public class SnapAdTest {
 	assertThatThrownBy(() -> ad.deleteAd("", idAdToDelete)).isInstanceOf(SnapOAuthAccessTokenException.class)
 		.hasMessage("The OAuthAccessToken must to be given");
     } // test_delete_ad_should_throw_SnapOAuthAccessTokenException_2()
+    
+    @Test
+    public void test_delete_ad_should_throw_IOException() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpDelete.class)))).thenThrow(IOException.class);
+	ad.deleteAd(oAuthAccessToken, idAdToDelete);
+    }// test_delete_ad_should_throw_IOException()
 
     @Test
     public void test_delete_ad_should_throw_SnapArgumentException_1() {
@@ -605,6 +624,12 @@ public class SnapAdTest {
 	assertThatThrownBy(() -> ad.getSpecificAd("", id)).isInstanceOf(SnapOAuthAccessTokenException.class)
 		.hasMessage("The OAuthAccessToken must to be given");
     } // test_getSpecificAd_should_throw_SnapOAuthAccessTokenException_2()
+    
+    @Test
+    public void test_getSpecificAd_should_throw_IOException() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
+	ad.getSpecificAd(oAuthAccessToken, id);
+    }// test_getSpecificAd_should_throw_IOException()
 
     @Test
     public void should_throw_exception_401_getSpecificAd() throws IOException, InterruptedException,
@@ -767,6 +792,12 @@ public class SnapAdTest {
 	assertThatThrownBy(() -> ad.getAllAdsFromAdSquad("", squadId)).isInstanceOf(SnapOAuthAccessTokenException.class)
 		.hasMessage("The OAuthAccessToken must to be given");
     }// test_getAllAds_AdSquad_should_throw_SnapOAuthAccessTokenException_2()
+    
+    @Test
+    public void test_getAllAds_AdSquad_should_throw_IOException() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
+	ad.getAllAdsFromAdSquad(oAuthAccessToken, squadId);
+    }// test_getAllAds_AdSquad_should_throw_IOException()
 
     @Test
     public void test_getAllAds_AdSquad_should_throw_SnapArgumentException_1() {
@@ -941,6 +972,12 @@ public class SnapAdTest {
 	assertThatThrownBy(() -> ad.getAllAdsFromAdAccount("", accountId))
 		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
     }// test_getAllAds_AdAccount_should_throw_SnapOAuthAccessTokenException_2()
+    
+    @Test
+    public void test_getAllAds_should_throw_IOException() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
+	ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId);
+    }// test_getAllAds_should_throw_IOException()
 
     @Test
     public void test_getAllAds_AdAccount_should_throw_SnapArgumentException_1() {

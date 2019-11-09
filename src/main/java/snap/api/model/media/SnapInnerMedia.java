@@ -1,14 +1,13 @@
-package snap.api.model.ads;
+package snap.api.model.media;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import snap.api.model.ads.Ad;
 
 /**
- * SnapInnerAdAccount
+ * SnapInnerMedia
  *
  * @author Yassine
  */
@@ -16,8 +15,8 @@ import snap.api.model.ads.Ad;
 @Setter
 @NoArgsConstructor
 @JsonIgnoreProperties(value = { "sub_request_status" })
-public class SnapInnerAd {
+public class SnapInnerMedia {
+    
+    private CreativeMedia media;
 
-    private Ad ad;
-
-}// SnapInnerAd
+}// SnapInnerMedia

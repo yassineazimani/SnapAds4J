@@ -15,14 +15,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SnapHttpResponseAd {
 
-	private List<SnapInnerAd> ads;
+    private List<SnapInnerAd> ads;
 
-	public Optional<Ad> getSpecificAd() {
-		return (CollectionUtils.isNotEmpty(ads) && ads.get(0) != null) ? Optional.of(ads.get(0).getAd())
-				: Optional.empty();
-	}// getSpecificAd()
+    public Optional<Ad> getSpecificAd() {
+	return (CollectionUtils.isNotEmpty(ads) && ads.get(0) != null) ? Optional.of(ads.get(0).getAd())
+		: Optional.empty();
+    }// getSpecificAd()
 
-	public List<Ad> getAllAd() {
-		return ads.stream().map(org -> org.getAd()).collect(Collectors.toList());
-	}// getAllAd()
+    public List<Ad> getAllAd() {
+	return ads.stream().map(org -> org.getAd()).collect(Collectors.toList());
+    }// getAllAd()
 }// SnapHttpResponseAd

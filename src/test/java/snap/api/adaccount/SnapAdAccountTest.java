@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
@@ -120,6 +121,12 @@ public class SnapAdAccountTest {
         .isInstanceOf(SnapOAuthAccessTokenException.class)
         .hasMessage("The OAuthAccessToken must to be given");
   } // test_getAlladAccount_should_throw_SnapOAuthAccessTokenException_2()
+  
+  @Test
+  public void test_getAlladAccount_ad_should_throw_IOException() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
+	adAccount.getAllAdAccounts(oAuthAccessToken, organizationId);
+  }// test_getAlladAccount_ad_should_throw_IOException()
 
   @Test
   public void test_getAlladAccount_should_throw_SnapArgumentException_1() {
@@ -333,6 +340,12 @@ public class SnapAdAccountTest {
         .isInstanceOf(SnapOAuthAccessTokenException.class)
         .hasMessage("The OAuthAccessToken must to be given");
   } // test_getSpecificAdAccount_should_throw_SnapOAuthAccessTokenException_2()
+  
+  @Test
+  public void test_getSpecificAdAccount_ad_should_throw_IOException() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
+	adAccount.getSpecificAdAccount(oAuthAccessToken, id);
+  }// test_getSpecificAdAccount_ad_should_throw_IOException()
 
   @Test
   public void test_getSpecificAdAccount_should_throw_SnapArgumentException_1() {
@@ -529,6 +542,12 @@ public class SnapAdAccountTest {
         .isInstanceOf(SnapOAuthAccessTokenException.class)
         .hasMessage("The OAuthAccessToken must to be given");
   } // test_updateAdAccount_should_throw_SnapOAuthAccessTokenException_2()
+  
+  @Test
+  public void test_updateAdAccount_ad_should_throw_IOException() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpPut.class)))).thenThrow(IOException.class);
+	adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount());
+  }// test_updateAdAccount_ad_should_throw_IOException()
 
   @Test
   public void test_updateAdAccount_should_throw_SnapArgumentException_1() {

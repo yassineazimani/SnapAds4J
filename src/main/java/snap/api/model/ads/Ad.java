@@ -16,32 +16,32 @@ import snap.api.model.thirdparty.SwipeTrackingUrl;
 @Setter
 public class Ad {
 
-	private String id;
-	
-	private String name;
-	
-	@JsonProperty("created_at")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-	private Date createdAt;
-	
-	@JsonProperty("updated_at")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-	private Date updatedAt;
-	
-	private StatusEnum status;
-	
-	private AdTypeEnum type;
+    private String id;
 
-	@JsonProperty("ad_squad_id")
-	private String adSquadId;
-	
-	@JsonProperty("creative_id")
-	private String creativeId;
-	
-	@JsonProperty("third_party_on_swipe_tracking_urls")
-	private SwipeTrackingUrl thirdPartyOnSwipeTrackingUrls;
-	
-	@JsonProperty("third_party_paid_impression_tracking_urls")
-	private PaidImpressionTrackingUrl thirdPartyPaidImpressionTrackingUrls;
+    private String name;
+
+    @JsonProperty("created_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private Date createdAt;
+
+    @JsonProperty("updated_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private Date updatedAt;
+
+    private StatusEnum status;
+
+    private AdTypeEnum type;
+
+    @JsonProperty("ad_squad_id")
+    private String adSquadId;
+
+    @JsonProperty("creative_id")
+    private String creativeId;
+
+    @JsonProperty("third_party_on_swipe_tracking_urls")
+    private SwipeTrackingUrl thirdPartyOnSwipeTrackingUrls;
+
+    @JsonProperty("third_party_paid_impression_tracking_urls")
+    private PaidImpressionTrackingUrl thirdPartyPaidImpressionTrackingUrls;
 
 }// Ad
