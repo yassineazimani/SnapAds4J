@@ -1,6 +1,6 @@
 package snap.api.model.media;
 
-import java.util.Optional;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,10 +9,19 @@ import lombok.Setter;
 @Setter
 public class SnapHttpResponseUploadMedia {
 
-    private SnapInnerMedia result;
-
-    public Optional<CreativeMedia> getResultUploadMedia() {
-	return Optional.ofNullable(result.getMedia());
-    }// getResultUploadMedia()
+    @JsonProperty("request_status")
+    private String requestStatus;
+    
+    @JsonProperty("request_id")
+    private String requestId;
+    
+    @JsonProperty("upload_id")
+    private String uploadId;
+    
+    @JsonProperty("add_path")
+    private String addPath;
+    
+    @JsonProperty("finalize_path")
+    private String finalizePath;
 
 }// SnapHttpResponseMedia

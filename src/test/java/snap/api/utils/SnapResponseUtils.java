@@ -286,4 +286,32 @@ public class SnapResponseUtils {
 	  		"  ]\r\n" + 
 	  		"}";
   }// getSnapAllAdForAdAccount()
+  
+  public static String getSnapLargeMediaUploadMetaResponses() {
+      return "{\r\n" + 
+      	"    \"request_status\":\"SUCCESS\",\r\n" + 
+      	"    \"request_id\":\"57e56c0b00ff0e1b43229b96350001737e616473617069736300016275696c642d62646338336131372d312d31352d3100010109\",\r\n" + 
+      	"    \"upload_id\":\"cffc3975-f2b3-40d2-bf81-f0e7d97b9af5\",\r\n" + 
+      	"    \"add_path\":\"/us/v1/media/7bd44f53-5de7-41c4-90c7-50633e5dbb7e/multipart-upload-v2?action=ADD\",\r\n" + 
+      	"    \"finalize_path\":\"/v1/media/7bd44f53-5de7-41c4-90c7-50633e5dbb7e/multipart-upload-v2?action=FINALIZE\"\r\n" + 
+      	"  }";
+  }// getSnapLargeMediaUploadMetaResponses()
+  
+  public static String getSnapLargeMediaUpload() {
+      return "{\r\n" + 
+      	"  \"result\": {\r\n" + 
+      	"    \"id\": \"7536bbc5-0074-4dc4-b654-5ba9cd9f9441\",\r\n" + 
+      	"    \"updated_at\": \"2016-09-23T17:59:23.826Z\",\r\n" + 
+      	"    \"created_at\": \"2016-09-23T17:51:07.799Z\",\r\n" + 
+      	"    \"name\": \"Media Chunked - Video\",\r\n" + 
+      	"    \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"    \"type\": \"VIDEO\",\r\n" + 
+      	"    \"media_status\": \"READY\",\r\n" + 
+      	"    \"file_name\": \"lfv.mp4\",\r\n" + 
+      	"    \"download_link\": \"https://storage.googleapis.com/ad-manager-creatives-production-us/7536bbc5-0074-4dc4-b654-5ba9cd9f9441/b195bd7c-aa7b-44c4-83a5-2c12e77a8784.mov\"\r\n" + 
+      	"  },\r\n" + 
+      	"  \"request_status\": \"SUCCESS\",\r\n" + 
+      	"  \"request_id\": \"57e56d7a00ff0b82bd232ea3d40001737e616473617069736300016275696c642d62646338336131372d312d31352d3100010134\"\r\n" + 
+      	"}";
+  }// getSnapLargeMediaUpload()
 } // SnapResponseUtils

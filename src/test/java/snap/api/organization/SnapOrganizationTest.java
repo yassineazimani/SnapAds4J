@@ -267,6 +267,7 @@ public class SnapOrganizationTest {
 	assertThat(org.getType()).isEqualTo(TypeOrganizationEnum.ENTERPRISE);
 	assertThat(org.getState()).isEqualTo("ACTIVE");
 	assertThat(org.getConfigurationSettings()).isNotNull();
+	assertThat(org.getConfigurationSettings().toString()).isNotNull();
 	assertThat(org.getConfigurationSettings().isNotificationsEnabled()).isTrue();
 	assertThat(org.getRoles()).isNotNull();
 	assertThat(org.getRoles().size()).isEqualTo(1);

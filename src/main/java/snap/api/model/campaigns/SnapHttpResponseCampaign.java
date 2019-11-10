@@ -9,6 +9,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import snap.api.model.SnapHttpResponse;
 
 /**
  * SnapHttpResponseCampaign
@@ -18,7 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SnapHttpResponseCampaign {
+public class SnapHttpResponseCampaign extends SnapHttpResponse{
 
   private List<SnapInnerCampaign> campaigns;
 

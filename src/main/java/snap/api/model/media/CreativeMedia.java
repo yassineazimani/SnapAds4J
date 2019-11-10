@@ -21,7 +21,7 @@ import snap.api.enums.MediaTypeEnum;
 @ToString
 public class CreativeMedia {
     
-    /** Ad account ID */
+    /** ID */
     @JsonProperty("id")
     private String id;
     
@@ -47,6 +47,9 @@ public class CreativeMedia {
     private String name;
     
     private MediaTypeEnum type;
+    
+    @JsonProperty("file_name")
+    private String fileName;
     
     /**
      * Doesn't know contents, it doesn't exist in the documentation API.

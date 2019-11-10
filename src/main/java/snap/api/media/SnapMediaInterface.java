@@ -66,14 +66,17 @@ public interface SnapMediaInterface {
      * @see
      * @param oAuthAccessToken
      * @param mediaId
-     * @param media
+     * @param filename
+     * @param chunks
+     * @return 
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
+     * @return
      */
-    public void uploadLargeMedia(String oAuthAccessToken, String mediaId, CreativeMedia media) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    public Optional<String> uploadLargeMedia(String oAuthAccessToken, String mediaId, String filename, List<File> chunks) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
     JsonProcessingException, UnsupportedEncodingException;
     
     /**

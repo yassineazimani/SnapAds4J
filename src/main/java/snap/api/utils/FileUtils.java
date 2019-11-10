@@ -8,11 +8,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class FileUtils {
@@ -112,4 +114,20 @@ public class FileUtils {
     public static boolean deleteFile(String fileName) {
 	return new File(fileName).delete();
     }// deleteFile()
+    
+    /**
+     * Get length of large media (bytes)
+     * @param chunks
+     * @return length
+     */
+    public static long getLengthLargeMedia(List<File> chunks) {
+	long total = 0l;
+	if(CollectionUtils.isNotEmpty(chunks)) {
+	    for(File chunk : chunks) {
+		total += chunk.length();
+	    }
+	}
+	return total;
+    }// getLengthLargeMedia()
+    
 }// FileUtils

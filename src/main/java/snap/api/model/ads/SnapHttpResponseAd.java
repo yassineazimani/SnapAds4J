@@ -9,11 +9,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import snap.api.model.SnapHttpResponse;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class SnapHttpResponseAd {
+public class SnapHttpResponseAd extends SnapHttpResponse{
 
     private List<SnapInnerAd> ads;
 

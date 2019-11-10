@@ -8,10 +8,11 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import lombok.Getter;
 import lombok.Setter;
+import snap.api.model.SnapHttpResponse;
 
 @Getter
 @Setter
-public class SnapHttpResponseMedia {
+public class SnapHttpResponseMedia extends SnapHttpResponse{
 
     private List<SnapInnerMedia> media;
 
