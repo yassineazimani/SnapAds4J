@@ -1,6 +1,6 @@
 # Marketing API for Java (unofficial)
 
-[![Build Status](https://travis-ci.org/yassineazimani/snap-api.svg?branch=develop)](https://travis-ci.org/yassineazimani/snap-api)
+[![Build Status](https://travis-ci.org/yassineazimani/snap-api.svg?branch=develop&kill_cache=1)](https://travis-ci.org/yassineazimani/snap-api)
 
 [![Coverage](https://coveralls.io/repos/github/yassineazimani/snap-api/badge.svg?branch=develop&kill_cache=1)](https://coveralls.io/github/yassineazimani/snap-api)
 
