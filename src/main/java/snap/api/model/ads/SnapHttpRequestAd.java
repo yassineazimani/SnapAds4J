@@ -10,13 +10,13 @@ import lombok.Setter;
 @Setter
 public class SnapHttpRequestAd {
 
-	private List<Ad> ads;
+    private List<Ad> ads;
 
-	  public SnapHttpRequestAd() {
-	    this.ads = new ArrayList<>();
-	  }// SnapHttpRequestAd()
+    public SnapHttpRequestAd() {
+	this.ads = new ArrayList<>();
+    }// SnapHttpRequestAd()
 
-	  public void addAd(Ad ad) {
-	    this.ads.add(ad);
-	  }// addAd()
+    public void addAd(Ad ad) {
+	this.ads.add(ad);
+    }// addAd()
 }// SnapHttpRequestAd

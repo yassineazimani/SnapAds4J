@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -477,4 +478,16 @@ public class SnapFundingSourceTest {
         .isInstanceOf(SnapResponseErrorException.class)
         .hasMessage("Error 1337");
   } // should_throw_exception_1337_getSpecificFundingSource()
+  
+  @Test
+  public void test_getAllFundingSource_should_throw_IOException() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
+	fundingSource.getAllFundingSource(oAuthAccessToken, id);
+  }// test_getAllFundingSource_should_throw_IOException()
+  
+  @Test
+  public void test_getSpecificFundingSource_should_throw_IOException() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
+	fundingSource.getSpecificFundingSource(oAuthAccessToken, id);
+  }// test_getSpecificFundingSource_should_throw_IOException()
 } // SnapFundingSourceTest

@@ -15,9 +15,9 @@ import snap.api.model.ads.Ad;
 @Getter
 @Setter
 @NoArgsConstructor
-@JsonIgnoreProperties(value = {"sub_request_status"})
+@JsonIgnoreProperties(value = { "sub_request_status" })
 public class SnapInnerAd {
 
-	private Ad ad;
-	
+    private Ad ad;
+
 }// SnapInnerAd

@@ -9,6 +9,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import snap.api.model.SnapHttpResponse;
 
 /**
  * SnapHttpResponseFundingSource
@@ -18,7 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SnapHttpResponseFundingSource {
+public class SnapHttpResponseFundingSource extends SnapHttpResponse{
 
   private List<SnapInnerFundingSource> fundingsources;
 
