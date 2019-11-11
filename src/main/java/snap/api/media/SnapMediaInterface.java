@@ -3,6 +3,7 @@ package snap.api.media;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -113,7 +114,7 @@ public interface SnapMediaInterface {
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
      */
-    public String getPreviewOfSpecificMedia(String oAuthAccessToken, String mediaId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
+    public Map<String, Object> getPreviewOfSpecificMedia(String oAuthAccessToken, String mediaId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
     
     /**
      * 
@@ -125,6 +126,6 @@ public interface SnapMediaInterface {
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
      */
-    public String getThumbnailOfSpecificMedia(String oAuthAccessToken, String mediaId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
+    public Map<String, Object> getThumbnailOfSpecificMedia(String oAuthAccessToken, String mediaId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
 
 }// SnapMediaInterface()

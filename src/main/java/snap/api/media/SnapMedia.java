@@ -3,6 +3,7 @@ package snap.api.media;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -33,6 +35,8 @@ import snap.api.exceptions.SnapResponseErrorException;
 import snap.api.model.media.CreativeMedia;
 import snap.api.model.media.SnapHttpRequestMedia;
 import snap.api.model.media.SnapHttpResponseFinalUploadMedia;
+import snap.api.model.media.SnapHttpResponseLinkMedia;
+import snap.api.model.media.SnapHttpResponseMedia;
 import snap.api.model.media.SnapHttpResponseUploadMedia;
 import snap.api.utils.EntityUtilsWrapper;
 import snap.api.utils.FileProperties;
@@ -60,6 +64,14 @@ public class SnapMedia implements SnapMediaInterface {
     private String endpointUploadImage;
 
     private String endpointUploadLargeMedia;
+    
+    private String endpointAllMedias;
+    
+    private String endpointSpecificMedia;
+    
+    private String endpointPreviewMedia;
+    
+    private String endpointThumbnailMedia;
 
     private final long maxLengthVideo;
 
@@ -80,6 +92,10 @@ public class SnapMedia implements SnapMediaInterface {
 	this.endpointUploadVideo = this.apiUrl + fp.getProperties().getProperty("api.url.media.upload.video");
 	this.endpointUploadImage = this.apiUrl + fp.getProperties().getProperty("api.url.media.upload.image");
 	this.endpointUploadLargeMedia = this.apiUrl + fp.getProperties().getProperty("api.url.media.upload.large.init");
+	this.endpointAllMedias = this.apiUrl + (String) fp.getProperties().get("api.url.media.all");
+	this.endpointSpecificMedia = this.apiUrl + (String) fp.getProperties().get("api.url.media.one");
+	this.endpointPreviewMedia = this.apiUrl + (String) fp.getProperties().get("api.url.media.preview");
+	this.endpointThumbnailMedia = this.apiUrl + (String) fp.getProperties().get("api.url.media.thumbnail");
 	this.httpClient = HttpClients.createDefault();
 	this.entityUtilsWrapper = new EntityUtilsWrapper();
 	this.minWidthAppIcon = Integer.valueOf((String) fp.getProperties().get("api.app.icon.min.width"));
@@ -272,8 +288,33 @@ public class SnapMedia implements SnapMediaInterface {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
-	return null;
-    }
+	if (StringUtils.isEmpty(adAccountId)) {
+	    throw new SnapArgumentException("The Ad Account ID is missing");
+	}
+	List<CreativeMedia> results = new ArrayList<>();
+	final String url = this.endpointAllMedias.replace("{ad_account_id}", adAccountId);
+	HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+	try (CloseableHttpResponse response = httpClient.execute(request)) {
+	    int statusCode = response.getStatusLine().getStatusCode();
+	    HttpEntity entity = response.getEntity();
+	    if (entity != null) {
+		String body = entityUtilsWrapper.toString(entity);
+		if (statusCode >= 300) {
+		    SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		    throw ex;
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SnapHttpResponseMedia responseFromJson = mapper.readValue(body, SnapHttpResponseMedia.class);
+		if (responseFromJson != null) {
+		    results = responseFromJson.getAllMedia();
+		}
+	    }
+	} catch (IOException e) {
+	    LOGGER.error("Impossible to get all ads, adAccountId = {}", adAccountId, e);
+	}
+	return results;
+    }// getAllMedia()
 
     @Override
     public Optional<CreativeMedia> getSpecificMedia(String oAuthAccessToken, String mediaId)
@@ -281,26 +322,103 @@ public class SnapMedia implements SnapMediaInterface {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
-	return null;
-    }
+	if (StringUtils.isEmpty(mediaId)) {
+	    throw new SnapArgumentException("The media ID is missing");
+	}
+	Optional<CreativeMedia> result = Optional.empty();
+	final String url = this.endpointSpecificMedia.replace("{media_id}", mediaId);
+	HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+	try (CloseableHttpResponse response = httpClient.execute(request)) {
+	    int statusCode = response.getStatusLine().getStatusCode();
+	    HttpEntity entity = response.getEntity();
+	    if (entity != null) {
+		String body = entityUtilsWrapper.toString(entity);
+		if (statusCode >= 300) {
+		    SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		    throw ex;
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SnapHttpResponseMedia responseFromJson = mapper.readValue(body, SnapHttpResponseMedia.class);
+		if (responseFromJson != null) {
+		    result = responseFromJson.getSpecificMedia();
+		}
+	    }
+	} catch (IOException e) {
+	    LOGGER.error("Impossible to get specific media, mediaId = {}", mediaId, e);
+	}
+	return result;
+    }// getSpecificMedia()
 
     @Override
-    public String getPreviewOfSpecificMedia(String oAuthAccessToken, String mediaId)
+    public Map<String, Object> getPreviewOfSpecificMedia(String oAuthAccessToken, String mediaId)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
-	return null;
-    }
+	if (StringUtils.isEmpty(mediaId)) {
+	    throw new SnapArgumentException("The media ID is missing");
+	}
+	Map<String, Object> result = new HashMap<>();
+	final String url = this.endpointPreviewMedia.replace("{media_id}", mediaId);
+	HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+	try (CloseableHttpResponse response = httpClient.execute(request)) {
+	    int statusCode = response.getStatusLine().getStatusCode();
+	    HttpEntity entity = response.getEntity();
+	    if (entity != null) {
+		String body = entityUtilsWrapper.toString(entity);
+		if (statusCode >= 300) {
+		    SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		    throw ex;
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SnapHttpResponseLinkMedia responseFromJson = mapper.readValue(body, SnapHttpResponseLinkMedia.class);
+		if (responseFromJson != null) {
+		    result.put("link", responseFromJson.getLink());
+		    result.put("expiresAt", responseFromJson.getExpiresAt());
+		}
+	    }
+	} catch (IOException e) {
+	    LOGGER.error("Impossible to get preview of media, mediaId = {}", mediaId, e);
+	}
+	return result;
+    }// getPreviewOfSpecificMedia()
 
     @Override
-    public String getThumbnailOfSpecificMedia(String oAuthAccessToken, String mediaId)
+    public Map<String, Object> getThumbnailOfSpecificMedia(String oAuthAccessToken, String mediaId)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
-	return null;
-    }
+	if (StringUtils.isEmpty(mediaId)) {
+	    throw new SnapArgumentException("The media ID is missing");
+	}
+	Map<String, Object> result = new HashMap<>();
+	final String url = this.endpointThumbnailMedia.replace("{media_id}", mediaId);
+	HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+	try (CloseableHttpResponse response = httpClient.execute(request)) {
+	    int statusCode = response.getStatusLine().getStatusCode();
+	    HttpEntity entity = response.getEntity();
+	    if (entity != null) {
+		String body = entityUtilsWrapper.toString(entity);
+		if (statusCode >= 300) {
+		    SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		    throw ex;
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SnapHttpResponseLinkMedia responseFromJson = mapper.readValue(body, SnapHttpResponseLinkMedia.class);
+		if (responseFromJson != null) {
+		    result.put("link", responseFromJson.getLink());
+		    result.put("expiresAt", responseFromJson.getExpiresAt());
+		}
+	    }
+	} catch (IOException e) {
+	    LOGGER.error("Impossible to get thumbnail of media, mediaId = {}", mediaId, e);
+	}
+	return result;
+    }// getThumbnailOfSpecificMedia()
 
     /**
      * Check Creative Media instance

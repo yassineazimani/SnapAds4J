@@ -314,4 +314,91 @@ public class SnapResponseUtils {
       	"  \"request_id\": \"57e56d7a00ff0b82bd232ea3d40001737e616473617069736300016275696c642d62646338336131372d312d31352d3100010134\"\r\n" + 
       	"}";
   }// getSnapLargeMediaUpload()
+  
+  public static String getSnapAllMedia() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57b00ee800ff0a7e553a9389710001737e616473617069736300016275696c642d35396264653638322d312d31312d37000100\",\r\n" + 
+      	"  \"media\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"media\": {\r\n" + 
+      	"        \"id\": \"7f65f9ff-63d8-41e7-991a-06b95a1ffbde\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-12T20:39:57.029Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-12T20:39:57.029Z\",\r\n" + 
+      	"        \"name\": \"Media 2\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"VIDEO\",\r\n" + 
+      	"        \"media_status\": \"PENDING_UPLOAD\"\r\n" + 
+      	"      }\r\n" + 
+      	"    },\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"media\": {\r\n" + 
+      	"        \"id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:24:28.378Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:23:37.086Z\",\r\n" + 
+      	"        \"name\": \"Media A - Video\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"VIDEO\",\r\n" + 
+      	"        \"media_status\": \"READY\",\r\n" + 
+      	"        \"file_name\": \"sample.mov\"\r\n" + 
+      	"      }\r\n" + 
+      	"    },\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"media\": {\r\n" + 
+      	"        \"id\": \"ab32d7e5-1f80-4e1a-a76b-3c543d2b28e4\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-12T17:38:01.918Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-12T17:36:59.740Z\",\r\n" + 
+      	"        \"name\": \"App Icon\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"IMAGE\",\r\n" + 
+      	"        \"media_status\": \"READY\",\r\n" + 
+      	"        \"file_name\": \"Mobile Strike.png\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapAllMedia()
+  
+  public static String getSnapSpecificMedia() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57b00f5f00ff0bd6909e4148c30001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010102\",\r\n" + 
+      	"  \"media\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"media\": {\r\n" + 
+      	"        \"id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:24:28.378Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:23:37.086Z\",\r\n" + 
+      	"        \"name\": \"Media A - Video\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"VIDEO\",\r\n" + 
+      	"        \"media_status\": \"READY\",\r\n" + 
+      	"        \"file_name\": \"sample.mov\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapSpecificMedia()
+  
+  public static String getSnapPreviewMedia() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5aa8450b00ff00ff741e879aff00580001737e816473617069736300016275696x642d37633033663563332d312d3134392d310001015e\",\r\n" + 
+      	"    \"expires_at\": \"2018-03-14T21:39:23.303Z\",\r\n" + 
+      	"    \"link\": \"https://adsapisc.appspot.com/media/video_preview?media_id=8e781365-ce4c-4336-8c53-f6a1f7c50af1&expires_at=1521063563303&signature=MGQCMA1DRI6uBax3GSq93E8hp5b3P2Ebg0lIlPa8iGML9rs1B9WFmPeHH6ttvx_rmDG5AgIwY0pjIvEEpwOXM8o3h9Hst60DjRN9Mw7am7OmkdrBGfoI4IiHBflv0XpK87Tnb_BE\"\r\n" + 
+      	"}";
+  }// getSnapPreviewMedia()
+  
+  public static String getSnapThumbnailMedia() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5b99772a00ff06928d3e31e94b0001737e616473617069736300016275696c642d33346634346232622d312d3230302d3200010154\",\r\n" + 
+      	"    \"expires_at\": \"2018-09-13T20:29:30.555Z\",\r\n" + 
+      	"    \"link\": \"https://adsapisc.appspot.com/media/video_thumbnail?media_id=095a4a6d-01b0-4f6c-8901-41ee38c7b540&expires_at=1536870570555&signature=MGQCMBQ_NfJM0yZCrdyLiEon4Lkbei0zFJF2HpLiHa2NvSLV2JyOVhLqHfQgqbDWUuzaCQIwHzPj_ZFtPNk688SoFiKWUIFEKKBMhSm8t4moy9xlfgnoSv-8LMQ1omM_P8QCj7O9\"\r\n" + 
+      	"}";
+  }// getSnapThumbnailMedia()
 } // SnapResponseUtils
