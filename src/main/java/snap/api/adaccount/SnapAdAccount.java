@@ -185,13 +185,14 @@ public class SnapAdAccount implements SnapAdAccountInterface {
    * @throws UnsupportedEncodingException 
    */
   @Override
-  public void updateAdAccount(String oAuthAccessToken, AdAccount adAccount)
+  public Optional<AdAccount> updateAdAccount(String oAuthAccessToken, AdAccount adAccount)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
           JsonProcessingException, UnsupportedEncodingException {
     if (StringUtils.isEmpty(oAuthAccessToken)) {
       throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
     }
     this.checkAdAccount(adAccount);
+    Optional<AdAccount> result = Optional.empty();
     final String url =
         this.endpointUpdateAdAccount.replace("{organization-id}", adAccount.getOrganizationId());
     SnapHttpRequestAdAccount reqBody = new SnapHttpRequestAdAccount();
@@ -206,10 +207,19 @@ public class SnapAdAccount implements SnapAdAccountInterface {
                 SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
             throw ex;
           }
+          ObjectMapper mapper = new ObjectMapper();
+	    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	    String body = entityUtilsWrapper.toString(entity);
+	    SnapHttpResponseAdAccount responseFromJson =
+		    mapper.readValue(body, SnapHttpResponseAdAccount.class);
+	    if (responseFromJson != null) {
+		result = responseFromJson.getSpecificAdAccount();
+	    }
       }
     } catch (IOException e) {
       LOGGER.error("Impossible to update ad account, id = {}", adAccount.getId(), e);
     }
+    return result;
   } // updateAdAccount()
 
   /**

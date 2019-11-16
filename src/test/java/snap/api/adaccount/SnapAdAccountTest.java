@@ -524,9 +524,27 @@ public class SnapAdAccountTest {
     Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
     Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
     Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+    Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapAdAccountUpdated());
     Assertions.assertThatCode(
             () -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
         .doesNotThrowAnyException();
+    Optional<AdAccount> optAdAccount = adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount());
+    assertThat(optAdAccount.isPresent()).isTrue();
+    optAdAccount.ifPresent((a) -> {
+	Assertions.assertThat(a.getId()).isEqualTo("123b9ca6-92f2-49c3-a3ed-0ea58afb467e");
+	Assertions.assertThat(a.getBrandName()).isEqualTo("Hooli");
+	Assertions.assertThat(a.getCurrency()).isEqualTo(CurrencyEnum.USD);
+	Assertions.assertThat(a.getLifetimeSpendCapMicro()).isEqualTo(1500000000.);
+	Assertions.assertThat(a.getName()).isEqualTo("Hooli Ad Account");
+	Assertions.assertThat(a.getStatus()).isEqualTo(StatusEnum.ACTIVE);
+	Assertions.assertThat(a.getType()).isEqualTo(AdAccountTypeEnum.PARTNER);
+	Assertions.assertThat(a.getOrganizationId()).isEqualTo(organizationId);
+	Assertions.assertThat(a.getFundingSourceIds()).isNotNull();
+        assertThat(a.getFundingSourceIds()).isNotNull();
+        assertThat(a.getFundingSourceIds()).isNotEmpty();
+        assertThat(a.getFundingSourceIds().get(0))
+            .isEqualTo("cdc67eba-a774-4954-9b94-9502bbdac1bc");
+    });
   } // test_updateAdAccount_should_success()
 
   @Test
