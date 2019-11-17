@@ -41,7 +41,7 @@ public class DemographicsBuilder {
    * @return
    */
   public DemographicsBuilder setMinAge(Double minAge) {
-    this.setMinAge(minAge);
+    this.demographicsInstance.setMinAge(minAge);
     return this;
   } // setMinAge()
 
@@ -52,7 +52,7 @@ public class DemographicsBuilder {
    * @return
    */
   public DemographicsBuilder setMaxAge(Double maxAge) {
-    this.setMaxAge(maxAge);
+    this.demographicsInstance.setMaxAge(maxAge);
     return this;
   } // setMaxAge()
 
@@ -63,7 +63,7 @@ public class DemographicsBuilder {
    * @return
    */
   public DemographicsBuilder setGender(GenderEnum gender) {
-    this.setGender(gender);
+    this.demographicsInstance.setGender(gender);
     return this;
   } // setMaxAge()
 
@@ -74,7 +74,7 @@ public class DemographicsBuilder {
    * @return
    */
   public DemographicsBuilder setLanguages(List<String> languages) {
-    this.setLanguages(languages);
+    this.demographicsInstance.setLanguages(languages);
     return this;
   } // setLanguages()
 
@@ -85,7 +85,7 @@ public class DemographicsBuilder {
    * @return
    */
   public DemographicsBuilder setAdvancedDemographics(List<String> advancedDemographics) {
-    this.setAdvancedDemographics(advancedDemographics);
+    this.demographicsInstance.setAdvancedDemographics(advancedDemographics);
     return this;
   } // setAdvancedDemographics()
 

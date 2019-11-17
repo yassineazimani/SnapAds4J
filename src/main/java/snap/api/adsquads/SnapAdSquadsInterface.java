@@ -13,11 +13,11 @@ import snap.api.model.adsquads.AdSquad;
 
 public interface SnapAdSquadsInterface {
 
-  public void createAdSquad(String oAuthAccessToken, AdSquad adSquad)
+  public Optional<AdSquad> createAdSquad(String oAuthAccessToken, AdSquad adSquad)
       throws SnapOAuthAccessTokenException, JsonProcessingException, SnapResponseErrorException,
           SnapArgumentException, UnsupportedEncodingException;
 
-  public void updateAdSquad(String oAuthAccessToken, AdSquad adSquad)
+  public Optional<AdSquad> updateAdSquad(String oAuthAccessToken, AdSquad adSquad)
       throws SnapOAuthAccessTokenException, JsonProcessingException, SnapResponseErrorException,
           SnapArgumentException, UnsupportedEncodingException;
 

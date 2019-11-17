@@ -21,13 +21,14 @@ public interface SnapMediaInterface {
      * @see
      * @param oAuthAccessToken
      * @param media
+     * @return Media created
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
      */
-    public void createMedia(String oAuthAccessToken, CreativeMedia media) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    public Optional<CreativeMedia> createMedia(String oAuthAccessToken, CreativeMedia media) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
     JsonProcessingException, UnsupportedEncodingException;
     
     /**

@@ -107,13 +107,14 @@ public class SnapMedia implements SnapMediaInterface {
     }// SnapMedia()
 
     @Override
-    public void createMedia(String oAuthAccessToken, CreativeMedia media)
+    public Optional<CreativeMedia> createMedia(String oAuthAccessToken, CreativeMedia media)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	checkCreativeMedia(media);
+	Optional<CreativeMedia> result = Optional.empty();
 	final String url = this.endpointCreation.replace("{ad_account_id}", media.getAdAccountId());
 	SnapHttpRequestMedia reqBody = new SnapHttpRequestMedia();
 	reqBody.addMedia(media);
@@ -124,9 +125,20 @@ public class SnapMedia implements SnapMediaInterface {
 		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
 		throw ex;
 	    }
+	    HttpEntity entity = response.getEntity();
+	    if (entity != null) {
+		String body = entityUtilsWrapper.toString(entity);
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SnapHttpResponseMedia responseFromJson = mapper.readValue(body, SnapHttpResponseMedia.class);
+		if (responseFromJson != null) {
+		    result = responseFromJson.getSpecificMedia();
+		}
+	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to create creative media, ad_account_id = {}", media.getAdAccountId(), e);
 	}
+	return result;
     }// createMedia()
 
     @Override

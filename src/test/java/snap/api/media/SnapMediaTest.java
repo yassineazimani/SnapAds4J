@@ -91,11 +91,23 @@ public class SnapMediaTest {
     } // setUp()
 
     @Test
-    public void test_create_media_should_success_1() throws IOException, InterruptedException {
+    public void test_create_media_should_success_1() throws IOException, InterruptedException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	Mockito.when(entityUtilsWrapper.toString(httpEntity))
+	.thenReturn(SnapResponseUtils.getSnapMediaCreated());
 	Assertions.assertThatCode(() -> snapMedia.createMedia(oAuthAccessToken, media)).doesNotThrowAnyException();
+	Assertions.assertThat(snapMedia.createMedia(oAuthAccessToken, media)).isNotNull();
+	snapMedia.createMedia(oAuthAccessToken, media)
+		.ifPresent(media -> {
+		    Assertions.assertThat(media.getId()).isEqualTo("a7bee653-1865-41cf-8cee-8ab85a205837");
+		    Assertions.assertThat(media.getName()).isEqualTo("Media A - Video");
+		    Assertions.assertThat(media.getAdAccountId()).isEqualTo(adAccountID);
+		    Assertions.assertThat(media.getType()).isEqualTo(MediaTypeEnum.VIDEO);
+		    Assertions.assertThat(media.getMediaStatus()).isEqualTo(MediaStatusTypeEnum.PENDING_UPLOAD);
+		});
     }// test_create_media_should_success_1()
 
     @Test

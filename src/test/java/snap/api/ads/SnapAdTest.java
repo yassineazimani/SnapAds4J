@@ -90,11 +90,23 @@ public class SnapAdTest {
     }// setUp()
 
     @Test
-    public void test_create_ad_should_success() throws IOException, InterruptedException {
+    public void test_create_ad_should_success() throws IOException, InterruptedException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapAdCreated());
 	Assertions.assertThatCode(() -> ad.createAd(oAuthAccessToken, adModel)).doesNotThrowAnyException();
+	Optional<Ad> optAd = ad.createAd(oAuthAccessToken, adModel);
+	assertThat(optAd.isPresent()).isTrue();
+	optAd.ifPresent(f -> {
+	    assertThat(f.getId()).isEqualTo("e8d6217f-32ab-400f-9e54-39a86a7963e4");
+	    assertThat(f.getName()).isEqualTo("Ad One");
+	    assertThat(f.getType()).isEqualTo(AdTypeEnum.SNAP_AD);
+	    assertThat(f.getStatus()).isEqualTo(StatusEnum.ACTIVE);
+	    assertThat(f.getAdSquadId()).isEqualTo(squadId);
+	    assertThat(f.getCreativeId()).isEqualTo(creativeId);
+	});
     }// test_create_ad_should_success()
 
     @Test
@@ -262,11 +274,23 @@ public class SnapAdTest {
     }// should_throw_exception_1337_create_ad()
 
     @Test
-    public void test_update_ad_should_success() throws IOException, InterruptedException {
+    public void test_update_ad_should_success() throws IOException, InterruptedException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPut.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapAdUpdated());
 	Assertions.assertThatCode(() -> ad.updateAd(oAuthAccessToken, adModelUpdate)).doesNotThrowAnyException();
+	Optional<Ad> optAd = ad.updateAd(oAuthAccessToken, adModelUpdate);
+	assertThat(optAd.isPresent()).isTrue();
+	optAd.ifPresent(f -> {
+	    assertThat(f.getId()).isEqualTo("e8d6217f-32ab-400f-9e54-39a86a7963e4");
+	    assertThat(f.getName()).isEqualTo("Ad One");
+	    assertThat(f.getType()).isEqualTo(AdTypeEnum.SNAP_AD);
+	    assertThat(f.getStatus()).isEqualTo(StatusEnum.ACTIVE);
+	    assertThat(f.getAdSquadId()).isEqualTo(squadId);
+	    assertThat(f.getCreativeId()).isEqualTo(creativeId);
+	});
     }// test_update_ad_should_success()
 
     @Test

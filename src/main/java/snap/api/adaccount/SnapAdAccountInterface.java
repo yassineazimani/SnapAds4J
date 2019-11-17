@@ -50,13 +50,16 @@ public interface SnapAdAccountInterface {
    *     Ad Account</a>
    * @param oAuthAccessToken oAuthAccessToken
    * @param adAccount ad account to update
+ * @return 
    * @throws SnapResponseErrorException
    * @throws SnapOAuthAccessTokenException
    * @throws SnapArgumentException
    * @throws JsonProcessingException
    * @throws UnsupportedEncodingException 
+   * 
+   * @return AdAccount updated
    */
-  public void updateAdAccount(String oAuthAccessToken, AdAccount adAccount)
+  public Optional<AdAccount> updateAdAccount(String oAuthAccessToken, AdAccount adAccount)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
           JsonProcessingException, UnsupportedEncodingException;
 } // SnapAdAccountInterface

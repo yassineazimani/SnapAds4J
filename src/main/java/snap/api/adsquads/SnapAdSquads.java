@@ -82,37 +82,49 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
     } // SnapAdSquads()
 
     @Override
-    public void createAdSquad(String oAuthAccessToken, AdSquad adSquad)
+    public Optional<AdSquad> createAdSquad(String oAuthAccessToken, AdSquad adSquad)
 	    throws JsonProcessingException, SnapOAuthAccessTokenException, SnapResponseErrorException,
 	    SnapArgumentException, UnsupportedEncodingException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	checkAdSquad(adSquad, CheckAdSquadEnum.CREATION);
+	Optional<AdSquad> result = Optional.empty();
 	final String url = this.endpointCreationAdSquad.replace("{campaign_id}", adSquad.getCampaignId());
 	SnapHttpRequestAdSquad reqBody = new SnapHttpRequestAdSquad();
 	reqBody.addAdSquad(adSquad);
 	LOGGER.info("Body create ad squad => {}", reqBody);
 	HttpPost request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, reqBody);
 	try (CloseableHttpResponse response = httpClient.execute(request)) {
-
 	    int statusCode = response.getStatusLine().getStatusCode();
 	    if (statusCode >= 300) {
 		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
 		throw ex;
 	    }
+	    HttpEntity entity = response.getEntity();
+	    if(entity != null) {
+		String body = entityUtilsWrapper.toString(entity);
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SnapHttpResponseAdSquad responseFromJson = mapper.readValue(body, SnapHttpResponseAdSquad.class);
+		if (responseFromJson != null) {
+		    result = responseFromJson.getSpecificAdSquad();
+		}
+	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to create ad squad, campaign_id = {}", adSquad.getCampaignId(), e);
 	}
+	return result;
     } // createAdSquad()
 
     @Override
-    public void updateAdSquad(String oAuthAccessToken, AdSquad adSquad) throws SnapOAuthAccessTokenException,
+    public Optional<AdSquad> updateAdSquad(String oAuthAccessToken, AdSquad adSquad) throws SnapOAuthAccessTokenException,
 	    JsonProcessingException, SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	checkAdSquad(adSquad, CheckAdSquadEnum.UPDATE);
+	Optional<AdSquad> result = Optional.empty();
 	final String url = this.endpointUpdateAdSquad.replace("{campaign_id}", adSquad.getCampaignId());
 	SnapHttpRequestAdSquad reqBody = new SnapHttpRequestAdSquad();
 	reqBody.addAdSquad(adSquad);
@@ -124,9 +136,20 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
 		throw ex;
 	    }
+	    HttpEntity entity = response.getEntity();
+	    if(entity != null) {
+	    String body = entityUtilsWrapper.toString(entity);
+	    ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SnapHttpResponseAdSquad responseFromJson = mapper.readValue(body, SnapHttpResponseAdSquad.class);
+		if (responseFromJson != null) {
+		    result = responseFromJson.getSpecificAdSquad();
+		}
+	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to update ad squad, id = {}", adSquad.getId(), e);
 	}
+	return result;
     } // updateAdSquad()
 
     @Override

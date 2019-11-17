@@ -28,7 +28,7 @@ public class SegmentRequestTargetingBuilder {
   } // setSegmentIds()
 
   public SegmentRequestTargetingBuilder setOperation(OperationEnum op) {
-    this.setOperation(op);
+    this.segmentInstance.setOperation(op);
     return this;
   } // setOperation()
 

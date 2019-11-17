@@ -82,12 +82,13 @@ public class SnapAd implements SnapAdInterface {
     }// SnapAd()
 
     @Override
-    public void createAd(String oAuthAccessToken, Ad ad) throws SnapOAuthAccessTokenException, JsonProcessingException,
+    public Optional<Ad> createAd(String oAuthAccessToken, Ad ad) throws SnapOAuthAccessTokenException, JsonProcessingException,
 	    SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	checkSnapAd(ad, CheckAdEnum.CREATION);
+	Optional<Ad> result = Optional.empty();
 	final String url = this.endpointCreateAd.replace("{ad_squad_id}", ad.getAdSquadId());
 	SnapHttpRequestAd reqBody = new SnapHttpRequestAd();
 	reqBody.addAd(ad);
@@ -99,13 +100,24 @@ public class SnapAd implements SnapAdInterface {
 		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
 		throw ex;
 	    }
+	    HttpEntity entity = response.getEntity();
+	    if(entity != null) {
+		String body = entityUtilsWrapper.toString(entity);
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SnapHttpResponseAd responseFromJson = mapper.readValue(body, SnapHttpResponseAd.class);
+		if (responseFromJson != null) {
+		    result = responseFromJson.getSpecificAd();
+		}
+	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to create ad, ad_squad_id = {}", ad.getAdSquadId(), e);
 	}
+	return result;
     }// createAd()
 
     @Override
-    public void updateAd(String oAuthAccessToken, Ad ad) throws SnapOAuthAccessTokenException, JsonProcessingException,
+    public Optional<Ad> updateAd(String oAuthAccessToken, Ad ad) throws SnapOAuthAccessTokenException, JsonProcessingException,
 	    SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
@@ -114,6 +126,7 @@ public class SnapAd implements SnapAdInterface {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	checkSnapAd(ad, CheckAdEnum.UPDATE);
+	Optional<Ad> result = Optional.empty();
 	final String url = this.endpointUpdateAd.replace("{ad_squad_id}", ad.getAdSquadId());
 	SnapHttpRequestAd reqBody = new SnapHttpRequestAd();
 	reqBody.addAd(ad);
@@ -125,9 +138,20 @@ public class SnapAd implements SnapAdInterface {
 		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
 		throw ex;
 	    }
+	    HttpEntity entity = response.getEntity();
+	    if(entity != null) {
+		String body = entityUtilsWrapper.toString(entity);
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SnapHttpResponseAd responseFromJson = mapper.readValue(body, SnapHttpResponseAd.class);
+		if (responseFromJson != null) {
+		    result = responseFromJson.getSpecificAd();
+		}
+	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to update ad, id = {}", ad.getId(), e);
 	}
+	return result;
     }// updateAd()
 
     @Override
