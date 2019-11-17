@@ -12,9 +12,6 @@ public enum StatusEnum {
   @JsonProperty("ACTIVE")
   ACTIVE,
   /** Status paused */
-  @JsonProperty("PAUSE")
-  PAUSE,
-  /** Status paused */
   @JsonProperty("PAUSED")
   PAUSED,
   /** Status redemmed */

@@ -74,6 +74,49 @@ public class SnapResponseUtils {
       	"  ]\r\n" + 
       	"}";
   }// getSnapAdAccountUpdated()
+  
+  public static String getSnapCampaignCreated() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57b002ad00ff07e1f50fd2267f0001737e616473617069736300016275696c642d35396264653638322d312d31312d370001010d\",\r\n" + 
+      	"  \"campaigns\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"campaign\": {\r\n" + 
+      	"        \"id\": \"92e1c28a-a331-45b4-8c26-fd3e0eea8c39\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T05:33:33.876Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T05:33:33.876Z\",\r\n" + 
+      	"        \"name\": \"Cool Campaign\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"status\": \"PAUSED\",\r\n" + 
+      	"        \"start_time\": \"2016-08-11T22:03:58.869Z\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapCampaignCreated()
+  
+  public static String getSnapCampaignUpdated() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57b0032700ff07e0cfdaa5e1a40001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010105\",\r\n" + 
+      	"  \"campaigns\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"campaign\": {\r\n" + 
+      	"        \"id\": \"92e1c28a-a331-45b4-8c26-fd3e0eea8c39\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T05:35:35.943Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T05:33:33.876Z\",\r\n" + 
+      	"        \"name\": \"Cool Campaign\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"status\": \"PAUSED\",\r\n" + 
+      	"        \"start_time\": \"2016-08-11T22:03:58.869Z\",\r\n" + 
+      	"        \"end_time\": \"2016-08-22T05:03:58.869Z\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapCampaignUpdated()
 
   public static String getSnapAllCampaigns() {
     return "{\r\n  \"request_status\": \"success\",\r\n  \"request_id\": \"57b003c700ff0f2e66c37f96c20001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010103\",\r\n  \"campaigns\": [\r\n    {\r\n      \"sub_request_status\": \"success\",\r\n      \"campaign\": {\r\n        \"id\": \"06302efa-4c0f-4e36-b880-a395a36cef64\",\r\n        \"updated_at\": \"2016-08-12T20:28:58.738Z\",\r\n        \"created_at\": \"2016-08-12T20:28:58.738Z\",\r\n        \"name\": \"Campaign One\",\r\n        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n        \"daily_budget_micro\": 200000000,\r\n        \"status\": \"ACTIVE\",\r\n        \"start_time\": \"2016-08-10T17:12:49.707Z\",\r\n        \"end_time\": \"2016-08-13T17:12:49.707Z\"\r\n      }\r\n    },\r\n    {\r\n      \"sub_request_status\": \"success\",\r\n      \"campaign\": {\r\n        \"id\": \"0fc8e179-6f3b-46e7-be8e-ca53fd404ece\",\r\n        \"updated_at\": \"2016-08-12T21:06:18.343Z\",\r\n        \"created_at\": \"2016-08-12T21:06:18.343Z\",\r\n        \"name\": \"Campaign Deux\",\r\n        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n        \"daily_budget_micro\": 500000000,\r\n        \"status\": \"ACTIVE\",\r\n        \"start_time\": \"2016-08-10T17:12:49.707Z\",\r\n        \"end_time\": \"2016-08-13T17:12:49.707Z\"\r\n      }\r\n    },\r\n\r\n   \r\n\r\n    {\r\n      \"sub_request_status\": \"success\",\r\n      \"campaign\": {\r\n        \"id\": \"92e1c28a-a331-45b4-8c26-fd3e0eea8c39\",\r\n        \"updated_at\": \"2016-08-14T05:36:46.441Z\",\r\n        \"created_at\": \"2016-08-14T05:33:33.876Z\",\r\n        \"name\": \"Cool Campaign\",\r\n        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n        \"status\": \"PAUSED\",\r\n        \"start_time\": \"2016-08-11T22:03:58.869Z\",\r\n        \"end_time\": \"2016-08-22T05:03:58.869Z\"\r\n      }\r\n    },\r\n    {\r\n      \"sub_request_status\": \"success\",\r\n      \"campaign\": {\r\n        \"id\": \"fedf8e04-0176-4ce3-a1ca-148204aee62c\",\r\n        \"updated_at\": \"2016-08-12T02:18:33.412Z\",\r\n        \"created_at\": \"2016-08-12T02:18:33.412Z\",\r\n        \"name\": \"Crazy Campaign\",\r\n        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n        \"start_time\": \"2016-08-11T22:03:58.869Z\",\r\n        \"status\": \"PAUSED\"\r\n      }\r\n    }\r\n  ]\r\n}";
@@ -82,6 +125,64 @@ public class SnapResponseUtils {
   public static String getSnapSpecificCampaign() {
     return "{\r\n  \"request_status\": \"success\",\r\n  \"request_id\": \"57b0049c00ff0e8cb21af5199c0001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010107\",\r\n  \"campaigns\": [\r\n    {\r\n      \"sub_request_status\": \"success\",\r\n      \"campaign\": {\r\n        \"id\": \"92e1c28a-a331-45b4-8c26-fd3e0eea8c39\",\r\n        \"updated_at\": \"2016-08-14T05:36:46.441Z\",\r\n        \"created_at\": \"2016-08-14T05:33:33.876Z\",\r\n        \"name\": \"Cool Campaign\",\r\n        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n        \"status\": \"PAUSED\",\r\n        \"start_time\": \"2016-08-11T22:03:58.869Z\",\r\n        \"end_time\": \"2016-08-22T05:03:58.869Z\"\r\n      }\r\n    }\r\n  ]\r\n}";
   } // getSnapSpecificCampaign()
+  
+  public static String getSnapAdSquadCreated() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57b007e000ff09058b02a9e0220001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010110\",\r\n" + 
+      	"  \"adsquads\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"adsquad\": {\r\n" + 
+      	"        \"id\": \"69cde0e6-0ccb-4982-8fce-1fa33507f213\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T05:55:45.250Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T05:55:45.250Z\",\r\n" + 
+      	"        \"name\": \"AdSquad2019\",\r\n" + 
+      	"        \"status\": \"PAUSED\",\r\n" + 
+      	"        \"campaign_id\": \"6cf25572-048b-4447-95d1-eb48231751be\",\r\n" + 
+      	"        \"type\": \"SNAP_ADS\",\r\n" + 
+      	"        \"targeting\": {\r\n" + 
+      	"          \"geos\": [\r\n" + 
+      	"            {\r\n" + 
+      	"              \"country_code\": \"us\"\r\n" + 
+      	"            }\r\n" + 
+      	"          ]\r\n" + 
+      	"        },\r\n" + 
+      	"        \"placement\": \"SNAP_ADS\",\r\n" + 
+      	"        \"billing_event\": \"IMPRESSION\",\r\n" + 
+      	"        \"bid_micro\": 1000000,\r\n" + 
+      	"        \"daily_budget_micro\": 1000000000,\r\n" + 
+      	"        \"start_time\": \"2016-08-11T22:03:58.869Z\",\r\n" + 
+      	"        \"optimization_goal\": \"IMPRESSIONS\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapAdSquadCreated()
+  
+  public static String getSnapAdSquadUpdated() {
+      return "{\r\n" + 
+      	"  \"status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"5792746b00019a287b52009b\",\r\n" + 
+      	"  \"adsquads\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"status\": \"success\",\r\n" + 
+      	"      \"adsquad\": {\r\n" + 
+      	"        \"id\": \"990d22f3-86a5-4e9e-8afd-ac4c118896d4\",\r\n" + 
+      	"        \"updated_at\": \"2016-07-22T12:30:51.169-07:00\",\r\n" + 
+      	"        \"created_at\": \"2016-07-22T12:16:17.461-07:00\",\r\n" + 
+      	"        \"name\": \"AdSquad2019\",\r\n" + 
+      	"        \"campaign_id\": \"6cf25572-048b-4447-95d1-eb48231751be\",\r\n" + 
+      	"        \"type\": \"SNAP_ADS\",\r\n" + 
+      	"        \"placement\": \"SNAP_ADS\",\r\n" + 
+      	"        \"optimization_goal\": \"IMPRESSIONS\",\r\n" + 
+      	"        \"bid_micro\": 1000,\r\n" + 
+      	"        \"daily_budget_micro\": 5555555\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapAdSquadUpdated()
   
   public static String getSnapSpecificAdSquad() {
       return "{\r\n" + 
@@ -222,6 +323,50 @@ public class SnapResponseUtils {
       	"  ]\r\n" + 
       	"}";
   }// getSnapAllAdSquadForAdAccount()
+  
+  public static String getSnapAdCreated() {
+     return "{\r\n" + 
+     	"  \"request_status\": \"success\",\r\n" + 
+     	"  \"request_id\": \"57b018c500ff0d22d3cefd730d0001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010107\",\r\n" + 
+     	"  \"ads\": [\r\n" + 
+     	"    {\r\n" + 
+     	"      \"sub_request_status\": \"success\",\r\n" + 
+     	"      \"ad\": {\r\n" + 
+     	"        \"id\": \"e8d6217f-32ab-400f-9e54-39a86a7963e4\",\r\n" + 
+     	"        \"updated_at\": \"2016-08-14T07:07:50.241Z\",\r\n" + 
+     	"        \"created_at\": \"2016-08-14T07:07:50.241Z\",\r\n" + 
+     	"        \"name\": \"Ad One\",\r\n" + 
+     	"        \"ad_squad_id\": \"23995202-bfbc-45a0-9702-dd6841af52fe\",\r\n" + 
+     	"        \"creative_id\": \"c1e6e929-acec-466f-b023-852b8cacc18f\",\r\n" + 
+     	"        \"status\": \"ACTIVE\",\r\n" + 
+     	"        \"type\": \"SNAP_AD\"\r\n" + 
+     	"      }\r\n" + 
+     	"    }\r\n" + 
+     	"  ]\r\n" + 
+     	"}"; 
+  }// getSnapAdCreated()
+  
+  public static String getSnapAdUpdated() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57b01a6300ff0c09d23a7706470001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010108\",\r\n" + 
+      	"  \"ads\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"ad\": {\r\n" + 
+      	"        \"id\": \"e8d6217f-32ab-400f-9e54-39a86a7963e4\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T07:14:45.174Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T07:07:50.241Z\",\r\n" + 
+      	"        \"name\": \"Ad One\",\r\n" + 
+      	"        \"ad_squad_id\": \"23995202-bfbc-45a0-9702-dd6841af52fe\",\r\n" + 
+      	"        \"creative_id\": \"c1e6e929-acec-466f-b023-852b8cacc18f\",\r\n" + 
+      	"        \"status\": \"ACTIVE\",\r\n" + 
+      	"        \"type\": \"SNAP_AD\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapAdUpdated()
   
   public static String getSnapSpecificAd() { 
 	  return "{\r\n" + 
@@ -389,6 +534,27 @@ public class SnapResponseUtils {
       	"  ]\r\n" + 
       	"}";
   }// getSnapAllMedia()
+  
+  public static String getSnapMediaCreated() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57b00d1900ff08a0dae50ab27a0001737e616473617069736300016275696c642d35396264653638322d312d31312d370001010b\",\r\n" + 
+      	"  \"media\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"media\": {\r\n" + 
+      	"        \"id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:18:01.855Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:18:01.855Z\",\r\n" + 
+      	"        \"name\": \"Media A - Video\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"VIDEO\",\r\n" + 
+      	"        \"media_status\": \"PENDING_UPLOAD\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapMediaCreated()
   
   public static String getSnapSpecificMedia() {
       return "{\r\n" + 

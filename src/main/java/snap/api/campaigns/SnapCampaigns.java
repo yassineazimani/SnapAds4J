@@ -58,7 +58,7 @@ public class SnapCampaigns implements SnapCampaignsInterface {
     private String endpointDeleteCampaign;
 
     private CloseableHttpClient httpClient;
-    
+
     private EntityUtilsWrapper entityUtilsWrapper;
 
     private static final Logger LOGGER = LogManager.getLogger(SnapCampaigns.class);
@@ -89,15 +89,18 @@ public class SnapCampaigns implements SnapCampaignsInterface {
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
+     * 
+     * @return Campaign created
      */
     @Override
-    public void createCampaign(String oAuthAccessToken, Campaign campaign)
+    public Optional<Campaign> createCampaign(String oAuthAccessToken, Campaign campaign)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	checkCampaign(campaign, CheckCampaignEnum.CREATION);
+	Optional<Campaign> result = Optional.empty();
 	final String url = this.endpointCreationCampaign.replace("{ad_account_id}", campaign.getAdAccountId());
 	SnapHttpRequestCampaign reqBody = new SnapHttpRequestCampaign();
 	reqBody.addCampaign(this.convertCampaignToMap(campaign));
@@ -109,19 +112,31 @@ public class SnapCampaigns implements SnapCampaignsInterface {
 		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
 		throw ex;
 	    }
+	    HttpEntity entity = response.getEntity();
+	    if (entity != null) {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		String body = entityUtilsWrapper.toString(entity);
+		SnapHttpResponseCampaign responseFromJson = mapper.readValue(body, SnapHttpResponseCampaign.class);
+		if (responseFromJson != null) {
+		    result = responseFromJson.getSpecificCampaign();
+		}
+	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to create campaign, ad_account_id = {}", campaign.getAdAccountId(), e);
 	}
+	return result;
     }
 
     @Override
-    public void updateCampaign(String oAuthAccessToken, Campaign campaign)
+    public Optional<Campaign> updateCampaign(String oAuthAccessToken, Campaign campaign)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	checkCampaign(campaign, CheckCampaignEnum.UPDATE);
+	Optional<Campaign> result = Optional.empty();
 	final String url = this.endpointUpdateCampaign.replace("{ad_account_id}", campaign.getAdAccountId());
 	SnapHttpRequestCampaign reqBody = new SnapHttpRequestCampaign();
 	reqBody.addCampaign(this.convertCampaignToMap(campaign));
@@ -133,9 +148,20 @@ public class SnapCampaigns implements SnapCampaignsInterface {
 		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
 		throw ex;
 	    }
+	    HttpEntity entity = response.getEntity();
+	    if (entity != null) {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		String body = entityUtilsWrapper.toString(entity);
+		SnapHttpResponseCampaign responseFromJson = mapper.readValue(body, SnapHttpResponseCampaign.class);
+		if (responseFromJson != null) {
+		    result = responseFromJson.getSpecificCampaign();
+		}
+	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to update campaign, id = {}", campaign.getId(), e);
 	}
+	return result;
     } // updateCampaign()
 
     @Override

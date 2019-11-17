@@ -75,8 +75,18 @@ public class SnapCampaignsTest {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapCampaignCreated());
 	Assertions.assertThatCode(() -> sCampaigns.createCampaign(oAuthAccessToken, this.initCampaignForCreation()))
 		.doesNotThrowAnyException();
+	Optional<Campaign> optCampaign = sCampaigns.createCampaign(oAuthAccessToken, this.initCampaignForCreation());
+	optCampaign.ifPresent(campaign -> {
+	    assertThat(campaign.getId()).isEqualTo(id);
+	    assertThat(campaign.getName()).isEqualTo("Cool Campaign");
+	    assertThat(campaign.getStatus()).isEqualTo(StatusEnum.PAUSED);
+	    assertThat(campaign.getName()).isEqualTo("Cool Campaign");
+	    assertThat(campaign.getAdAccountId()).isEqualTo(accountId);
+	});
     } // test_create_campaign_should_success()
 
     @Test
@@ -258,8 +268,18 @@ public class SnapCampaignsTest {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPut.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapCampaignUpdated());
 	Assertions.assertThatCode(() -> sCampaigns.updateCampaign(oAuthAccessToken, this.initCampaignForUpdate()))
 		.doesNotThrowAnyException();
+	Optional<Campaign> optCampaign = sCampaigns.updateCampaign(oAuthAccessToken, this.initCampaignForUpdate());
+	optCampaign.ifPresent(campaign -> {
+	    assertThat(campaign.getId()).isEqualTo(id);
+	    assertThat(campaign.getName()).isEqualTo("Cool Campaign");
+	    assertThat(campaign.getStatus()).isEqualTo(StatusEnum.PAUSED);
+	    assertThat(campaign.getName()).isEqualTo("Cool Campaign");
+	    assertThat(campaign.getAdAccountId()).isEqualTo(accountId);
+	});
     } // test_update_campaign_should_success()
 
     @Test
