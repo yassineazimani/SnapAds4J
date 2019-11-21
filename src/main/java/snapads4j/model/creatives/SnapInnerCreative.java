@@ -13,32 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package snapads4j.model.media;
+package snapads4j.model.creatives;
 
-import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import snapads4j.model.SnapHttpResponse;
 
+/**
+ * SnapInnerCreative
+ *
+ * @author Yassine
+ */
 @Getter
 @Setter
-public class SnapHttpResponseLinkMedia extends SnapHttpResponse{
+@NoArgsConstructor
+@JsonIgnoreProperties(value = {"sub_request_status"})
+public class SnapInnerCreative {
 
-    @JsonProperty("request_status")
-    private String requestStatus;
+    private Creative creative;
     
-    @JsonProperty("request_id")
-    private String requestId;
-    
-    @JsonProperty("expires_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    private Date expiresAt;
-    
-    
-    private String link;
-
-}// SnapHttpResponseLinkMedia
+}// SnapInnerCreative

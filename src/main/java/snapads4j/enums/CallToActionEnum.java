@@ -13,32 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package snapads4j.model.media;
+package snapads4j.enums;
 
-import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Getter;
-import lombok.Setter;
-import snapads4j.model.SnapHttpResponse;
-
-@Getter
-@Setter
-public class SnapHttpResponseLinkMedia extends SnapHttpResponse{
-
-    @JsonProperty("request_status")
-    private String requestStatus;
-    
-    @JsonProperty("request_id")
-    private String requestId;
-    
-    @JsonProperty("expires_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    private Date expiresAt;
-    
-    
-    private String link;
-
-}// SnapHttpResponseLinkMedia
+/**
+ * CallToActionEnum
+ * @author yassine
+ *
+ */
+public enum CallToActionEnum {
+    /**
+     * BLANK
+     */
+    @JsonProperty("BLANK")
+    BLANK,
+    /**
+     * INSTALL_NOW
+     */
+    @JsonProperty("INSTALL_NOW")
+    INSTALL_NOW,
+    /**
+     * WATCH
+     */
+    @JsonProperty("WATCH")
+    WATCH,
+    /**
+     * VIEW_MORE
+     */
+    @JsonProperty("VIEW_MORE")
+    VIEW_MORE;
+}// CallToActionEnum

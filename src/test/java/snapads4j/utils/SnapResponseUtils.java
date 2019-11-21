@@ -610,4 +610,39 @@ public class SnapResponseUtils {
       	"    \"link\": \"https://adsapisc.appspot.com/media/video_thumbnail?media_id=095a4a6d-01b0-4f6c-8901-41ee38c7b540&expires_at=1536870570555&signature=MGQCMBQ_NfJM0yZCrdyLiEon4Lkbei0zFJF2HpLiHa2NvSLV2JyOVhLqHfQgqbDWUuzaCQIwHzPj_ZFtPNk688SoFiKWUIFEKKBMhSm8t4moy9xlfgnoSv-8LMQ1omM_P8QCj7O9\"\r\n" + 
       	"}";
   }// getSnapThumbnailMedia()
+  
+  public static String getSnapSpecificCreative() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57b017a400ff057ca1dcf703da0001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010101\",\r\n" + 
+      	"  \"creatives\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"creative\": {\r\n" + 
+      	"        \"id\": \"c1e6e929-acec-466f-b023-852b8cacc54f\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:45:04.300Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:45:04.300Z\",\r\n" + 
+      	"        \"name\": \"Creative Creative\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"SNAP_AD\",\r\n" + 
+      	"        \"packaging_status\": \"PENDING\",\r\n" + 
+      	"        \"review_status\": \"PENDING_REVIEW\",\r\n" + 
+      	"        \"shareable\": true,\r\n" + 
+      	"        \"top_snap_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"top_snap_crop_position\": \"MIDDLE\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapSpecificCreative()
+  
+  public static String getSnapPreviewCreative() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5aa15e8000ff03acde535d9a200001737e616473617069736300016275696c642d62633562363761342d312d3134372d3600013326\",\r\n" + 
+      	"    \"creative_id\": \"c1e6e929-acec-466f-b023-852b8cacc54f\",\r\n" + 
+      	"    \"expires_at\": \"2018-03-09T15:51:33.248Z\",\r\n" + 
+      	"    \"snapcode_link\": \"https://adsapisc.appspot.com/snapcodeimage/c1e6e929-acec-466f-b023-852b8cacc54f/352a899e-4a9d-3fdf-8efe-9bac9b8a0a21\"\r\n" + 
+      	"}";
+  }// getSnapPreviewCreative()
 } // SnapResponseUtils
