@@ -18,6 +18,8 @@ package snapads4j.model.creatives;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -42,6 +44,7 @@ import snapads4j.enums.TopSnapCropPositionEnum;
 @Getter
 @Setter
 @ToString
+@JsonInclude(Include.NON_NULL)
 public class Creative {
     
     /** ID */
@@ -127,5 +130,26 @@ public class Creative {
      */
     @JsonProperty("review_status")
     private ReviewStatusEnum reviewStatus;
+    
+    @JsonProperty("longform_video_properties")
+    private LongformVideoProperties longformVideoProperties;
+    
+    @JsonProperty("app_install_properties")
+    private AppInstallProperties appInstallProperties;
+    
+    @JsonProperty("web_view_properties")
+    private WebViewProperties webViewProperties;
+    
+    @JsonProperty("deep_link_properties")
+    private DeepLinkProperties deepLinkProperties;
+    
+    @JsonProperty("preview_properties")
+    private PreviewProperties previewProperties;
+    
+    @JsonProperty("collection_properties")
+    private CollectionProperties collectionProperties;
+    
+    @JsonProperty("ad_to_lens_properties")
+    private AdLensProperties adLensProperties;
 
 }// Creative

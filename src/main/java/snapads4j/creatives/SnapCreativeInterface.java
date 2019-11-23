@@ -22,19 +22,17 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import snapads4j.enums.CreativeToCreateEnum;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.creatives.Creative;
 
 public interface SnapCreativeInterface {
-
+    
     /**
      * 
      * @param oAuthAccessToken
      * @param creative
-     * @param type
      * @return
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
@@ -42,7 +40,7 @@ public interface SnapCreativeInterface {
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
      */
-    public Optional<Creative> createCreative(String oAuthAccessToken, Creative creative, CreativeToCreateEnum type)
+    public Optional<Creative> createCreative(String oAuthAccessToken, Creative creative)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException;
     

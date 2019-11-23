@@ -593,6 +593,114 @@ public class SnapResponseUtils {
       	"}";
   }// getSnapSpecificMedia()
   
+  public static String getSnapAllCreatives() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57b0171900ff0c73f50d5bd2f10001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010106\",\r\n" + 
+      	"  \"creatives\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"creative\": {\r\n" + 
+      	"        \"id\": \"184fe3d0-ff80-4388-8d5f-05c340eff231\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:54:38.229Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:54:38.229Z\",\r\n" + 
+      	"        \"name\": \"Creative LFV\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"LONGFORM_VIDEO\",\r\n" + 
+      	"        \"packaging_status\": \"PENDING\",\r\n" + 
+      	"        \"review_status\": \"PENDING_REVIEW\",\r\n" + 
+      	"        \"shareable\": true,\r\n" + 
+      	"        \"call_to_action\": \"WATCH\",\r\n" + 
+      	"        \"top_snap_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"top_snap_crop_position\": \"MIDDLE\",\r\n" + 
+      	"        \"longform_video_properties\": {\r\n" + 
+      	"          \"video_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\"\r\n" + 
+      	"        }\r\n" + 
+      	"      }\r\n" + 
+      	"    },\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"creative\": {\r\n" + 
+      	"        \"id\": \"1c7065c2-ad9f-41cc-b2c5-d48d9810439b\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:56:48.631Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:56:48.631Z\",\r\n" + 
+      	"        \"name\": \"Creative App Install\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"APP_INSTALL\",\r\n" + 
+      	"        \"packaging_status\": \"PENDING\",\r\n" + 
+      	"        \"review_status\": \"PENDING_REVIEW\",\r\n" + 
+      	"        \"shareable\": true,\r\n" + 
+      	"        \"call_to_action\": \"INSTALL_NOW\",\r\n" + 
+      	"        \"top_snap_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"top_snap_crop_position\": \"MIDDLE\",\r\n" + 
+      	"        \"app_install_properties\": {\r\n" + 
+      	"          \"app_name\": \"Cool App Yo\",\r\n" + 
+      	"          \"ios_app_id\": \"447188370\",\r\n" + 
+      	"          \"android_app_url\": \"com.snapchat.android\",\r\n" + 
+      	"          \"icon_media_id\": \"ab32d7e5-1f80-4e1a-a76b-3c543d2b28e4\"\r\n" + 
+      	"        }\r\n" + 
+      	"      }\r\n" + 
+      	"    },\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"creative\": {\r\n" + 
+      	"        \"id\": \"313e8415-6294-47d6-b064-5a0d9f21d224\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:54:52.107Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:54:52.107Z\",\r\n" + 
+      	"        \"name\": \"Creative LFV 2\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"LONGFORM_VIDEO\",\r\n" + 
+      	"        \"packaging_status\": \"PENDING\",\r\n" + 
+      	"        \"review_status\": \"PENDING_REVIEW\",\r\n" + 
+      	"        \"shareable\": true,\r\n" + 
+      	"        \"call_to_action\": \"WATCH\",\r\n" + 
+      	"        \"top_snap_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"top_snap_crop_position\": \"MIDDLE\",\r\n" + 
+      	"        \"longform_video_properties\": {\r\n" + 
+      	"          \"video_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\"\r\n" + 
+      	"        }\r\n" + 
+      	"      }\r\n" + 
+      	"    },\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"creative\": {\r\n" + 
+      	"        \"id\": \"67e4296c-486b-4bf3-877b-f34e8eeb173c\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:58:12.768Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:58:12.768Z\",\r\n" + 
+      	"        \"name\": \"Creative WV\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"WEB_VIEW\",\r\n" + 
+      	"        \"packaging_status\": \"PENDING\",\r\n" + 
+      	"        \"review_status\": \"PENDING_REVIEW\",\r\n" + 
+      	"        \"shareable\": true,\r\n" + 
+      	"        \"call_to_action\": \"VIEW_MORE\",\r\n" + 
+      	"        \"top_snap_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"top_snap_crop_position\": \"MIDDLE\",\r\n" + 
+      	"        \"web_view_properties\": {\r\n" + 
+      	"          \"url\": \"http://snapchat.com/ads\"\r\n" + 
+      	"        }\r\n" + 
+      	"      }\r\n" + 
+      	"    },\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"creative\": {\r\n" + 
+      	"        \"id\": \"c1e6e929-acec-466f-b023-852b8cacc18f\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:45:04.300Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:45:04.300Z\",\r\n" + 
+      	"        \"name\": \"Creative Creative\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"SNAP_AD\",\r\n" + 
+      	"        \"packaging_status\": \"PENDING\",\r\n" + 
+      	"        \"review_status\": \"PENDING_REVIEW\",\r\n" + 
+      	"        \"shareable\": true,\r\n" + 
+      	"        \"top_snap_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"top_snap_crop_position\": \"MIDDLE\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapAllCreatives()
+  
   public static String getSnapPreviewMedia() {
       return "{\r\n" + 
       	"    \"request_status\": \"SUCCESS\",\r\n" + 

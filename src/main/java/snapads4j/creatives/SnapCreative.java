@@ -39,7 +39,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Getter;
 import lombok.Setter;
-import snapads4j.enums.CreativeToCreateEnum;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
@@ -89,12 +88,12 @@ public class SnapCreative implements SnapCreativeInterface{
     }// SnapCreative()
 
     @Override
-    public Optional<Creative> createCreative(String oAuthAccessToken, Creative creative, CreativeToCreateEnum type)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+    public Optional<Creative> createCreative(String oAuthAccessToken, Creative creative) throws SnapResponseErrorException, SnapOAuthAccessTokenException,
+	    SnapArgumentException, JsonProcessingException, UnsupportedEncodingException {
 	// TODO Auto-generated method stub
 	return null;
-    }
+    }// createCreative()
+
 
     @Override
     public Optional<Creative> updateCreative(String oAuthAccessToken, Creative creative)

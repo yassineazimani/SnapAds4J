@@ -19,6 +19,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -36,6 +38,7 @@ import snapads4j.enums.StatusEnum;
 @Getter
 @Setter
 @ToString
+@JsonInclude(Include.NON_NULL)
 public class AdAccount {
 
   /** AD Account ID */
