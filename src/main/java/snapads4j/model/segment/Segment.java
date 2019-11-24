@@ -15,6 +15,8 @@
  */
 package snapads4j.model.segment;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -28,6 +30,7 @@ import snapads4j.enums.UploadStatusEnum;
 @Getter
 @Setter
 @ToString
+@JsonInclude(Include.NON_NULL)
 public class Segment {
 
   private Long id;

@@ -17,6 +17,8 @@ package snapads4j.model.adsquads;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -41,6 +43,7 @@ import snapads4j.model.targeting.Targeting;
 @Getter
 @Setter
 @ToString
+@JsonInclude(Include.NON_NULL)
 public class AdSquad {
 
   /** Ad Squad ID */

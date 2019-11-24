@@ -26,5 +26,7 @@ public enum AdTypeEnum {
   @JsonProperty("SNAP_AD")
   SNAP_AD,
   @JsonProperty("LENS")
-  LENS;
+  LENS,
+  @JsonProperty("FILTER")
+  FILTER;
 }// AdTypeEnum

@@ -137,9 +137,6 @@ public class SnapAd implements SnapAdInterface {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
-	if (StringUtils.isEmpty(oAuthAccessToken)) {
-	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
-	}
 	checkSnapAd(ad, CheckAdEnum.UPDATE);
 	Optional<Ad> result = Optional.empty();
 	final String url = this.endpointUpdateAd.replace("{ad_squad_id}", ad.getAdSquadId());

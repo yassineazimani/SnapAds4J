@@ -13,32 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package snapads4j.model.media;
+package snapads4j.model.creatives;
 
-import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
-import snapads4j.model.SnapHttpResponse;
+import lombok.ToString;
 
 @Getter
 @Setter
-public class SnapHttpResponseLinkMedia extends SnapHttpResponse{
+@ToString
+public class LongformVideoProperties {
 
-    @JsonProperty("request_status")
-    private String requestStatus;
+    @JsonProperty("video_media_id")
+    private String videoMediaId;
     
-    @JsonProperty("request_id")
-    private String requestId;
-    
-    @JsonProperty("expires_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    private Date expiresAt;
-    
-    
-    private String link;
-
-}// SnapHttpResponseLinkMedia
+}// LongformVideoProperties

@@ -18,6 +18,8 @@ package snapads4j.model.campaigns;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -35,6 +37,7 @@ import snapads4j.enums.StatusEnum;
 @Getter
 @Setter
 @ToString
+@JsonInclude(Include.NON_NULL)
 public class Campaign {
 
   /** Campaign ID */

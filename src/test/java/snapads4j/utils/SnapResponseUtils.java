@@ -593,6 +593,181 @@ public class SnapResponseUtils {
       	"}";
   }// getSnapSpecificMedia()
   
+  public static String getSnapCreativeCreated() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57b0136f00ff085e3d63d358a20001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010108\",\r\n" + 
+      	"  \"creatives\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"creative\": {\r\n" + 
+      	"        \"id\": \"c1e6e929-acec-466f-b023-852b8cacc18f\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:45:04.300Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:45:04.300Z\",\r\n" + 
+      	"        \"name\": \"Creative Creative\",\r\n" + 
+      	"        \"brand_name\": \"Maxiumum Brand\",\r\n" + 
+      	"        \"headline\": \"Healthy Living\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"SNAP_AD\",\r\n" + 
+      	"        \"packaging_status\": \"PENDING\",\r\n" + 
+      	"        \"review_status\": \"PENDING_REVIEW\",\r\n" + 
+      	"        \"shareable\": true,\r\n" + 
+      	"        \"top_snap_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"top_snap_crop_position\": \"MIDDLE\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapCreativeCreated()
+  
+  public static String getSnapCreativeUpdated() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5c3008ed00ff04a89c4d5c66150001737e616473617069736300016275696c642d31326365666331382d312d3232362d3000000003\",\r\n" + 
+      	"    \"creatives\": [\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"creative\": {\r\n" + 
+      	"                \"id\": \"7772efab-028d-40ec-aa9d-7eb8f065c10a\",\r\n" + 
+      	"                \"updated_at\": \"2019-01-11T21:21:50.991Z\",\r\n" + 
+      	"                \"created_at\": \"2018-12-05T16:04:09.772Z\",\r\n" + 
+      	"                \"created_by_app_id\": \"e4892f56-5303-4782-bfb2-14ebe02c6401\",\r\n" + 
+      	"                \"created_by_user\": \"a22b5575-9052-437e-96c1-db781d62d203\",\r\n" + 
+      	"                \"last_updated_by_app_id\": \"fffabe40-7639-4a6b-837d-b88f802dc3d2\",\r\n" + 
+      	"                \"last_updated_by_user\": \"222b5575-9052-437e-96c1-db781d62d203\",\r\n" + 
+      	"                \"name\": \"Citrus Creative\",\r\n" + 
+      	"                \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"                \"type\": \"WEB_VIEW\",\r\n" + 
+      	"                \"packaging_status\": \"IN_PROGRESS\",\r\n" + 
+      	"                \"review_status\": \"PENDING_REVIEW\",\r\n" + 
+      	"                \"shareable\": true,\r\n" + 
+      	"                \"headline\": \"For all Citrus Fans\",\r\n" + 
+      	"                \"brand_name\": \"Example Inc\",\r\n" + 
+      	"                \"call_to_action\": \"LISTEN\",\r\n" + 
+      	"                \"top_snap_media_id\": \"647e6398-7e44-4ae5-a19d-c400b93bce32\",\r\n" + 
+      	"                \"top_snap_crop_position\": \"MIDDLE\",\r\n" + 
+      	"                \"web_view_properties\": {\r\n" + 
+      	"                    \"url\": \"https://www.example.com/intro?utm_source=snapchat&utm_medium=paidsocial&utm_campaign=2019_citrus\",\r\n" + 
+      	"                    \"allow_snap_javascript_sdk\": false,\r\n" + 
+      	"                    \"use_immersive_mode\": false,\r\n" + 
+      	"                    \"deep_link_urls\": [],\r\n" + 
+      	"                    \"block_preload\": true\r\n" + 
+      	"                },\r\n" + 
+      	"                \"ad_product\": \"SNAP_AD\"\r\n" + 
+      	"            }\r\n" + 
+      	"        }\r\n" + 
+      	"    ]\r\n" + 
+      	"}";
+  }// getSnapCreativeUpdated()
+  
+  public static String getSnapAllCreatives() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57b0171900ff0c73f50d5bd2f10001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010106\",\r\n" + 
+      	"  \"creatives\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"creative\": {\r\n" + 
+      	"        \"id\": \"184fe3d0-ff80-4388-8d5f-05c340eff231\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:54:38.229Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:54:38.229Z\",\r\n" + 
+      	"        \"name\": \"Creative LFV\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"LONGFORM_VIDEO\",\r\n" + 
+      	"        \"packaging_status\": \"PENDING\",\r\n" + 
+      	"        \"review_status\": \"PENDING_REVIEW\",\r\n" + 
+      	"        \"shareable\": true,\r\n" + 
+      	"        \"call_to_action\": \"WATCH\",\r\n" + 
+      	"        \"top_snap_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"top_snap_crop_position\": \"MIDDLE\",\r\n" + 
+      	"        \"longform_video_properties\": {\r\n" + 
+      	"          \"video_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\"\r\n" + 
+      	"        }\r\n" + 
+      	"      }\r\n" + 
+      	"    },\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"creative\": {\r\n" + 
+      	"        \"id\": \"1c7065c2-ad9f-41cc-b2c5-d48d9810439b\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:56:48.631Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:56:48.631Z\",\r\n" + 
+      	"        \"name\": \"Creative App Install\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"APP_INSTALL\",\r\n" + 
+      	"        \"packaging_status\": \"PENDING\",\r\n" + 
+      	"        \"review_status\": \"PENDING_REVIEW\",\r\n" + 
+      	"        \"shareable\": true,\r\n" + 
+      	"        \"call_to_action\": \"INSTALL_NOW\",\r\n" + 
+      	"        \"top_snap_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"top_snap_crop_position\": \"MIDDLE\",\r\n" + 
+      	"        \"app_install_properties\": {\r\n" + 
+      	"          \"app_name\": \"Cool App Yo\",\r\n" + 
+      	"          \"ios_app_id\": \"447188370\",\r\n" + 
+      	"          \"android_app_url\": \"com.snapchat.android\",\r\n" + 
+      	"          \"icon_media_id\": \"ab32d7e5-1f80-4e1a-a76b-3c543d2b28e4\"\r\n" + 
+      	"        }\r\n" + 
+      	"      }\r\n" + 
+      	"    },\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"creative\": {\r\n" + 
+      	"        \"id\": \"313e8415-6294-47d6-b064-5a0d9f21d224\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:54:52.107Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:54:52.107Z\",\r\n" + 
+      	"        \"name\": \"Creative LFV 2\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"LONGFORM_VIDEO\",\r\n" + 
+      	"        \"packaging_status\": \"PENDING\",\r\n" + 
+      	"        \"review_status\": \"PENDING_REVIEW\",\r\n" + 
+      	"        \"shareable\": true,\r\n" + 
+      	"        \"call_to_action\": \"WATCH\",\r\n" + 
+      	"        \"top_snap_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"top_snap_crop_position\": \"MIDDLE\",\r\n" + 
+      	"        \"longform_video_properties\": {\r\n" + 
+      	"          \"video_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\"\r\n" + 
+      	"        }\r\n" + 
+      	"      }\r\n" + 
+      	"    },\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"creative\": {\r\n" + 
+      	"        \"id\": \"67e4296c-486b-4bf3-877b-f34e8eeb173c\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:58:12.768Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:58:12.768Z\",\r\n" + 
+      	"        \"name\": \"Creative WV\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"WEB_VIEW\",\r\n" + 
+      	"        \"packaging_status\": \"PENDING\",\r\n" + 
+      	"        \"review_status\": \"PENDING_REVIEW\",\r\n" + 
+      	"        \"shareable\": true,\r\n" + 
+      	"        \"call_to_action\": \"VIEW_MORE\",\r\n" + 
+      	"        \"top_snap_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"top_snap_crop_position\": \"MIDDLE\",\r\n" + 
+      	"        \"web_view_properties\": {\r\n" + 
+      	"          \"url\": \"http://snapchat.com/ads\"\r\n" + 
+      	"        }\r\n" + 
+      	"      }\r\n" + 
+      	"    },\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"creative\": {\r\n" + 
+      	"        \"id\": \"c1e6e929-acec-466f-b023-852b8cacc18f\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:45:04.300Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:45:04.300Z\",\r\n" + 
+      	"        \"name\": \"Creative Creative\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"SNAP_AD\",\r\n" + 
+      	"        \"packaging_status\": \"PENDING\",\r\n" + 
+      	"        \"review_status\": \"PENDING_REVIEW\",\r\n" + 
+      	"        \"shareable\": true,\r\n" + 
+      	"        \"top_snap_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"top_snap_crop_position\": \"MIDDLE\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapAllCreatives()
+  
   public static String getSnapPreviewMedia() {
       return "{\r\n" + 
       	"    \"request_status\": \"SUCCESS\",\r\n" + 
@@ -610,4 +785,39 @@ public class SnapResponseUtils {
       	"    \"link\": \"https://adsapisc.appspot.com/media/video_thumbnail?media_id=095a4a6d-01b0-4f6c-8901-41ee38c7b540&expires_at=1536870570555&signature=MGQCMBQ_NfJM0yZCrdyLiEon4Lkbei0zFJF2HpLiHa2NvSLV2JyOVhLqHfQgqbDWUuzaCQIwHzPj_ZFtPNk688SoFiKWUIFEKKBMhSm8t4moy9xlfgnoSv-8LMQ1omM_P8QCj7O9\"\r\n" + 
       	"}";
   }// getSnapThumbnailMedia()
+  
+  public static String getSnapSpecificCreative() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57b017a400ff057ca1dcf703da0001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010101\",\r\n" + 
+      	"  \"creatives\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"creative\": {\r\n" + 
+      	"        \"id\": \"c1e6e929-acec-466f-b023-852b8cacc54f\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:45:04.300Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:45:04.300Z\",\r\n" + 
+      	"        \"name\": \"Creative Creative\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"SNAP_AD\",\r\n" + 
+      	"        \"packaging_status\": \"PENDING\",\r\n" + 
+      	"        \"review_status\": \"PENDING_REVIEW\",\r\n" + 
+      	"        \"shareable\": true,\r\n" + 
+      	"        \"top_snap_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"top_snap_crop_position\": \"MIDDLE\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapSpecificCreative()
+  
+  public static String getSnapPreviewCreative() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5aa15e8000ff03acde535d9a200001737e616473617069736300016275696c642d62633562363761342d312d3134372d3600013326\",\r\n" + 
+      	"    \"creative_id\": \"c1e6e929-acec-466f-b023-852b8cacc54f\",\r\n" + 
+      	"    \"expires_at\": \"2018-03-09T15:51:33.248Z\",\r\n" + 
+      	"    \"snapcode_link\": \"https://adsapisc.appspot.com/snapcodeimage/c1e6e929-acec-466f-b023-852b8cacc54f/352a899e-4a9d-3fdf-8efe-9bac9b8a0a21\"\r\n" + 
+      	"}";
+  }// getSnapPreviewCreative()
 } // SnapResponseUtils

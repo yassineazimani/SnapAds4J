@@ -18,6 +18,8 @@ package snapads4j.model.media;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -34,6 +36,7 @@ import snapads4j.enums.MediaTypeEnum;
 @Getter
 @Setter
 @ToString
+@JsonInclude(Include.NON_NULL)
 public class CreativeMedia {
     
     /** ID */
