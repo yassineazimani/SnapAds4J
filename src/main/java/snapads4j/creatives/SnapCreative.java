@@ -335,7 +335,7 @@ public class SnapCreative implements SnapCreativeInterface {
 	    }
 
 	    if (creative.getAdLensProperties() != null
-		    && StringUtils.isNotEmpty(creative.getAdLensProperties().getLensMediaId())) {
+		    && StringUtils.isEmpty(creative.getAdLensProperties().getLensMediaId())) {
 		sb.append("Lens Media ID (Ad Lens Properties) is required,");
 	    }
 

@@ -593,6 +593,33 @@ public class SnapResponseUtils {
       	"}";
   }// getSnapSpecificMedia()
   
+  public static String getSnapCreativeCreated() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57b0136f00ff085e3d63d358a20001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010108\",\r\n" + 
+      	"  \"creatives\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"creative\": {\r\n" + 
+      	"        \"id\": \"c1e6e929-acec-466f-b023-852b8cacc18f\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T06:45:04.300Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T06:45:04.300Z\",\r\n" + 
+      	"        \"name\": \"Creative Creative\",\r\n" + 
+      	"        \"brand_name\": \"Maxiumum Brand\",\r\n" + 
+      	"        \"headline\": \"Healthy Living\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"type\": \"SNAP_AD\",\r\n" + 
+      	"        \"packaging_status\": \"PENDING\",\r\n" + 
+      	"        \"review_status\": \"PENDING_REVIEW\",\r\n" + 
+      	"        \"shareable\": true,\r\n" + 
+      	"        \"top_snap_media_id\": \"a7bee653-1865-41cf-8cee-8ab85a205837\",\r\n" + 
+      	"        \"top_snap_crop_position\": \"MIDDLE\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapCreativeCreated()
+  
   public static String getSnapCreativeUpdated() {
       return "{\r\n" + 
       	"    \"request_status\": \"SUCCESS\",\r\n" + 
