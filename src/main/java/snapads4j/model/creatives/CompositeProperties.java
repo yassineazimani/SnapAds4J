@@ -13,39 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package snapads4j.enums;
+package snapads4j.model.creatives;
+
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * CallToActionEnum
- * @author yassine
- *
- */
-public enum CallToActionEnum {
-    /**
-     * BLANK
-     */
-    @JsonProperty("BLANK")
-    BLANK,
-    /**
-     * INSTALL_NOW
-     */
-    @JsonProperty("INSTALL_NOW")
-    INSTALL_NOW,
-    /**
-     * WATCH
-     */
-    @JsonProperty("WATCH")
-    WATCH,
-    /**
-     * LISTEN
-     */
-    @JsonProperty("LISTEN")
-    LISTEN,
-    /**
-     * VIEW_MORE
-     */
-    @JsonProperty("VIEW_MORE")
-    VIEW_MORE;
-}// CallToActionEnum
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
+public class CompositeProperties {
+
+    @JsonProperty("creative_ids")
+    private List<String> creativeIds;
+    
+}// CompositeProperties

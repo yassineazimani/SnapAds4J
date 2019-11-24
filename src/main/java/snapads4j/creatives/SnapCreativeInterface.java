@@ -30,10 +30,11 @@ import snapads4j.model.creatives.Creative;
 public interface SnapCreativeInterface {
     
     /**
+     * This function will create a Creative.
      * 
      * @param oAuthAccessToken
-     * @param creative
-     * @return
+     * @param creative Creative to create
+     * @return creative created
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
@@ -45,10 +46,13 @@ public interface SnapCreativeInterface {
 	    JsonProcessingException, UnsupportedEncodingException;
     
     /**
+     * This function will update the specified Creative.
+     * 
+     * <b>The API expects the entire object when updating any fields.</b>
      * 
      * @param oAuthAccessToken
-     * @param creative
-     * @return
+     * @param creative Creative to update
+     * @return creative updated
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException

@@ -593,6 +593,46 @@ public class SnapResponseUtils {
       	"}";
   }// getSnapSpecificMedia()
   
+  public static String getSnapCreativeUpdated() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5c3008ed00ff04a89c4d5c66150001737e616473617069736300016275696c642d31326365666331382d312d3232362d3000000003\",\r\n" + 
+      	"    \"creatives\": [\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"creative\": {\r\n" + 
+      	"                \"id\": \"7772efab-028d-40ec-aa9d-7eb8f065c10a\",\r\n" + 
+      	"                \"updated_at\": \"2019-01-11T21:21:50.991Z\",\r\n" + 
+      	"                \"created_at\": \"2018-12-05T16:04:09.772Z\",\r\n" + 
+      	"                \"created_by_app_id\": \"e4892f56-5303-4782-bfb2-14ebe02c6401\",\r\n" + 
+      	"                \"created_by_user\": \"a22b5575-9052-437e-96c1-db781d62d203\",\r\n" + 
+      	"                \"last_updated_by_app_id\": \"fffabe40-7639-4a6b-837d-b88f802dc3d2\",\r\n" + 
+      	"                \"last_updated_by_user\": \"222b5575-9052-437e-96c1-db781d62d203\",\r\n" + 
+      	"                \"name\": \"Citrus Creative\",\r\n" + 
+      	"                \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"                \"type\": \"WEB_VIEW\",\r\n" + 
+      	"                \"packaging_status\": \"IN_PROGRESS\",\r\n" + 
+      	"                \"review_status\": \"PENDING_REVIEW\",\r\n" + 
+      	"                \"shareable\": true,\r\n" + 
+      	"                \"headline\": \"For all Citrus Fans\",\r\n" + 
+      	"                \"brand_name\": \"Example Inc\",\r\n" + 
+      	"                \"call_to_action\": \"LISTEN\",\r\n" + 
+      	"                \"top_snap_media_id\": \"647e6398-7e44-4ae5-a19d-c400b93bce32\",\r\n" + 
+      	"                \"top_snap_crop_position\": \"MIDDLE\",\r\n" + 
+      	"                \"web_view_properties\": {\r\n" + 
+      	"                    \"url\": \"https://www.example.com/intro?utm_source=snapchat&utm_medium=paidsocial&utm_campaign=2019_citrus\",\r\n" + 
+      	"                    \"allow_snap_javascript_sdk\": false,\r\n" + 
+      	"                    \"use_immersive_mode\": false,\r\n" + 
+      	"                    \"deep_link_urls\": [],\r\n" + 
+      	"                    \"block_preload\": true\r\n" + 
+      	"                },\r\n" + 
+      	"                \"ad_product\": \"SNAP_AD\"\r\n" + 
+      	"            }\r\n" + 
+      	"        }\r\n" + 
+      	"    ]\r\n" + 
+      	"}";
+  }// getSnapCreativeUpdated()
+  
   public static String getSnapAllCreatives() {
       return "{\r\n" + 
       	"  \"request_status\": \"success\",\r\n" + 

@@ -23,10 +23,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -39,22 +41,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Getter;
 import lombok.Setter;
+import snapads4j.enums.CheckAdEnum;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
+import snapads4j.model.creatives.AppInstallProperties;
+import snapads4j.model.creatives.CollectionProperties;
 import snapads4j.model.creatives.Creative;
+import snapads4j.model.creatives.DeepLinkProperties;
+import snapads4j.model.creatives.PreviewProperties;
 import snapads4j.model.creatives.SnapHttpRequestCreative;
 import snapads4j.model.creatives.SnapHttpResponseCreative;
 import snapads4j.model.creatives.SnapHttpResponsePreviewCreative;
+import snapads4j.model.creatives.WebViewProperties;
 import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.FileProperties;
 import snapads4j.utils.HttpUtils;
 
 @Getter
 @Setter
-public class SnapCreative implements SnapCreativeInterface{
-    
+public class SnapCreative implements SnapCreativeInterface {
+
     private FileProperties fp;
 
     private String apiUrl;
@@ -70,11 +78,11 @@ public class SnapCreative implements SnapCreativeInterface{
     private String endpointPreviewCreative;
 
     private CloseableHttpClient httpClient;
-    
+
     private EntityUtilsWrapper entityUtilsWrapper;
 
     private static final Logger LOGGER = LogManager.getLogger(SnapCreative.class);
-    
+
     public SnapCreative() {
 	this.fp = new FileProperties();
 	this.apiUrl = (String) fp.getProperties().get("api.url");
@@ -88,12 +96,39 @@ public class SnapCreative implements SnapCreativeInterface{
     }// SnapCreative()
 
     @Override
-    public Optional<Creative> createCreative(String oAuthAccessToken, Creative creative) throws SnapResponseErrorException, SnapOAuthAccessTokenException,
-	    SnapArgumentException, JsonProcessingException, UnsupportedEncodingException {
-	// TODO Auto-generated method stub
-	return null;
+    public Optional<Creative> createCreative(String oAuthAccessToken, Creative creative)
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+	    JsonProcessingException, UnsupportedEncodingException {
+	if (StringUtils.isEmpty(oAuthAccessToken)) {
+	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
+	}
+	checkCreative(creative, CheckAdEnum.CREATION);
+	Optional<Creative> result = Optional.empty();
+	final String url = this.endpointCreateCreative.replace("{ad_account_id}", creative.getAdAccountId());
+	SnapHttpRequestCreative reqBody = new SnapHttpRequestCreative();
+	reqBody.addCreative(creative);
+	HttpPost request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, reqBody);
+	try (CloseableHttpResponse response = httpClient.execute(request)) {
+	    int statusCode = response.getStatusLine().getStatusCode();
+	    if (statusCode >= 300) {
+		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		throw ex;
+	    }
+	    HttpEntity entity = response.getEntity();
+	    if (entity != null) {
+		String body = entityUtilsWrapper.toString(entity);
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SnapHttpResponseCreative responseFromJson = mapper.readValue(body, SnapHttpResponseCreative.class);
+		if (responseFromJson != null) {
+		    result = responseFromJson.getSpecificCreative();
+		}
+	    }
+	} catch (IOException e) {
+	    LOGGER.error("Impossible to create creative, ad_account_id = {}", creative.getAdAccountId(), e);
+	}
+	return result;
     }// createCreative()
-
 
     @Override
     public Optional<Creative> updateCreative(String oAuthAccessToken, Creative creative)
@@ -102,9 +137,9 @@ public class SnapCreative implements SnapCreativeInterface{
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
-	//checkCreative(creative, CheckAdEnum.UPDATE);
+	checkCreative(creative, CheckAdEnum.UPDATE);
 	Optional<Creative> result = Optional.empty();
-	final String url = this.endpointUpdateCreative.replace("{id}", creative.getId());
+	final String url = this.endpointUpdateCreative.replace("{ad_account_id}", creative.getAdAccountId());
 	SnapHttpRequestCreative reqBody = new SnapHttpRequestCreative();
 	reqBody.addCreative(creative);
 	HttpPut request = HttpUtils.preparePutRequestObject(url, oAuthAccessToken, reqBody);
@@ -115,7 +150,7 @@ public class SnapCreative implements SnapCreativeInterface{
 		throw ex;
 	    }
 	    HttpEntity entity = response.getEntity();
-	    if(entity != null) {
+	    if (entity != null) {
 		String body = entityUtilsWrapper.toString(entity);
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -223,7 +258,8 @@ public class SnapCreative implements SnapCreativeInterface{
 		}
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		SnapHttpResponsePreviewCreative responseFromJson = mapper.readValue(body, SnapHttpResponsePreviewCreative.class);
+		SnapHttpResponsePreviewCreative responseFromJson = mapper.readValue(body,
+			SnapHttpResponsePreviewCreative.class);
 		if (responseFromJson != null) {
 		    result.put("snapcodeLink", responseFromJson.getSnapCodeLink());
 		    result.put("expiresAt", responseFromJson.getExpiresAt());
@@ -235,4 +271,154 @@ public class SnapCreative implements SnapCreativeInterface{
 	return result;
     }// getPreviewCreative()
 
+    private void checkCreative(Creative creative, CheckAdEnum check) throws SnapArgumentException {
+	if (check == null) {
+	    throw new SnapArgumentException("Please give type of checking Creative");
+	}
+	StringBuilder sb = new StringBuilder();
+	if (creative != null) {
+	    AppInstallProperties appProperties = creative.getAppInstallProperties();
+	    WebViewProperties webViewProperties = creative.getWebViewProperties();
+	    DeepLinkProperties deepLinkProperties = creative.getDeepLinkProperties();
+	    PreviewProperties previewProperties = creative.getPreviewProperties();
+	    CollectionProperties collectionProperties = creative.getCollectionProperties();
+
+	    if (check == CheckAdEnum.UPDATE) {
+		if (creative.getCallToAction() == null) {
+		    sb.append("The call to action is required,");
+		}
+		if (deepLinkProperties != null) {
+		    if (StringUtils.isEmpty(deepLinkProperties.getIosAppId())) {
+			sb.append("IOS App ID (Deep Link Properties) is required,");
+		    }
+		    if (StringUtils.isEmpty(deepLinkProperties.getAndroidAppUrl())) {
+			sb.append("Android App URL (Deep Link Properties) is required,");
+		    }
+		    if (StringUtils.isEmpty(deepLinkProperties.getFallbackType())) {
+			sb.append("Fallback Type (Deep Link Properties) is required,");
+		    }
+		    if (StringUtils.isEmpty(deepLinkProperties.getWebViewFallbackUrl())) {
+			sb.append("WebView Fallback Type URL (Deep Link Properties) is required,");
+		    }
+		}
+	    }
+	    if (StringUtils.isEmpty(creative.getAdAccountId())) {
+		sb.append("The Ad Account ID is required,");
+	    }
+	    if (StringUtils.isEmpty(creative.getBrandName())) {
+		sb.append("The brand name is required,");
+	    }
+	    if (StringUtils.isEmpty(creative.getHeadline())) {
+		sb.append("The headline is required,");
+	    }
+	    if (StringUtils.isEmpty(creative.getName())) {
+		sb.append("The creative's name is required,");
+	    }
+	    if (StringUtils.isEmpty(creative.getTopSnapMediaId())) {
+		sb.append("The top snap media ID is required,");
+	    }
+	    if (creative.getType() == null) {
+		sb.append("The creative's type is required,");
+	    }
+	    if (creative.getLongformVideoProperties() != null
+		    && StringUtils.isEmpty(creative.getLongformVideoProperties().getVideoMediaId())) {
+		sb.append("Video Media ID (Long Form Video Properties) is required,");
+	    }
+
+	    if (webViewProperties != null && StringUtils.isEmpty(webViewProperties.getUrl())) {
+		sb.append("URL (Web View Properties) is required,");
+	    }
+	    
+	    if (creative.getCompositeProperties() != null
+		    && CollectionUtils.isEmpty(creative.getCompositeProperties().getCreativeIds())) {
+		sb.append("Creative IDs (Composite Properties) is required,");
+	    }
+
+	    if (creative.getAdLensProperties() != null
+		    && StringUtils.isNotEmpty(creative.getAdLensProperties().getLensMediaId())) {
+		sb.append("Lens Media ID (Ad Lens Properties) is required,");
+	    }
+
+	    checkAppProperties(appProperties, sb);
+	    checkDeepLinkProperties(deepLinkProperties, sb);
+	    checkPreviewProperties(creative, previewProperties, sb);
+	    checkCollectionProperties(collectionProperties, sb);
+	} else {
+	    sb.append("Creative parameter is not given,");
+	}
+	String finalErrors = sb.toString();
+	if (!StringUtils.isEmpty(finalErrors)) {
+	    finalErrors = finalErrors.substring(0, finalErrors.length() - 1);
+	    throw new SnapArgumentException(finalErrors);
+	}
+    }// checkCreative()
+
+    private void checkAppProperties(AppInstallProperties appProperties, StringBuilder sb) {
+	if (appProperties != null) {
+	    if (StringUtils.isEmpty(appProperties.getAndroidAppUrl())) {
+		sb.append("Android App URL (App Install Properties) is required,");
+	    }
+	    if (StringUtils.isEmpty(appProperties.getAppName())) {
+		sb.append("App name (App Install Properties) is required,");
+	    }
+	    if (StringUtils.isEmpty(appProperties.getIconMediaId())) {
+		sb.append("Icon Media ID (App Install Properties) is required,");
+	    }
+	    if (StringUtils.isEmpty(appProperties.getIosAppId())) {
+		sb.append("IOS App ID (App Install Properties) is required,");
+	    }
+	}
+    }// checkAppProperties()
+
+    private void checkDeepLinkProperties(DeepLinkProperties deepLinkProperties, StringBuilder sb) {
+	if (deepLinkProperties != null) {
+	    if (StringUtils.isEmpty(deepLinkProperties.getDeepLinkUri())) {
+		sb.append("Deep Link URI (Deep Link Properties) is required,");
+	    }
+	    if (StringUtils.isEmpty(deepLinkProperties.getAppName())) {
+		sb.append("App name (Deep Link Properties) is required,");
+	    }
+	    if (StringUtils.isEmpty(deepLinkProperties.getIconMediaId())) {
+		sb.append("Icon Media ID (Deep Link Properties) is required,");
+	    }
+	}
+    }// checkDeepLinkProperties()
+
+    private void checkPreviewProperties(Creative creative, PreviewProperties previewProperties, StringBuilder sb) {
+	if (previewProperties != null && creative != null) {
+	    if (StringUtils.isEmpty(creative.getPreviewCreativeId())) {
+		sb.append("Preview Creative ID is required,");
+	    }
+	    if (StringUtils.isEmpty(previewProperties.getLogoMediaId())) {
+		sb.append("Logo Media ID (Preview Properties) is required,");
+	    }
+	    if (StringUtils.isEmpty(previewProperties.getPreviewHeadline())) {
+		sb.append("Preview Headline (Preview Properties) is required,");
+	    }
+	    if (StringUtils.isEmpty(previewProperties.getPreviewMediaId())) {
+		sb.append("Preview Media ID (Preview Properties) is required,");
+	    }
+	}
+    }// checkDeepLinkProperties()
+
+    private void checkCollectionProperties(CollectionProperties collectionProperties, StringBuilder sb) {
+	if (collectionProperties != null) {
+	    if (StringUtils.isEmpty(collectionProperties.getInteractionZoneId())) {
+		sb.append("Interaction Zone ID (Collection Properties) is required,");
+	    }
+	    if (StringUtils.isEmpty(collectionProperties.getDefaultFallbackInteractionType())) {
+		sb.append("Default Fallback Interaction Type (Collection Properties) is required,");
+	    }
+	    if (StringUtils.isNotEmpty(collectionProperties.getDefaultFallbackInteractionType())
+		    && collectionProperties.getWebViewProperties() == null
+		    && collectionProperties.getDefaultFallbackInteractionType().equals("WEB_VIEW")) {
+		sb.append("Web View Properties (Collection Properties) is required,");
+	    }
+	    if (StringUtils.isNotEmpty(collectionProperties.getDefaultFallbackInteractionType())
+		    && collectionProperties.getDeepLinkProperties() == null
+		    && collectionProperties.getDefaultFallbackInteractionType().equals("DEEP_LINK")) {
+		sb.append("Deep Link Properties (Collection Properties) is required,");
+	    }
+	}
+    }// checkCollectionProperties()
 }// SnapCreative

@@ -151,5 +151,12 @@ public class Creative {
     
     @JsonProperty("ad_to_lens_properties")
     private AdLensProperties adLensProperties;
+    
+    @JsonProperty("composite_properties")
+    private CompositeProperties compositeProperties;
+    
+    public Creative() {
+	this.shareable = true;
+    }// Creative()
 
 }// Creative
