@@ -76,6 +76,10 @@ public class SnapCreative implements SnapCreativeInterface {
     private String endpointAllCreatives;
 
     private String endpointPreviewCreative;
+    
+    private int maxCharactersBrandname;
+    
+    private int maxCharactersHeadline;
 
     private CloseableHttpClient httpClient;
 
@@ -91,6 +95,8 @@ public class SnapCreative implements SnapCreativeInterface {
 	this.endpointSpecificCreative = this.apiUrl + (String) fp.getProperties().get("api.url.creative.one");
 	this.endpointAllCreatives = this.apiUrl + (String) fp.getProperties().get("api.url.creative.all");
 	this.endpointPreviewCreative = this.apiUrl + (String) fp.getProperties().get("api.url.creative.preview");
+	this.maxCharactersBrandname = Integer.valueOf((String) fp.getProperties().get("api.brandname.max.characters"));
+	this.maxCharactersHeadline = Integer.valueOf((String) fp.getProperties().get("api.headline.max.characters"));
 	this.httpClient = HttpClients.createDefault();
 	this.entityUtilsWrapper = new EntityUtilsWrapper();
     }// SnapCreative()
@@ -308,8 +314,14 @@ public class SnapCreative implements SnapCreativeInterface {
 	    if (StringUtils.isEmpty(creative.getBrandName())) {
 		sb.append("The brand name is required,");
 	    }
+	    if (StringUtils.isNotEmpty(creative.getBrandName()) && creative.getBrandName().length() > this.maxCharactersBrandname) {
+		sb.append("The brand name max length is "+ this.maxCharactersBrandname + " characters,");
+	    }
 	    if (StringUtils.isEmpty(creative.getHeadline())) {
 		sb.append("The headline is required,");
+	    }
+	    if (StringUtils.isNotEmpty(creative.getHeadline()) && creative.getHeadline().length() > this.maxCharactersHeadline) {
+		sb.append("The headline max length is "+ this.maxCharactersHeadline + " characters,");
 	    }
 	    if (StringUtils.isEmpty(creative.getName())) {
 		sb.append("The creative's name is required,");
