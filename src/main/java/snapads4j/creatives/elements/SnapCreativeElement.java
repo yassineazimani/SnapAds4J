@@ -45,7 +45,9 @@ import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.creatives.elements.CreativeElement;
 import snapads4j.model.creatives.elements.InteractionZone;
+import snapads4j.model.creatives.elements.SnapHttpRequestCreativeElement;
 import snapads4j.model.creatives.elements.SnapHttpRequestInteractionZone;
+import snapads4j.model.creatives.elements.SnapHttpResponseCreativeElement;
 import snapads4j.model.creatives.elements.SnapHttpResponseInteractionZone;
 import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.FileProperties;
@@ -59,6 +61,10 @@ public class SnapCreativeElement implements SnapCreativeElementInterface {
 
     private String apiUrl;
     
+    private String endpointCreate;
+    
+    private String endpointCreateMultiple;
+    
     private String endpointCreateInteractionZone;
     
     private CloseableHttpClient httpClient;
@@ -70,6 +76,8 @@ public class SnapCreativeElement implements SnapCreativeElementInterface {
     public SnapCreativeElement() {
 	this.fp = new FileProperties();
 	this.apiUrl = (String) fp.getProperties().get("api.url");
+	this.endpointCreate = this.apiUrl + (String) fp.getProperties().get("api.url.creative.element.create");
+	this.endpointCreateMultiple = this.apiUrl + (String) fp.getProperties().get("api.url.creative.element.create.multiple");
 	this.endpointCreateInteractionZone = this.apiUrl + (String) fp.getProperties().get("api.url.interaction.zone.create");
 	this.httpClient = HttpClients.createDefault();
 	this.entityUtilsWrapper = new EntityUtilsWrapper();
@@ -84,6 +92,29 @@ public class SnapCreativeElement implements SnapCreativeElementInterface {
 	}
 	checkCreativeElement(creative);
 	Optional<CreativeElement> result = Optional.empty();
+	final String url = this.endpointCreate.replace("{ad_account_id}", creative.getAdAccountId());
+	SnapHttpRequestCreativeElement reqBody = new SnapHttpRequestCreativeElement();
+	reqBody.addCreative(creative);
+	HttpPost request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, reqBody);
+	try (CloseableHttpResponse response = httpClient.execute(request)) {
+	    int statusCode = response.getStatusLine().getStatusCode();
+	    if (statusCode >= 300) {
+		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		throw ex;
+	    }
+	    HttpEntity entity = response.getEntity();
+	    if (entity != null) {
+		String body = entityUtilsWrapper.toString(entity);
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SnapHttpResponseCreativeElement responseFromJson = mapper.readValue(body, SnapHttpResponseCreativeElement.class);
+		if (responseFromJson != null) {
+		    result = responseFromJson.getSpecificCreative();
+		}
+	    }
+	} catch (IOException e) {
+	    LOGGER.error("Impossible to create creative element, ad_account_id = {}", creative.getAdAccountId(), e);
+	}
 	return result;
     }// createCreativeElement()
 
@@ -96,6 +127,29 @@ public class SnapCreativeElement implements SnapCreativeElementInterface {
 	}
 	checkCreativeElements(creatives);
 	List<CreativeElement> results = new ArrayList<>();
+	final String url = this.endpointCreate.replace("{ad_account_id}", creatives.get(0).getAdAccountId());
+	SnapHttpRequestCreativeElement reqBody = new SnapHttpRequestCreativeElement();
+	creatives.forEach(c -> reqBody.addCreative(c));
+	HttpPost request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, reqBody);
+	try (CloseableHttpResponse response = httpClient.execute(request)) {
+	    int statusCode = response.getStatusLine().getStatusCode();
+	    if (statusCode >= 300) {
+		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		throw ex;
+	    }
+	    HttpEntity entity = response.getEntity();
+	    if (entity != null) {
+		String body = entityUtilsWrapper.toString(entity);
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SnapHttpResponseCreativeElement responseFromJson = mapper.readValue(body, SnapHttpResponseCreativeElement.class);
+		if (responseFromJson != null) {
+		    results = responseFromJson.getAllCreatives();
+		}
+	    }
+	} catch (IOException e) {
+	    LOGGER.error("Impossible to create creative elements, ad_account_id = {}", creatives.get(0).getAdAccountId(), e);
+	}
 	return results;
     }// createCreativeElements()
 

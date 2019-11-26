@@ -821,6 +821,120 @@ public class SnapResponseUtils {
       	"}";
   }// getSnapPreviewCreative()
   
+  public static String getSnapCreationCreativeElement() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5bee332000ff06b565385cab550001737e616473617069736300016275696c642d33373039663463642d312d3232302d3000010145\",\r\n" + 
+      	"    \"creative_elements\": [\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"creative_element\": {\r\n" + 
+      	"                \"id\": \"f63bb5f5-471c-404f-8f0d-e5c1a003e4d9\",\r\n" + 
+      	"                \"updated_at\": \"2018-11-16T03:01:52.907Z\",\r\n" + 
+      	"                \"created_at\": \"2018-11-16T03:01:52.907Z\",\r\n" + 
+      	"                \"name\": \"Product 1 button\",\r\n" + 
+      	"                \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"                \"type\": \"BUTTON\",\r\n" + 
+      	"                \"interaction_type\": \"WEB_VIEW\",\r\n" + 
+      	"                \"title\": \"Best title\",\r\n" + 
+      	"                \"description\": \"Product 1\",\r\n" + 
+      	"                \"button_properties\": {\r\n" + 
+      	"                    \"button_overlay_media_id\": \"008a5ae9-bcc1-4c2e-a3f1-7e924d582019\"\r\n" + 
+      	"                },\r\n" + 
+      	"                \"web_view_properties\": {\r\n" + 
+      	"                    \"url\": \"https://snapchat.com\",\r\n" + 
+      	"                    \"allow_snap_javascript_sdk\": false,\r\n" + 
+      	"                    \"use_immersive_mode\": false,\r\n" + 
+      	"                    \"deep_link_urls\": [],\r\n" + 
+      	"                    \"block_preload\": false\r\n" + 
+      	"                }\r\n" + 
+      	"            }\r\n" + 
+      	"        }\r\n" + 
+      	"    ]\r\n" + 
+      	"}";
+  }// getSnapCreationCreativeElement()
+  
+  public static String getSnapCreationCreativeElements() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5bee33f200ff057a031dfee6af0001737e616473617069736300016275696c642d33373039663463642d312d3232302d300001011a\",\r\n" + 
+      	"    \"creative_elements\": [\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"creative_element\": {\r\n" + 
+      	"                \"id\": \"70debf44-cb4b-4b5f-8828-bd2b68b9f0ca\",\r\n" + 
+      	"                \"updated_at\": \"2018-11-16T03:05:23.241Z\",\r\n" + 
+      	"                \"created_at\": \"2018-11-16T03:05:23.241Z\",\r\n" + 
+      	"                \"name\": \"Product 1 button\",\r\n" + 
+      	"                \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"                \"type\": \"BUTTON\",\r\n" + 
+      	"                \"interaction_type\": \"WEB_VIEW\",\r\n" + 
+      	"                \"title\": \"Best title\",\r\n" + 
+      	"                \"description\": \"Product 1\",\r\n" + 
+      	"                \"button_properties\": {\r\n" + 
+      	"                    \"button_overlay_media_id\": \"008a5ae9-bcc1-4c2e-a3f1-7e924d582019\"\r\n" + 
+      	"                },\r\n" + 
+      	"                \"web_view_properties\": {\r\n" + 
+      	"                    \"url\": \"https://snapchat.com\",\r\n" + 
+      	"                    \"allow_snap_javascript_sdk\": false,\r\n" + 
+      	"                    \"use_immersive_mode\": false,\r\n" + 
+      	"                    \"deep_link_urls\": [],\r\n" + 
+      	"                    \"block_preload\": false\r\n" + 
+      	"                }\r\n" + 
+      	"            }\r\n" + 
+      	"        },\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"creative_element\": {\r\n" + 
+      	"                \"id\": \"a2d1c8a0-0466-4924-b769-7a7e6ed5be3d\",\r\n" + 
+      	"                \"updated_at\": \"2018-11-16T03:05:23.241Z\",\r\n" + 
+      	"                \"created_at\": \"2018-11-16T03:05:23.241Z\",\r\n" + 
+      	"                \"name\": \"Product 2 button\",\r\n" + 
+      	"                \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"                \"type\": \"BUTTON\",\r\n" + 
+      	"                \"interaction_type\": \"WEB_VIEW\",\r\n" + 
+      	"                \"title\": \"Best title\",\r\n" + 
+      	"                \"description\": \"Product 2\",\r\n" + 
+      	"                \"button_properties\": {\r\n" + 
+      	"                    \"button_overlay_media_id\": \"008a5ae9-bcc1-4c2e-a3f1-7e924d582012\"\r\n" + 
+      	"                },\r\n" + 
+      	"                \"web_view_properties\": {\r\n" + 
+      	"                    \"url\": \"https://snapchat.com\",\r\n" + 
+      	"                    \"allow_snap_javascript_sdk\": false,\r\n" + 
+      	"                    \"use_immersive_mode\": false,\r\n" + 
+      	"                    \"deep_link_urls\": [],\r\n" + 
+      	"                    \"block_preload\": false\r\n" + 
+      	"                }\r\n" + 
+      	"            }\r\n" + 
+      	"        },\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"creative_element\": {\r\n" + 
+      	"                \"id\": \"4091233e-3351-405d-8684-a97e70c3b5da\",\r\n" + 
+      	"                \"updated_at\": \"2018-11-16T03:05:23.242Z\",\r\n" + 
+      	"                \"created_at\": \"2018-11-16T03:05:23.242Z\",\r\n" + 
+      	"                \"name\": \"Product 3 button\",\r\n" + 
+      	"                \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"                \"type\": \"BUTTON\",\r\n" + 
+      	"                \"interaction_type\": \"WEB_VIEW\",\r\n" + 
+      	"                \"title\": \"Best title\",\r\n" + 
+      	"                \"description\": \"Product 3\",\r\n" + 
+      	"                \"button_properties\": {\r\n" + 
+      	"                    \"button_overlay_media_id\": \"008a5ae9-bcc1-4c2e-a3f1-7e924d582013\"\r\n" + 
+      	"                },\r\n" + 
+      	"                \"web_view_properties\": {\r\n" + 
+      	"                    \"url\": \"https://snapchat.com\",\r\n" + 
+      	"                    \"allow_snap_javascript_sdk\": false,\r\n" + 
+      	"                    \"use_immersive_mode\": false,\r\n" + 
+      	"                    \"deep_link_urls\": [],\r\n" + 
+      	"                    \"block_preload\": false\r\n" + 
+      	"                }\r\n" + 
+      	"            }\r\n" + 
+      	"        }\r\n" + 
+      	"    ]\r\n" + 
+      	"}";
+  }// getSnapCreationCreativeElements()
+  
   public static String getSnapCreationInteractionZone() {
       return "{\r\n" + 
       	"    \"request_status\": \"SUCCESS\",\r\n" + 
