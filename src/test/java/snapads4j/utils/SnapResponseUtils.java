@@ -820,4 +820,30 @@ public class SnapResponseUtils {
       	"    \"snapcode_link\": \"https://adsapisc.appspot.com/snapcodeimage/c1e6e929-acec-466f-b023-852b8cacc54f/352a899e-4a9d-3fdf-8efe-9bac9b8a0a21\"\r\n" + 
       	"}";
   }// getSnapPreviewCreative()
+  
+  public static String getSnapCreationInteractionZone() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5bee38df00ff00ff5858a22dbc9f0001737e616473617069736300016275696c642d33373039663463642d312d3232302d3000010154\",\r\n" + 
+      	"    \"interaction_zones\": [\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"interaction_zone\": {\r\n" + 
+      	"                \"id\": \"a218dc8b-7a79-4da6-9a1c-e5a581c7bd46\",\r\n" + 
+      	"                \"updated_at\": \"2018-11-16T03:26:23.130Z\",\r\n" + 
+      	"                \"created_at\": \"2018-11-16T03:26:23.130Z\",\r\n" + 
+      	"                \"name\": \"First Interaction Zone\",\r\n" + 
+      	"                \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"                \"headline\": \"MORE\",\r\n" + 
+      	"                \"creative_element_ids\": [\r\n" + 
+      	"                    \"70debf44-cb4b-4b5f-8828-bd2b68b9f0cf\",\r\n" + 
+      	"                    \"a2d1c8a0-0466-4924-b769-7a7e6ed5be3b\",\r\n" + 
+      	"                    \"4091233e-3351-405d-8684-a97e70c3b5dc\",\r\n" + 
+      	"                    \"f63bb5f5-471c-404f-8f0d-e5c1a003e4d9\"\r\n" + 
+      	"                ]\r\n" + 
+      	"            }\r\n" + 
+      	"        }\r\n" + 
+      	"    ]\r\n" + 
+      	"}";
+  }// getSnapCreationInteractionZone()
 } // SnapResponseUtils

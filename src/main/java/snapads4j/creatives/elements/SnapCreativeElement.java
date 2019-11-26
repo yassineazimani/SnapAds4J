@@ -15,6 +15,7 @@
  */
 package snapads4j.creatives.elements;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,18 +23,57 @@ import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.Getter;
+import lombok.Setter;
 import snapads4j.enums.CreativeTypeEnum;
 import snapads4j.enums.InteractionTypeEnum;
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExceptionsUtils;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.creatives.elements.CreativeElement;
 import snapads4j.model.creatives.elements.InteractionZone;
+import snapads4j.model.creatives.elements.SnapHttpRequestInteractionZone;
+import snapads4j.model.creatives.elements.SnapHttpResponseInteractionZone;
+import snapads4j.utils.EntityUtilsWrapper;
+import snapads4j.utils.FileProperties;
+import snapads4j.utils.HttpUtils;
 
+@Getter
+@Setter
 public class SnapCreativeElement implements SnapCreativeElementInterface {
+    
+    private FileProperties fp;
+
+    private String apiUrl;
+    
+    private String endpointCreateInteractionZone;
+    
+    private CloseableHttpClient httpClient;
+
+    private EntityUtilsWrapper entityUtilsWrapper;
+
+    private static final Logger LOGGER = LogManager.getLogger(SnapCreativeElement.class);
+    
+    public SnapCreativeElement() {
+	this.fp = new FileProperties();
+	this.apiUrl = (String) fp.getProperties().get("api.url");
+	this.endpointCreateInteractionZone = this.apiUrl + (String) fp.getProperties().get("api.url.interaction.zone.create");
+	this.httpClient = HttpClients.createDefault();
+	this.entityUtilsWrapper = new EntityUtilsWrapper();
+    }// SnapCreativeElement()
 
     @Override
     public Optional<CreativeElement> createCreativeElement(String oAuthAccessToken, CreativeElement creative)
@@ -68,6 +108,29 @@ public class SnapCreativeElement implements SnapCreativeElementInterface {
 	}
 	checkInteractionZone(interactionZone);
 	Optional<InteractionZone> result = Optional.empty();
+	final String url = this.endpointCreateInteractionZone.replace("{ad_account_id}", interactionZone.getAdAccountId());
+	SnapHttpRequestInteractionZone reqBody = new SnapHttpRequestInteractionZone();
+	reqBody.addInteractionZone(interactionZone);
+	HttpPost request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, reqBody);
+	try (CloseableHttpResponse response = httpClient.execute(request)) {
+	    int statusCode = response.getStatusLine().getStatusCode();
+	    if (statusCode >= 300) {
+		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		throw ex;
+	    }
+	    HttpEntity entity = response.getEntity();
+	    if (entity != null) {
+		String body = entityUtilsWrapper.toString(entity);
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SnapHttpResponseInteractionZone responseFromJson = mapper.readValue(body, SnapHttpResponseInteractionZone.class);
+		if (responseFromJson != null) {
+		    result = responseFromJson.getSpecificInteractionZone();
+		}
+	    }
+	} catch (IOException e) {
+	    LOGGER.error("Impossible to create interaction zone, ad_account_id = {}", interactionZone.getAdAccountId(), e);
+	}
 	return result;
     }// createInteractionZone()
 

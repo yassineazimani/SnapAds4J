@@ -29,6 +29,8 @@ import snapads4j.model.creatives.WebViewProperties;
 @Setter
 @ToString
 public class CreativeElement {
+    
+    private String id;
 
     @JsonProperty("ad_account_id")
     private String adAccountId;

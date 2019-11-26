@@ -15,29 +15,25 @@
  */
 package snapads4j.model.creatives.elements;
 
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
+/**
+ * SnapInnerCreative
+ *
+ * @author Yassine
+ */
 @Getter
 @Setter
-@ToString
-public class InteractionZone {
+@NoArgsConstructor
+@JsonIgnoreProperties(value = {"sub_request_status"})
+public class SnapInnerInteractionZone {
 
-    private String id;
+    @JsonProperty("interaction_zone")
+    private InteractionZone interactionZone;
     
-    @JsonProperty("ad_account_id")
-    private String adAccountId;
-    
-    private String name;
-    
-    private String headline;
-    
-    @JsonProperty("creative_element_ids")
-    private List<String> creativeElements;
-    
-}// InteractionZone
+}// SnapInnerInteractionZone

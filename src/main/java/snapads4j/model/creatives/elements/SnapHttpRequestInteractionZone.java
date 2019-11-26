@@ -15,29 +15,27 @@
  */
 package snapads4j.model.creatives.elements;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
-public class InteractionZone {
+public class SnapHttpRequestInteractionZone {
 
-    private String id;
+    @JsonProperty("interaction_zones")
+    private List<InteractionZone> interactionZones;
+
+    public SnapHttpRequestInteractionZone() {
+	this.interactionZones = new ArrayList<>();
+    }// SnapHttpRequestInteractionZone()
+
+    public void addInteractionZone(InteractionZone zone) {
+	this.interactionZones.add(zone);
+    }// addInteractionZone()
     
-    @JsonProperty("ad_account_id")
-    private String adAccountId;
-    
-    private String name;
-    
-    private String headline;
-    
-    @JsonProperty("creative_element_ids")
-    private List<String> creativeElements;
-    
-}// InteractionZone
+}// SnapHttpRequestInteractionZone
