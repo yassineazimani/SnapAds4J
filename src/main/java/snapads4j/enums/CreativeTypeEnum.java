@@ -89,6 +89,11 @@ public enum CreativeTypeEnum {
     @JsonProperty("LENS_LONGFORM_VIDEO")
     LENS_LONGFORM_VIDEO, 
     /**
+     * BUTTON
+     */
+    @JsonProperty("BUTTON")
+    BUTTON,
+    /**
      * COLLECTION
      */
     @JsonProperty("COLLECTION")

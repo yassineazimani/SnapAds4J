@@ -31,6 +31,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -58,6 +59,7 @@ import snapads4j.model.creatives.LongformVideoProperties;
 import snapads4j.model.creatives.PreviewProperties;
 import snapads4j.model.creatives.WebViewProperties;
 import snapads4j.utils.EntityUtilsWrapper;
+import snapads4j.utils.FileProperties;
 import snapads4j.utils.SnapResponseUtils;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -89,9 +91,22 @@ public class SnapCreativeTest {
     
     private final String topSnapMediaId = "a7bee653-1865-41cf-8cee-8ab85a205837";
     
+    private static FileProperties fp;
+    
+    private static int maxCharactersBrandname;
+    
+    private static int maxCharactersHeadline;
+    
     private Creative creative;
     
     private Creative creativeForCreation;
+    
+    @BeforeClass
+    public static void initMaxCharacters() {
+	fp = new FileProperties();
+	maxCharactersBrandname = Integer.valueOf((String) fp.getProperties().get("api.brandname.max.characters"));
+	maxCharactersHeadline = Integer.valueOf((String) fp.getProperties().get("api.headline.max.characters"));
+    }// initMaxCharacters()
 
     @Before
     public void setUp() {
@@ -222,6 +237,20 @@ public class SnapCreativeTest {
 	assertThatThrownBy(() -> snapCreative.createCreative(oAuthAccessToken, creativeForCreation))
 	.isInstanceOf(SnapArgumentException.class).hasMessage("Deep Link Properties (Collection Properties) is required");
     }// test_create_creative_should_throw_SnapArgumentException_11()
+    
+    @Test
+    public void test_create_creative_should_throw_SnapArgumentException_12() {
+	creativeForCreation.setBrandName("HOs6pbDi9zH7n6Vi6pGO829G4MtpjR90Q3g");
+	assertThatThrownBy(() -> snapCreative.createCreative(oAuthAccessToken, creativeForCreation))
+	.isInstanceOf(SnapArgumentException.class).hasMessage("The brand name max length is "+ maxCharactersBrandname + " characters");
+    }// test_create_creative_should_throw_SnapArgumentException_12()
+    
+    @Test
+    public void test_create_creative_should_throw_SnapArgumentException_13() {
+	creativeForCreation.setHeadline("HOs6pbDi9zH7n6Vi6pGO829G4MtpjR90Q3g");
+	assertThatThrownBy(() -> snapCreative.createCreative(oAuthAccessToken, creativeForCreation))
+	.isInstanceOf(SnapArgumentException.class).hasMessage("The headline max length is "+ maxCharactersHeadline + " characters");
+    }// test_create_creative_should_throw_SnapArgumentException_13()
 
     @Test
     public void test_create_creative_should_throw_IOException() throws ClientProtocolException, IOException,
