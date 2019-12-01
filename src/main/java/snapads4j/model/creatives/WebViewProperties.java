@@ -15,6 +15,8 @@
  */
 package snapads4j.model.creatives;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -33,5 +35,11 @@ public class WebViewProperties {
     
     @JsonProperty("block_preload")
     private boolean blockPreload;
+    
+    @JsonProperty("use_immersive_mode")
+    private boolean useImmersiveMode;
+    
+    @JsonProperty("deep_link_urls")
+    private List<String> deepLinkUrls;
     
 }// WebViewProperties

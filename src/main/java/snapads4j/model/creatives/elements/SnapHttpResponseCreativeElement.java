@@ -23,7 +23,6 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import snapads4j.model.SnapHttpResponse;
@@ -33,7 +32,6 @@ import snapads4j.model.SnapHttpResponse;
  *
  * @author Yassine
  */
-@Getter
 @Setter
 @NoArgsConstructor
 public class SnapHttpResponseCreativeElement extends SnapHttpResponse {

@@ -15,6 +15,9 @@
  */
 package snapads4j.model.creatives.elements;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -31,6 +34,14 @@ import snapads4j.model.creatives.WebViewProperties;
 public class CreativeElement {
     
     private String id;
+    
+    @JsonProperty("created_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private Date createdAt;
+
+    @JsonProperty("updated_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private Date updatedAt;
 
     @JsonProperty("ad_account_id")
     private String adAccountId;

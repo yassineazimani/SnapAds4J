@@ -19,9 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
@@ -64,7 +66,7 @@ public class SnapCampaignsTest {
 
     @Mock
     private StatusLine statusLine;
-    
+
     @Mock
     private EntityUtilsWrapper entityUtilsWrapper;
 
@@ -77,11 +79,14 @@ public class SnapCampaignsTest {
 
     private final String id = "92e1c28a-a331-45b4-8c26-fd3e0eea8c39";
 
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
     @Before
     public void setUp() {
 	MockitoAnnotations.initMocks(this);
 	sCampaigns.setHttpClient(httpClient);
 	sCampaigns.setEntityUtilsWrapper(entityUtilsWrapper);
+	sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     } // setUp()
 
     @Test
@@ -101,6 +106,8 @@ public class SnapCampaignsTest {
 	    assertThat(campaign.getStatus()).isEqualTo(StatusEnum.PAUSED);
 	    assertThat(campaign.getName()).isEqualTo("Cool Campaign");
 	    assertThat(campaign.getAdAccountId()).isEqualTo(accountId);
+	    assertThat(sdf.format(campaign.getCreatedAt())).isEqualTo("2016-08-14T05:33:33.876Z");
+	    assertThat(sdf.format(campaign.getUpdatedAt())).isEqualTo("2016-08-14T05:33:33.876Z");
 	});
     } // test_create_campaign_should_success()
 
@@ -294,6 +301,10 @@ public class SnapCampaignsTest {
 	    assertThat(campaign.getStatus()).isEqualTo(StatusEnum.PAUSED);
 	    assertThat(campaign.getName()).isEqualTo("Cool Campaign");
 	    assertThat(campaign.getAdAccountId()).isEqualTo(accountId);
+	    assertThat(sdf.format(campaign.getCreatedAt())).isEqualTo("2016-08-14T05:33:33.876Z");
+	    assertThat(sdf.format(campaign.getUpdatedAt())).isEqualTo("2016-08-14T05:35:35.943Z");
+	    assertThat(sdf.format(campaign.getStartTime())).isEqualTo("2016-08-11T22:03:58.869Z");
+	    assertThat(sdf.format(campaign.getEndTime())).isEqualTo("2016-08-22T05:03:58.869Z");
 	});
     } // test_update_campaign_should_success()
 
@@ -488,22 +499,37 @@ public class SnapCampaignsTest {
 	assertThat(campaigns.get(0).getName()).isEqualTo("Campaign One");
 	assertThat(campaigns.get(0).getAdAccountId()).isEqualTo(accountId);
 	assertThat(campaigns.get(0).getDailyBudgetMicro()).isEqualTo(200000000.);
+	assertThat(sdf.format(campaigns.get(0).getCreatedAt())).isEqualTo("2016-08-12T20:28:58.738Z");
+	assertThat(sdf.format(campaigns.get(0).getUpdatedAt())).isEqualTo("2016-08-12T20:28:58.738Z");
+	assertThat(sdf.format(campaigns.get(0).getStartTime())).isEqualTo("2016-08-10T17:12:49.707Z");
+	assertThat(sdf.format(campaigns.get(0).getEndTime())).isEqualTo("2016-08-13T17:12:49.707Z");
 
 	assertThat(campaigns.get(1).getId()).isEqualTo("0fc8e179-6f3b-46e7-be8e-ca53fd404ece");
 	assertThat(campaigns.get(1).getStatus()).isEqualTo(StatusEnum.ACTIVE);
 	assertThat(campaigns.get(1).getName()).isEqualTo("Campaign Deux");
 	assertThat(campaigns.get(1).getAdAccountId()).isEqualTo(accountId);
 	assertThat(campaigns.get(1).getDailyBudgetMicro()).isEqualTo(500000000.);
+	assertThat(sdf.format(campaigns.get(1).getCreatedAt())).isEqualTo("2016-08-12T21:06:18.343Z");
+	assertThat(sdf.format(campaigns.get(1).getUpdatedAt())).isEqualTo("2016-08-12T21:06:18.343Z");
+	assertThat(sdf.format(campaigns.get(1).getStartTime())).isEqualTo("2016-08-10T17:12:49.707Z");
+	assertThat(sdf.format(campaigns.get(1).getEndTime())).isEqualTo("2016-08-13T17:12:49.707Z");
 
 	assertThat(campaigns.get(2).getId()).isEqualTo("92e1c28a-a331-45b4-8c26-fd3e0eea8c39");
 	assertThat(campaigns.get(2).getStatus()).isEqualTo(StatusEnum.PAUSED);
 	assertThat(campaigns.get(2).getName()).isEqualTo("Cool Campaign");
 	assertThat(campaigns.get(2).getAdAccountId()).isEqualTo(accountId);
+	assertThat(sdf.format(campaigns.get(2).getCreatedAt())).isEqualTo("2016-08-14T05:33:33.876Z");
+	assertThat(sdf.format(campaigns.get(2).getUpdatedAt())).isEqualTo("2016-08-14T05:36:46.441Z");
+	assertThat(sdf.format(campaigns.get(2).getStartTime())).isEqualTo("2016-08-11T22:03:58.869Z");
+	assertThat(sdf.format(campaigns.get(2).getEndTime())).isEqualTo("2016-08-22T05:03:58.869Z");
 
 	assertThat(campaigns.get(3).getId()).isEqualTo("fedf8e04-0176-4ce3-a1ca-148204aee62c");
 	assertThat(campaigns.get(3).getStatus()).isEqualTo(StatusEnum.PAUSED);
 	assertThat(campaigns.get(3).getName()).isEqualTo("Crazy Campaign");
 	assertThat(campaigns.get(3).getAdAccountId()).isEqualTo(accountId);
+	assertThat(sdf.format(campaigns.get(3).getCreatedAt())).isEqualTo("2016-08-12T02:18:33.412Z");
+	assertThat(sdf.format(campaigns.get(3).getUpdatedAt())).isEqualTo("2016-08-12T02:18:33.412Z");
+	assertThat(sdf.format(campaigns.get(3).getStartTime())).isEqualTo("2016-08-11T22:03:58.869Z");
     } // test_getAllCampaigns_should_success()
 
     @Test
@@ -669,6 +695,10 @@ public class SnapCampaignsTest {
 	    assertThat(f.getName()).isEqualTo("Cool Campaign");
 	    assertThat(f.getAdAccountId()).isEqualTo(accountId);
 	    assertThat(f.getStatus()).isEqualTo(StatusEnum.PAUSED);
+	    assertThat(sdf.format(f.getCreatedAt())).isEqualTo("2016-08-14T05:33:33.876Z");
+	    assertThat(sdf.format(f.getUpdatedAt())).isEqualTo("2016-08-14T05:36:46.441Z");
+	    assertThat(sdf.format(f.getStartTime())).isEqualTo("2016-08-11T22:03:58.869Z");
+	    assertThat(sdf.format(f.getEndTime())).isEqualTo("2016-08-22T05:03:58.869Z");
 	});
     } // test_getSpecificCampaign_should_success()
 

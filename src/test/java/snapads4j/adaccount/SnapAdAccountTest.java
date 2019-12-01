@@ -19,9 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
@@ -72,12 +74,15 @@ public class SnapAdAccountTest {
   private final String id = "e703eb9f-8eac-4eda-a9c7-deec3935222d";
 
   private final String organizationId = "40d6719b-da09-410b-9185-0cc9c0dfed1d";
+  
+  private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     adAccount.setHttpClient(httpClient);
     adAccount.setEntityUtilsWrapper(entityUtilsWrapper);
+    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
   } // setUp()
 
   @Test
@@ -107,6 +112,8 @@ public class SnapAdAccountTest {
     assertThat(adAccounts.get(0).getFundingSourceIds()).isNotEmpty();
     assertThat(adAccounts.get(0).getFundingSourceIds().get(0))
         .isEqualTo("e703eb9f-8eac-4eda-a9c7-deec3935222d");
+    assertThat(sdf.format(adAccounts.get(0).getCreatedAt())).isEqualTo("2016-08-11T22:03:58.869Z");
+    assertThat(sdf.format(adAccounts.get(0).getUpdatedAt())).isEqualTo("2016-08-11T22:03:58.869Z");
 
     assertThat(adAccounts.get(1).getId()).isEqualTo("81cf9302-764c-429a-8561-e3bc329cf987");
     assertThat(adAccounts.get(1).getType()).isEqualTo(AdAccountTypeEnum.DIRECT);
@@ -121,6 +128,8 @@ public class SnapAdAccountTest {
     assertThat(adAccounts.get(1).getFundingSourceIds()).isNotEmpty();
     assertThat(adAccounts.get(1).getFundingSourceIds().get(0))
         .isEqualTo("7abfb9c6-0258-4eee-9898-03a8c099695d");
+    assertThat(sdf.format(adAccounts.get(1).getCreatedAt())).isEqualTo("2016-08-11T22:03:58.869Z");
+    assertThat(sdf.format(adAccounts.get(1).getUpdatedAt())).isEqualTo("2016-08-11T22:03:58.869Z");
   } // test_getAllAdAccounts_should_success()
 
   @Test
@@ -327,6 +336,7 @@ public class SnapAdAccountTest {
     assertThat(optAdAccount.isPresent()).isTrue();
     optAdAccount.ifPresent(
         f -> {
+          assertThat(f.toString()).isNotEmpty();
           assertThat(f.getId()).isEqualTo("8adc3db7-8148-4fbf-999c-8d2266369d74");
           assertThat(f.getType()).isEqualTo(AdAccountTypeEnum.PARTNER);
           assertThat(f.getName()).isEqualTo("Hooli Test Ad Account");
@@ -339,6 +349,8 @@ public class SnapAdAccountTest {
           assertThat(f.getFundingSourceIds()).isNotEmpty();
           assertThat(f.getFundingSourceIds().get(0))
               .isEqualTo("e703eb9f-8eac-4eda-a9c7-deec3935222d");
+          assertThat(sdf.format(f.getCreatedAt())).isEqualTo("2016-08-11T22:03:58.869Z");
+          assertThat(sdf.format(f.getUpdatedAt())).isEqualTo("2016-08-11T22:03:58.869Z");
         });
   } // test_getSpecificAdAccount_should_success()
 
@@ -559,6 +571,8 @@ public class SnapAdAccountTest {
         assertThat(a.getFundingSourceIds()).isNotEmpty();
         assertThat(a.getFundingSourceIds().get(0))
             .isEqualTo("cdc67eba-a774-4954-9b94-9502bbdac1bc");
+        assertThat(sdf.format(a.getCreatedAt())).isEqualTo("2016-08-11T22:03:58.869Z");
+        assertThat(sdf.format(a.getUpdatedAt())).isEqualTo("2016-08-11T22:03:58.869Z");
     });
   } // test_updateAdAccount_should_success()
 

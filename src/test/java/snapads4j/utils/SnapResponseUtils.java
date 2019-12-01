@@ -184,8 +184,8 @@ public class SnapResponseUtils {
       	"      \"status\": \"success\",\r\n" + 
       	"      \"adsquad\": {\r\n" + 
       	"        \"id\": \"990d22f3-86a5-4e9e-8afd-ac4c118896d4\",\r\n" + 
-      	"        \"updated_at\": \"2016-07-22T12:30:51.169-07:00\",\r\n" + 
-      	"        \"created_at\": \"2016-07-22T12:16:17.461-07:00\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T05:55:45.250Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T05:55:45.250Z\",\r\n" + 
       	"        \"name\": \"AdSquad2019\",\r\n" + 
       	"        \"campaign_id\": \"6cf25572-048b-4447-95d1-eb48231751be\",\r\n" + 
       	"        \"type\": \"SNAP_ADS\",\r\n" + 
@@ -210,6 +210,7 @@ public class SnapResponseUtils {
       	"        \"id\": \"23995202-bfbc-45a0-9702-dd6841af52fe\",\r\n" + 
       	"        \"updated_at\": \"2016-08-14T05:58:55.409Z\",\r\n" + 
       	"        \"created_at\": \"2016-08-14T05:58:55.409Z\",\r\n" + 
+      	"	 \"end_time\": \"2016-08-16T05:58:55.409Z\",\r\n" +
       	"        \"name\": \"Ad Squad Uno\",\r\n" + 
       	"        \"status\": \"ACTIVE\",\r\n" + 
       	"        \"campaign_id\": \"6cf25572-048b-4447-95d1-eb48231751be\",\r\n" + 
@@ -899,7 +900,7 @@ public class SnapResponseUtils {
       	"                    \"button_overlay_media_id\": \"008a5ae9-bcc1-4c2e-a3f1-7e924d582012\"\r\n" + 
       	"                },\r\n" + 
       	"                \"web_view_properties\": {\r\n" + 
-      	"                    \"url\": \"https://snapchat.com\",\r\n" + 
+      	"                    \"url\": \"https://snapchat2.com\",\r\n" + 
       	"                    \"allow_snap_javascript_sdk\": false,\r\n" + 
       	"                    \"use_immersive_mode\": false,\r\n" + 
       	"                    \"deep_link_urls\": [],\r\n" + 
@@ -923,7 +924,7 @@ public class SnapResponseUtils {
       	"                    \"button_overlay_media_id\": \"008a5ae9-bcc1-4c2e-a3f1-7e924d582013\"\r\n" + 
       	"                },\r\n" + 
       	"                \"web_view_properties\": {\r\n" + 
-      	"                    \"url\": \"https://snapchat.com\",\r\n" + 
+      	"                    \"url\": \"https://snapchat3.com\",\r\n" + 
       	"                    \"allow_snap_javascript_sdk\": false,\r\n" + 
       	"                    \"use_immersive_mode\": false,\r\n" + 
       	"                    \"deep_link_urls\": [],\r\n" + 

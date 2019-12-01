@@ -15,9 +15,7 @@
  */
 package snapads4j.model.user;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import snapads4j.model.SnapHttpResponse;
 
@@ -28,8 +26,6 @@ import snapads4j.model.SnapHttpResponse;
  */
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class SnapHttpResponseUser extends SnapHttpResponse {
 
   private AuthenticatedUser me;

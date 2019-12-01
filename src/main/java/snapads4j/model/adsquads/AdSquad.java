@@ -17,6 +17,7 @@ package snapads4j.model.adsquads;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -48,6 +49,14 @@ public class AdSquad {
 
   /** Ad Squad ID */
   private String id;
+  
+  @JsonProperty("created_at")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+  private Date createdAt;
+
+  @JsonProperty("updated_at")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+  private Date updatedAt;
 
   /** Campaign ID */
   @JsonProperty("campaign_id")
@@ -70,6 +79,8 @@ public class AdSquad {
   private Double lifetimeBudgetMicro;
 
   /** End time */
+  @JsonProperty("end_time")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
   private Date endTime;
 
   /** Ad Squad name */
@@ -83,6 +94,8 @@ public class AdSquad {
   private PlacementEnum placement;
 
   /** Start time */
+  @JsonProperty("start_time")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
   private Date startTime;
 
   /** Ad Squad status */

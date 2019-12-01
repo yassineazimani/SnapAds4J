@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import snapads4j.model.SnapHttpResponse;
@@ -31,7 +30,6 @@ import snapads4j.model.SnapHttpResponse;
  *
  * @author Yassine
  */
-@Getter
 @Setter
 @NoArgsConstructor
 public class SnapHttpResponseAdAccount extends SnapHttpResponse {
