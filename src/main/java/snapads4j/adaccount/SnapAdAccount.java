@@ -19,9 +19,7 @@ package snapads4j.adaccount;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -207,7 +205,7 @@ public class SnapAdAccount implements SnapAdAccountInterface {
 	Optional<AdAccount> result = Optional.empty();
 	final String url = this.endpointUpdateAdAccount.replace("{organization-id}", adAccount.getOrganizationId());
 	SnapHttpRequestAdAccount reqBody = new SnapHttpRequestAdAccount();
-	reqBody.addAdAccount(this.convertAdAccountToMap(adAccount));
+	reqBody.addAdAccount(adAccount);
 	HttpPut request = HttpUtils.preparePutRequestObject(url, oAuthAccessToken, reqBody);
 	try (CloseableHttpResponse response = httpClient.execute(request)) {
 	    int statusCode = response.getStatusLine().getStatusCode();
@@ -276,61 +274,4 @@ public class SnapAdAccount implements SnapAdAccountInterface {
 	}
     } // checkAdAccount()
 
-    /**
-     * Convert an ad account instance to a map
-     *
-     * @param adAccount
-     * @return map
-     */
-    private Map<String, String> convertAdAccountToMap(AdAccount adAccount) {
-	Map<String, String> result = new HashMap<>();
-	if (adAccount != null) {
-	    if (StringUtils.isNotEmpty(adAccount.getAdvertiser())) {
-		result.put("advertiser", adAccount.getAdvertiser());
-	    }
-	    if (StringUtils.isNotEmpty(adAccount.getAdvertiserOrganizationId())) {
-		result.put("advertiser_organization_id", adAccount.getAdvertiserOrganizationId());
-	    }
-	    if (StringUtils.isNotEmpty(adAccount.getBrandName())) {
-		result.put("brand_name", adAccount.getBrandName());
-	    }
-	    if (StringUtils.isNotEmpty(adAccount.getId())) {
-		result.put("id", adAccount.getId());
-	    }
-	    if (StringUtils.isNotEmpty(adAccount.getName())) {
-		result.put("name", adAccount.getName());
-	    }
-	    if (StringUtils.isNotEmpty(adAccount.getOrganizationId())) {
-		result.put("organization_id", adAccount.getOrganizationId());
-	    }
-	    if (StringUtils.isNotEmpty(adAccount.getTimezone())) {
-		result.put("timezone", adAccount.getTimezone());
-	    }
-	    if (adAccount.getCurrency() != null) {
-		result.put("currency", adAccount.getCurrency().toString());
-	    }
-	    if (CollectionUtils.isNotEmpty(adAccount.getFundingSourceIds())) {
-		StringBuilder sb = new StringBuilder("[");
-		for (int i = 0; i < adAccount.getFundingSourceIds().size(); ++i) {
-		    sb.append(adAccount.getFundingSourceIds().get(i));
-		    if (i < adAccount.getFundingSourceIds().size() - 1) {
-			sb.append(",");
-		    }
-		}
-		sb.append("]");
-		result.put("funding_source_ids", sb.toString());
-	    }
-	    if (adAccount.getLifetimeSpendCapMicro() != null) {
-		result.put("lifetime_spend_cap_micro", adAccount.getLifetimeSpendCapMicro().toString());
-	    }
-	    if (adAccount.getStatus() != null) {
-		result.put("status", adAccount.getStatus().toString());
-	    }
-	    if (adAccount.getType() != null) {
-		result.put("type", adAccount.getType().toString());
-	    }
-	    LOGGER.debug("convertAdAccountToMap {}", result);
-	}
-	return result;
-    } // convertAdAccountToMap()
 } // SnapAdAccount

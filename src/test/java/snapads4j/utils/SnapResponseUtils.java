@@ -961,4 +961,28 @@ public class SnapResponseUtils {
       	"    ]\r\n" + 
       	"}";
   }// getSnapCreationInteractionZone()
+  
+  public static String getSnapSegmentCreated() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57ae54d800ff0a4a5232b1a7210001737e616473617069736300016275696c642d35396264653638322d312d31312d37000100\",\r\n" + 
+      	"  \"segments\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"segment\": {\r\n" + 
+      	"        \"updated_at\": \"2016-08-12T22:59:42.452Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-12T22:59:42.405Z\",\r\n" + 
+      	"        \"name\": \"all the sams in the world\",\r\n" + 
+      	"        \"id\": \"5677923948298240\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"description\": \"all the sams in the world\",\r\n" + 
+      	"        \"status\": \"PENDING\",\r\n" + 
+      	"        \"source_type\": \"FIRST_PARTY\",\r\n" + 
+      	"        \"retention_in_days\": 180,\r\n" + 
+      	"        \"approximate_number_users\": 0\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapSegmentCreated()
 } // SnapResponseUtils

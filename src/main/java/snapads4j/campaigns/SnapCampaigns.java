@@ -17,11 +17,8 @@ package snapads4j.campaigns;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -118,7 +115,7 @@ public class SnapCampaigns implements SnapCampaignsInterface {
 	Optional<Campaign> result = Optional.empty();
 	final String url = this.endpointCreationCampaign.replace("{ad_account_id}", campaign.getAdAccountId());
 	SnapHttpRequestCampaign reqBody = new SnapHttpRequestCampaign();
-	reqBody.addCampaign(this.convertCampaignToMap(campaign));
+	reqBody.addCampaign(campaign);
 	LOGGER.info("Body create campaign => {}", reqBody);
 	HttpPost request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, reqBody);
 	try (CloseableHttpResponse response = httpClient.execute(request)) {
@@ -154,7 +151,7 @@ public class SnapCampaigns implements SnapCampaignsInterface {
 	Optional<Campaign> result = Optional.empty();
 	final String url = this.endpointUpdateCampaign.replace("{ad_account_id}", campaign.getAdAccountId());
 	SnapHttpRequestCampaign reqBody = new SnapHttpRequestCampaign();
-	reqBody.addCampaign(this.convertCampaignToMap(campaign));
+	reqBody.addCampaign(campaign);
 	LOGGER.info("Body update campaign => {}", reqBody);
 	HttpPut request = HttpUtils.preparePutRequestObject(url, oAuthAccessToken, reqBody);
 	try (CloseableHttpResponse response = httpClient.execute(request)) {
@@ -313,58 +310,4 @@ public class SnapCampaigns implements SnapCampaignsInterface {
 	}
     } // checkCampaign()
 
-    /**
-     * Convert an campaign instance to a map
-     *
-     * @param campaign
-     * @return map
-     */
-    private Map<String, String> convertCampaignToMap(Campaign campaign) {
-	Map<String, String> result = new HashMap<>();
-	if (campaign != null) {
-	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-	    if (StringUtils.isNotEmpty(campaign.getId())) {
-		result.put("id", campaign.getId());
-	    }
-	    if (StringUtils.isNotEmpty(campaign.getAdAccountId())) {
-		result.put("ad_account_id", campaign.getAdAccountId());
-	    }
-	    if (campaign.getDailyBudgetMicro() != null) {
-		result.put("daily_budget_micro", campaign.getDailyBudgetMicro().toString());
-	    }
-	    if (campaign.getEndTime() != null) {
-		result.put("end_time", sdf.format(campaign.getEndTime()));
-	    }
-	    if (StringUtils.isNotEmpty(campaign.getName())) {
-		result.put("name", campaign.getName());
-	    }
-	    if (campaign.getStartTime() != null) {
-		result.put("start_time", sdf.format(campaign.getStartTime()));
-	    }
-	    if (campaign.getStatus() != null) {
-		result.put("status", campaign.getStatus().toString());
-	    }
-	    if (campaign.getLifetimeSpendCapMicro() != null) {
-		result.put("lifetime_spend_cap_micro", campaign.getLifetimeSpendCapMicro().toString());
-	    }
-	    if (campaign.getObjective() != null) {
-		result.put("objective", campaign.getObjective().toString());
-	    }
-	    if (campaign.getBuyModel() != null) {
-		result.put("buy_model", campaign.getBuyModel().toString());
-	    }
-	    if (campaign.getMeasurementSpec() != null) {
-		Map<String, String> measurementSpec = new HashMap<>();
-		measurementSpec.put("ios_app_id", campaign.getMeasurementSpec().getIosAppId());
-		measurementSpec.put("android_app_url", campaign.getMeasurementSpec().getAndroidAppUrl());
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-		    result.put("measurement_spec", mapper.writeValueAsString(measurementSpec));
-		} catch (JsonProcessingException e) {
-		    LOGGER.error("Impossible to write measurement_spec {}", measurementSpec);
-		}
-	    }
-	}
-	return result;
-    } // convertCampaignToMap()
 } // SnapCampaigns

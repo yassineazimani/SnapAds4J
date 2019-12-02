@@ -13,35 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package snapads4j.enums;
+package snapads4j.model.audience.match;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-/**
- * Status enum
- *
- * @author Yassine
- */
-public enum StatusEnum {
-  /** Status actived */
-  @JsonProperty("ACTIVE")
-  ACTIVE,
-  /** Status paused */
-  @JsonProperty("PAUSED")
-  PAUSED,
-  /** Status redemmed */
-  @JsonProperty("REDEEMED")
-  REDEEMED,
-  /** Status spent */
-  @JsonProperty("SPENT")
-  SPENT,
-  /** Status expired */
-  @JsonProperty("EXPIRED")
-  EXPIRED,
-  /** Status pending */
-  @JsonProperty("PENDING")
-  PENDING,
-  /** Status deleted */
-  @JsonProperty("DELETED")
-  DELETED;
-} // StatusEnum
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@JsonIgnoreProperties(value = {"sub_request_status"})
+public class SnapInnerAudienceSegment {
+    
+    private AudienceSegment segment;
+    
+}// SnapInnerAudienceSegment
