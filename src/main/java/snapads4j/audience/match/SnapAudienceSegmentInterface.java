@@ -16,6 +16,7 @@
 package snapads4j.audience.match;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,4 +32,7 @@ public interface SnapAudienceSegmentInterface {
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException;
 
+    public List<AudienceSegment> getAllAudienceSegments(String oAuthAccessToken, String adAccountID) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    JsonProcessingException, UnsupportedEncodingException;
+    
 }// SnapAudienceSegmentInterface

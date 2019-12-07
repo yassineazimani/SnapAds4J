@@ -985,4 +985,43 @@ public class SnapResponseUtils {
       	"  ]\r\n" + 
       	"}";
   }// getSnapSegmentCreated()
+  
+  public static String getSnapSegmentsCreated() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57ae554a00ff0487459c8ac85c0001737e616473617069736300016275696c642d34363138393265642d312d31312d3200010103\",\r\n" + 
+      	"  \"segments\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"segment\": {\r\n" + 
+      	"        \"updated_at\": \"2016-08-12T21:11:01.325Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-12T21:11:01.196Z\",\r\n" + 
+      	"        \"name\": \"super duper sam 2\",\r\n" + 
+      	"        \"id\": \"5689640350646272\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"description\": \"all the sams in the world\",\r\n" + 
+      	"        \"status\": \"PENDING\",\r\n" + 
+      	"        \"source_type\": \"FIRST_PARTY\",\r\n" + 
+      	"        \"retention_in_days\": 180,\r\n" + 
+      	"        \"approximate_number_users\": 0\r\n" + 
+      	"      }\r\n" + 
+      	"    },\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"segment\": {\r\n" + 
+      	"        \"updated_at\": \"2016-08-12T20:58:16.098Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-12T20:58:16.036Z\",\r\n" + 
+      	"        \"name\": \"super duper sam\",\r\n" + 
+      	"        \"id\": \"5715031928864768\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"description\": \"all the sams in the world\",\r\n" + 
+      	"        \"status\": \"PENDING\",\r\n" + 
+      	"        \"source_type\": \"FIRST_PARTY\",\r\n" + 
+      	"        \"retention_in_days\": 180,\r\n" + 
+      	"        \"approximate_number_users\": 0\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapSegmentsCreated()
 } // SnapResponseUtils

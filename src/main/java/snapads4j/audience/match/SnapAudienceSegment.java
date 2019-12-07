@@ -17,11 +17,14 @@ package snapads4j.audience.match;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -53,6 +56,8 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface{
 
     private String endpointCreationAudienceSegment;
     
+    private String endpointGetAllAudienceSegments;
+    
     private CloseableHttpClient httpClient;
 
     private EntityUtilsWrapper entityUtilsWrapper;
@@ -63,6 +68,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface{
 	this.fp = new FileProperties();
 	this.apiUrl = (String) fp.getProperties().get("api.url");
 	this.endpointCreationAudienceSegment = this.apiUrl + (String) fp.getProperties().get("api.url.audience.match.create");
+	this.endpointGetAllAudienceSegments = this.apiUrl + (String) fp.getProperties().get("api.url.audience.match.all");
 	this.httpClient = HttpClients.createDefault();
 	this.entityUtilsWrapper = new EntityUtilsWrapper();
     }// SnapAudienceSegment()
@@ -101,6 +107,40 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface{
 	}
 	return result;
     }// createAudienceSegment()
+    
+    @Override
+    public List<AudienceSegment> getAllAudienceSegments(String oAuthAccessToken, String adAccountID) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    JsonProcessingException, UnsupportedEncodingException {
+	if (StringUtils.isEmpty(oAuthAccessToken)) {
+	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
+	}
+	if (StringUtils.isEmpty(adAccountID)) {
+	    throw new SnapArgumentException("The Ad Account ID is required");
+	}
+	List<AudienceSegment> results = new ArrayList<>();
+	final String url = this.endpointGetAllAudienceSegments.replace("{ad_account_id}", adAccountID);
+	HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+	try(CloseableHttpResponse response = httpClient.execute(request)){
+	    int statusCode = response.getStatusLine().getStatusCode();
+	    if (statusCode >= 300) {
+		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		throw ex;
+	    }
+	    HttpEntity entity = response.getEntity();
+	    if (entity != null) {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		String body = entityUtilsWrapper.toString(entity);
+		SnapHttpResponseAudienceSegment responseFromJson = mapper.readValue(body, SnapHttpResponseAudienceSegment.class);
+		if (responseFromJson != null) {
+		    results = responseFromJson.getAllAudienceSegment();
+		}
+	    }
+	} catch (IOException e) {
+	    LOGGER.error("Impossible to get all audience segments, ad_account_id = {}", adAccountID, e);
+	}
+	return results;
+    }// getAudienceSegments()
     
     private void checkAudienceSegment(AudienceSegment segment) throws SnapArgumentException {
 	StringBuilder sb = new StringBuilder();
