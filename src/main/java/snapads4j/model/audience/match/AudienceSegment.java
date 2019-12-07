@@ -16,6 +16,7 @@
 package snapads4j.model.audience.match;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -69,6 +70,15 @@ public class AudienceSegment {
     
     @JsonProperty("targetable_status")
     private TargetableStatusEnum targetableStatus;
+    
+    @JsonProperty("creation_spec")
+    private CreationSpec creationSpec;
+    
+    @JsonProperty("organization_id")
+    private String organizationId;
+    
+    @JsonProperty("visible_to")
+    private List<String> visibleTo;
     
     public AudienceSegment() {
 	this.retentionInDays = 9999;

@@ -962,7 +962,7 @@ public class SnapResponseUtils {
       	"}";
   }// getSnapCreationInteractionZone()
   
-  public static String getSnapSegmentCreated() {
+  public static String getSnapAudienceSegmentCreated() {
       return "{\r\n" + 
       	"  \"request_status\": \"success\",\r\n" + 
       	"  \"request_id\": \"57ae54d800ff0a4a5232b1a7210001737e616473617069736300016275696c642d35396264653638322d312d31312d37000100\",\r\n" + 
@@ -984,9 +984,9 @@ public class SnapResponseUtils {
       	"    }\r\n" + 
       	"  ]\r\n" + 
       	"}";
-  }// getSnapSegmentCreated()
+  }// getSnapAudienceSegmentCreated()
   
-  public static String getSnapSegmentsCreated() {
+  public static String getSnapAudienceSegmentsCreated() {
       return "{\r\n" + 
       	"  \"request_status\": \"success\",\r\n" + 
       	"  \"request_id\": \"57ae554a00ff0487459c8ac85c0001737e616473617069736300016275696c642d34363138393265642d312d31312d3200010103\",\r\n" + 
@@ -1023,5 +1023,66 @@ public class SnapResponseUtils {
       	"    }\r\n" + 
       	"  ]\r\n" + 
       	"}";
-  }// getSnapSegmentsCreated()
+  }// getSnapAudienceSegmentsCreated()
+  
+  public static String getSnapSpecificAudienceSegment() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5b3116c800ff0cfbb4758de4670001737e616473617069736300016275696c642d32636336303266382d312d3137382d300001015d\",\r\n" + 
+      	"    \"segments\": [\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"segment\": {\r\n" + 
+      	"                \"id\": \"5701023945457664\",\r\n" + 
+      	"                \"updated_at\": \"2018-06-25T02:13:52.956Z\",\r\n" + 
+      	"                \"created_at\": \"2018-03-09T00:57:57.462Z\",\r\n" + 
+      	"                \"name\": \"Lookalike\",\r\n" + 
+      	"                \"ad_account_id\": \"3f539865-c001-4f5e-bd31-5ae129a4550a\",\r\n" + 
+      	"                \"status\": \"ACTIVE\",\r\n" + 
+      	"                \"targetable_status\": \"READY\",\r\n" + 
+      	"                \"upload_status\": \"COMPLETE\",\r\n" + 
+      	"                \"source_type\": \"LOOKALIKE\",\r\n" + 
+      	"                \"retention_in_days\": 180,\r\n" + 
+      	"                \"approximate_number_users\": 11487000,\r\n" + 
+      	"                \"creation_spec\": {\r\n" + 
+      	"                    \"seed_segment_id\": \"5749764677173248\",\r\n" + 
+      	"                    \"country\": \"US\",\r\n" + 
+      	"                    \"type\": \"BALANCE\"\r\n" + 
+      	"                }\r\n" + 
+      	"            }\r\n" + 
+      	"        }\r\n" + 
+      	"    ]\r\n" + 
+      	"}";
+  }// getSnapSpecificAudienceSegment()
+  
+  public static String getSnapAudienceSegmentUpdated() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5dc3096800ff0c266ebe6eeaac0001737e616473617069736300016275696c642d65653836646631392d312d3330322d300001013a\",\r\n" + 
+      	"    \"segments\": [\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"segment\": {\r\n" + 
+      	"                \"id\": \"5603670370513719\",\r\n" + 
+      	"                \"updated_at\": \"2019-11-06T17:56:57.053Z\",\r\n" + 
+      	"                \"created_at\": \"2019-03-28T14:47:17.956Z\",\r\n" + 
+      	"                \"name\": \"Honey Bear Segment 2019\",\r\n" + 
+      	"                \"ad_account_id\": \"22225ba6-7559-4000-9663-bace8adff5f1\",\r\n" + 
+      	"                \"organization_id\": \"1fdeefec-f502-4ca8-9a84-6411e0a51052\",\r\n" + 
+      	"                \"description\": \"A list of Honey bear lovers across the globe\",\r\n" + 
+      	"                \"status\": \"PAUSED\",\r\n" + 
+      	"                \"targetable_status\": \"TOO_FEW_USERS\",\r\n" + 
+      	"                \"upload_status\": \"COMPLETE\",\r\n" + 
+      	"                \"source_type\": \"FIRST_PARTY\",\r\n" + 
+      	"                \"retention_in_days\": 60,\r\n" + 
+      	"                \"approximate_number_users\": 500000,\r\n" + 
+      	"                \"visible_to\": [\r\n" + 
+      	"                    \"AdAccountEntity_22225ba6-7559-4000-9663-bace8adff5f1\"\r\n" + 
+      	"                ]\r\n" + 
+      	"            }\r\n" + 
+      	"        }\r\n" + 
+      	"    ]\r\n" + 
+      	"}";
+  }// getSnapAudienceSegmentUpdated()
+  
 } // SnapResponseUtils

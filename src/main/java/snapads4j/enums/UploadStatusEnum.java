@@ -27,9 +27,9 @@ public enum UploadStatusEnum {
   @JsonProperty("NO_UPLOAD")
   NO_UPLOAD,
   /** Not all uploads to this segment have been processed so audience size might change */
-  @JsonProperty("FIRST_PARTY")
+  @JsonProperty("PROCESSING")
   PROCESSING,
   /** All received uploads have been processed and matched. Audience size reflects segment size */
-  @JsonProperty("FIRST_PARTY")
+  @JsonProperty("COMPLETE")
   COMPLETE;
 } // UploadStatusEnum

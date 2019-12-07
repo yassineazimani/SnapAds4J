@@ -31,8 +31,15 @@ public interface SnapAudienceSegmentInterface {
     public Optional<AudienceSegment> createAudienceSegment(String oAuthAccessToken, AudienceSegment segment)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException;
+    
+    public Optional<AudienceSegment> updateAudienceSegment(String oAuthAccessToken, AudienceSegment segment)
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+	    JsonProcessingException, UnsupportedEncodingException;
 
     public List<AudienceSegment> getAllAudienceSegments(String oAuthAccessToken, String adAccountID) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    JsonProcessingException, UnsupportedEncodingException;
+    
+    public Optional<AudienceSegment> getSpecificAudienceSegment(String oAuthAccessToken, String segmentID) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
     JsonProcessingException, UnsupportedEncodingException;
     
 }// SnapAudienceSegmentInterface
