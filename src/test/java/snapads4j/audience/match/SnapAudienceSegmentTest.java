@@ -60,7 +60,9 @@ import snapads4j.exceptions.SnapNormalizeArgumentException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.audience.match.AudienceSegment;
+import snapads4j.model.audience.match.CreationSpec;
 import snapads4j.model.audience.match.FormUserForAudienceSegment;
+import snapads4j.model.audience.match.SamLookalikes;
 import snapads4j.model.config.HttpDeleteWithBody;
 import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.SnapResponseUtils;
@@ -97,6 +99,8 @@ public class SnapAudienceSegmentTest {
     private AudienceSegment segment;
 
     private AudienceSegment segmentToUpdate;
+    
+    private SamLookalikes sam;
 
     private List<AudienceSegment> segments;
 
@@ -115,6 +119,7 @@ public class SnapAudienceSegmentTest {
 	this.segmentToUpdate = initAudienceSegmentForUpdate();
 	data = new ArrayList<>();
 	this.form = initFormUserForAudienceSegment(SchemaEnum.EMAIL_SHA256);
+	this.sam = initSam();
     } // setUp()
 
     @Test
@@ -210,7 +215,7 @@ public class SnapAudienceSegmentTest {
 	this.segment.setRetentionInDays(-1);
 	assertThatThrownBy(() -> snapAudienceSegment.createAudienceSegment(oAuthAccessToken, this.segment))
 		.isInstanceOf(SnapArgumentException.class)
-		.hasMessage("The retention must be equal or greater than zero");
+		.hasMessage("The retention must be equal or greater than zero days");
     } // test_create_audience_segment_should_throw_throw_SnapArgumentException_when_retention_days_is_lt_0()
 
     @Test
@@ -801,7 +806,7 @@ public class SnapAudienceSegmentTest {
 	this.segment.setRetentionInDays(-1);
 	assertThatThrownBy(() -> snapAudienceSegment.updateAudienceSegment(oAuthAccessToken, this.segment))
 		.isInstanceOf(SnapArgumentException.class)
-		.hasMessage("The retention must be equal or greater than zero");
+		.hasMessage("The retention must be equal or greater than zero days");
     } // test_update_audience_segment_should_throw_throw_SnapArgumentException_when_retention_days_is_lt_0()
 
     @Test
@@ -1742,6 +1747,280 @@ public class SnapAudienceSegmentTest {
 	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, specificId))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     } // should_throw_exception_1337_delete_audience_segment()
+    
+    @Test
+    public void test_create_sam_look_a_likes_should_success() throws IOException, InterruptedException,
+	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	Mockito.when(entityUtilsWrapper.toString(httpEntity))
+		.thenReturn(SnapResponseUtils.getSnapSamLookalikesCreated());
+	Assertions.assertThatCode(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.doesNotThrowAnyException();
+	Optional<AudienceSegment> optSegment = snapAudienceSegment.createSamLookalikes(oAuthAccessToken,
+		this.sam);
+	assertThat(optSegment.isPresent()).isTrue();
+	optSegment.ifPresent(s -> {
+	    assertThat(s.getId()).isEqualTo("5652536396611584");
+	    assertThat(s.getName()).isEqualTo(this.sam.getName());
+	    assertThat(s.getStatus()).isEqualTo(StatusEnum.ACTIVE);
+	    assertThat(s.getDescription()).isEqualTo(this.sam.getDescription());
+	    assertThat(s.getSourceType()).isEqualTo(this.sam.getSourceType());
+	    assertThat(s.getRetentionInDays()).isEqualTo(this.sam.getRetentionInDays());
+	    assertThat(s.getAdAccountId()).isEqualTo(this.sam.getAdAccountId());
+	    assertThat(s.getApproximateNumberUsers()).isEqualTo(0);
+	    assertThat(s.getCreationSpec()).isNotNull();
+	    assertThat(s.getCreationSpec().getCountry()).isEqualTo(this.sam.getCreationSpec().getCountry());
+	    assertThat(s.getCreationSpec().getSeedSegmentId()).isEqualTo(this.sam.getCreationSpec().getSeedSegmentId());
+	    assertThat(s.getCreationSpec().getType()).isEqualTo(this.sam.getCreationSpec().getType());
+	    assertThat(s.toString()).isNotEmpty();
+	    assertThat(s.getCreationSpec().toString()).isNotEmpty();
+	    assertThat(sdf.format(s.getCreatedAt())).isEqualTo("2016-08-12T22:59:42.452Z");
+	    assertThat(sdf.format(s.getUpdatedAt())).isEqualTo("2016-08-12T22:59:42.452Z");
+	});
+    }// test_create_sam_look_a_likes_should_success()
+
+    @Test
+    public void test_create_sam_look_a_likes_should_throw_SnapOAuthAccessTokenException_1() {
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(null, this.sam))
+		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
+    } // test_create_sam_look_a_likes_should_throw_SnapOAuthAccessTokenException_1()
+
+    @Test
+    public void test_create_sam_look_a_likes_should_throw_SnapOAuthAccessTokenException_2() {
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes("", this.sam))
+		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
+    } // test_create_sam_look_a_likes_should_throw_SnapOAuthAccessTokenException_2()
+
+    @Test
+    public void test_create_sam_look_a_likes_should_throw_IOException() throws ClientProtocolException, IOException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
+	snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam);
+    }// test_create_sam_look_a_likes_should_throw_IOException()
+
+    @Test
+    public void test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_sam_is_null() {
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, null))
+		.isInstanceOf(SnapArgumentException.class).hasMessage("Sam Lookalikes parameter is not given");
+    } // test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_sam_is_null()
+
+    @Test
+    public void test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_adAccountId_is_null() {
+	this.sam.setAdAccountId(null);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
+    } // test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_adAccountId_is_null()
+
+    @Test
+    public void test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_adAccountId_is_empty() {
+	this.sam.setAdAccountId("");
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
+    } // test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_adAccountId_is_empty()
+
+    @Test
+    public void test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_name_is_null() {
+	this.sam.setName(null);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapArgumentException.class).hasMessage("The name is required");
+    } // test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_name_is_null()
+
+    @Test
+    public void test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_name_is_empty() {
+	this.sam.setName("");
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapArgumentException.class).hasMessage("The name is required");
+    } // test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_name_is_empty()
+
+    @Test
+    public void test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_source_type_is_null() {
+	this.sam.setSourceType(null);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapArgumentException.class)
+		.hasMessage("The source type is required");
+    } // test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_source_type_is_null()
+    
+    @Test
+    public void test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_source_type_is_not_lookalike() {
+	this.sam.setSourceType(SourceTypeEnum.ENGAGEMENT);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapArgumentException.class)
+		.hasMessage("The source type must be LOOKALIKE");
+    } // test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_source_type_is_not_lookalike()
+
+    @Test
+    public void test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_retention_days_is_lt_0() {
+	this.sam.setRetentionInDays(-1);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapArgumentException.class)
+		.hasMessage("The retention must be equal or greater than zero days");
+    } // test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_retention_days_is_lt_0()
+    
+    @Test
+    public void test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_retention_days_is_gt_180() {
+	this.sam.setRetentionInDays(181);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapArgumentException.class)
+		.hasMessage("The retention must be equal or less than 180 days");
+    } // test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_retention_days_is_gt_180()
+    
+    @Test
+    public void test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_creation_spec_is_null() {
+	this.sam.setCreationSpec(null);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapArgumentException.class)
+		.hasMessage("Lookalike creation spec is required");
+    } // test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_creation_spec_is_null()
+    
+    @Test
+    public void test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_creation_spec_country_is_null() {
+	this.sam.setCreationSpec(new CreationSpec());
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapArgumentException.class)
+		.hasMessageContaining("Lookalike creation spec country is required");
+    } // test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_creation_spec_country_is_null()
+
+    @Test
+    public void test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_creation_spec_seed_segment_id_is_null() {
+	this.sam.setCreationSpec(new CreationSpec());
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapArgumentException.class)
+		.hasMessageContaining("Lookalike creation spec seed segment ID is required");
+    } // test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_creation_spec_seed_segment_id_is_null()
+    
+    @Test
+    public void test_create_sam_look_a_likes_should_not_throw_throw_SnapArgumentException_when_creation_spec_type_is_not_given() {
+	this.sam.setCreationSpec(new CreationSpec());
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+	.isInstanceOf(SnapArgumentException.class)
+	.hasMessageContaining("Lookalike creation spec country is required")
+	.hasMessageContaining("Lookalike creation spec seed segment ID is required");
+	assertThat(new CreationSpec().getType()).isEqualTo(TypeCreationSpecDetails.BALANCE);
+    } // test_create_sam_look_a_likes_should_not_throw_throw_SnapArgumentException_when_creation_spec_type_is_not_given()
+    @Test
+    public void should_throw_exception_400_create_sam_look_a_likes() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(400);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
+    } // should_throw_exception_400_create_sam_look_a_likes()
+
+    @Test
+    public void should_throw_exception_401_create_sam_look_a_likes() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(401);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
+    } // should_throw_exception_401_create_sam_look_a_likes()
+
+    @Test
+    public void should_throw_exception_403_create_sam_look_a_likes() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(403);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
+    } // should_throw_exception_403_create_sam_look_a_likes()
+
+    @Test
+    public void should_throw_exception_404_create_sam_look_a_likes() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(404);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
+    } // should_throw_exception_404_create_sam_look_a_likes()
+
+    @Test
+    public void should_throw_exception_405_create_sam_look_a_likes() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(405);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
+    } // should_throw_exception_405_create_sam_look_a_likes()
+
+    @Test
+    public void should_throw_exception_406_create_sam_look_a_likes() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(406);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
+    } // should_throw_exception_406_create_sam_look_a_likes()
+
+    @Test
+    public void should_throw_exception_410_create_sam_look_a_likes() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(410);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
+    } // should_throw_exception_410_create_sam_look_a_likes()
+
+    @Test
+    public void should_throw_exception_418_create_sam_look_a_likes() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(418);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
+    } // should_throw_exception_418_create_sam_look_a_likes()
+
+    @Test
+    public void should_throw_exception_429_create_sam_look_a_likes() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(429);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
+    } // should_throw_exception_429_create_sam_look_a_likes()
+
+    @Test
+    public void should_throw_exception_500_create_sam_look_a_likes() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(500);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
+    } // should_throw_exception_500_create_sam_look_a_likes()
+
+    @Test
+    public void should_throw_exception_503_create_sam_look_a_likes() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(503);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
+    } // should_throw_exception_503_create_sam_look_a_likes()
+
+    @Test
+    public void should_throw_exception_1337_create_sam_look_a_likes() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
+    } // should_throw_exception_1337_create_sam_look_a_likes()
 
     private FormUserForAudienceSegment initFormUserForAudienceSegment(SchemaEnum schema) {
 	return initFormUserForAudienceSegment(schema, true);
@@ -1764,6 +2043,22 @@ public class SnapAudienceSegmentTest {
 	segment.setSourceType(SourceTypeEnum.FIRST_PARTY);
 	return segment;
     }// initAudienceSegment()
+    
+    private SamLookalikes initSam() {
+	SamLookalikes sam = new SamLookalikes();
+	sam.setAdAccountId(this.adAccountId);
+	sam.setDescription("similar to all the sams in the world");
+	sam.setName("lookalikes of all the sams in the world");
+	sam.setRetentionInDays(180);
+	sam.setSourceType(SourceTypeEnum.LOOKALIKE);
+	sam.setAdAccountId("d47d2516-4f1f-46f0-a63c-31a46804c3aa");
+	CreationSpec cs = new CreationSpec();
+	cs.setCountry("US");
+	cs.setType(TypeCreationSpecDetails.REACH);
+	cs.setSeedSegmentId("5677923948298240");
+	sam.setCreationSpec(cs);
+	return sam;
+    }// initSam()
 
     private AudienceSegment initAudienceSegmentForUpdate() {
 	AudienceSegment segment = new AudienceSegment();

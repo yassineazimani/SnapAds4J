@@ -21,7 +21,7 @@ URL Marketing API SnapChat : https://developers.snapchat.com/ads/
 * Creative Elements
 * Targeting
 * Snap Audience Match
-* SAM - Lookalikes (in progress)
+* SAM - Lookalikes
 * Audience Insights (in progress)
 * Audience Size (in progress)
 * Bid Estimate (in progress)
@@ -31,7 +31,7 @@ URL Marketing API SnapChat : https://developers.snapchat.com/ads/
 
 ## Installation
 
-..
+Very soon...
 
 ## License
 
@@ -39,7 +39,21 @@ Apache License, Version 2.0
 
 https://opensource.org/licenses/Apache-2.0
 
+This projects uses Mockito : [License Mockito](https://github.com/mockito/mockito/wiki/License), 
+
+AssertJ : [License AssertJ](https://github.com/joel-costigliola/assertj-core/blob/master/LICENSE.txt), 
+
+Lombok : [License MIT Lombok](https://projectlombok.org/), 
+
+Jackson : [License Jackson](https://github.com/FasterXML/jackson-core/blob/master/src/main/resources/META-INF/LICENSE), 
+
+Log4J 2: [License Log4J 2](https://logging.apache.org/log4j/2.x/license.html), 
+
+Apache commons (lang3, codec, collections, httpcomponents): [License Apache Commons](https://commons.apache.org/proper/commons-bsf/license.html), 
+
+cobertura-maven-plugin: [License Corbertura Maven Plugin](http://www.mojohaus.org/cobertura-maven-plugin/license.html)
+
 ## Code examples
 
-..
+Very soon...
 

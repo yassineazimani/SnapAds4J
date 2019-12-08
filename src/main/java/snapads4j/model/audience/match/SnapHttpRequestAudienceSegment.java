@@ -23,13 +23,13 @@ import lombok.Getter;
 @Getter
 public class SnapHttpRequestAudienceSegment {
 
-    private List<AudienceSegment> segments;
+    private List<SamLookalikes> segments;
 
     public SnapHttpRequestAudienceSegment() {
       this.segments = new ArrayList<>();
     } // SnapHttpRequestAudienceSegment()
 
-    public void addAudienceSegment(AudienceSegment a) {
+    public void addAudienceSegment(SamLookalikes a) {
       this.segments.add(a);
     } // addAudienceSegment()
     

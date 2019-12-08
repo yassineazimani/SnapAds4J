@@ -1146,4 +1146,33 @@ public class SnapResponseUtils {
       	"    \"segments\": []\r\n" + 
       	"}";
   }// getSnapDeleteAudienceSegment()
+  
+  public static String getSnapSamLookalikesCreated() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"SUCCESS\",\r\n" + 
+      	"  \"request_id\": \"57e18036000733c0f1abd670\",\r\n" + 
+      	"  \"segments\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"      \"segment\": {\r\n" + 
+      	"        \"id\": \"5652536396611584\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-12T22:59:42.452Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-12T22:59:42.452Z\",\r\n" + 
+      	"        \"name\": \"lookalikes of all the sams in the world\",\r\n" + 
+      	"        \"ad_account_id\": \"d47d2516-4f1f-46f0-a63c-31a46804c3aa\",\r\n" + 
+      	"        \"description\": \"similar to all the sams in the world\",\r\n" + 
+      	"        \"status\": \"ACTIVE\",\r\n" + 
+      	"        \"source_type\": \"LOOKALIKE\",\r\n" + 
+      	"        \"retention_in_days\": 180,\r\n" + 
+      	"        \"approximate_number_users\": 0,\r\n" + 
+      	"        \"creation_spec\": {\r\n" + 
+      	"          \"seed_segment_id\": \"5677923948298240\",\r\n" + 
+      	"          \"country\": \"US\",\r\n" + 
+      	"          \"type\": \"REACH\"\r\n" + 
+      	"        }\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapSamLookalikesCreated()
 } // SnapResponseUtils
