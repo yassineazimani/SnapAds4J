@@ -27,6 +27,7 @@ import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.audience.match.AudienceSegment;
 import snapads4j.model.audience.match.FormUserForAudienceSegment;
+import snapads4j.model.audience.match.SamLookalikes;
 
 public interface SnapAudienceSegmentInterface {
     
@@ -53,6 +54,10 @@ public interface SnapAudienceSegmentInterface {
     public Optional<AudienceSegment> deleteAllUsersFromSegment(String oAuthAccessToken, String segmentID)
 	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
 	    SnapResponseErrorException, SnapArgumentException;
+
+    Optional<AudienceSegment> createSamLookalikes(String oAuthAccessToken, SamLookalikes sam)
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+	    JsonProcessingException, UnsupportedEncodingException;
     
     
 }// SnapAudienceSegmentInterface

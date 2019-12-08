@@ -15,8 +15,9 @@
  */
 package snapads4j.model.audience.match;
 
-import java.util.List;
+import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,35 +25,38 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import snapads4j.enums.StatusEnum;
-import snapads4j.enums.TargetableStatusEnum;
-import snapads4j.enums.UploadStatusEnum;
+import snapads4j.enums.SourceTypeEnum;
 
 @Getter
 @Setter
 @JsonInclude(Include.NON_EMPTY)
 @ToString
-public class AudienceSegment extends SamLookalikes {
+public class SamLookalikes {
 
-    @JsonProperty("approximate_number_users")
-    private int approximateNumberUsers;
+    protected String id;
     
-    private StatusEnum status;
+    @JsonProperty("ad_account_id")
+    protected String adAccountId;
+    
+    @JsonProperty("created_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    protected Date createdAt;
 
-    @JsonProperty("upload_status")
-    private UploadStatusEnum uploadStatus;
+    @JsonProperty("updated_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    protected Date updatedAt;
     
-    @JsonProperty("targetable_status")
-    private TargetableStatusEnum targetableStatus;
+    protected String description;
     
-    @JsonProperty("organization_id")
-    private String organizationId;
+    protected String name;
     
-    @JsonProperty("visible_to")
-    private List<String> visibleTo;
+    @JsonProperty("retention_in_days")
+    protected int retentionInDays;
     
-    public AudienceSegment() {
-	this.retentionInDays = 9999;
-    }// AudienceSegment()
+    @JsonProperty("source_type")
+    protected SourceTypeEnum sourceType;
     
-}// AudienceSegment
+    @JsonProperty("creation_spec")
+    protected CreationSpec creationSpec;
+
+}// SamLookalikes

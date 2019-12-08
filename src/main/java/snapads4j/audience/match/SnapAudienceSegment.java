@@ -43,6 +43,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Setter;
 import snapads4j.enums.SchemaEnum;
+import snapads4j.enums.SourceTypeEnum;
 import snapads4j.enums.StatusEnum;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
@@ -51,6 +52,7 @@ import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.audience.match.AudienceSegment;
 import snapads4j.model.audience.match.FormUserForAudienceSegment;
+import snapads4j.model.audience.match.SamLookalikes;
 import snapads4j.model.audience.match.SnapHttpRequestAudienceSegment;
 import snapads4j.model.audience.match.SnapHttpRequestUserForAudienceSegment;
 import snapads4j.model.audience.match.SnapHttpResponseAudienceSegment;
@@ -69,6 +71,8 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
     private String apiUrl;
 
     private String endpointCreationAudienceSegment;
+    
+    private String endpointCreationSam;
 
     private String endpointUpdateAudienceSegment;
 
@@ -95,6 +99,8 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	this.apiUrl = (String) fp.getProperties().get("api.url");
 	this.endpointCreationAudienceSegment = this.apiUrl
 		+ (String) fp.getProperties().get("api.url.audience.match.create");
+	this.endpointCreationSam = this.apiUrl +
+		(String) fp.getProperties().get("api.url.audience.match.create.sam.lookalikes");
 	this.endpointUpdateAudienceSegment = this.apiUrl
 		+ (String) fp.getProperties().get("api.url.audience.match.update");
 	this.endpointGetAllAudienceSegments = this.apiUrl
@@ -148,6 +154,42 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	}
 	return result;
     }// createAudienceSegment()
+    
+    @Override
+    public Optional<AudienceSegment> createSamLookalikes(String oAuthAccessToken, SamLookalikes sam)
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+	    JsonProcessingException, UnsupportedEncodingException {
+	if (StringUtils.isEmpty(oAuthAccessToken)) {
+	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
+	}
+	checkSamLookalikes(sam);
+	Optional<AudienceSegment> result = Optional.empty();
+	final String url = this.endpointCreationSam.replace("{ad_account_id}", sam.getAdAccountId());
+	SnapHttpRequestAudienceSegment reqBody = new SnapHttpRequestAudienceSegment();
+	reqBody.addAudienceSegment(sam);
+	HttpPost request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, reqBody);
+	try (CloseableHttpResponse response = httpClient.execute(request)) {
+	    int statusCode = response.getStatusLine().getStatusCode();
+	    if (statusCode >= 300) {
+		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		throw ex;
+	    }
+	    HttpEntity entity = response.getEntity();
+	    if (entity != null) {
+		String body = entityUtilsWrapper.toString(entity);
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SnapHttpResponseAudienceSegment responseFromJson = mapper.readValue(body,
+			SnapHttpResponseAudienceSegment.class);
+		if (responseFromJson != null) {
+		    result = responseFromJson.getSpecificAudienceSegment();
+		}
+	    }
+	} catch (IOException e) {
+	    LOGGER.error("Impossible to create sam lookalikes, ad_account_id = {}", sam.getAdAccountId(), e);
+	}
+	return result;
+    }// createSamLookalikes()
 
     @Override
     public Optional<AudienceSegment> updateAudienceSegment(String oAuthAccessToken, AudienceSegment segment)
@@ -488,7 +530,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 		sb.append("The name is required,");
 	    }
 	    if (segment.getRetentionInDays() < 0) {
-		sb.append("The retention must be equal or greater than zero,");
+		sb.append("The retention must be equal or greater than zero days,");
 	    }
 	    if (isForCreation) {
 		if (segment.getSourceType() == null) {
@@ -504,5 +546,50 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	    throw new SnapArgumentException(finalErrors);
 	}
     }// checkAudienceSegment()
+    
+    private void checkSamLookalikes(SamLookalikes sam) throws SnapArgumentException {
+	StringBuilder sb = new StringBuilder();
+	if (sam != null) {
+	    if (StringUtils.isEmpty(sam.getAdAccountId())) {
+		sb.append("The Ad Account ID is required,");
+	    }
+	    if (StringUtils.isEmpty(sam.getName())) {
+		sb.append("The name is required,");
+	    }
+	    if (sam.getRetentionInDays() < 0) {
+		sb.append("The retention must be equal or greater than zero days,");
+	    }
+	    if (sam.getRetentionInDays() > 180) {
+		sb.append("The retention must be equal or less than 180 days,");
+	    }
+	    if (sam.getSourceType() == null) {
+		sb.append("The source type is required,");
+	    }
+	    if (sam.getSourceType() != null && sam.getSourceType() != SourceTypeEnum.LOOKALIKE) {
+		sb.append("The source type must be LOOKALIKE,");
+	    }
+	    if(sam.getCreationSpec() == null) {
+		sb.append("Lookalike creation spec is required,");
+	    }
+	    if(sam.getCreationSpec() != null) {
+                if(StringUtils.isEmpty(sam.getCreationSpec().getCountry())) {
+            		sb.append("Lookalike creation spec country is required,");
+                }
+                if(StringUtils.isEmpty(sam.getCreationSpec().getSeedSegmentId())) {
+            		sb.append("Lookalike creation spec seed segment ID is required,");
+                }
+                if(sam.getCreationSpec().getType() == null) {
+            		sb.append("Lookalike creation spec type is required,");
+                }
+	    }
+	} else {
+	    sb.append("Sam Lookalikes parameter is not given,");
+	}
+	String finalErrors = sb.toString();
+	if (!StringUtils.isEmpty(finalErrors)) {
+	    finalErrors = finalErrors.substring(0, finalErrors.length() - 1);
+	    throw new SnapArgumentException(finalErrors);
+	}
+    }// checkSamLookalikes()
 
 }// SnapAudienceSegment
