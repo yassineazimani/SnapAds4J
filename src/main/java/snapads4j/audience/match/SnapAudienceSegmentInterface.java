@@ -46,8 +46,13 @@ public interface SnapAudienceSegmentInterface {
     
     public int addUserToSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment) throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException, SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException;
     
-    public int deleteUserToSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment)
+    public int deleteUserFromSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment)
 	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
 	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException;
 
+    public Optional<AudienceSegment> deleteAllUsersFromSegment(String oAuthAccessToken, String segmentID)
+	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
+	    SnapResponseErrorException, SnapArgumentException;
+    
+    
 }// SnapAudienceSegmentInterface

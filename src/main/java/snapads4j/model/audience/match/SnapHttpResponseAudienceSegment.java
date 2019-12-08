@@ -23,10 +23,11 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import snapads4j.model.SnapHttpResponse;
 
 @Setter
 @NoArgsConstructor
-public class SnapHttpResponseAudienceSegment {
+public class SnapHttpResponseAudienceSegment extends SnapHttpResponse{
 
     private List<SnapInnerAudienceSegment> segments;
 

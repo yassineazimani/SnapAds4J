@@ -32,6 +32,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -88,19 +89,19 @@ public class SnapAudienceSegmentTest {
     private final String oAuthAccessToken = "meowmeowmeow";
 
     private final String adAccountId = "8adc3db7-8148-4fbf-999c-8d2266369d74";
-    
+
     private final String specificId = "5701023945457664";
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     private AudienceSegment segment;
-    
+
     private AudienceSegment segmentToUpdate;
 
     private List<AudienceSegment> segments;
-    
+
     private FormUserForAudienceSegment form;
-    
+
     private List<String> data;
 
     @Before
@@ -123,7 +124,8 @@ public class SnapAudienceSegmentTest {
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
 	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapAudienceSegmentCreated());
+	Mockito.when(entityUtilsWrapper.toString(httpEntity))
+		.thenReturn(SnapResponseUtils.getSnapAudienceSegmentCreated());
 	Assertions.assertThatCode(() -> snapAudienceSegment.createAudienceSegment(oAuthAccessToken, this.segment))
 		.doesNotThrowAnyException();
 	Optional<AudienceSegment> optSegment = snapAudienceSegment.createAudienceSegment(oAuthAccessToken,
@@ -340,7 +342,8 @@ public class SnapAudienceSegmentTest {
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
 	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapAudienceSegmentsCreated());
+	Mockito.when(entityUtilsWrapper.toString(httpEntity))
+		.thenReturn(SnapResponseUtils.getSnapAudienceSegmentsCreated());
 	Assertions.assertThatCode(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId))
 		.doesNotThrowAnyException();
 	List<AudienceSegment> segmentsReturned = snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken,
@@ -528,7 +531,8 @@ public class SnapAudienceSegmentTest {
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
 	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapSpecificAudienceSegment());
+	Mockito.when(entityUtilsWrapper.toString(httpEntity))
+		.thenReturn(SnapResponseUtils.getSnapSpecificAudienceSegment());
 	Assertions.assertThatCode(() -> snapAudienceSegment.getSpecificAudienceSegment(oAuthAccessToken, specificId))
 		.doesNotThrowAnyException();
 	Optional<AudienceSegment> optSegment = snapAudienceSegment.getSpecificAudienceSegment(oAuthAccessToken,
@@ -567,8 +571,8 @@ public class SnapAudienceSegmentTest {
     } // test_get_specific_audience_segment_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
-    public void test_get_specific_audience_segment_should_throw_IOException() throws ClientProtocolException, IOException,
-	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+    public void test_get_specific_audience_segment_should_throw_IOException() throws ClientProtocolException,
+	    IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
 	snapAudienceSegment.getSpecificAudienceSegment(oAuthAccessToken, specificId);
     }// test_get_specific_audience_segment_should_throw_IOException()
@@ -706,7 +710,7 @@ public class SnapAudienceSegmentTest {
 	assertThatThrownBy(() -> snapAudienceSegment.getSpecificAudienceSegment(oAuthAccessToken, specificId))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     } // should_throw_exception_1337_get_specific_audience_segment()
-    
+
     @Test
     public void test_update_audience_segment_should_success() throws IOException, InterruptedException,
 	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException {
@@ -714,7 +718,8 @@ public class SnapAudienceSegmentTest {
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPut.class))).thenReturn(httpResponse);
 	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapAudienceSegmentUpdated());
+	Mockito.when(entityUtilsWrapper.toString(httpEntity))
+		.thenReturn(SnapResponseUtils.getSnapAudienceSegmentUpdated());
 	Assertions.assertThatCode(() -> snapAudienceSegment.updateAudienceSegment(oAuthAccessToken, this.segment))
 		.doesNotThrowAnyException();
 	Optional<AudienceSegment> optSegment = snapAudienceSegment.updateAudienceSegment(oAuthAccessToken,
@@ -920,227 +925,828 @@ public class SnapAudienceSegmentTest {
 	assertThatThrownBy(() -> snapAudienceSegment.updateAudienceSegment(oAuthAccessToken, this.segment))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     } // should_throw_exception_1337_update_audience_segment()
-    
+
     @Test
-    public void add_user_to_segment_should_success_when_data_added() throws SnapOAuthAccessTokenException, SnapResponseErrorException, ClientProtocolException, IOException, SnapArgumentException, SnapNormalizeArgumentException {
+    public void add_user_from_segment_should_success_when_data_added()
+	    throws SnapOAuthAccessTokenException, SnapResponseErrorException, ClientProtocolException, IOException,
+	    SnapArgumentException, SnapNormalizeArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
 	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapAddUserForAudienceSegment());
+	Mockito.when(entityUtilsWrapper.toString(httpEntity))
+		.thenReturn(SnapResponseUtils.getSnapAddUserForAudienceSegment());
 	data.add("   yAssine.azimani@toto.com   ");
 	data.add("john.jo@toto.com");
-	assertThat(snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
-	.isEqualTo(2);
-    }// add_user_to_segment_should_success_when_data_added()
-    
+	assertThat(snapAudienceSegment.addUserToSegment(oAuthAccessToken, form)).isEqualTo(2);
+    }// add_user_from_segment_should_success_when_data_added()
+
     @Test
-    public void add_user_to_segment_should_success_when_zero_data_added() throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException, SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException {
-	assertThat(snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
-	.isEqualTo(0);
-    }// add_user_to_segment_should_success_when_zero_data_added()
-    
+    public void add_user_from_segment_should_success_when_zero_data_added()
+	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
+	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException {
+	assertThat(snapAudienceSegment.addUserToSegment(oAuthAccessToken, form)).isEqualTo(0);
+    }// add_user_from_segment_should_success_when_zero_data_added()
+
     @Test
-    public void add_user_to_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_null() {
+    public void add_user_from_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_null() {
 	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(null, form))
-	.hasMessage("The OAuthAccessToken must to be given")
-	.isInstanceOf(SnapOAuthAccessTokenException.class);
-    }// add_user_to_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_null()
-    
+		.hasMessage("The OAuthAccessToken must to be given").isInstanceOf(SnapOAuthAccessTokenException.class);
+    }// add_user_from_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_null()
+
     @Test
-    public void add_user_to_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_empty() {
+    public void add_user_from_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_empty() {
 	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment("", form))
-	.hasMessage("The OAuthAccessToken must to be given")
-	.isInstanceOf(SnapOAuthAccessTokenException.class);
-    }// add_user_to_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_empty()
-    
+		.hasMessage("The OAuthAccessToken must to be given").isInstanceOf(SnapOAuthAccessTokenException.class);
+    }// add_user_from_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_empty()
+
     @Test
-    public void add_user_to_segment_should_throw_SnapArgumentException_when_data_is_null() {
+    public void add_user_from_segment_should_throw_SnapArgumentException_when_data_is_null() {
 	form.setData(null);
 	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
-	.hasMessage("List of hashed identifiers is required")
-	.isInstanceOf(SnapArgumentException.class);
-    }// add_user_to_segment_should_throw_SnapArgumentException_when_data_is_null()
-    
+		.hasMessage("List of hashed identifiers is required").isInstanceOf(SnapArgumentException.class);
+    }// add_user_from_segment_should_throw_SnapArgumentException_when_data_is_null()
+
     @Test
-    public void add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_null() {
+    public void add_user_from_segment_should_throw_SnapArgumentException_when_schema_is_null() {
 	FormUserForAudienceSegment form = initFormUserForAudienceSegment(SchemaEnum.EMAIL_SHA256, false);
 	form.setSchema(null);
 	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Type schema is required")
-	.isInstanceOf(SnapArgumentException.class);
-    }// add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_null()
-    
-    @Test
-    public void add_user_to_segment_should_throw_SnapArgumentException_when_segment_id_is_null() {
-	form.setId(null);
-	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Segment ID is required")
-	.isInstanceOf(SnapArgumentException.class);
-    }// add_user_to_segment_should_throw_SnapArgumentException_when_segment_id_is_null()
-    
-    @Test
-    public void add_user_to_segment_should_throw_SnapArgumentException_when_segment_id_is_empty() {
-	form.setId("");
-	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Segment ID is required")
-	.isInstanceOf(SnapArgumentException.class);
-    }// add_user_to_segment_should_throw_SnapArgumentException_when_segment_id_is_empty()
+		.hasMessage("Type schema is required").isInstanceOf(SnapArgumentException.class);
+    }// add_user_from_segment_should_throw_SnapArgumentException_when_schema_is_null()
 
     @Test
-    public void add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_email_and_data_is_not_email() {
+    public void add_user_from_segment_should_throw_SnapArgumentException_when_segment_id_is_null() {
+	form.setId(null);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+		.hasMessage("Segment ID is required").isInstanceOf(SnapArgumentException.class);
+    }// add_user_from_segment_should_throw_SnapArgumentException_when_segment_id_is_null()
+
+    @Test
+    public void add_user_from_segment_should_throw_SnapArgumentException_when_segment_id_is_empty() {
+	form.setId("");
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+		.hasMessage("Segment ID is required").isInstanceOf(SnapArgumentException.class);
+    }// add_user_from_segment_should_throw_SnapArgumentException_when_segment_id_is_empty()
+
+    @Test
+    public void add_user_from_segment_should_throw_SnapArgumentException_when_schema_is_email_and_data_is_not_email() {
 	form.setData(Stream.of("foo").collect(Collectors.toList()));
 	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Data must be have valid email(s)")
-	.isInstanceOf(SnapNormalizeArgumentException.class);
-    }// add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_email_and_data_is_not_email()
-    
+		.hasMessage("Data must be have valid email(s)").isInstanceOf(SnapNormalizeArgumentException.class);
+    }// add_user_from_segment_should_throw_SnapArgumentException_when_schema_is_email_and_data_is_not_email()
+
     @Test
-    public void add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_email_and_one_data_among_datas_not_email() {
+    public void add_user_from_segment_should_throw_SnapArgumentException_when_schema_is_email_and_one_data_among_datas_not_email() {
 	form.setData(Stream.of("foo", "bobo@test.com").collect(Collectors.toList()));
 	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Data must be have valid email(s)")
-	.isInstanceOf(SnapNormalizeArgumentException.class);
-    }// add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_email_and_one_data_among_datas_not_email()
-    
+		.hasMessage("Data must be have valid email(s)").isInstanceOf(SnapNormalizeArgumentException.class);
+    }// add_user_from_segment_should_throw_SnapArgumentException_when_schema_is_email_and_one_data_among_datas_not_email()
+
     @Test
-    public void add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_data_is_not_phone() {
+    public void add_user_from_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_data_is_not_phone() {
 	form.setData(Stream.of("102030405").collect(Collectors.toList()));
 	form.setSchema(SchemaEnum.PHONE_SHA256);
 	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Data must be have valid phone(s) number")
-	.isInstanceOf(SnapNormalizeArgumentException.class);
-	
+		.hasMessage("Data must be have valid phone(s) number")
+		.isInstanceOf(SnapNormalizeArgumentException.class);
+
 	form.setData(Stream.of("A02#@!40B").collect(Collectors.toList()));
 	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Data must be have valid phone(s) number")
-	.isInstanceOf(SnapNormalizeArgumentException.class);
-    }// add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_data_is_not_phone()
-    
+		.hasMessage("Data must be have valid phone(s) number")
+		.isInstanceOf(SnapNormalizeArgumentException.class);
+    }// add_user_from_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_data_is_not_phone()
+
     @Test
-    public void add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_one_data_among_datas_not_phone() {
-	form.setData(Stream.of("A02#@!40B", "0102030405", "123-456-7890", "(123)456-7890", "(123)4567890").collect(Collectors.toList()));
+    public void add_user_from_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_one_data_among_datas_not_phone() {
+	form.setData(Stream.of("A02#@!40B", "0102030405", "123-456-7890", "(123)456-7890", "(123)4567890")
+		.collect(Collectors.toList()));
 	form.setSchema(SchemaEnum.PHONE_SHA256);
 	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Data must be have valid phone(s) number")
-	.isInstanceOf(SnapNormalizeArgumentException.class);
+		.hasMessage("Data must be have valid phone(s) number")
+		.isInstanceOf(SnapNormalizeArgumentException.class);
 	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Data must be have valid phone(s) number")
-	.isInstanceOf(SnapNormalizeArgumentException.class);
-    }// add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_one_data_among_datas_not_phone()
-    
+		.hasMessage("Data must be have valid phone(s) number")
+		.isInstanceOf(SnapNormalizeArgumentException.class);
+    }// add_user_from_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_one_data_among_datas_not_phone()
+
     @Test
-    public void delete_user_to_segment_should_success_when_data_add() throws SnapOAuthAccessTokenException, SnapResponseErrorException, ClientProtocolException, IOException, SnapArgumentException, SnapNormalizeArgumentException {
+    public void should_throw_exception_400_add_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(400);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
+    } // should_throw_exception_400_add_user_from_segment()
+
+    @Test
+    public void should_throw_exception_401_add_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(401);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
+    } // should_throw_exception_401_add_user_from_segment()
+
+    @Test
+    public void should_throw_exception_403_add_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(403);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
+    } // should_throw_exception_403_add_user_from_segment()
+
+    @Test
+    public void should_throw_exception_404_add_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(404);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
+    } // should_throw_exception_404_add_user_from_segment()
+
+    @Test
+    public void should_throw_exception_405_add_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(405);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
+    } // should_throw_exception_405_add_user_from_segment()
+
+    @Test
+    public void should_throw_exception_406_add_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(406);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
+    } // should_throw_exception_406_add_user_from_segment()
+
+    @Test
+    public void should_throw_exception_410_add_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(410);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
+    } // should_throw_exception_410_add_user_from_segment()
+
+    @Test
+    public void should_throw_exception_418_add_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(418);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
+    } // should_throw_exception_418_add_user_from_segment()
+
+    @Test
+    public void should_throw_exception_429_add_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(429);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
+    } // should_throw_exception_429_add_user_from_segment()
+
+    @Test
+    public void should_throw_exception_500_add_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(500);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
+    } // should_throw_exception_500_add_user_from_segment()
+
+    @Test
+    public void should_throw_exception_503_add_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(503);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
+    } // should_throw_exception_503_add_user_from_segment()
+
+    @Test
+    public void should_throw_exception_1337_add_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
+    } // should_throw_exception_1337_add_user_from_segment()
+
+    @Test
+    public void add_user_from_segment_should_throw_IOException()
+	    throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException,
+	    SnapArgumentException, SnapNormalizeArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
+	snapAudienceSegment.addUserToSegment(oAuthAccessToken, form);
+    }// add_user_from_segment_should_throw_IOException()
+
+    @Test
+    public void delete_user_from_segment_should_success_when_data_add()
+	    throws SnapOAuthAccessTokenException, SnapResponseErrorException, ClientProtocolException, IOException,
+	    SnapArgumentException, SnapNormalizeArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpDeleteWithBody.class))).thenReturn(httpResponse);
 	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapDeleteUserForAudienceSegment());
+	Mockito.when(entityUtilsWrapper.toString(httpEntity))
+		.thenReturn(SnapResponseUtils.getSnapDeleteUserForAudienceSegment());
 	data.add("   yAssine.azimani@toto.com   ");
 	data.add("john.jo@toto.com");
-	assertThat(snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
-	.isEqualTo(2);
-    }// delete_user_to_segment_should_success_when_data_deleteed()
-    
-    @Test
-    public void delete_user_to_segment_should_success_when_zero_data_add() throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException, SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException {
-	assertThat(snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
-	.isEqualTo(0);
-    }// delete_user_to_segment_should_success_when_zero_data_deleteed()
-    
-    @Test
-    public void delete_user_to_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_null() {
-	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(null, form))
-	.hasMessage("The OAuthAccessToken must to be given")
-	.isInstanceOf(SnapOAuthAccessTokenException.class);
-    }// delete_user_to_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_null()
-    
-    @Test
-    public void delete_user_to_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_empty() {
-	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment("", form))
-	.hasMessage("The OAuthAccessToken must to be given")
-	.isInstanceOf(SnapOAuthAccessTokenException.class);
-    }// delete_user_to_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_empty()
-    
-    @Test
-    public void delete_user_to_segment_should_throw_SnapArgumentException_when_data_is_null() {
-	form.setData(null);
-	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
-	.hasMessage("List of hashed identifiers is required")
-	.isInstanceOf(SnapArgumentException.class);
-    }// delete_user_to_segment_should_throw_SnapArgumentException_when_data_is_null()
-    
-    @Test
-    public void delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_null() {
-	FormUserForAudienceSegment form = initFormUserForAudienceSegment(SchemaEnum.EMAIL_SHA256, false);
-	form.setSchema(null);
-	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Type schema is required")
-	.isInstanceOf(SnapArgumentException.class);
-    }// delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_null()
-    
-    @Test
-    public void delete_user_to_segment_should_throw_SnapArgumentException_when_segment_id_is_null() {
-	form.setId(null);
-	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Segment ID is required")
-	.isInstanceOf(SnapArgumentException.class);
-    }// delete_user_to_segment_should_throw_SnapArgumentException_when_segment_id_is_null()
-    
-    @Test
-    public void delete_user_to_segment_should_throw_SnapArgumentException_when_segment_id_is_empty() {
-	form.setId("");
-	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Segment ID is required")
-	.isInstanceOf(SnapArgumentException.class);
-    }// delete_user_to_segment_should_throw_SnapArgumentException_when_segment_id_is_empty()
+	assertThat(snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form)).isEqualTo(2);
+    }// delete_user_from_segment_should_success_when_data_deleteed()
 
     @Test
-    public void delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_email_and_data_is_not_email() {
+    public void delete_user_from_segment_should_success_when_zero_data_add()
+	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
+	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException {
+	assertThat(snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form)).isEqualTo(0);
+    }// delete_user_from_segment_should_success_when_zero_data_deleteed()
+
+    @Test
+    public void delete_user_from_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_null() {
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(null, form))
+		.hasMessage("The OAuthAccessToken must to be given").isInstanceOf(SnapOAuthAccessTokenException.class);
+    }// delete_user_from_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_null()
+
+    @Test
+    public void delete_user_from_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_empty() {
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment("", form))
+		.hasMessage("The OAuthAccessToken must to be given").isInstanceOf(SnapOAuthAccessTokenException.class);
+    }// delete_user_from_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_empty()
+
+    @Test
+    public void delete_user_from_segment_should_throw_SnapArgumentException_when_data_is_null() {
+	form.setData(null);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.hasMessage("List of hashed identifiers is required").isInstanceOf(SnapArgumentException.class);
+    }// delete_user_from_segment_should_throw_SnapArgumentException_when_data_is_null()
+
+    @Test
+    public void delete_user_from_segment_should_throw_SnapArgumentException_when_schema_is_null() {
+	FormUserForAudienceSegment form = initFormUserForAudienceSegment(SchemaEnum.EMAIL_SHA256, false);
+	form.setSchema(null);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.hasMessage("Type schema is required").isInstanceOf(SnapArgumentException.class);
+    }// delete_user_from_segment_should_throw_SnapArgumentException_when_schema_is_null()
+
+    @Test
+    public void delete_user_from_segment_should_throw_SnapArgumentException_when_segment_id_is_null() {
+	form.setId(null);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.hasMessage("Segment ID is required").isInstanceOf(SnapArgumentException.class);
+    }// delete_user_from_segment_should_throw_SnapArgumentException_when_segment_id_is_null()
+
+    @Test
+    public void delete_user_from_segment_should_throw_SnapArgumentException_when_segment_id_is_empty() {
+	form.setId("");
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.hasMessage("Segment ID is required").isInstanceOf(SnapArgumentException.class);
+    }// delete_user_from_segment_should_throw_SnapArgumentException_when_segment_id_is_empty()
+
+    @Test
+    public void delete_user_from_segment_should_throw_SnapArgumentException_when_schema_is_email_and_data_is_not_email() {
 	form.setData(Stream.of("foo").collect(Collectors.toList()));
-	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Data must be have valid email(s)")
-	.isInstanceOf(SnapNormalizeArgumentException.class);
-    }// delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_email_and_data_is_not_email()
-    
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.hasMessage("Data must be have valid email(s)").isInstanceOf(SnapNormalizeArgumentException.class);
+    }// delete_user_from_segment_should_throw_SnapArgumentException_when_schema_is_email_and_data_is_not_email()
+
     @Test
-    public void delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_email_and_one_data_among_datas_not_email() {
+    public void delete_user_from_segment_should_throw_SnapArgumentException_when_schema_is_email_and_one_data_among_datas_not_email() {
 	form.setData(Stream.of("foo", "bobo@test.com").collect(Collectors.toList()));
-	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Data must be have valid email(s)")
-	.isInstanceOf(SnapNormalizeArgumentException.class);
-    }// delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_email_and_one_data_among_datas_not_email()
-    
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.hasMessage("Data must be have valid email(s)").isInstanceOf(SnapNormalizeArgumentException.class);
+    }// delete_user_from_segment_should_throw_SnapArgumentException_when_schema_is_email_and_one_data_among_datas_not_email()
+
     @Test
-    public void delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_data_is_not_phone() {
+    public void delete_user_from_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_data_is_not_phone() {
 	form.setData(Stream.of("102030405").collect(Collectors.toList()));
 	form.setSchema(SchemaEnum.PHONE_SHA256);
-	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Data must be have valid phone(s) number")
-	.isInstanceOf(SnapNormalizeArgumentException.class);
-	
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.hasMessage("Data must be have valid phone(s) number")
+		.isInstanceOf(SnapNormalizeArgumentException.class);
+
 	form.setData(Stream.of("A02#@!40B").collect(Collectors.toList()));
-	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Data must be have valid phone(s) number")
-	.isInstanceOf(SnapNormalizeArgumentException.class);
-    }// delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_data_is_not_phone()
-    
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.hasMessage("Data must be have valid phone(s) number")
+		.isInstanceOf(SnapNormalizeArgumentException.class);
+    }// delete_user_from_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_data_is_not_phone()
+
     @Test
-    public void delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_one_data_among_datas_not_phone() {
-	form.setData(Stream.of("A02#@!40B", "0102030405", "123-456-7890", "(123)456-7890", "(123)4567890").collect(Collectors.toList()));
+    public void delete_user_from_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_one_data_among_datas_not_phone() {
+	form.setData(Stream.of("A02#@!40B", "0102030405", "123-456-7890", "(123)456-7890", "(123)4567890")
+		.collect(Collectors.toList()));
 	form.setSchema(SchemaEnum.PHONE_SHA256);
-	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Data must be have valid phone(s) number")
-	.isInstanceOf(SnapNormalizeArgumentException.class);
-	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
-	.hasMessage("Data must be have valid phone(s) number")
-	.isInstanceOf(SnapNormalizeArgumentException.class);
-    }// delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_one_data_among_datas_not_phone()
-    
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.hasMessage("Data must be have valid phone(s) number")
+		.isInstanceOf(SnapNormalizeArgumentException.class);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.hasMessage("Data must be have valid phone(s) number")
+		.isInstanceOf(SnapNormalizeArgumentException.class);
+    }// delete_user_from_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_one_data_among_datas_not_phone()
+
+    @Test
+    public void should_throw_exception_400_delete_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(400);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDeleteWithBody.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
+    } // should_throw_exception_400_delete_user_from_segment()
+
+    @Test
+    public void should_throw_exception_401_delete_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(401);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDeleteWithBody.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
+    } // should_throw_exception_401_delete_user_from_segment()
+
+    @Test
+    public void should_throw_exception_403_delete_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(403);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDeleteWithBody.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
+    } // should_throw_exception_403_delete_user_from_segment()
+
+    @Test
+    public void should_throw_exception_404_delete_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(404);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDeleteWithBody.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
+    } // should_throw_exception_404_delete_user_from_segment()
+
+    @Test
+    public void should_throw_exception_405_delete_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(405);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDeleteWithBody.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
+    } // should_throw_exception_405_delete_user_from_segment()
+
+    @Test
+    public void should_throw_exception_406_delete_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(406);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDeleteWithBody.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
+    } // should_throw_exception_406_delete_user_from_segment()
+
+    @Test
+    public void should_throw_exception_410_delete_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(410);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDeleteWithBody.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
+    } // should_throw_exception_410_delete_user_from_segment()
+
+    @Test
+    public void should_throw_exception_418_delete_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(418);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDeleteWithBody.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
+    } // should_throw_exception_418_delete_user_from_segment()
+
+    @Test
+    public void should_throw_exception_429_delete_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(429);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDeleteWithBody.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
+    } // should_throw_exception_429_delete_user_from_segment()
+
+    @Test
+    public void should_throw_exception_500_delete_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(500);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDeleteWithBody.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
+    } // should_throw_exception_500_delete_user_from_segment()
+
+    @Test
+    public void should_throw_exception_503_delete_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(503);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDeleteWithBody.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
+    } // should_throw_exception_503_delete_user_from_segment()
+
+    @Test
+    public void should_throw_exception_1337_delete_user_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDeleteWithBody.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
+    } // should_throw_exception_1337_delete_user_from_segment()
+
+    @Test
+    public void delete_user_from_segment_should_throw_IOException()
+	    throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException,
+	    SnapArgumentException, SnapNormalizeArgumentException {
+	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
+	Mockito.when(httpClient.execute((Mockito.any(HttpDeleteWithBody.class)))).thenThrow(IOException.class);
+	snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form);
+    }// delete_user_from_segment_should_throw_IOException()
+
+    @Test
+    public void test_delete_all_users_from_segment_should_success() throws SnapResponseErrorException,
+	    SnapOAuthAccessTokenException, SnapArgumentException, IOException, InterruptedException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	Mockito.when(entityUtilsWrapper.toString(httpEntity))
+		.thenReturn(SnapResponseUtils.getSnapDeleteAllUsersFromAudienceSegment());
+	Assertions.assertThatCode(() -> snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, specificId))
+		.doesNotThrowAnyException();
+	Optional<AudienceSegment> opt = snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, specificId);
+	Assertions.assertThat(opt.isPresent()).isTrue();
+	opt.ifPresent(a -> {
+	    assertThat(a.getId()).isEqualTo("5769345128988888");
+	    assertThat(a.getName()).isEqualTo("super duper sam");
+	    assertThat(a.getStatus()).isEqualTo(StatusEnum.ACTIVE);
+	    assertThat(a.getDescription()).isEqualTo("all the sams in the world");
+	    assertThat(a.getSourceType()).isEqualTo(SourceTypeEnum.FIRST_PARTY);
+	    assertThat(a.getRetentionInDays()).isEqualTo(180);
+	    assertThat(a.getAdAccountId()).isEqualTo("8adc3db7-8148-4fbf-999c-8d1111111d11");
+	    assertThat(a.getApproximateNumberUsers()).isEqualTo(0);
+	    assertThat(a.toString()).isNotEmpty();
+	    assertThat(sdf.format(a.getCreatedAt())).isEqualTo("2017-02-23T18:34:48.900Z");
+	    assertThat(sdf.format(a.getUpdatedAt())).isEqualTo("2017-02-23T19:01:30.080Z");
+	});
+    } // test_delete_all_users_from_segment_should_success()
+
+    @Test
+    public void test_delete_all_users_from_segment_should_throw_SnapOAuthAccessTokenException_1() {
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAllUsersFromSegment(null, specificId))
+		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
+    } // test_delete_all_users_from_segment_should_throw_SnapOAuthAccessTokenException_1()
+
+    @Test
+    public void test_delete_all_users_from_segment_should_throw_SnapOAuthAccessTokenException_2() {
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAllUsersFromSegment("", specificId))
+		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
+    } // test_delete_all_users_from_segment_should_throw_SnapOAuthAccessTokenException_2()
+
+    @Test
+    public void test_delete_all_users_from_segment_should_throw_IOException() throws ClientProtocolException,
+	    IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpDelete.class)))).thenThrow(IOException.class);
+	snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, specificId);
+    }// test_delete_all_users_from_segment_should_throw_IOException()
+
+    @Test
+    public void test_delete_all_users_from_segment_should_throw_SnapArgumentException_1() {
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, null))
+		.isInstanceOf(SnapArgumentException.class).hasMessage("The segment ID is required");
+    } // test_delete_all_users_from_segment_should_throw_SnapArgumentException_1()
+
+    @Test
+    public void test_delete_all_users_from_segment_should_throw_SnapArgumentException_2() {
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, ""))
+		.isInstanceOf(SnapArgumentException.class).hasMessage("The segment ID is required");
+    } // test_delete_all_users_from_segment_should_throw_SnapArgumentException_2()
+
+    @Test
+    public void should_throw_exception_401_delete_all_users_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(401);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
+    } // should_throw_exception_401_delete_all_users_from_segment()
+
+    @Test
+    public void should_throw_exception_403_delete_all_users_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(403);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
+    } // should_throw_exception_403_delete_all_users_from_segment()
+
+    @Test
+    public void should_throw_exception_404_delete_all_users_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(404);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
+    } // should_throw_exception_404_delete_all_users_from_segment()
+
+    @Test
+    public void should_throw_exception_405_delete_all_users_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(405);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
+    } // should_throw_exception_405_delete_all_users_from_segment()
+
+    @Test
+    public void should_throw_exception_406_delete_all_users_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(406);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
+    } // should_throw_exception_406_delete_all_users_from_segment()
+
+    @Test
+    public void should_throw_exception_410_delete_all_users_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(410);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
+    } // should_throw_exception_410_delete_all_users_from_segment()
+
+    @Test
+    public void should_throw_exception_418_delete_all_users_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(418);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
+    } // should_throw_exception_418_delete_all_users_from_segment()
+
+    @Test
+    public void should_throw_exception_429_delete_all_users_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(429);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
+    } // should_throw_exception_429_delete_all_users_from_segment()
+
+    @Test
+    public void should_throw_exception_500_delete_all_users_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(500);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
+    } // should_throw_exception_500_delete_all_users_from_segment()
+
+    @Test
+    public void should_throw_exception_503_delete_all_users_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(503);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
+    } // should_throw_exception_503_delete_all_users_from_segment()
+
+    @Test
+    public void should_throw_exception_1337_delete_all_users_from_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
+    } // should_throw_exception_1337_delete_all_users_from_segment()
+
+    @Test
+    public void test_delete_audience_segment_should_success() throws SnapResponseErrorException,
+	    SnapOAuthAccessTokenException, SnapArgumentException, IOException, InterruptedException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	Mockito.when(entityUtilsWrapper.toString(httpEntity))
+	.thenReturn(SnapResponseUtils.getSnapDeleteAudienceSegment());
+	Assertions.assertThatCode(() -> snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, specificId))
+		.doesNotThrowAnyException();
+    } // test_delete_audience_segment_should_success()
+
+    @Test
+    public void test_delete_audience_segment_should_throw_SnapOAuthAccessTokenException_1() {
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment(null, specificId))
+		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
+    } // test_delete_audience_segment_should_throw_SnapOAuthAccessTokenException_1()
+
+    @Test
+    public void test_delete_audience_segment_should_throw_SnapOAuthAccessTokenException_2() {
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment("", specificId))
+		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
+    } // test_delete_audience_segment_should_throw_SnapOAuthAccessTokenException_2()
+
+    @Test
+    public void test_delete_audience_segment_should_throw_IOException() throws ClientProtocolException, IOException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpDelete.class)))).thenThrow(IOException.class);
+	snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, specificId);
+    }// test_delete_audience_segment_should_throw_IOException()
+
+    @Test
+    public void test_delete_audience_segment_should_throw_SnapArgumentException_1() {
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, null))
+		.isInstanceOf(SnapArgumentException.class).hasMessage("The segment ID is required");
+    } // test_delete_audience_segment_should_throw_SnapArgumentException_1()
+
+    @Test
+    public void test_delete_audience_segment_should_throw_SnapArgumentException_2() {
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, ""))
+		.isInstanceOf(SnapArgumentException.class).hasMessage("The segment ID is required");
+    } // test_delete_audience_segment_should_throw_SnapArgumentException_2()
+
+    @Test
+    public void should_throw_exception_401_delete_audience_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(401);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
+    } // should_throw_exception_401_delete_audience_segment()
+
+    @Test
+    public void should_throw_exception_403_delete_audience_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(403);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
+    } // should_throw_exception_403_delete_audience_segment()
+
+    @Test
+    public void should_throw_exception_404_delete_audience_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(404);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
+    } // should_throw_exception_404_delete_audience_segment()
+
+    @Test
+    public void should_throw_exception_405_delete_audience_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(405);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
+    } // should_throw_exception_405_delete_audience_segment()
+
+    @Test
+    public void should_throw_exception_406_delete_audience_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(406);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
+    } // should_throw_exception_406_delete_audience_segment()
+
+    @Test
+    public void should_throw_exception_410_delete_audience_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(410);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
+    } // should_throw_exception_410_delete_audience_segment()
+
+    @Test
+    public void should_throw_exception_418_delete_audience_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(418);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
+    } // should_throw_exception_418_delete_audience_segment()
+
+    @Test
+    public void should_throw_exception_429_delete_audience_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(429);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
+    } // should_throw_exception_429_delete_audience_segment()
+
+    @Test
+    public void should_throw_exception_500_delete_audience_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(500);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
+    } // should_throw_exception_500_delete_audience_segment()
+
+    @Test
+    public void should_throw_exception_503_delete_audience_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(503);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
+    } // should_throw_exception_503_delete_audience_segment()
+
+    @Test
+    public void should_throw_exception_1337_delete_audience_segment() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
+    } // should_throw_exception_1337_delete_audience_segment()
+
     private FormUserForAudienceSegment initFormUserForAudienceSegment(SchemaEnum schema) {
 	return initFormUserForAudienceSegment(schema, true);
     }// initFormUserForAudienceSegment()
-    
+
     private FormUserForAudienceSegment initFormUserForAudienceSegment(SchemaEnum schema, boolean withSchema) {
 	FormUserForAudienceSegment form = new FormUserForAudienceSegment();
 	form.setId(specificId);
@@ -1158,7 +1764,7 @@ public class SnapAudienceSegmentTest {
 	segment.setSourceType(SourceTypeEnum.FIRST_PARTY);
 	return segment;
     }// initAudienceSegment()
-    
+
     private AudienceSegment initAudienceSegmentForUpdate() {
 	AudienceSegment segment = new AudienceSegment();
 	segment.setId("5603670370513719");

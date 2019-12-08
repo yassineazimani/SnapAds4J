@@ -1114,4 +1114,36 @@ public class SnapResponseUtils {
       	"  ]\r\n" + 
       	"}";
   }// getSnapDeleteUserForAudienceSegment()
+  
+  public static String getSnapDeleteAllUsersFromAudienceSegment() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"SUCCESS\",\r\n" + 
+      	"  \"request_id\": \"58af318900ff0cb66aa3a103dd0001737e616473617069736300016275696c642d61666139346564352d312d34342d3000010109\",\r\n" + 
+      	"  \"segments\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"      \"segment\": {\r\n" + 
+      	"        \"id\":\"5769345128988888\",\r\n" + 
+      	"        \"updated_at\":\"2017-02-23T19:01:30.080Z\",\r\n" + 
+      	"        \"created_at\":\"2017-02-23T18:34:48.900Z\",\r\n" + 
+      	"        \"name\":\"super duper sam\",\r\n" + 
+      	"        \"ad_account_id\":\"8adc3db7-8148-4fbf-999c-8d1111111d11\",\r\n" + 
+      	"        \"description\":\"all the sams in the world\",\r\n" + 
+      	"        \"status\":\"ACTIVE\",\r\n" + 
+      	"        \"source_type\":\"FIRST_PARTY\",\r\n" + 
+      	"        \"retention_in_days\":180,\r\n" + 
+      	"        \"approximate_number_users\":0\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapDeleteAllUsersFromAudienceSegment()
+  
+  public static String getSnapDeleteAudienceSegment() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5b994e4900ff02dce52463d1020001737e616473617069736300016275696c642d33346634346232622d312d3230302d32000100\",\r\n" + 
+      	"    \"segments\": []\r\n" + 
+      	"}";
+  }// getSnapDeleteAudienceSegment()
 } // SnapResponseUtils

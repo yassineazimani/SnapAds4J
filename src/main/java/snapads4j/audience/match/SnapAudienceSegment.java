@@ -28,6 +28,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -42,6 +43,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Setter;
 import snapads4j.enums.SchemaEnum;
+import snapads4j.enums.StatusEnum;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
 import snapads4j.exceptions.SnapNormalizeArgumentException;
@@ -77,7 +79,11 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
     private String endpointAddUserForAudienceSegment;
 
     private String endpointDeleteUserForAudienceSegment;
-    
+
+    private String endpointDeleteAllUsersForAudienceSegment;
+
+    private String endpointDeleteAudienceSegment;
+
     private CloseableHttpClient httpClient;
 
     private EntityUtilsWrapper entityUtilsWrapper;
@@ -99,6 +105,10 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 		+ (String) fp.getProperties().get("api.url.audience.match.add.user");
 	this.endpointDeleteUserForAudienceSegment = this.apiUrl
 		+ (String) fp.getProperties().get("api.url.audience.match.delete.user");
+	this.endpointDeleteAllUsersForAudienceSegment = this.apiUrl
+		+ (String) fp.getProperties().get("api.url.audience.match.delete.all");
+	this.endpointDeleteAudienceSegment = this.apiUrl
+		+ (String) fp.getProperties().get("api.url.audience.match.delete");
 	this.httpClient = HttpClients.createDefault();
 	this.entityUtilsWrapper = new EntityUtilsWrapper();
     }// SnapAudienceSegment()
@@ -262,7 +272,8 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	int result = 0;
 	if (CollectionUtils.isNotEmpty(formUserForAudienceSegment.getData())) {
 	    normalizeAndHashDataUserForAudienceSegment(formUserForAudienceSegment);
-	    final String url = this.endpointAddUserForAudienceSegment.replace("{segment_id}", "");
+	    final String url = this.endpointAddUserForAudienceSegment.replace("{segment_id}",
+		    formUserForAudienceSegment.getId());
 	    SnapHttpRequestUserForAudienceSegment reqBody = new SnapHttpRequestUserForAudienceSegment();
 	    reqBody.addUserForAudienceSegment(formUserForAudienceSegment);
 	    HttpPost request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, reqBody);
@@ -293,13 +304,13 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	}
 	return result;
     }// addUserToSegment()
-    
+
     /**
      * 
      * Type schema mobile_ad_id regex isn't checked here unlike phone and email.
      */
     @Override
-    public int deleteUserToSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment)
+    public int deleteUserFromSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment)
 	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
 	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
@@ -309,7 +320,8 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	int result = 0;
 	if (CollectionUtils.isNotEmpty(formUserForAudienceSegment.getData())) {
 	    normalizeAndHashDataUserForAudienceSegment(formUserForAudienceSegment);
-	    final String url = this.endpointDeleteUserForAudienceSegment.replace("{segment_id}", "");
+	    final String url = this.endpointDeleteUserForAudienceSegment.replace("{segment_id}",
+		    formUserForAudienceSegment.getId());
 	    SnapHttpRequestUserForAudienceSegment reqBody = new SnapHttpRequestUserForAudienceSegment();
 	    reqBody.addUserForAudienceSegment(formUserForAudienceSegment);
 	    HttpDeleteWithBody request = HttpUtils.prepareDeleteRequestObject(url, oAuthAccessToken, reqBody);
@@ -339,7 +351,78 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	    }
 	}
 	return result;
-    }// deleteUserToSegment()
+    }// deleteUserFromSegment()
+
+    @Override
+    public Optional<AudienceSegment> deleteAllUsersFromSegment(String oAuthAccessToken, String segmentID)
+	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
+	    SnapResponseErrorException, SnapArgumentException {
+	if (StringUtils.isEmpty(oAuthAccessToken)) {
+	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
+	}
+	if (StringUtils.isEmpty(segmentID)) {
+	    throw new SnapArgumentException("The segment ID is required");
+	}
+	Optional<AudienceSegment> result = Optional.empty();
+	final String url = this.endpointDeleteAllUsersForAudienceSegment.replace("{segment_id}", segmentID);
+	HttpDelete request = HttpUtils.prepareDeleteRequest(url, oAuthAccessToken);
+	try (CloseableHttpResponse response = httpClient.execute(request)) {
+	    int statusCode = response.getStatusLine().getStatusCode();
+	    if (statusCode >= 300) {
+		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		throw ex;
+	    }
+	    HttpEntity entity = response.getEntity();
+	    if (entity != null) {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		String body = entityUtilsWrapper.toString(entity);
+		SnapHttpResponseAudienceSegment responseFromJson = mapper.readValue(body,
+			SnapHttpResponseAudienceSegment.class);
+		if (responseFromJson != null) {
+		    result = responseFromJson.getSpecificAudienceSegment();
+		}
+	    }
+	} catch (IOException ie) {
+	    LOGGER.error("Impossible to delete all users from segment, segmentID = {}", segmentID, ie);
+	}
+	return result;
+    }// deleteAllUsersFromSegment()
+
+    public boolean deleteAudienceSegment(String oAuthAccessToken, String segmentID)
+	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
+	    SnapResponseErrorException, SnapArgumentException {
+	if (StringUtils.isEmpty(oAuthAccessToken)) {
+	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
+	}
+	if (StringUtils.isEmpty(segmentID)) {
+	    throw new SnapArgumentException("The segment ID is required");
+	}
+	boolean result = false;
+	final String url = this.endpointDeleteAudienceSegment + segmentID;
+
+	HttpDelete request = HttpUtils.prepareDeleteRequest(url, oAuthAccessToken);
+	try (CloseableHttpResponse response = httpClient.execute(request)) {
+	    int statusCode = response.getStatusLine().getStatusCode();
+	    if (statusCode >= 300) {
+		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		throw ex;
+	    }
+	    HttpEntity entity = response.getEntity();
+	    if (entity != null) {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		String body = entityUtilsWrapper.toString(entity);
+		SnapHttpResponseAudienceSegment responseFromJson = mapper.readValue(body,
+			SnapHttpResponseAudienceSegment.class);
+		result = responseFromJson.getRequestStatus()
+			.equals(StatusEnum.SUCCESS.toString());
+	    }
+	} catch (IOException ie) {
+	    LOGGER.error("Impossible to delete audience segment, segmentID = {}", segmentID, ie);
+	}
+	return result;
+    }// deleteAudienceSegment()
 
     private void checkUserForAudienceSegment(FormUserForAudienceSegment form) throws SnapArgumentException {
 	StringBuilder sb = new StringBuilder();
@@ -362,32 +445,32 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	    throw new SnapArgumentException(finalErrors);
 	}
     }// checkUserForAudienceSegment()
-    
+
     /**
      * Mobile_ad_id isn't checked unlike email and phone
+     * 
      * @param form
      * @throws SnapArgumentException
      */
-    private void normalizeAndHashDataUserForAudienceSegment(FormUserForAudienceSegment form) throws SnapNormalizeArgumentException {
-	if(form == null || CollectionUtils.isEmpty(form.getSchema()) || CollectionUtils.isEmpty(form.getData())) {
+    private void normalizeAndHashDataUserForAudienceSegment(FormUserForAudienceSegment form)
+	    throws SnapNormalizeArgumentException {
+	if (form == null || CollectionUtils.isEmpty(form.getSchema()) || CollectionUtils.isEmpty(form.getData())) {
 	    throw new SnapNormalizeArgumentException("Form must be normalized and hashed before send to Snap API");
 	}
 	SchemaEnum schema = form.getSchema().get(0);
 	List<String> data = form.getData();
-	data = data.stream().map(String::trim)
-			    .map(String::toLowerCase)
-		            .collect(Collectors.toList());
-	if(schema == SchemaEnum.EMAIL_SHA256) {
+	data = data.stream().map(String::trim).map(String::toLowerCase).collect(Collectors.toList());
+	if (schema == SchemaEnum.EMAIL_SHA256) {
 	    List<String> tmpEmails = data.stream().filter(Pattern.compile("^(.+)@(.+)$").asPredicate())
-	    .collect(Collectors.toList());
-	    if(tmpEmails.size() != data.size()) {
+		    .collect(Collectors.toList());
+	    if (tmpEmails.size() != data.size()) {
 		throw new SnapNormalizeArgumentException("Data must be have valid email(s)");
 	    }
-	}
-	else if(schema == SchemaEnum.PHONE_SHA256) {
-	    List<String> tmpPhones = data.stream().filter(Pattern.compile("\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}").asPredicate())
+	} else if (schema == SchemaEnum.PHONE_SHA256) {
+	    List<String> tmpPhones = data.stream()
+		    .filter(Pattern.compile("\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}").asPredicate())
 		    .collect(Collectors.toList());
-	    if(tmpPhones.size() != data.size()) {
+	    if (tmpPhones.size() != data.size()) {
 		throw new SnapNormalizeArgumentException("Data must be have valid phone(s) number");
 	    }
 	}

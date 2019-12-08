@@ -22,10 +22,11 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import snapads4j.model.SnapHttpResponse;
 
 @Setter
 @NoArgsConstructor
-public class SnapHttpResponseUserForAudienceSegment {
+public class SnapHttpResponseUserForAudienceSegment extends SnapHttpResponse{
 
     private List<SnapInnerUserForAudienceSegment> users;
 

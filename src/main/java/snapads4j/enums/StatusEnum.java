@@ -41,6 +41,9 @@ public enum StatusEnum {
   /** Status pending */
   @JsonProperty("PENDING")
   PENDING,
+  /** Success */
+  @JsonProperty("SUCCESS")
+  SUCCESS,
   /** Status deleted */
   @JsonProperty("DELETED")
   DELETED;
