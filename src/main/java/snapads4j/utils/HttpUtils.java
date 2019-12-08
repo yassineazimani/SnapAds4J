@@ -35,6 +35,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import snapads4j.model.auth.Auth;
+import snapads4j.model.config.HttpDeleteWithBody;
 
 /**
  * Http Utils
@@ -171,4 +172,24 @@ public class HttpUtils {
 	request.addHeader("Authorization", "Bearer " + oAuthAccessToken);
 	return request;
     } // prepareDeleteRequest()
+    
+    /**
+     * Prepare DELETE request HTTP
+     * (Imao, It's a wrong way in design SnapChat API..., but i have no choice to do like this)
+     * @param url              url
+     * @param oAuthAccessToken oAuthAccessToken
+     * @params args Data to send (Only String, no binary)
+     * @return HttpRequest
+     * @throws UnsupportedEncodingException
+     */
+    public static HttpDeleteWithBody prepareDeleteRequestObject(String url, String oAuthAccessToken, Object args)
+	    throws JsonProcessingException, UnsupportedEncodingException {
+	HttpDeleteWithBody request = new HttpDeleteWithBody(url);
+	ObjectMapper mapper = new ObjectMapper();
+	String requestBody = mapper.writeValueAsString(args);
+	request.setEntity(new StringEntity(requestBody));
+	request.addHeader("Content-Type", "application/json");
+	request.addHeader("Authorization", "Bearer " + oAuthAccessToken);
+	return request;
+    } // prepareDeleteRequestObject()
 } // HttpUtils

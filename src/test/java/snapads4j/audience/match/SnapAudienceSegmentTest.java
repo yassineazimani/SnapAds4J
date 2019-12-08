@@ -60,6 +60,7 @@ import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.audience.match.AudienceSegment;
 import snapads4j.model.audience.match.FormUserForAudienceSegment;
+import snapads4j.model.config.HttpDeleteWithBody;
 import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.SnapResponseUtils;
 
@@ -1027,6 +1028,114 @@ public class SnapAudienceSegmentTest {
 	.hasMessage("Data must be have valid phone(s) number")
 	.isInstanceOf(SnapNormalizeArgumentException.class);
     }// add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_one_data_among_datas_not_phone()
+    
+    @Test
+    public void delete_user_to_segment_should_success_when_data_add() throws SnapOAuthAccessTokenException, SnapResponseErrorException, ClientProtocolException, IOException, SnapArgumentException, SnapNormalizeArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
+	Mockito.when(httpClient.execute(Mockito.any(HttpDeleteWithBody.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapDeleteUserForAudienceSegment());
+	data.add("   yAssine.azimani@toto.com   ");
+	data.add("john.jo@toto.com");
+	assertThat(snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
+	.isEqualTo(2);
+    }// delete_user_to_segment_should_success_when_data_deleteed()
+    
+    @Test
+    public void delete_user_to_segment_should_success_when_zero_data_add() throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException, SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException {
+	assertThat(snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
+	.isEqualTo(0);
+    }// delete_user_to_segment_should_success_when_zero_data_deleteed()
+    
+    @Test
+    public void delete_user_to_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_null() {
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(null, form))
+	.hasMessage("The OAuthAccessToken must to be given")
+	.isInstanceOf(SnapOAuthAccessTokenException.class);
+    }// delete_user_to_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_null()
+    
+    @Test
+    public void delete_user_to_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_empty() {
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment("", form))
+	.hasMessage("The OAuthAccessToken must to be given")
+	.isInstanceOf(SnapOAuthAccessTokenException.class);
+    }// delete_user_to_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_empty()
+    
+    @Test
+    public void delete_user_to_segment_should_throw_SnapArgumentException_when_data_is_null() {
+	form.setData(null);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
+	.hasMessage("List of hashed identifiers is required")
+	.isInstanceOf(SnapArgumentException.class);
+    }// delete_user_to_segment_should_throw_SnapArgumentException_when_data_is_null()
+    
+    @Test
+    public void delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_null() {
+	FormUserForAudienceSegment form = initFormUserForAudienceSegment(SchemaEnum.EMAIL_SHA256, false);
+	form.setSchema(null);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Type schema is required")
+	.isInstanceOf(SnapArgumentException.class);
+    }// delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_null()
+    
+    @Test
+    public void delete_user_to_segment_should_throw_SnapArgumentException_when_segment_id_is_null() {
+	form.setId(null);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Segment ID is required")
+	.isInstanceOf(SnapArgumentException.class);
+    }// delete_user_to_segment_should_throw_SnapArgumentException_when_segment_id_is_null()
+    
+    @Test
+    public void delete_user_to_segment_should_throw_SnapArgumentException_when_segment_id_is_empty() {
+	form.setId("");
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Segment ID is required")
+	.isInstanceOf(SnapArgumentException.class);
+    }// delete_user_to_segment_should_throw_SnapArgumentException_when_segment_id_is_empty()
+
+    @Test
+    public void delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_email_and_data_is_not_email() {
+	form.setData(Stream.of("foo").collect(Collectors.toList()));
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Data must be have valid email(s)")
+	.isInstanceOf(SnapNormalizeArgumentException.class);
+    }// delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_email_and_data_is_not_email()
+    
+    @Test
+    public void delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_email_and_one_data_among_datas_not_email() {
+	form.setData(Stream.of("foo", "bobo@test.com").collect(Collectors.toList()));
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Data must be have valid email(s)")
+	.isInstanceOf(SnapNormalizeArgumentException.class);
+    }// delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_email_and_one_data_among_datas_not_email()
+    
+    @Test
+    public void delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_data_is_not_phone() {
+	form.setData(Stream.of("102030405").collect(Collectors.toList()));
+	form.setSchema(SchemaEnum.PHONE_SHA256);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Data must be have valid phone(s) number")
+	.isInstanceOf(SnapNormalizeArgumentException.class);
+	
+	form.setData(Stream.of("A02#@!40B").collect(Collectors.toList()));
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Data must be have valid phone(s) number")
+	.isInstanceOf(SnapNormalizeArgumentException.class);
+    }// delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_data_is_not_phone()
+    
+    @Test
+    public void delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_one_data_among_datas_not_phone() {
+	form.setData(Stream.of("A02#@!40B", "0102030405", "123-456-7890", "(123)456-7890", "(123)4567890").collect(Collectors.toList()));
+	form.setSchema(SchemaEnum.PHONE_SHA256);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Data must be have valid phone(s) number")
+	.isInstanceOf(SnapNormalizeArgumentException.class);
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Data must be have valid phone(s) number")
+	.isInstanceOf(SnapNormalizeArgumentException.class);
+    }// delete_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_one_data_among_datas_not_phone()
     
     private FormUserForAudienceSegment initFormUserForAudienceSegment(SchemaEnum schema) {
 	return initFormUserForAudienceSegment(schema, true);

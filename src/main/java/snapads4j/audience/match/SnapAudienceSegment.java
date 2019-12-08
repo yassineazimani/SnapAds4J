@@ -54,6 +54,7 @@ import snapads4j.model.audience.match.SnapHttpRequestUserForAudienceSegment;
 import snapads4j.model.audience.match.SnapHttpResponseAudienceSegment;
 import snapads4j.model.audience.match.SnapHttpResponseUserForAudienceSegment;
 import snapads4j.model.audience.match.UserForAudienceSegment;
+import snapads4j.model.config.HttpDeleteWithBody;
 import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.FileProperties;
 import snapads4j.utils.HttpUtils;
@@ -288,6 +289,53 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	}
 	return result;
     }// addUserToSegment()
+    
+    /**
+     * 
+     * Type schema mobile_ad_id regex isn't checked here unlike phone and email.
+     */
+    @Override
+    public int deleteUserToSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment)
+	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
+	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException {
+	if (StringUtils.isEmpty(oAuthAccessToken)) {
+	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
+	}
+	checkUserForAudienceSegment(formUserForAudienceSegment);
+	int result = 0;
+	if (CollectionUtils.isNotEmpty(formUserForAudienceSegment.getData())) {
+	    normalizeAndHashDataUserForAudienceSegment(formUserForAudienceSegment);
+	    final String url = this.endpointAddUserForAudienceSegment.replace("{segment_id}", "");
+	    SnapHttpRequestUserForAudienceSegment reqBody = new SnapHttpRequestUserForAudienceSegment();
+	    reqBody.addUserForAudienceSegment(formUserForAudienceSegment);
+	    HttpDeleteWithBody request = HttpUtils.prepareDeleteRequestObject(url, oAuthAccessToken, reqBody);
+	    try (CloseableHttpResponse response = httpClient.execute(request)) {
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 300) {
+		    SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		    throw ex;
+		}
+		HttpEntity entity = response.getEntity();
+		if (entity != null) {
+		    ObjectMapper mapper = new ObjectMapper();
+		    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		    String body = entityUtilsWrapper.toString(entity);
+		    SnapHttpResponseUserForAudienceSegment responseFromJson = mapper.readValue(body,
+			    SnapHttpResponseUserForAudienceSegment.class);
+		    if (responseFromJson != null) {
+			Optional<UserForAudienceSegment> resp = responseFromJson.getSpecificUserForAudienceSegment();
+			if (resp.isPresent()) {
+			    result = resp.get().getNumberUploadedUsers();
+			}
+		    }
+		}
+	    } catch (IOException ie) {
+		LOGGER.error("Impossible to delete user to an existant segment, segmentID = {}",
+			formUserForAudienceSegment.getId(), ie);
+	    }
+	}
+	return result;
+    }// deleteUserToSegment()
 
     private void checkUserForAudienceSegment(FormUserForAudienceSegment form) throws SnapArgumentException {
 	StringBuilder sb = new StringBuilder();
