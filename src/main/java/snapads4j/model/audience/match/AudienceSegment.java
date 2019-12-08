@@ -33,7 +33,7 @@ import snapads4j.enums.UploadStatusEnum;
 
 @Getter
 @Setter
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_EMPTY)
 @ToString
 public class AudienceSegment {
     

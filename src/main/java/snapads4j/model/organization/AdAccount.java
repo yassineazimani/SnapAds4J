@@ -38,7 +38,7 @@ import snapads4j.enums.TypeOrganizationEnum;
 @Getter
 @Setter
 @ToString
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_EMPTY)
 public class AdAccount {
 
   /** Ad account ID */

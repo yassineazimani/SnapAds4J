@@ -36,7 +36,7 @@ import snapads4j.enums.MediaTypeEnum;
 @Getter
 @Setter
 @ToString
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_EMPTY)
 public class CreativeMedia {
     
     /** ID */

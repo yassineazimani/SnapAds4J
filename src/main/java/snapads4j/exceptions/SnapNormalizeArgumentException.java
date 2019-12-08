@@ -13,26 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package snapads4j.model.interest;
+package snapads4j.exceptions;
 
-import java.util.List;
+/**
+ * Exception thrown when an argument can't be normalized.
+ *
+ * @author Yassine
+ */
+public class SnapNormalizeArgumentException extends Exception {
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
+  private static final long serialVersionUID = 574050857351824817L;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-@Getter
-@Setter
-@ToString
-@JsonInclude(Include.NON_EMPTY)
-public class Interest {
-
-  private Integer id;
-
-  @JsonProperty("category_id")
-  private List<String> categoryIds;
-} // Interest
+  /**
+   * Constructor
+   *
+   * @param message Message exception
+   */
+  public SnapNormalizeArgumentException(String message) {
+    super(message);
+  } // SnapNormalizeArgumentException()
+} // SnapNormalizeArgumentException()

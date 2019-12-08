@@ -13,35 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package snapads4j.model.segment;
+package snapads4j.enums;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import snapads4j.enums.OperationEnum;
-import snapads4j.model.targeting.Targeting;
-
 /**
- * Segment used to build {@link Targeting} instance.
+ * Schema Enum
+ * @author yassine
  *
- * @author Yassine
  */
-@Getter
-@Setter
-@ToString
-@JsonInclude(Include.NON_EMPTY)
-public class SegmentRequestTargeting {
-
-  private Long id;
-
-  @JsonProperty("segment_id")
-  private List<String> segmentIds;
-
-  private OperationEnum operation;
-} // SegmentRequestTargeting
+public enum SchemaEnum {
+    @JsonProperty("EMAIL_SHA256")
+    EMAIL_SHA256,
+    @JsonProperty("MOBILE_AD_ID_SHA256")
+    MOBILE_AD_ID_SHA256,
+    @JsonProperty("PHONE_SHA256")
+    PHONE_SHA256;
+}// SchemaEnum

@@ -15,44 +15,48 @@
  */
 package snapads4j.model.audience.match;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import snapads4j.enums.TypeCreationSpecDetails;
+import snapads4j.enums.SchemaEnum;
 
 @Getter
 @Setter
-@JsonInclude(Include.NON_EMPTY)
 @ToString
-/**
- * 
- * @author yassine
- *
- */
-public class CreationSpec {
+public class FormUserForAudienceSegment {
     
-    public CreationSpec() {
-	this.type = TypeCreationSpecDetails.BALANCE;
-    }// CreationSpec()
+    /**
+     * Segment ID
+     */
+    @Getter
+    @Setter
+    private String id;
+    
+    /**
+     * List of one type of Schema
+     */
+    @Getter
+    private List<SchemaEnum> schema;
+    
+    /**
+     * List of hashed identifiers
+     */
+    @Getter
+    @Setter
+    private List<String> data;
+    
+    public FormUserForAudienceSegment() {
+	this.schema = new ArrayList<>();
+    }// FormUserForAudienceSegment()
 
-    /**
-     * Seed Audience Segment ID
-     */
-    @JsonProperty("seed_segment_id")
-    private String seedSegmentId;
-    
-    /**
-     * ISO-2 Country Code
-     */
-    private String country;
-    
-    /**
-     * The type of Lookalike to be created
-     */
-    private TypeCreationSpecDetails type;
-    
-}// CreationSpec
+    public void setSchema(SchemaEnum schema) {
+	if(schema != null) {
+	    this.schema.clear();
+	    this.schema.add(schema);
+	}
+    }// setSchema()
+
+}// FormUserForAudienceSegment()

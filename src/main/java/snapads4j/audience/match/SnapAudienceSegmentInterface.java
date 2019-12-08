@@ -22,9 +22,11 @@ import java.util.Optional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapNormalizeArgumentException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.audience.match.AudienceSegment;
+import snapads4j.model.audience.match.FormUserForAudienceSegment;
 
 public interface SnapAudienceSegmentInterface {
     
@@ -41,5 +43,7 @@ public interface SnapAudienceSegmentInterface {
     
     public Optional<AudienceSegment> getSpecificAudienceSegment(String oAuthAccessToken, String segmentID) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
     JsonProcessingException, UnsupportedEncodingException;
+    
+    public int addUserToSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment) throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException, SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException;
     
 }// SnapAudienceSegmentInterface

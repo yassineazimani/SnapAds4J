@@ -1085,4 +1085,18 @@ public class SnapResponseUtils {
       	"}";
   }// getSnapAudienceSegmentUpdated()
   
+  public static String getSnapAddUserForAudienceSegment() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"SUCCESS\",\r\n" + 
+      	"  \"request_id\": \"57c4d34700ff0d538b8ba40ed90001737e7465616d6b6f363139000173616d2d68616f6d696e672d757365722d746573740001010c\",\r\n" + 
+      	"  \"users\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"      \"user\": {\r\n" + 
+      	"        \"number_uploaded_users\": 2\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapAddUserForAudienceSegment()
 } // SnapResponseUtils

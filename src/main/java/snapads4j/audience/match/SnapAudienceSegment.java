@@ -20,7 +20,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -37,13 +41,19 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Setter;
+import snapads4j.enums.SchemaEnum;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
+import snapads4j.exceptions.SnapNormalizeArgumentException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.audience.match.AudienceSegment;
+import snapads4j.model.audience.match.FormUserForAudienceSegment;
 import snapads4j.model.audience.match.SnapHttpRequestAudienceSegment;
+import snapads4j.model.audience.match.SnapHttpRequestUserForAudienceSegment;
 import snapads4j.model.audience.match.SnapHttpResponseAudienceSegment;
+import snapads4j.model.audience.match.SnapHttpResponseUserForAudienceSegment;
+import snapads4j.model.audience.match.UserForAudienceSegment;
 import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.FileProperties;
 import snapads4j.utils.HttpUtils;
@@ -63,6 +73,8 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 
     private String endpointGetSpecificAudienceSegment;
 
+    private String endpointAddUserForAudienceSegment;
+
     private CloseableHttpClient httpClient;
 
     private EntityUtilsWrapper entityUtilsWrapper;
@@ -80,6 +92,8 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 		+ (String) fp.getProperties().get("api.url.audience.match.all");
 	this.endpointGetSpecificAudienceSegment = this.apiUrl
 		+ (String) fp.getProperties().get("api.url.audience.match.one");
+	this.endpointAddUserForAudienceSegment = this.apiUrl
+		+ (String) fp.getProperties().get("api.url.audience.match.add.user");
 	this.httpClient = HttpClients.createDefault();
 	this.entityUtilsWrapper = new EntityUtilsWrapper();
     }// SnapAudienceSegment()
@@ -227,6 +241,107 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	}
 	return result;
     }// getSpecificAudienceSegment()
+
+    /**
+     * 
+     * Type schema mobile_ad_id regex isn't checked here unlike phone and email.
+     */
+    @Override
+    public int addUserToSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment)
+	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
+	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException {
+	if (StringUtils.isEmpty(oAuthAccessToken)) {
+	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
+	}
+	checkUserForAudienceSegment(formUserForAudienceSegment);
+	int result = 0;
+	if (CollectionUtils.isNotEmpty(formUserForAudienceSegment.getData())) {
+	    normalizeAndHashDataUserForAudienceSegment(formUserForAudienceSegment);
+	    final String url = this.endpointAddUserForAudienceSegment.replace("{segment_id}", "");
+	    SnapHttpRequestUserForAudienceSegment reqBody = new SnapHttpRequestUserForAudienceSegment();
+	    reqBody.addUserForAudienceSegment(formUserForAudienceSegment);
+	    HttpPost request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, reqBody);
+	    try (CloseableHttpResponse response = httpClient.execute(request)) {
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 300) {
+		    SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		    throw ex;
+		}
+		HttpEntity entity = response.getEntity();
+		if (entity != null) {
+		    ObjectMapper mapper = new ObjectMapper();
+		    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		    String body = entityUtilsWrapper.toString(entity);
+		    SnapHttpResponseUserForAudienceSegment responseFromJson = mapper.readValue(body,
+			    SnapHttpResponseUserForAudienceSegment.class);
+		    if (responseFromJson != null) {
+			Optional<UserForAudienceSegment> resp = responseFromJson.getSpecificUserForAudienceSegment();
+			if (resp.isPresent()) {
+			    result = resp.get().getNumberUploadedUsers();
+			}
+		    }
+		}
+	    } catch (IOException ie) {
+		LOGGER.error("Impossible to add user to an existant segment, segmentID = {}",
+			formUserForAudienceSegment.getId(), ie);
+	    }
+	}
+	return result;
+    }// addUserToSegment()
+
+    private void checkUserForAudienceSegment(FormUserForAudienceSegment form) throws SnapArgumentException {
+	StringBuilder sb = new StringBuilder();
+	if (form != null) {
+	    if (form.getData() == null) {
+		sb.append("List of hashed identifiers is required,");
+	    }
+	    if (CollectionUtils.isEmpty(form.getSchema())) {
+		sb.append("Type schema is required,");
+	    }
+	    if (StringUtils.isEmpty(form.getId())) {
+		sb.append("Segment ID is required,");
+	    }
+	} else {
+	    sb.append("FormUserForAudienceSegment parameter is not given,");
+	}
+	String finalErrors = sb.toString();
+	if (!StringUtils.isEmpty(finalErrors)) {
+	    finalErrors = finalErrors.substring(0, finalErrors.length() - 1);
+	    throw new SnapArgumentException(finalErrors);
+	}
+    }// checkUserForAudienceSegment()
+    
+    /**
+     * Mobile_ad_id isn't checked unlike email and phone
+     * @param form
+     * @throws SnapArgumentException
+     */
+    private void normalizeAndHashDataUserForAudienceSegment(FormUserForAudienceSegment form) throws SnapNormalizeArgumentException {
+	if(form == null || CollectionUtils.isEmpty(form.getSchema()) || CollectionUtils.isEmpty(form.getData())) {
+	    throw new SnapNormalizeArgumentException("Form must be normalized and hashed before send to Snap API");
+	}
+	SchemaEnum schema = form.getSchema().get(0);
+	List<String> data = form.getData();
+	data = data.stream().map(String::trim)
+			    .map(String::toLowerCase)
+		            .collect(Collectors.toList());
+	if(schema == SchemaEnum.EMAIL_SHA256) {
+	    List<String> tmpEmails = data.stream().filter(Pattern.compile("^(.+)@(.+)$").asPredicate())
+	    .collect(Collectors.toList());
+	    if(tmpEmails.size() != data.size()) {
+		throw new SnapNormalizeArgumentException("Data must be have valid email(s)");
+	    }
+	}
+	else if(schema == SchemaEnum.PHONE_SHA256) {
+	    List<String> tmpPhones = data.stream().filter(Pattern.compile("\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}").asPredicate())
+		    .collect(Collectors.toList());
+	    if(tmpPhones.size() != data.size()) {
+		throw new SnapNormalizeArgumentException("Data must be have valid phone(s) number");
+	    }
+	}
+	data = data.stream().map(DigestUtils::sha256Hex).collect(Collectors.toList());
+	form.setData(data);
+    }// normalizeAndHashDataUserForAudienceSegment()
 
     private void checkAudienceSegment(AudienceSegment segment, boolean isForCreation) throws SnapArgumentException {
 	StringBuilder sb = new StringBuilder();

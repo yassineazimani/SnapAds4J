@@ -19,11 +19,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
@@ -43,15 +46,20 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import snapads4j.enums.SchemaEnum;
 import snapads4j.enums.SourceTypeEnum;
 import snapads4j.enums.StatusEnum;
 import snapads4j.enums.TargetableStatusEnum;
 import snapads4j.enums.TypeCreationSpecDetails;
 import snapads4j.enums.UploadStatusEnum;
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapNormalizeArgumentException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.audience.match.AudienceSegment;
+import snapads4j.model.audience.match.FormUserForAudienceSegment;
 import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.SnapResponseUtils;
 
@@ -89,6 +97,10 @@ public class SnapAudienceSegmentTest {
     private AudienceSegment segmentToUpdate;
 
     private List<AudienceSegment> segments;
+    
+    private FormUserForAudienceSegment form;
+    
+    private List<String> data;
 
     @Before
     public void setUp() {
@@ -99,6 +111,8 @@ public class SnapAudienceSegmentTest {
 	this.segment = initAudienceSegment();
 	this.segments = initAudienceSegments();
 	this.segmentToUpdate = initAudienceSegmentForUpdate();
+	data = new ArrayList<>();
+	this.form = initFormUserForAudienceSegment(SchemaEnum.EMAIL_SHA256);
     } // setUp()
 
     @Test
@@ -148,53 +162,53 @@ public class SnapAudienceSegmentTest {
     }// test_create_audience_segment_should_throw_IOException()
 
     @Test
-    public void test_create_audience_segment_should_throw_SnapArgumentException_when_segment_is_null() {
+    public void test_create_audience_segment_should_throw_throw_SnapArgumentException_when_segment_is_null() {
 	assertThatThrownBy(() -> snapAudienceSegment.createAudienceSegment(oAuthAccessToken, null))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("Segment parameter is not given");
-    } // test_create_audience_segment_should_throw_SnapArgumentException_when_segment_is_null()
+    } // test_create_audience_segment_should_throw_throw_SnapArgumentException_when_segment_is_null()
 
     @Test
-    public void test_create_audience_segment_should_throw_SnapArgumentException_when_adAccountId_is_null() {
+    public void test_create_audience_segment_should_throw_throw_SnapArgumentException_when_adAccountId_is_null() {
 	this.segment.setAdAccountId(null);
 	assertThatThrownBy(() -> snapAudienceSegment.createAudienceSegment(oAuthAccessToken, this.segment))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
-    } // test_create_audience_segment_should_throw_SnapArgumentException_when_adAccountId_is_null()
+    } // test_create_audience_segment_should_throw_throw_SnapArgumentException_when_adAccountId_is_null()
 
     @Test
-    public void test_create_audience_segment_should_throw_SnapArgumentException_when_adAccountId_is_empty() {
+    public void test_create_audience_segment_should_throw_throw_SnapArgumentException_when_adAccountId_is_empty() {
 	this.segment.setAdAccountId("");
 	assertThatThrownBy(() -> snapAudienceSegment.createAudienceSegment(oAuthAccessToken, this.segment))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
-    } // test_create_audience_segment_should_throw_SnapArgumentException_when_adAccountId_is_empty()
+    } // test_create_audience_segment_should_throw_throw_SnapArgumentException_when_adAccountId_is_empty()
 
     @Test
-    public void test_create_audience_segment_should_throw_SnapArgumentException_when_name_is_null() {
+    public void test_create_audience_segment_should_throw_throw_SnapArgumentException_when_name_is_null() {
 	this.segment.setName(null);
 	assertThatThrownBy(() -> snapAudienceSegment.createAudienceSegment(oAuthAccessToken, this.segment))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The name is required");
-    } // test_create_audience_segment_should_throw_SnapArgumentException_when_name_is_null()
+    } // test_create_audience_segment_should_throw_throw_SnapArgumentException_when_name_is_null()
 
     @Test
-    public void test_create_audience_segment_should_throw_SnapArgumentException_when_name_is_empty() {
+    public void test_create_audience_segment_should_throw_throw_SnapArgumentException_when_name_is_empty() {
 	this.segment.setName("");
 	assertThatThrownBy(() -> snapAudienceSegment.createAudienceSegment(oAuthAccessToken, this.segment))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The name is required");
-    } // test_create_audience_segment_should_throw_SnapArgumentException_when_name_is_empty()
+    } // test_create_audience_segment_should_throw_throw_SnapArgumentException_when_name_is_empty()
 
     @Test
-    public void test_create_audience_segment_should_throw_SnapArgumentException_when_source_type_is_null() {
+    public void test_create_audience_segment_should_throw_throw_SnapArgumentException_when_source_type_is_null() {
 	this.segment.setSourceType(null);
 	assertThatThrownBy(() -> snapAudienceSegment.createAudienceSegment(oAuthAccessToken, this.segment))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The source type is required");
-    } // test_create_audience_segment_should_throw_SnapArgumentException_when_source_type_is_null()
+    } // test_create_audience_segment_should_throw_throw_SnapArgumentException_when_source_type_is_null()
 
     @Test
-    public void test_create_audience_segment_should_throw_SnapArgumentException_when_retention_days_is_lt_0() {
+    public void test_create_audience_segment_should_throw_throw_SnapArgumentException_when_retention_days_is_lt_0() {
 	this.segment.setRetentionInDays(-1);
 	assertThatThrownBy(() -> snapAudienceSegment.createAudienceSegment(oAuthAccessToken, this.segment))
 		.isInstanceOf(SnapArgumentException.class)
 		.hasMessage("The retention must be equal or greater than zero");
-    } // test_create_audience_segment_should_throw_SnapArgumentException_when_retention_days_is_lt_0()
+    } // test_create_audience_segment_should_throw_throw_SnapArgumentException_when_retention_days_is_lt_0()
 
     @Test
     public void should_throw_exception_400_create_audience_segment() throws IOException, InterruptedException,
@@ -373,16 +387,16 @@ public class SnapAudienceSegmentTest {
     }// test_get_all_audiences_segments_should_throw_IOException()
 
     @Test
-    public void test_get_all_audiences_segments_should_throw_SnapArgumentException_when_adAccountId_is_null() {
+    public void test_get_all_audiences_segments_should_throw_throw_SnapArgumentException_when_adAccountId_is_null() {
 	assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, null))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
-    } // test_get_all_audiences_segments_should_throw_SnapArgumentException_when_adAccountId_is_null()
+    } // test_get_all_audiences_segments_should_throw_throw_SnapArgumentException_when_adAccountId_is_null()
 
     @Test
-    public void test_get_all_audiences_segments_should_throw_SnapArgumentException_when_adAccountId_is_empty() {
+    public void test_get_all_audiences_segments_should_throw_throw_SnapArgumentException_when_adAccountId_is_empty() {
 	assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, ""))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
-    } // test_get_all_audiences_segments_should_throw_SnapArgumentException_when_adAccountId_is_empty()
+    } // test_get_all_audiences_segments_should_throw_throw_SnapArgumentException_when_adAccountId_is_empty()
 
     @Test
     public void should_throw_exception_400_get_all_audiences_segment() throws IOException, InterruptedException,
@@ -559,16 +573,16 @@ public class SnapAudienceSegmentTest {
     }// test_get_specific_audience_segment_should_throw_IOException()
 
     @Test
-    public void test_get_specific_audience_segment_should_throw_SnapArgumentException_when_id_is_null() {
+    public void test_get_specific_audience_segment_should_throw_throw_SnapArgumentException_when_id_is_null() {
 	assertThatThrownBy(() -> snapAudienceSegment.getSpecificAudienceSegment(oAuthAccessToken, null))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("ID is required");
-    } // test_get_specific_audience_segment_should_throw_SnapArgumentException_when_adAccountId_is_null()
+    } // test_get_specific_audience_segment_should_throw_throw_SnapArgumentException_when_adAccountId_is_null()
 
     @Test
-    public void test_get_specific_audience_segment_should_throw_SnapArgumentException_when_id_is_empty() {
+    public void test_get_specific_audience_segment_should_throw_throw_SnapArgumentException_when_id_is_empty() {
 	assertThatThrownBy(() -> snapAudienceSegment.getSpecificAudienceSegment(oAuthAccessToken, ""))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("ID is required");
-    } // test_get_specific_audience_segment_should_throw_SnapArgumentException_when_adAccountId_is_empty()
+    } // test_get_specific_audience_segment_should_throw_throw_SnapArgumentException_when_adAccountId_is_empty()
 
     @Test
     public void should_throw_exception_400_get_specific_audience_segment() throws IOException, InterruptedException,
@@ -743,46 +757,46 @@ public class SnapAudienceSegmentTest {
     }// test_update_audience_segment_should_throw_IOException()
 
     @Test
-    public void test_update_audience_segment_should_throw_SnapArgumentException_when_segment_is_null() {
+    public void test_update_audience_segment_should_throw_throw_SnapArgumentException_when_segment_is_null() {
 	assertThatThrownBy(() -> snapAudienceSegment.updateAudienceSegment(oAuthAccessToken, null))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("Segment parameter is not given");
-    } // test_update_audience_segment_should_throw_SnapArgumentException_when_segment_is_null()
+    } // test_update_audience_segment_should_throw_throw_SnapArgumentException_when_segment_is_null()
 
     @Test
-    public void test_update_audience_segment_should_throw_SnapArgumentException_when_adAccountId_is_null() {
+    public void test_update_audience_segment_should_throw_throw_SnapArgumentException_when_adAccountId_is_null() {
 	this.segment.setAdAccountId(null);
 	assertThatThrownBy(() -> snapAudienceSegment.updateAudienceSegment(oAuthAccessToken, this.segment))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
-    } // test_update_audience_segment_should_throw_SnapArgumentException_when_adAccountId_is_null()
+    } // test_update_audience_segment_should_throw_throw_SnapArgumentException_when_adAccountId_is_null()
 
     @Test
-    public void test_update_audience_segment_should_throw_SnapArgumentException_when_adAccountId_is_empty() {
+    public void test_update_audience_segment_should_throw_throw_SnapArgumentException_when_adAccountId_is_empty() {
 	this.segment.setAdAccountId("");
 	assertThatThrownBy(() -> snapAudienceSegment.updateAudienceSegment(oAuthAccessToken, this.segment))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
-    } // test_update_audience_segment_should_throw_SnapArgumentException_when_adAccountId_is_empty()
+    } // test_update_audience_segment_should_throw_throw_SnapArgumentException_when_adAccountId_is_empty()
 
     @Test
-    public void test_update_audience_segment_should_throw_SnapArgumentException_when_name_is_null() {
+    public void test_update_audience_segment_should_throw_throw_SnapArgumentException_when_name_is_null() {
 	this.segment.setName(null);
 	assertThatThrownBy(() -> snapAudienceSegment.updateAudienceSegment(oAuthAccessToken, this.segment))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The name is required");
-    } // test_update_audience_segment_should_throw_SnapArgumentException_when_name_is_null()
+    } // test_update_audience_segment_should_throw_throw_SnapArgumentException_when_name_is_null()
 
     @Test
-    public void test_update_audience_segment_should_throw_SnapArgumentException_when_name_is_empty() {
+    public void test_update_audience_segment_should_throw_throw_SnapArgumentException_when_name_is_empty() {
 	this.segment.setName("");
 	assertThatThrownBy(() -> snapAudienceSegment.updateAudienceSegment(oAuthAccessToken, this.segment))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The name is required");
-    } // test_update_audience_segment_should_throw_SnapArgumentException_when_name_is_empty()
+    } // test_update_audience_segment_should_throw_throw_SnapArgumentException_when_name_is_empty()
 
     @Test
-    public void test_update_audience_segment_should_throw_SnapArgumentException_when_retention_days_is_lt_0() {
+    public void test_update_audience_segment_should_throw_throw_SnapArgumentException_when_retention_days_is_lt_0() {
 	this.segment.setRetentionInDays(-1);
 	assertThatThrownBy(() -> snapAudienceSegment.updateAudienceSegment(oAuthAccessToken, this.segment))
 		.isInstanceOf(SnapArgumentException.class)
 		.hasMessage("The retention must be equal or greater than zero");
-    } // test_update_audience_segment_should_throw_SnapArgumentException_when_retention_days_is_lt_0()
+    } // test_update_audience_segment_should_throw_throw_SnapArgumentException_when_retention_days_is_lt_0()
 
     @Test
     public void should_throw_exception_400_update_audience_segment() throws IOException, InterruptedException,
@@ -905,6 +919,126 @@ public class SnapAudienceSegmentTest {
 	assertThatThrownBy(() -> snapAudienceSegment.updateAudienceSegment(oAuthAccessToken, this.segment))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     } // should_throw_exception_1337_update_audience_segment()
+    
+    @Test
+    public void add_user_to_segment_should_success_when_data_added() throws SnapOAuthAccessTokenException, SnapResponseErrorException, ClientProtocolException, IOException, SnapArgumentException, SnapNormalizeArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapAddUserForAudienceSegment());
+	data.add("   yAssine.azimani@toto.com   ");
+	data.add("john.jo@toto.com");
+	assertThat(snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+	.isEqualTo(2);
+    }// add_user_to_segment_should_success_when_data_added()
+    
+    @Test
+    public void add_user_to_segment_should_success_when_zero_data_added() throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException, SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException {
+	assertThat(snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+	.isEqualTo(0);
+    }// add_user_to_segment_should_success_when_zero_data_added()
+    
+    @Test
+    public void add_user_to_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_null() {
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(null, form))
+	.hasMessage("The OAuthAccessToken must to be given")
+	.isInstanceOf(SnapOAuthAccessTokenException.class);
+    }// add_user_to_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_null()
+    
+    @Test
+    public void add_user_to_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_empty() {
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment("", form))
+	.hasMessage("The OAuthAccessToken must to be given")
+	.isInstanceOf(SnapOAuthAccessTokenException.class);
+    }// add_user_to_segment_should_SnapOAuthAccessTokenException_when_oAuthAccessToken_is_empty()
+    
+    @Test
+    public void add_user_to_segment_should_throw_SnapArgumentException_when_data_is_null() {
+	form.setData(null);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+	.hasMessage("List of hashed identifiers is required")
+	.isInstanceOf(SnapArgumentException.class);
+    }// add_user_to_segment_should_throw_SnapArgumentException_when_data_is_null()
+    
+    @Test
+    public void add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_null() {
+	FormUserForAudienceSegment form = initFormUserForAudienceSegment(SchemaEnum.EMAIL_SHA256, false);
+	form.setSchema(null);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Type schema is required")
+	.isInstanceOf(SnapArgumentException.class);
+    }// add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_null()
+    
+    @Test
+    public void add_user_to_segment_should_throw_SnapArgumentException_when_segment_id_is_null() {
+	form.setId(null);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Segment ID is required")
+	.isInstanceOf(SnapArgumentException.class);
+    }// add_user_to_segment_should_throw_SnapArgumentException_when_segment_id_is_null()
+    
+    @Test
+    public void add_user_to_segment_should_throw_SnapArgumentException_when_segment_id_is_empty() {
+	form.setId("");
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Segment ID is required")
+	.isInstanceOf(SnapArgumentException.class);
+    }// add_user_to_segment_should_throw_SnapArgumentException_when_segment_id_is_empty()
+
+    @Test
+    public void add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_email_and_data_is_not_email() {
+	form.setData(Stream.of("foo").collect(Collectors.toList()));
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Data must be have valid email(s)")
+	.isInstanceOf(SnapNormalizeArgumentException.class);
+    }// add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_email_and_data_is_not_email()
+    
+    @Test
+    public void add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_email_and_one_data_among_datas_not_email() {
+	form.setData(Stream.of("foo", "bobo@test.com").collect(Collectors.toList()));
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Data must be have valid email(s)")
+	.isInstanceOf(SnapNormalizeArgumentException.class);
+    }// add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_email_and_one_data_among_datas_not_email()
+    
+    @Test
+    public void add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_data_is_not_phone() {
+	form.setData(Stream.of("102030405").collect(Collectors.toList()));
+	form.setSchema(SchemaEnum.PHONE_SHA256);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Data must be have valid phone(s) number")
+	.isInstanceOf(SnapNormalizeArgumentException.class);
+	
+	form.setData(Stream.of("A02#@!40B").collect(Collectors.toList()));
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Data must be have valid phone(s) number")
+	.isInstanceOf(SnapNormalizeArgumentException.class);
+    }// add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_data_is_not_phone()
+    
+    @Test
+    public void add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_one_data_among_datas_not_phone() {
+	form.setData(Stream.of("A02#@!40B", "0102030405", "123-456-7890", "(123)456-7890", "(123)4567890").collect(Collectors.toList()));
+	form.setSchema(SchemaEnum.PHONE_SHA256);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Data must be have valid phone(s) number")
+	.isInstanceOf(SnapNormalizeArgumentException.class);
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+	.hasMessage("Data must be have valid phone(s) number")
+	.isInstanceOf(SnapNormalizeArgumentException.class);
+    }// add_user_to_segment_should_throw_SnapArgumentException_when_schema_is_phone_and_one_data_among_datas_not_phone()
+    
+    private FormUserForAudienceSegment initFormUserForAudienceSegment(SchemaEnum schema) {
+	return initFormUserForAudienceSegment(schema, true);
+    }// initFormUserForAudienceSegment()
+    
+    private FormUserForAudienceSegment initFormUserForAudienceSegment(SchemaEnum schema, boolean withSchema) {
+	FormUserForAudienceSegment form = new FormUserForAudienceSegment();
+	form.setId(specificId);
+	form.setSchema(withSchema ? schema : null);
+	form.setData(data);
+	return form;
+    }// initFormUserForAudienceSegment()
 
     private AudienceSegment initAudienceSegment() {
 	AudienceSegment segment = new AudienceSegment();

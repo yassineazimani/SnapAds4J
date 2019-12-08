@@ -33,7 +33,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_EMPTY)
 public class Device {
 
   /** Id */

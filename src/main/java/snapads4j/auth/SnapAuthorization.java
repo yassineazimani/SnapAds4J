@@ -17,8 +17,6 @@ package snapads4j.auth;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -40,6 +38,7 @@ import snapads4j.config.SnapConfiguration;
 import snapads4j.exceptions.SnapAuthorizationException;
 import snapads4j.exceptions.SnapExceptionsUtils;
 import snapads4j.exceptions.SnapResponseErrorException;
+import snapads4j.model.auth.Auth;
 import snapads4j.model.auth.TokenResponse;
 import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.FileProperties;
@@ -105,13 +104,13 @@ public class SnapAuthorization {
 	if (StringUtils.isEmpty(oauthCode)) {
 	    throw new SnapAuthorizationException("Missing oAuthCode");
 	}
-	Map<String, String> args = new HashMap<>();
-	args.put("grant_type", "authorization_code");
-	args.put("redirect_uri", configuration.getRedirectUri());
-	args.put("code", oauthCode);
-	args.put("client_id", configuration.getClientId());
-	args.put("client_secret", configuration.getClientSecret());
-	HttpPost request = HttpUtils.preparePostRequest(this.apiUrl, args);
+	Auth auth = new Auth();
+	auth.setGrantType("authorization_code");
+	auth.setRedirectUri(configuration.getRedirectUri());
+	auth.setCode(oauthCode);
+	auth.setClientId(configuration.getClientId());
+	auth.setClientSecret(configuration.getClientSecret());
+	HttpPost request = HttpUtils.preparePostRequestAuth(this.apiUrl, auth);
 	try (CloseableHttpResponse response = httpClient.execute(request)) {
 	    int statusCode = response.getStatusLine().getStatusCode();
 	    if (statusCode >= 300) {
@@ -149,13 +148,13 @@ public class SnapAuthorization {
 	if (StringUtils.isEmpty(refreshToken)) {
 	    throw new SnapAuthorizationException("Missing refreshToken");
 	}
-	Map<String, String> args = new HashMap<>();
-	args.put("grant_type", "refresh_token");
-	args.put("redirect_uri", configuration.getRedirectUri());
-	args.put("code", refreshToken);
-	args.put("client_id", configuration.getClientId());
-	args.put("client_secret", configuration.getClientSecret());
-	HttpPost request = HttpUtils.preparePostRequest(this.apiUrl, args);
+	Auth auth = new Auth();
+	auth.setGrantType("refresh_token");
+	auth.setRedirectUri(configuration.getRedirectUri());
+	auth.setCode(refreshToken);
+	auth.setClientId(configuration.getClientId());
+	auth.setClientSecret(configuration.getClientSecret());
+	HttpPost request = HttpUtils.preparePostRequestAuth(this.apiUrl, auth);
 	try (CloseableHttpResponse response = httpClient.execute(request)) {
 	    int statusCode = response.getStatusLine().getStatusCode();
 	    if (statusCode >= 300) {

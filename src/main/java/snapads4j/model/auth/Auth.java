@@ -13,35 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package snapads4j.model.segment;
-
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
+package snapads4j.model.auth;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
-import snapads4j.enums.OperationEnum;
-import snapads4j.model.targeting.Targeting;
 
-/**
- * Segment used to build {@link Targeting} instance.
- *
- * @author Yassine
- */
 @Getter
 @Setter
-@ToString
-@JsonInclude(Include.NON_EMPTY)
-public class SegmentRequestTargeting {
+public class Auth {
+    
+    private String grantType;
 
-  private Long id;
+    private String redirectUri;
+    
+    private String code;
 
-  @JsonProperty("segment_id")
-  private List<String> segmentIds;
+    private String clientId;
 
-  private OperationEnum operation;
-} // SegmentRequestTargeting
+    private String clientSecret;
+
+}// Auth

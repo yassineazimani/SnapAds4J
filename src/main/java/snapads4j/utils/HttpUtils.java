@@ -17,18 +17,24 @@ package snapads4j.utils;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.message.BasicNameValuePair;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import snapads4j.model.auth.Auth;
 
 /**
  * Http Utils
@@ -59,25 +65,6 @@ public class HttpUtils {
      * @return HttpRequest
      * @throws UnsupportedEncodingException
      */
-    public static HttpPost preparePostRequest(String url, Map<String, String> args)
-	    throws JsonProcessingException, UnsupportedEncodingException {
-	HttpPost request = new HttpPost(url);
-	ObjectMapper mapper = new ObjectMapper();
-	String requestBody = mapper.writeValueAsString(args);
-	request.setEntity(new StringEntity(requestBody));
-	request.addHeader("Content-Type", "application/json");
-	return request;
-    } // preparePostRequest()
-
-    /**
-     * Prepare POST request HTTP
-     *
-     * @param url              url
-     * @param oAuthAccessToken oAuthAccessToken
-     * @params args Data to send (Only String, no binary)
-     * @return HttpRequest
-     * @throws UnsupportedEncodingException
-     */
     public static HttpPost preparePostRequestObject(String url, String oAuthAccessToken, Object args)
 	    throws JsonProcessingException, UnsupportedEncodingException {
 	HttpPost request = new HttpPost(url);
@@ -88,6 +75,28 @@ public class HttpUtils {
 	request.addHeader("Authorization", "Bearer " + oAuthAccessToken);
 	return request;
     } // preparePostRequest()
+    
+    /**
+     * Prepare POST request HTTP
+     *
+     * @param url              url
+     * @params args Data to send (Only String, no binary)
+     * @return HttpRequest
+     * @throws UnsupportedEncodingException
+     */
+    public static HttpPost preparePostRequestAuth(String url, Auth auth)
+	    throws JsonProcessingException, UnsupportedEncodingException {
+	HttpPost request = new HttpPost(url);
+	List<BasicNameValuePair> params = new ArrayList<>();
+	params.add(new BasicNameValuePair("grant_type", auth.getGrantType()));
+	params.add(new BasicNameValuePair("code", auth.getCode()));
+	params.add(new BasicNameValuePair("redirect_uri", auth.getRedirectUri()));
+	params.add(new BasicNameValuePair("client_id", auth.getClientId()));
+	params.add(new BasicNameValuePair("client_secret", auth.getClientSecret()));
+	UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(params, "utf-8");
+	request.setEntity(urlEncodedFormEntity);
+	return request;
+    } // preparePostRequestAuth()
     
     /**
      * Prepare POST request HTTP (Upload file)

@@ -13,35 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package snapads4j.model.segment;
+package snapads4j.model.audience.match;
 
 import java.util.List;
+import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.collections4.CollectionUtils;
 
-import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
-import snapads4j.enums.OperationEnum;
-import snapads4j.model.targeting.Targeting;
 
-/**
- * Segment used to build {@link Targeting} instance.
- *
- * @author Yassine
- */
-@Getter
 @Setter
-@ToString
-@JsonInclude(Include.NON_EMPTY)
-public class SegmentRequestTargeting {
+@NoArgsConstructor
+public class SnapHttpResponseUserForAudienceSegment {
 
-  private Long id;
+    private List<SnapInnerUserForAudienceSegment> users;
 
-  @JsonProperty("segment_id")
-  private List<String> segmentIds;
-
-  private OperationEnum operation;
-} // SegmentRequestTargeting
+    public Optional<UserForAudienceSegment> getSpecificUserForAudienceSegment() {
+      return (CollectionUtils.isNotEmpty(users) && users.get(0) != null)
+          ? Optional.of(users.get(0).getUser())
+          : Optional.empty();
+    } // getSpecificUserForAudienceSegment()
+    
+}// SnapHttpResponseUserForAudienceSegment
