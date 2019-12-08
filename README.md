@@ -6,9 +6,28 @@ This is unofficial SnapChat Marketing API binding library allows you to integrat
 
 URL Marketing API SnapChat : https://developers.snapchat.com/ads/
 
-## Features
+## Features / Roadmap for current version
 
-..
+* Authentication
+* User
+* Organizations
+* Funding Sources
+* Ad Accounts
+* Campaigns
+* Ad Squads
+* Ads
+* Media
+* Creatives
+* Creative Elements
+* Targeting
+* Snap Audience Match
+* SAM - Lookalikes (in progress)
+* Audience Insights (in progress)
+* Audience Size (in progress)
+* Bid Estimate (in progress)
+* Measurement (in progress)
+* Audit Logs (in progress)
+* Snap Pixel (in progress)
 
 ## Installation
 
@@ -16,7 +35,9 @@ URL Marketing API SnapChat : https://developers.snapchat.com/ads/
 
 ## License
 
-..
+Apache License, Version 2.0
+
+https://opensource.org/licenses/Apache-2.0
 
 ## Code examples
 
