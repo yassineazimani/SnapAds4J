@@ -76,6 +76,8 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 
     private String endpointAddUserForAudienceSegment;
 
+    private String endpointDeleteUserForAudienceSegment;
+    
     private CloseableHttpClient httpClient;
 
     private EntityUtilsWrapper entityUtilsWrapper;
@@ -95,6 +97,8 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 		+ (String) fp.getProperties().get("api.url.audience.match.one");
 	this.endpointAddUserForAudienceSegment = this.apiUrl
 		+ (String) fp.getProperties().get("api.url.audience.match.add.user");
+	this.endpointDeleteUserForAudienceSegment = this.apiUrl
+		+ (String) fp.getProperties().get("api.url.audience.match.delete.user");
 	this.httpClient = HttpClients.createDefault();
 	this.entityUtilsWrapper = new EntityUtilsWrapper();
     }// SnapAudienceSegment()
@@ -305,7 +309,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	int result = 0;
 	if (CollectionUtils.isNotEmpty(formUserForAudienceSegment.getData())) {
 	    normalizeAndHashDataUserForAudienceSegment(formUserForAudienceSegment);
-	    final String url = this.endpointAddUserForAudienceSegment.replace("{segment_id}", "");
+	    final String url = this.endpointDeleteUserForAudienceSegment.replace("{segment_id}", "");
 	    SnapHttpRequestUserForAudienceSegment reqBody = new SnapHttpRequestUserForAudienceSegment();
 	    reqBody.addUserForAudienceSegment(formUserForAudienceSegment);
 	    HttpDeleteWithBody request = HttpUtils.prepareDeleteRequestObject(url, oAuthAccessToken, reqBody);
