@@ -19,9 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
@@ -95,6 +97,8 @@ public class SnapAdSquadsTest {
     private AdSquad adSquadForUpdate;
 
     private AdSquad adSquadErrosForUpdate;
+    
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     @Before
     public void setUp() {
@@ -108,6 +112,7 @@ public class SnapAdSquadsTest {
 	adSquadForUpdate.setBillingEvent(BillingEventEnum.IMPRESSION);
 	adSquadForUpdate.setId("990d22f3-86a5-4e9e-8afd-ac4c118896d4");
 	adSquadErrosForUpdate.setId(adSquadForUpdate.getId());
+	sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     } // setUp()
 
     @Test
@@ -132,6 +137,10 @@ public class SnapAdSquadsTest {
 	    assertThat(adsquad.getDailyBudgetMicro()).isEqualTo(1000000000);
 	    assertThat(adsquad.getOptimizationGoal()).isEqualTo(OptimizationGoalEnum.IMPRESSIONS);
 	    assertThat(adsquad.getTargeting()).isNotNull();
+	    assertThat(adsquad.toString()).isNotEmpty();
+	    assertThat(sdf.format(adsquad.getCreatedAt())).isEqualTo("2016-08-14T05:55:45.250Z");
+	    assertThat(sdf.format(adsquad.getUpdatedAt())).isEqualTo("2016-08-14T05:55:45.250Z");
+	    assertThat(sdf.format(adsquad.getStartTime())).isEqualTo("2016-08-11T22:03:58.869Z");
 	    Targeting target = adsquad.getTargeting();
 	    assertThat(target.getGeos()).isNotNull();
 	    assertThat(target.getGeos()).hasSize(1);
@@ -370,6 +379,7 @@ public class SnapAdSquadsTest {
 	Assertions.assertThatCode(() -> sAdSquads.updateAdSquad(oAuthAccessToken, adSquadForUpdate))
 		.doesNotThrowAnyException();
 	Optional<AdSquad> optAdSquad = sAdSquads.updateAdSquad(oAuthAccessToken, adSquadForUpdate);
+	assertThat(optAdSquad.isPresent()).isTrue();
 	optAdSquad.ifPresent(adsquad -> {
 	    assertThat(adsquad.getId()).isEqualTo(adSquadForUpdate.getId());
 	    assertThat(adsquad.getName()).isEqualTo(adSquadForUpdate.getName());
@@ -379,6 +389,8 @@ public class SnapAdSquadsTest {
 	    assertThat(adsquad.getBidMicro()).isEqualTo(1000);
 	    assertThat(adsquad.getDailyBudgetMicro()).isEqualTo(5555555);
 	    assertThat(adsquad.getOptimizationGoal()).isEqualTo(OptimizationGoalEnum.IMPRESSIONS);
+	    assertThat(sdf.format(adsquad.getCreatedAt())).isEqualTo("2016-08-14T05:55:45.250Z");
+	    assertThat(sdf.format(adsquad.getUpdatedAt())).isEqualTo("2016-08-14T05:55:45.250Z");
 	});
     }// test_update_ad_squad_should_success()
 
@@ -777,6 +789,10 @@ public class SnapAdSquadsTest {
 	    assertThat(f.getDailyBudgetMicro()).isEqualTo(1000000000);
 	    assertThat(f.getOptimizationGoal()).isEqualTo(OptimizationGoalEnum.IMPRESSIONS);
 	    assertThat(f.getTargeting()).isNotNull();
+	    assertThat(f.toString()).isNotEmpty();
+	    assertThat(sdf.format(f.getCreatedAt())).isEqualTo("2016-08-14T05:58:55.409Z");
+	    assertThat(sdf.format(f.getUpdatedAt())).isEqualTo("2016-08-14T05:58:55.409Z");
+	    assertThat(sdf.format(f.getEndTime())).isEqualTo("2016-08-16T05:58:55.409Z");
 	    Targeting target = f.getTargeting();
 	    assertThat(target.getGeos()).isNotNull();
 	    assertThat(target.getGeos()).hasSize(1);
@@ -965,6 +981,9 @@ public class SnapAdSquadsTest {
 	assertThat(adSquads.get(0).getBillingEvent()).isEqualTo(BillingEventEnum.IMPRESSION);
 	assertThat(adSquads.get(0).getOptimizationGoal()).isEqualTo(OptimizationGoalEnum.IMPRESSIONS);
 	assertThat(adSquads.get(0).getBidMicro()).isEqualTo(1000000.);
+	assertThat(sdf.format(adSquads.get(0).getCreatedAt())).isEqualTo("2016-08-14T05:52:45.186Z");
+	assertThat(sdf.format(adSquads.get(0).getUpdatedAt())).isEqualTo("2016-08-14T05:52:45.186Z");
+	assertThat(sdf.format(adSquads.get(0).getStartTime())).isEqualTo("2016-08-11T22:03:58.869Z");
 
 	assertThat(adSquads.get(1).getId()).isEqualTo("23995202-bfbc-45a0-9702-dd6841af52fe");
 	assertThat(adSquads.get(1).getStatus()).isEqualTo(StatusEnum.ACTIVE);
@@ -980,6 +999,9 @@ public class SnapAdSquadsTest {
 	assertThat(adSquads.get(1).getTargeting().getGeos()).isNotNull();
 	assertThat(adSquads.get(1).getTargeting().getGeos()).hasSize(1);
 	assertThat(adSquads.get(1).getTargeting().getGeos().get(0).getCountryCode()).isEqualTo("us");
+	assertThat(sdf.format(adSquads.get(1).getCreatedAt())).isEqualTo("2016-08-14T05:58:55.409Z");
+	assertThat(sdf.format(adSquads.get(1).getUpdatedAt())).isEqualTo("2016-08-14T05:58:55.409Z");
+	assertThat(sdf.format(adSquads.get(1).getStartTime())).isEqualTo("2016-08-11T22:03:58.869Z");
     } // test_getAllAdSquads_Campaign_should_success()
 
     @Test
@@ -1160,6 +1182,9 @@ public class SnapAdSquadsTest {
 	assertThat(adSquads.get(0).getBillingEvent()).isEqualTo(BillingEventEnum.IMPRESSION);
 	assertThat(adSquads.get(0).getOptimizationGoal()).isEqualTo(OptimizationGoalEnum.IMPRESSIONS);
 	assertThat(adSquads.get(0).getBidMicro()).isEqualTo(1000000.);
+	assertThat(sdf.format(adSquads.get(0).getCreatedAt())).isEqualTo("2016-08-14T05:52:45.186Z");
+	assertThat(sdf.format(adSquads.get(0).getUpdatedAt())).isEqualTo("2016-08-14T05:52:45.186Z");
+	assertThat(sdf.format(adSquads.get(0).getStartTime())).isEqualTo("2016-08-11T22:03:58.869Z");
 
 	assertThat(adSquads.get(1).getId()).isEqualTo("23995202-bfbc-45a0-9702-dd6841af52fe");
 	assertThat(adSquads.get(1).getStatus()).isEqualTo(StatusEnum.ACTIVE);
@@ -1175,6 +1200,9 @@ public class SnapAdSquadsTest {
 	assertThat(adSquads.get(1).getTargeting().getGeos()).isNotNull();
 	assertThat(adSquads.get(1).getTargeting().getGeos()).hasSize(1);
 	assertThat(adSquads.get(1).getTargeting().getGeos().get(0).getCountryCode()).isEqualTo("us");
+	assertThat(sdf.format(adSquads.get(1).getCreatedAt())).isEqualTo("2016-08-14T05:58:55.409Z");
+	assertThat(sdf.format(adSquads.get(1).getUpdatedAt())).isEqualTo("2016-08-14T05:58:55.409Z");
+	assertThat(sdf.format(adSquads.get(1).getStartTime())).isEqualTo("2016-08-11T22:03:58.869Z");
     } // test_getAllAdSquads_AdAccount_should_success()
 
     @Test

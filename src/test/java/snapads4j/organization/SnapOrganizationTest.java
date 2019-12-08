@@ -19,8 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
@@ -66,7 +68,7 @@ public class SnapOrganizationTest {
 
     @Mock
     private HttpEntity httpEntity;
-    
+
     @Mock
     private EntityUtilsWrapper entityUtilsWrapper;
 
@@ -74,11 +76,14 @@ public class SnapOrganizationTest {
 
     private final String id = "40d6719b-da09-410b-9185-0cc9c0dfed1d";
 
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
     @Before
     public void setUp() {
 	MockitoAnnotations.initMocks(snapOrganization);
 	snapOrganization.setHttpClient(httpClient);
 	snapOrganization.setEntityUtilsWrapper(entityUtilsWrapper);
+	sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     } // setUp()
 
     @Test
@@ -104,6 +109,9 @@ public class SnapOrganizationTest {
 	assertThat(org1.getName()).isEqualTo("My Organization");
 	assertThat(org1.getPostalCode()).isEqualTo("98134");
 	assertThat(org1.getType()).isEqualTo(TypeOrganizationEnum.ENTERPRISE);
+	assertThat(sdf.format(org1.getCreatedAt())).isEqualTo("2017-05-26T15:14:44.877Z");
+	assertThat(sdf.format(org1.getUpdatedAt())).isEqualTo("2017-05-26T15:14:44.877Z");
+
 	assertThat(org2).isNotNull();
 	assertThat(org2.getId()).isEqualTo("507d7a57-94de-4239-8a74-e93c00ca53e6");
 	assertThat(org2.getAddressLine1()).isEqualTo("1100 Silicon Vallety Rd");
@@ -113,6 +121,8 @@ public class SnapOrganizationTest {
 	assertThat(org2.getName()).isEqualTo("Hooli");
 	assertThat(org2.getPostalCode()).isEqualTo("94110");
 	assertThat(org2.getType()).isEqualTo(TypeOrganizationEnum.ENTERPRISE);
+	assertThat(sdf.format(org2.getCreatedAt())).isEqualTo("2017-08-01T15:14:44.877Z");
+	assertThat(sdf.format(org2.getUpdatedAt())).isEqualTo("2016-08-01T15:14:44.877Z");
     } // should_given_all_organizations()
 
     @Test
@@ -287,6 +297,8 @@ public class SnapOrganizationTest {
 	assertThat(org.getRoles()).isNotNull();
 	assertThat(org.getRoles().size()).isEqualTo(1);
 	assertThat(org.getRoles().get(0)).isEqualTo("member");
+	assertThat(sdf.format(org.getCreatedAt())).isEqualTo("2016-08-09T17:12:49.707Z");
+	assertThat(sdf.format(org.getUpdatedAt())).isEqualTo("2018-09-04T16:27:01.066Z");
 
 	assertThat(org.getAdAccounts()).isNotEmpty();
 	assertThat(org.getAdAccounts().size()).isEqualTo(3);
@@ -459,7 +471,8 @@ public class SnapOrganizationTest {
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
 	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapSpecificOrganization());
+	Mockito.when(entityUtilsWrapper.toString(httpEntity))
+		.thenReturn(SnapResponseUtils.getSnapSpecificOrganization());
 
 	Optional<Organization> organization = snapOrganization.getSpecificOrganization(oAuthAccessToken, id);
 	assertThat(organization.isPresent()).isTrue();
@@ -472,6 +485,8 @@ public class SnapOrganizationTest {
 	    assertThat(org.getName()).isEqualTo("My Organization");
 	    assertThat(org.getPostalCode()).isEqualTo("98134");
 	    assertThat(org.getType()).isEqualTo(TypeOrganizationEnum.ENTERPRISE);
+	    assertThat(sdf.format(org.getCreatedAt())).isEqualTo("2017-05-26T15:14:44.877Z");
+	    assertThat(sdf.format(org.getUpdatedAt())).isEqualTo("2017-05-26T15:14:44.877Z");
 	});
     } // should_given_specific_organization()
 

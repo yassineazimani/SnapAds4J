@@ -19,7 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
@@ -65,12 +67,15 @@ public class SnapUserTest {
     private EntityUtilsWrapper entityUtilsWrapper;
 
     private final String oAuthAccessToken = "meowmeowmeow";
+    
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     @Before
     public void setUp() {
 	MockitoAnnotations.initMocks(this);
 	snapUser.setHttpClient(httpClient);
 	snapUser.setEntityUtilsWrapper(entityUtilsWrapper);
+	sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     } // setUp()
 
     @Test
@@ -88,6 +93,8 @@ public class SnapUserTest {
 	    assertThat(user.getEmail()).isEqualTo("honey.badger@hooli.com");
 	    assertThat(user.getId()).isEqualTo("2f5dd7e6-fcd1-4324-8455-1ea4d96caaaa");
 	    assertThat(user.getOrganizationId()).isEqualTo("40d6719b-da09-410b-9185-0cc9c0dfed1d");
+	    assertThat(sdf.format(user.getCreatedAt())).isEqualTo("2016-08-12T01:56:39.842Z");
+	    assertThat(sdf.format(user.getUpdatedAt())).isEqualTo("2016-08-12T01:56:39.841Z");
 	});
     } // test_aboutMe_should_success()
 

@@ -34,7 +34,7 @@ import snapads4j.model.segment.SegmentRequestTargeting;
 @Getter
 @Setter
 @ToString
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_EMPTY)
 public class Targeting {
 
   /** List of Demographic Targets. */

@@ -19,8 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -92,6 +94,8 @@ public class SnapAdTest {
     private Ad adModelCreateFailure;
 
     private Ad adModelUpdateFailure;
+    
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     @Before
     public void setUp() {
@@ -102,6 +106,7 @@ public class SnapAdTest {
 	adModelUpdate = initFunctionalAd("e8d6217f-32ab-400f-9e54-39a86a7963e4");
 	adModelCreateFailure = initFunctionalAd(null);
 	adModelUpdateFailure = initFunctionalAd("e8d6217f-32ab-400f-9e54-39a86a7963e4");
+	sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     }// setUp()
 
     @Test
@@ -121,6 +126,8 @@ public class SnapAdTest {
 	    assertThat(f.getStatus()).isEqualTo(StatusEnum.ACTIVE);
 	    assertThat(f.getAdSquadId()).isEqualTo(squadId);
 	    assertThat(f.getCreativeId()).isEqualTo(creativeId);
+	    assertThat(sdf.format(f.getCreatedAt())).isEqualTo("2016-08-14T07:07:50.241Z");
+	    assertThat(sdf.format(f.getUpdatedAt())).isEqualTo("2016-08-14T07:07:50.241Z");
 	});
     }// test_create_ad_should_success()
 
@@ -299,12 +306,15 @@ public class SnapAdTest {
 	Optional<Ad> optAd = ad.updateAd(oAuthAccessToken, adModelUpdate);
 	assertThat(optAd.isPresent()).isTrue();
 	optAd.ifPresent(f -> {
+	    assertThat(f.toString()).isNotEmpty();
 	    assertThat(f.getId()).isEqualTo("e8d6217f-32ab-400f-9e54-39a86a7963e4");
 	    assertThat(f.getName()).isEqualTo("Ad One");
 	    assertThat(f.getType()).isEqualTo(AdTypeEnum.SNAP_AD);
 	    assertThat(f.getStatus()).isEqualTo(StatusEnum.ACTIVE);
 	    assertThat(f.getAdSquadId()).isEqualTo(squadId);
 	    assertThat(f.getCreativeId()).isEqualTo(creativeId);
+	    assertThat(sdf.format(f.getCreatedAt())).isEqualTo("2016-08-14T07:07:50.241Z");
+	    assertThat(sdf.format(f.getUpdatedAt())).isEqualTo("2016-08-14T07:14:45.174Z");
 	});
     }// test_update_ad_should_success()
 
@@ -649,6 +659,8 @@ public class SnapAdTest {
 	    assertThat(f.getStatus()).isEqualTo(StatusEnum.ACTIVE);
 	    assertThat(f.getAdSquadId()).isEqualTo(squadId);
 	    assertThat(f.getCreativeId()).isEqualTo(creativeId);
+	    assertThat(sdf.format(f.getCreatedAt())).isEqualTo("2016-08-14T07:07:50.241Z");
+	    assertThat(sdf.format(f.getUpdatedAt())).isEqualTo("2016-08-14T07:14:45.174Z");
 	});
     } // test_getSpecificAd_should_success()
 
@@ -811,6 +823,8 @@ public class SnapAdTest {
 	assertThat(ads.get(0).getAdSquadId()).isEqualTo(squadId);
 	assertThat(ads.get(0).getType()).isEqualTo(AdTypeEnum.SNAP_AD);
 	assertThat(ads.get(0).getCreativeId()).isEqualTo(creativeId);
+	assertThat(sdf.format(ads.get(0).getCreatedAt())).isEqualTo("2016-08-14T07:18:05.699Z");
+	assertThat(sdf.format(ads.get(0).getUpdatedAt())).isEqualTo("2016-08-14T07:18:05.699Z");
 
 	assertThat(ads.get(1).getId()).isEqualTo("e8d6217f-32ab-400f-9e54-39a86a7963e4");
 	assertThat(ads.get(1).getStatus()).isEqualTo(StatusEnum.ACTIVE);
@@ -818,6 +832,8 @@ public class SnapAdTest {
 	assertThat(ads.get(0).getAdSquadId()).isEqualTo(squadId);
 	assertThat(ads.get(1).getType()).isEqualTo(AdTypeEnum.SNAP_AD);
 	assertThat(ads.get(1).getCreativeId()).isEqualTo(creativeId);
+	assertThat(sdf.format(ads.get(1).getCreatedAt())).isEqualTo("2016-08-14T07:07:50.241Z");
+	assertThat(sdf.format(ads.get(1).getUpdatedAt())).isEqualTo("2016-08-14T07:14:45.174Z");
     }// test_getAllAds_AdSquad_should_success()
 
     @Test
@@ -991,6 +1007,8 @@ public class SnapAdTest {
 	assertThat(ads.get(0).getAdSquadId()).isEqualTo(squadId);
 	assertThat(ads.get(0).getType()).isEqualTo(AdTypeEnum.SNAP_AD);
 	assertThat(ads.get(0).getCreativeId()).isEqualTo(creativeId);
+	assertThat(sdf.format(ads.get(0).getCreatedAt())).isEqualTo("2016-08-14T07:18:05.699Z");
+	assertThat(sdf.format(ads.get(0).getUpdatedAt())).isEqualTo("2016-08-14T07:18:05.699Z");
 
 	assertThat(ads.get(1).getId()).isEqualTo("e8d6217f-32ab-400f-9e54-39a86a7963e4");
 	assertThat(ads.get(1).getStatus()).isEqualTo(StatusEnum.ACTIVE);
@@ -998,6 +1016,8 @@ public class SnapAdTest {
 	assertThat(ads.get(0).getAdSquadId()).isEqualTo(squadId);
 	assertThat(ads.get(1).getType()).isEqualTo(AdTypeEnum.SNAP_AD);
 	assertThat(ads.get(0).getCreativeId()).isEqualTo(creativeId);
+	assertThat(sdf.format(ads.get(1).getCreatedAt())).isEqualTo("2016-08-14T07:07:50.241Z");
+	assertThat(sdf.format(ads.get(1).getUpdatedAt())).isEqualTo("2016-08-14T07:14:45.174Z");
     }// test_getAllAds_AdAccount_should_success()
 
     @Test

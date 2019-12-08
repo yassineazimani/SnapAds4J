@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package snapads4j.model.segment;
+package snapads4j.model.audience.match;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -22,40 +22,37 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import snapads4j.enums.SourceTypeEnum;
-import snapads4j.enums.StatusEnum;
-import snapads4j.enums.TargetableStatusEnum;
-import snapads4j.enums.UploadStatusEnum;
+import snapads4j.enums.TypeCreationSpecDetails;
 
 @Getter
 @Setter
+@JsonInclude(Include.NON_EMPTY)
 @ToString
-@JsonInclude(Include.NON_NULL)
-public class Segment {
+/**
+ * 
+ * @author yassine
+ *
+ */
+public class CreationSpec {
+    
+    public CreationSpec() {
+	this.type = TypeCreationSpecDetails.BALANCE;
+    }// CreationSpec()
 
-  private Long id;
-
-  @JsonProperty("ad_account_id")
-  private String adAccountId;
-
-  private String description;
-
-  private String name;
-
-  @JsonProperty("retention_in_days")
-  private int retention_in_days;
-
-  @JsonProperty("source_type")
-  private SourceTypeEnum sourceType;
-
-  @JsonProperty("approximate_number_users")
-  private long approximate_number_users;
-
-  private StatusEnum status;
-
-  @JsonProperty("upload_status")
-  private UploadStatusEnum uploadStatus;
-
-  @JsonProperty("targetable_status")
-  private TargetableStatusEnum targetableStatus;
-} // Segment
+    /**
+     * Seed Audience Segment ID
+     */
+    @JsonProperty("seed_segment_id")
+    private String seedSegmentId;
+    
+    /**
+     * ISO-2 Country Code
+     */
+    private String country;
+    
+    /**
+     * The type of Lookalike to be created
+     */
+    private TypeCreationSpecDetails type;
+    
+}// CreationSpec

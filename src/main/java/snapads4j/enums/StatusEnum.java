@@ -38,6 +38,12 @@ public enum StatusEnum {
   /** Status expired */
   @JsonProperty("EXPIRED")
   EXPIRED,
+  /** Status pending */
+  @JsonProperty("PENDING")
+  PENDING,
+  /** Success */
+  @JsonProperty("SUCCESS")
+  SUCCESS,
   /** Status deleted */
   @JsonProperty("DELETED")
   DELETED;

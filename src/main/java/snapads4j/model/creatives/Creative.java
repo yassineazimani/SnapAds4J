@@ -44,7 +44,7 @@ import snapads4j.enums.TopSnapCropPositionEnum;
 @Getter
 @Setter
 @ToString
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_EMPTY)
 public class Creative {
     
     /** ID */

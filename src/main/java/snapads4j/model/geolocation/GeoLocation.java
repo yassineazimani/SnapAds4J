@@ -29,7 +29,7 @@ import snapads4j.enums.OperationEnum;
 @Getter
 @Setter
 @ToString
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_EMPTY)
 public class GeoLocation {
 
   @JsonProperty("country_code")

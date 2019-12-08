@@ -21,11 +21,9 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import lombok.Getter;
 import lombok.Setter;
 import snapads4j.model.SnapHttpResponse;
 
-@Getter
 @Setter
 public class SnapHttpResponseMedia extends SnapHttpResponse{
 

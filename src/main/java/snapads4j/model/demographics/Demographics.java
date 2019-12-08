@@ -34,7 +34,7 @@ import snapads4j.enums.GenderEnum;
 @Getter
 @Setter
 @ToString
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_EMPTY)
 public class Demographics {
 
   /** Identifiant */

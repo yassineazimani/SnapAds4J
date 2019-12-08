@@ -18,8 +18,10 @@ package snapads4j.creatives;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
@@ -101,6 +103,8 @@ public class SnapCreativeTest {
     
     private Creative creativeForCreation;
     
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    
     @BeforeClass
     public static void initMaxCharacters() {
 	fp = new FileProperties();
@@ -115,6 +119,7 @@ public class SnapCreativeTest {
 	snapCreative.setEntityUtilsWrapper(entityUtilsWrapper);
 	creative = initCreativeForUpdate();
 	creativeForCreation = initCreativeForCreation();
+	sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     }// setUp()
     
     @Test
@@ -141,6 +146,8 @@ public class SnapCreativeTest {
 	    Assertions.assertThat(c.getTopSnapCropPosition()).isEqualTo(TopSnapCropPositionEnum.MIDDLE);
 	    Assertions.assertThat(c.getPackagingStatus()).isEqualTo(PackagingStatusEnum.PENDING);
 	    Assertions.assertThat(c.getReviewStatus()).isEqualTo(ReviewStatusEnum.PENDING_REVIEW);
+	    Assertions.assertThat(sdf.format(c.getCreatedAt())).isEqualTo("2016-08-14T06:45:04.300Z");
+	    Assertions.assertThat(sdf.format(c.getUpdatedAt())).isEqualTo("2016-08-14T06:45:04.300Z");
 	});
     }// test_create_creative_should_success()
     
@@ -409,6 +416,8 @@ public class SnapCreativeTest {
 	    Assertions.assertThat(c.getWebViewProperties().getUrl()).isEqualTo(creative.getWebViewProperties().getUrl());
 	    Assertions.assertThat(c.getWebViewProperties().isAllowSnapJavascriptSdk()).isEqualTo(creative.getWebViewProperties().isAllowSnapJavascriptSdk());
 	    Assertions.assertThat(c.getWebViewProperties().isBlockPreload()).isEqualTo(creative.getWebViewProperties().isBlockPreload());
+	    Assertions.assertThat(sdf.format(c.getCreatedAt())).isEqualTo("2018-12-05T16:04:09.772Z");
+	    Assertions.assertThat(sdf.format(c.getUpdatedAt())).isEqualTo("2019-01-11T21:21:50.991Z");
 	});
     }// test_update_creative_should_success()
     
@@ -599,6 +608,9 @@ public class SnapCreativeTest {
 	Assertions.assertThat(creatives.get(0).getLongformVideoProperties()).isNotNull();
 	Assertions.assertThat(creatives.get(0).getLongformVideoProperties().toString()).isNotEmpty();
 	Assertions.assertThat(creatives.get(0).getLongformVideoProperties().getVideoMediaId()).isEqualTo("a7bee653-1865-41cf-8cee-8ab85a205837");
+	Assertions.assertThat(sdf.format(creatives.get(0).getCreatedAt())).isEqualTo("2016-08-14T06:54:38.229Z");
+	Assertions.assertThat(sdf.format(creatives.get(0).getUpdatedAt())).isEqualTo("2016-08-14T06:54:38.229Z");
+	
 	Assertions.assertThat(creatives.get(1).getId()).isEqualTo("1c7065c2-ad9f-41cc-b2c5-d48d9810439b");
 	Assertions.assertThat(creatives.get(1).getName()).isEqualTo("Creative App Install");
 	Assertions.assertThat(creatives.get(1).getAdAccountId()).isEqualTo(adAccountID);
@@ -615,6 +627,8 @@ public class SnapCreativeTest {
 	Assertions.assertThat(creatives.get(1).getAppInstallProperties().getAppName()).isEqualTo("Cool App Yo");
 	Assertions.assertThat(creatives.get(1).getAppInstallProperties().getIconMediaId()).isEqualTo("ab32d7e5-1f80-4e1a-a76b-3c543d2b28e4");
 	Assertions.assertThat(creatives.get(1).getAppInstallProperties().getIosAppId()).isEqualTo("447188370");
+	Assertions.assertThat(sdf.format(creatives.get(1).getCreatedAt())).isEqualTo("2016-08-14T06:56:48.631Z");
+	Assertions.assertThat(sdf.format(creatives.get(1).getUpdatedAt())).isEqualTo("2016-08-14T06:56:48.631Z");
 	
 	Assertions.assertThat(creatives.get(2).getId()).isEqualTo("313e8415-6294-47d6-b064-5a0d9f21d224");
 	Assertions.assertThat(creatives.get(2).getName()).isEqualTo("Creative LFV 2");
@@ -629,6 +643,9 @@ public class SnapCreativeTest {
 	Assertions.assertThat(creatives.get(2).getLongformVideoProperties()).isNotNull();
 	Assertions.assertThat(creatives.get(2).getLongformVideoProperties().toString()).isNotEmpty();
 	Assertions.assertThat(creatives.get(2).getLongformVideoProperties().getVideoMediaId()).isEqualTo("a7bee653-1865-41cf-8cee-8ab85a205837");
+	Assertions.assertThat(sdf.format(creatives.get(2).getCreatedAt())).isEqualTo("2016-08-14T06:54:52.107Z");
+	Assertions.assertThat(sdf.format(creatives.get(2).getUpdatedAt())).isEqualTo("2016-08-14T06:54:52.107Z");
+	
 	Assertions.assertThat(creatives.get(3).getId()).isEqualTo("67e4296c-486b-4bf3-877b-f34e8eeb173c");
 	Assertions.assertThat(creatives.get(3).getName()).isEqualTo("Creative WV");
 	Assertions.assertThat(creatives.get(3).getAdAccountId()).isEqualTo(adAccountID);
@@ -642,6 +659,9 @@ public class SnapCreativeTest {
 	Assertions.assertThat(creatives.get(3).getWebViewProperties()).isNotNull();
 	Assertions.assertThat(creatives.get(3).getWebViewProperties().toString()).isNotEmpty();
 	Assertions.assertThat(creatives.get(3).getWebViewProperties().getUrl()).isEqualTo("http://snapchat.com/ads");
+	Assertions.assertThat(sdf.format(creatives.get(3).getCreatedAt())).isEqualTo("2016-08-14T06:58:12.768Z");
+	Assertions.assertThat(sdf.format(creatives.get(3).getUpdatedAt())).isEqualTo("2016-08-14T06:58:12.768Z");
+	
 	Assertions.assertThat(creatives.get(4).getId()).isEqualTo("c1e6e929-acec-466f-b023-852b8cacc18f");
 	Assertions.assertThat(creatives.get(4).getName()).isEqualTo("Creative Creative");
 	Assertions.assertThat(creatives.get(4).getAdAccountId()).isEqualTo(adAccountID);
@@ -651,6 +671,8 @@ public class SnapCreativeTest {
 	Assertions.assertThat(creatives.get(4).isShareable()).isEqualTo(true);
 	Assertions.assertThat(creatives.get(4).getTopSnapMediaId()).isEqualTo(topSnapMediaId);
 	Assertions.assertThat(creatives.get(4).getTopSnapCropPosition()).isEqualTo(TopSnapCropPositionEnum.MIDDLE);
+	Assertions.assertThat(sdf.format(creatives.get(4).getCreatedAt())).isEqualTo("2016-08-14T06:45:04.300Z");
+	Assertions.assertThat(sdf.format(creatives.get(4).getUpdatedAt())).isEqualTo("2016-08-14T06:45:04.300Z");
     }// test_get_all_creatives_should_success()
     
     @Test
@@ -841,6 +863,8 @@ public class SnapCreativeTest {
 		    Assertions.assertThat(creative.getReviewStatus()).isEqualTo(ReviewStatusEnum.PENDING_REVIEW);
 		    Assertions.assertThat(creative.getType()).isEqualTo(CreativeTypeEnum.SNAP_AD);
 		    Assertions.assertThat(creative.getTopSnapCropPosition()).isEqualTo(TopSnapCropPositionEnum.MIDDLE);
+		    Assertions.assertThat(sdf.format(creative.getCreatedAt())).isEqualTo("2016-08-14T06:45:04.300Z");
+		    Assertions.assertThat(sdf.format(creative.getUpdatedAt())).isEqualTo("2016-08-14T06:45:04.300Z");
 		});
     }// test_get_specific_creative_should_success()
 

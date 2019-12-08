@@ -29,6 +29,8 @@ public enum SourceTypeEnum {
   ENGAGEMENT,
   @JsonProperty("PIXEL")
   PIXEL,
+  @JsonProperty("LOOKALIKE")
+  LOOKALIKE,
   @JsonProperty("FOOT_TRAFFIC_INSIGHTS")
   FOOT_TRAFFIC_INSIGHTS;
 } // SourceTypeEnum

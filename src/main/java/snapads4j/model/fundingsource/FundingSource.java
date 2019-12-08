@@ -38,7 +38,7 @@ import snapads4j.enums.StatusEnum;
 @Getter
 @Setter
 @ToString
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_EMPTY)
 public class FundingSource {
 
   /** Funding Source ID */

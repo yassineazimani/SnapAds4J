@@ -184,8 +184,8 @@ public class SnapResponseUtils {
       	"      \"status\": \"success\",\r\n" + 
       	"      \"adsquad\": {\r\n" + 
       	"        \"id\": \"990d22f3-86a5-4e9e-8afd-ac4c118896d4\",\r\n" + 
-      	"        \"updated_at\": \"2016-07-22T12:30:51.169-07:00\",\r\n" + 
-      	"        \"created_at\": \"2016-07-22T12:16:17.461-07:00\",\r\n" + 
+      	"        \"updated_at\": \"2016-08-14T05:55:45.250Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-14T05:55:45.250Z\",\r\n" + 
       	"        \"name\": \"AdSquad2019\",\r\n" + 
       	"        \"campaign_id\": \"6cf25572-048b-4447-95d1-eb48231751be\",\r\n" + 
       	"        \"type\": \"SNAP_ADS\",\r\n" + 
@@ -210,6 +210,7 @@ public class SnapResponseUtils {
       	"        \"id\": \"23995202-bfbc-45a0-9702-dd6841af52fe\",\r\n" + 
       	"        \"updated_at\": \"2016-08-14T05:58:55.409Z\",\r\n" + 
       	"        \"created_at\": \"2016-08-14T05:58:55.409Z\",\r\n" + 
+      	"	 \"end_time\": \"2016-08-16T05:58:55.409Z\",\r\n" +
       	"        \"name\": \"Ad Squad Uno\",\r\n" + 
       	"        \"status\": \"ACTIVE\",\r\n" + 
       	"        \"campaign_id\": \"6cf25572-048b-4447-95d1-eb48231751be\",\r\n" + 
@@ -899,7 +900,7 @@ public class SnapResponseUtils {
       	"                    \"button_overlay_media_id\": \"008a5ae9-bcc1-4c2e-a3f1-7e924d582012\"\r\n" + 
       	"                },\r\n" + 
       	"                \"web_view_properties\": {\r\n" + 
-      	"                    \"url\": \"https://snapchat.com\",\r\n" + 
+      	"                    \"url\": \"https://snapchat2.com\",\r\n" + 
       	"                    \"allow_snap_javascript_sdk\": false,\r\n" + 
       	"                    \"use_immersive_mode\": false,\r\n" + 
       	"                    \"deep_link_urls\": [],\r\n" + 
@@ -923,7 +924,7 @@ public class SnapResponseUtils {
       	"                    \"button_overlay_media_id\": \"008a5ae9-bcc1-4c2e-a3f1-7e924d582013\"\r\n" + 
       	"                },\r\n" + 
       	"                \"web_view_properties\": {\r\n" + 
-      	"                    \"url\": \"https://snapchat.com\",\r\n" + 
+      	"                    \"url\": \"https://snapchat3.com\",\r\n" + 
       	"                    \"allow_snap_javascript_sdk\": false,\r\n" + 
       	"                    \"use_immersive_mode\": false,\r\n" + 
       	"                    \"deep_link_urls\": [],\r\n" + 
@@ -960,4 +961,189 @@ public class SnapResponseUtils {
       	"    ]\r\n" + 
       	"}";
   }// getSnapCreationInteractionZone()
+  
+  public static String getSnapAudienceSegmentCreated() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57ae54d800ff0a4a5232b1a7210001737e616473617069736300016275696c642d35396264653638322d312d31312d37000100\",\r\n" + 
+      	"  \"segments\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"segment\": {\r\n" + 
+      	"        \"updated_at\": \"2016-08-12T22:59:42.452Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-12T22:59:42.405Z\",\r\n" + 
+      	"        \"name\": \"all the sams in the world\",\r\n" + 
+      	"        \"id\": \"5677923948298240\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"description\": \"all the sams in the world\",\r\n" + 
+      	"        \"status\": \"PENDING\",\r\n" + 
+      	"        \"source_type\": \"FIRST_PARTY\",\r\n" + 
+      	"        \"retention_in_days\": 180,\r\n" + 
+      	"        \"approximate_number_users\": 0\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapAudienceSegmentCreated()
+  
+  public static String getSnapAudienceSegmentsCreated() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57ae554a00ff0487459c8ac85c0001737e616473617069736300016275696c642d34363138393265642d312d31312d3200010103\",\r\n" + 
+      	"  \"segments\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"segment\": {\r\n" + 
+      	"        \"updated_at\": \"2016-08-12T21:11:01.325Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-12T21:11:01.196Z\",\r\n" + 
+      	"        \"name\": \"super duper sam 2\",\r\n" + 
+      	"        \"id\": \"5689640350646272\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"description\": \"all the sams in the world\",\r\n" + 
+      	"        \"status\": \"PENDING\",\r\n" + 
+      	"        \"source_type\": \"FIRST_PARTY\",\r\n" + 
+      	"        \"retention_in_days\": 180,\r\n" + 
+      	"        \"approximate_number_users\": 0\r\n" + 
+      	"      }\r\n" + 
+      	"    },\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"success\",\r\n" + 
+      	"      \"segment\": {\r\n" + 
+      	"        \"updated_at\": \"2016-08-12T20:58:16.098Z\",\r\n" + 
+      	"        \"created_at\": \"2016-08-12T20:58:16.036Z\",\r\n" + 
+      	"        \"name\": \"super duper sam\",\r\n" + 
+      	"        \"id\": \"5715031928864768\",\r\n" + 
+      	"        \"ad_account_id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n" + 
+      	"        \"description\": \"all the sams in the world\",\r\n" + 
+      	"        \"status\": \"PENDING\",\r\n" + 
+      	"        \"source_type\": \"FIRST_PARTY\",\r\n" + 
+      	"        \"retention_in_days\": 180,\r\n" + 
+      	"        \"approximate_number_users\": 0\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapAudienceSegmentsCreated()
+  
+  public static String getSnapSpecificAudienceSegment() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5b3116c800ff0cfbb4758de4670001737e616473617069736300016275696c642d32636336303266382d312d3137382d300001015d\",\r\n" + 
+      	"    \"segments\": [\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"segment\": {\r\n" + 
+      	"                \"id\": \"5701023945457664\",\r\n" + 
+      	"                \"updated_at\": \"2018-06-25T02:13:52.956Z\",\r\n" + 
+      	"                \"created_at\": \"2018-03-09T00:57:57.462Z\",\r\n" + 
+      	"                \"name\": \"Lookalike\",\r\n" + 
+      	"                \"ad_account_id\": \"3f539865-c001-4f5e-bd31-5ae129a4550a\",\r\n" + 
+      	"                \"status\": \"ACTIVE\",\r\n" + 
+      	"                \"targetable_status\": \"READY\",\r\n" + 
+      	"                \"upload_status\": \"COMPLETE\",\r\n" + 
+      	"                \"source_type\": \"LOOKALIKE\",\r\n" + 
+      	"                \"retention_in_days\": 180,\r\n" + 
+      	"                \"approximate_number_users\": 11487000,\r\n" + 
+      	"                \"creation_spec\": {\r\n" + 
+      	"                    \"seed_segment_id\": \"5749764677173248\",\r\n" + 
+      	"                    \"country\": \"US\",\r\n" + 
+      	"                    \"type\": \"BALANCE\"\r\n" + 
+      	"                }\r\n" + 
+      	"            }\r\n" + 
+      	"        }\r\n" + 
+      	"    ]\r\n" + 
+      	"}";
+  }// getSnapSpecificAudienceSegment()
+  
+  public static String getSnapAudienceSegmentUpdated() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5dc3096800ff0c266ebe6eeaac0001737e616473617069736300016275696c642d65653836646631392d312d3330322d300001013a\",\r\n" + 
+      	"    \"segments\": [\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"segment\": {\r\n" + 
+      	"                \"id\": \"5603670370513719\",\r\n" + 
+      	"                \"updated_at\": \"2019-11-06T17:56:57.053Z\",\r\n" + 
+      	"                \"created_at\": \"2019-03-28T14:47:17.956Z\",\r\n" + 
+      	"                \"name\": \"Honey Bear Segment 2019\",\r\n" + 
+      	"                \"ad_account_id\": \"22225ba6-7559-4000-9663-bace8adff5f1\",\r\n" + 
+      	"                \"organization_id\": \"1fdeefec-f502-4ca8-9a84-6411e0a51052\",\r\n" + 
+      	"                \"description\": \"A list of Honey bear lovers across the globe\",\r\n" + 
+      	"                \"status\": \"PAUSED\",\r\n" + 
+      	"                \"targetable_status\": \"TOO_FEW_USERS\",\r\n" + 
+      	"                \"upload_status\": \"COMPLETE\",\r\n" + 
+      	"                \"source_type\": \"FIRST_PARTY\",\r\n" + 
+      	"                \"retention_in_days\": 60,\r\n" + 
+      	"                \"approximate_number_users\": 500000,\r\n" + 
+      	"                \"visible_to\": [\r\n" + 
+      	"                    \"AdAccountEntity_22225ba6-7559-4000-9663-bace8adff5f1\"\r\n" + 
+      	"                ]\r\n" + 
+      	"            }\r\n" + 
+      	"        }\r\n" + 
+      	"    ]\r\n" + 
+      	"}";
+  }// getSnapAudienceSegmentUpdated()
+  
+  public static String getSnapAddUserForAudienceSegment() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"SUCCESS\",\r\n" + 
+      	"  \"request_id\": \"57c4d34700ff0d538b8ba40ed90001737e7465616d6b6f363139000173616d2d68616f6d696e672d757365722d746573740001010c\",\r\n" + 
+      	"  \"users\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"      \"user\": {\r\n" + 
+      	"        \"number_uploaded_users\": 2\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapAddUserForAudienceSegment()
+  
+  public static String getSnapDeleteUserForAudienceSegment() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"SUCCESS\",\r\n" + 
+      	"  \"request_id\": \"57c4d34700ff0d538b8ba40ed90001737e7465616d6b6f363139000173616d2d68616f6d696e672d757365722d746573740001010c\",\r\n" + 
+      	"  \"users\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"      \"user\": {\r\n" + 
+      	"        \"number_uploaded_users\": 2\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapDeleteUserForAudienceSegment()
+  
+  public static String getSnapDeleteAllUsersFromAudienceSegment() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"SUCCESS\",\r\n" + 
+      	"  \"request_id\": \"58af318900ff0cb66aa3a103dd0001737e616473617069736300016275696c642d61666139346564352d312d34342d3000010109\",\r\n" + 
+      	"  \"segments\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"      \"segment\": {\r\n" + 
+      	"        \"id\":\"5769345128988888\",\r\n" + 
+      	"        \"updated_at\":\"2017-02-23T19:01:30.080Z\",\r\n" + 
+      	"        \"created_at\":\"2017-02-23T18:34:48.900Z\",\r\n" + 
+      	"        \"name\":\"super duper sam\",\r\n" + 
+      	"        \"ad_account_id\":\"8adc3db7-8148-4fbf-999c-8d1111111d11\",\r\n" + 
+      	"        \"description\":\"all the sams in the world\",\r\n" + 
+      	"        \"status\":\"ACTIVE\",\r\n" + 
+      	"        \"source_type\":\"FIRST_PARTY\",\r\n" + 
+      	"        \"retention_in_days\":180,\r\n" + 
+      	"        \"approximate_number_users\":0\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getSnapDeleteAllUsersFromAudienceSegment()
+  
+  public static String getSnapDeleteAudienceSegment() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5b994e4900ff02dce52463d1020001737e616473617069736300016275696c642d33346634346232622d312d3230302d32000100\",\r\n" + 
+      	"    \"segments\": []\r\n" + 
+      	"}";
+  }// getSnapDeleteAudienceSegment()
 } // SnapResponseUtils

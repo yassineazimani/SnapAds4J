@@ -19,8 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
@@ -76,12 +78,15 @@ public class SnapFundingSourceTest {
   private final String id = "e703eb9f-8eac-4eda-a9c7-deec3935222d";
 
   private final String organizationId = "40d6719b-da09-410b-9185-0cc9c0dfed1d";
+  
+  private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     fundingSource.setHttpClient(httpClient);
     fundingSource.setEntityUtilsWrapper(entityUtilsWrapper);
+    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
   } // setUp()
 
   @Test
@@ -108,6 +113,8 @@ public class SnapFundingSourceTest {
     assertThat(fundingSources.get(0).getExpirationYear()).isEqualTo(2020);
     assertThat(fundingSources.get(0).getDailySpendLimitMicro()).isEqualTo(25000000);
     assertThat(fundingSources.get(0).getDailySpendCurrency()).isEqualTo(CurrencyEnum.USD);
+    assertThat(sdf.format(fundingSources.get(0).getCreatedAt())).isEqualTo("2017-05-22T22:46:30.917Z");
+    assertThat(sdf.format(fundingSources.get(0).getUpdatedAt())).isEqualTo("2017-05-22T22:46:30.917Z");
 
     assertThat(fundingSources.get(1).getId()).isEqualTo("9d111fbf-da5f-4526-9e7b-226f847b3d7e");
     assertThat(fundingSources.get(1).getType()).isEqualTo(FundingSourceTypeEnum.LINE_OF_CREDIT);
@@ -117,6 +124,8 @@ public class SnapFundingSourceTest {
     assertThat(fundingSources.get(1).getStatus()).isEqualTo(StatusEnum.ACTIVE);
     assertThat(fundingSources.get(1).getCreditAccountType()).isEqualTo("MANAGED");
     assertThat(fundingSources.get(1).getBudgetSpentMicro()).isEqualTo(8000000000.);
+    assertThat(sdf.format(fundingSources.get(1).getCreatedAt())).isEqualTo("2017-05-22T22:46:30.920Z");
+    assertThat(sdf.format(fundingSources.get(1).getUpdatedAt())).isEqualTo("2017-05-22T22:46:30.920Z");
 
     assertThat(fundingSources.get(2).getId()).isEqualTo("d24b4011-3560-47ea-86fa-0ed14c6b90d4");
     assertThat(fundingSources.get(2).getType()).isEqualTo(FundingSourceTypeEnum.COUPON);
@@ -124,6 +133,8 @@ public class SnapFundingSourceTest {
     assertThat(fundingSources.get(2).getCurrency()).isEqualTo(CurrencyEnum.EUR);
     assertThat(fundingSources.get(2).getValueMicro()).isEqualTo(10000000000.);
     assertThat(fundingSources.get(2).getStatus()).isEqualTo(StatusEnum.REDEEMED);
+    assertThat(sdf.format(fundingSources.get(2).getCreatedAt())).isEqualTo("2017-05-22T22:46:30.920Z");
+    assertThat(sdf.format(fundingSources.get(2).getUpdatedAt())).isEqualTo("2017-05-22T22:46:30.920Z");
   } // test_getAllFundingSource_should_success()
 
   @Test
@@ -318,6 +329,8 @@ public class SnapFundingSourceTest {
           assertThat(f.getNameCreditCard()).isEqualTo("Hooli Test Ad Account Funding Source");
           assertThat(f.getOrganizationId()).isEqualTo("40d6719b-da09-410b-9185-0cc9c0dfed1d");
           assertThat(f.getCurrency()).isEqualTo(CurrencyEnum.USD);
+          assertThat(sdf.format(f.getCreatedAt())).isEqualTo("2016-08-11T22:03:54.337Z");
+          assertThat(sdf.format(f.getUpdatedAt())).isEqualTo("2016-08-11T22:03:54.337Z");
         });
   } // test_getSpecificFundingSource_should_success()
 

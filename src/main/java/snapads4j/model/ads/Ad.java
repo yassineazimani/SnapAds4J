@@ -31,7 +31,7 @@ import snapads4j.model.thirdparty.SwipeTrackingUrl;
 
 @Getter
 @Setter
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_EMPTY)
 public class Ad {
 
     private String id;

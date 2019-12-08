@@ -15,14 +15,17 @@
  */
 package snapads4j.media;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
@@ -95,6 +98,8 @@ public class SnapMediaTest {
     private CreativeMedia media;
 
     private CreativeMedia mediaFail;
+    
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     @Before
     public void setUp() {
@@ -103,6 +108,7 @@ public class SnapMediaTest {
 	snapMedia.setEntityUtilsWrapper(entityUtilsWrapper);
 	media = initializeCreativeMedia("Media A - Video", MediaTypeEnum.VIDEO);
 	mediaFail = initializeCreativeMedia("Media A - Video", MediaTypeEnum.VIDEO);
+	sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     } // setUp()
 
     @Test
@@ -122,6 +128,8 @@ public class SnapMediaTest {
 		    Assertions.assertThat(media.getAdAccountId()).isEqualTo(adAccountID);
 		    Assertions.assertThat(media.getType()).isEqualTo(MediaTypeEnum.VIDEO);
 		    Assertions.assertThat(media.getMediaStatus()).isEqualTo(MediaStatusTypeEnum.PENDING_UPLOAD);
+		    assertThat(sdf.format(media.getCreatedAt())).isEqualTo("2016-08-14T06:18:01.855Z");
+		    assertThat(sdf.format(media.getUpdatedAt())).isEqualTo("2016-08-14T06:18:01.855Z");
 		});
     }// test_create_media_should_success_1()
 
@@ -1618,26 +1626,36 @@ public class SnapMediaTest {
 	Mockito.when(entityUtilsWrapper.toString(httpEntity))
 	.thenReturn(SnapResponseUtils.getSnapAllMedia());
 	Assertions.assertThatCode(() -> snapMedia.getAllMedia(oAuthAccessToken, adAccountID)).doesNotThrowAnyException();
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID)).isNotNull();
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID)).isNotEmpty();
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).size()).isEqualTo(3);
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(0).getId()).isEqualTo("7f65f9ff-63d8-41e7-991a-06b95a1ffbde");
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(0).getName()).isEqualTo("Media 2");
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(0).getAdAccountId()).isEqualTo(adAccountID);
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(0).getType()).isEqualTo(MediaTypeEnum.VIDEO);
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(0).getMediaStatus()).isEqualTo(MediaStatusTypeEnum.PENDING_UPLOAD);
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(1).getId()).isEqualTo("a7bee653-1865-41cf-8cee-8ab85a205837");
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(1).getName()).isEqualTo("Media A - Video");
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(1).getFileName()).isEqualTo("sample.mov");
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(1).getAdAccountId()).isEqualTo(adAccountID);
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(1).getType()).isEqualTo(MediaTypeEnum.VIDEO);
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(1).getMediaStatus()).isEqualTo(MediaStatusTypeEnum.READY);
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(2).getId()).isEqualTo("ab32d7e5-1f80-4e1a-a76b-3c543d2b28e4");
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(2).getName()).isEqualTo("App Icon");
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(2).getFileName()).isEqualTo("Mobile Strike.png");
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(2).getAdAccountId()).isEqualTo(adAccountID);
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(2).getType()).isEqualTo(MediaTypeEnum.IMAGE);
-	Assertions.assertThat(snapMedia.getAllMedia(oAuthAccessToken, adAccountID).get(2).getMediaStatus()).isEqualTo(MediaStatusTypeEnum.READY);
+	List<CreativeMedia> medias = snapMedia.getAllMedia(oAuthAccessToken, adAccountID);
+	Assertions.assertThat(medias).isNotNull();
+	Assertions.assertThat(medias).isNotEmpty();
+	Assertions.assertThat(medias.size()).isEqualTo(3);
+	Assertions.assertThat(medias.get(0).getId()).isEqualTo("7f65f9ff-63d8-41e7-991a-06b95a1ffbde");
+	Assertions.assertThat(medias.get(0).getName()).isEqualTo("Media 2");
+	Assertions.assertThat(medias.get(0).getAdAccountId()).isEqualTo(adAccountID);
+	Assertions.assertThat(medias.get(0).getType()).isEqualTo(MediaTypeEnum.VIDEO);
+	Assertions.assertThat(medias.get(0).getMediaStatus()).isEqualTo(MediaStatusTypeEnum.PENDING_UPLOAD);
+	    assertThat(sdf.format(medias.get(0).getCreatedAt())).isEqualTo("2016-08-12T20:39:57.029Z");
+	    assertThat(sdf.format(medias.get(0).getUpdatedAt())).isEqualTo("2016-08-12T20:39:57.029Z");
+	
+	Assertions.assertThat(medias.get(1).getId()).isEqualTo("a7bee653-1865-41cf-8cee-8ab85a205837");
+	Assertions.assertThat(medias.get(1).getName()).isEqualTo("Media A - Video");
+	Assertions.assertThat(medias.get(1).getFileName()).isEqualTo("sample.mov");
+	Assertions.assertThat(medias.get(1).getAdAccountId()).isEqualTo(adAccountID);
+	Assertions.assertThat(medias.get(1).getType()).isEqualTo(MediaTypeEnum.VIDEO);
+	Assertions.assertThat(medias.get(1).getMediaStatus()).isEqualTo(MediaStatusTypeEnum.READY);
+	    assertThat(sdf.format(medias.get(1).getCreatedAt())).isEqualTo("2016-08-14T06:23:37.086Z");
+	    assertThat(sdf.format(medias.get(1).getUpdatedAt())).isEqualTo("2016-08-14T06:24:28.378Z");
+	
+	Assertions.assertThat(medias.get(2).getId()).isEqualTo("ab32d7e5-1f80-4e1a-a76b-3c543d2b28e4");
+	Assertions.assertThat(medias.get(2).getName()).isEqualTo("App Icon");
+	Assertions.assertThat(medias.get(2).getFileName()).isEqualTo("Mobile Strike.png");
+	Assertions.assertThat(medias.get(2).getAdAccountId()).isEqualTo(adAccountID);
+	Assertions.assertThat(medias.get(2).getType()).isEqualTo(MediaTypeEnum.IMAGE);
+	Assertions.assertThat(medias.get(2).getMediaStatus()).isEqualTo(MediaStatusTypeEnum.READY);
+	    assertThat(sdf.format(medias.get(2).getCreatedAt())).isEqualTo("2016-08-12T17:36:59.740Z");
+	    assertThat(sdf.format(medias.get(2).getUpdatedAt())).isEqualTo("2016-08-12T17:38:01.918Z");
+    
     }// test_get_all_media_should_success()
     
     @Test
@@ -1831,6 +1849,8 @@ public class SnapMediaTest {
 		    Assertions.assertThat(media.getAdAccountId()).isEqualTo(adAccountID);
 		    Assertions.assertThat(media.getType()).isEqualTo(MediaTypeEnum.VIDEO);
 		    Assertions.assertThat(media.getMediaStatus()).isEqualTo(MediaStatusTypeEnum.READY);
+		    Assertions.assertThat(sdf.format(media.getCreatedAt())).isEqualTo("2016-08-14T06:23:37.086Z");
+		    Assertions.assertThat(sdf.format(media.getUpdatedAt())).isEqualTo("2016-08-14T06:24:28.378Z");
 		});
     }// test_get_specific_media_should_success()
 

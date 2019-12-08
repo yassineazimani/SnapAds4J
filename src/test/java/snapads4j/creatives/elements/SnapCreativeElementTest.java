@@ -3,9 +3,11 @@ package snapads4j.creatives.elements;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
@@ -57,6 +59,8 @@ public class SnapCreativeElementTest {
 
     private final String adAccountID = "8adc3db7-8148-4fbf-999c-8d2266369d74";
     
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    
     private InteractionZone interactionZone;
     
     private CreativeElement creative;
@@ -71,6 +75,7 @@ public class SnapCreativeElementTest {
 	interactionZone = initInteractionZone();
 	creative = initCreativeElement();
 	creatives = initCreativeElements();
+	sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     }// setUp()
     
     @Test
@@ -98,6 +103,8 @@ public class SnapCreativeElementTest {
 	    Assertions.assertThat(c.getWebViewProperties()).isNotNull();
 	    Assertions.assertThat(c.getWebViewProperties().toString()).isNotEmpty();
 	    Assertions.assertThat(c.getWebViewProperties().getUrl()).isEqualTo(creative.getWebViewProperties().getUrl());
+	    Assertions.assertThat(sdf.format(c.getCreatedAt())).isEqualTo("2018-11-16T03:01:52.907Z");
+	    Assertions.assertThat(sdf.format(c.getUpdatedAt())).isEqualTo("2018-11-16T03:01:52.907Z");
 	});
     }// test_create_creative_should_success()
     
@@ -269,6 +276,40 @@ public class SnapCreativeElementTest {
 	assertThatThrownBy(() -> snapCreative.createCreativeElement(oAuthAccessToken, creative))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     } // should_throw_exception_1337_create_creative()
+    
+    @Test
+    public void test_create_creatives_should_success() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
+	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapCreationCreativeElements());
+	Assertions.assertThatCode(() -> snapCreative.createCreativeElements(oAuthAccessToken, creatives))
+		.doesNotThrowAnyException();
+	List<CreativeElement> lCreatives = snapCreative.createCreativeElements(oAuthAccessToken, creatives);
+	Assertions.assertThat(lCreatives).isNotNull();
+	Assertions.assertThat(lCreatives).isNotEmpty();
+	Assertions.assertThat(lCreatives).size().isEqualTo(3);
+	for(int i = 0; i < lCreatives.size(); ++i) {
+	    Assertions.assertThat(lCreatives.get(i).getAdAccountId()).isEqualTo(creatives.get(i).getAdAccountId());
+	    Assertions.assertThat(lCreatives.get(i).getDescription()).isEqualTo(creatives.get(i).getDescription());
+	    Assertions.assertThat(lCreatives.get(i).getName()).isEqualTo(creatives.get(i).getName());
+	    Assertions.assertThat(lCreatives.get(i).getTitle()).isEqualTo(creatives.get(i).getTitle());
+	    Assertions.assertThat(lCreatives.get(i).getType()).isEqualTo(creatives.get(i).getType());
+	    Assertions.assertThat(lCreatives.get(i).getButtonProperties().getButtonOverlayMediaId()).isEqualTo(creatives.get(i).getButtonProperties().getButtonOverlayMediaId());
+	    Assertions.assertThat(lCreatives.get(i).getWebViewProperties().getUrl()).isEqualTo(creatives.get(i).getWebViewProperties().getUrl());
+	    Assertions.assertThat(lCreatives.get(i).getWebViewProperties().isAllowSnapJavascriptSdk()).isEqualTo(creatives.get(i).getWebViewProperties().isAllowSnapJavascriptSdk());
+	    Assertions.assertThat(lCreatives.get(i).getWebViewProperties().isBlockPreload()).isEqualTo(creatives.get(i).getWebViewProperties().isBlockPreload());
+	    Assertions.assertThat(lCreatives.get(i).getWebViewProperties().isUseImmersiveMode()).isEqualTo(false);
+	    Assertions.assertThat(lCreatives.get(i).getWebViewProperties().getDeepLinkUrls()).isEmpty();
+	}
+	    Assertions.assertThat(sdf.format(lCreatives.get(0).getCreatedAt())).isEqualTo("2018-11-16T03:05:23.241Z");
+	    Assertions.assertThat(sdf.format(lCreatives.get(0).getUpdatedAt())).isEqualTo("2018-11-16T03:05:23.241Z");
+	    Assertions.assertThat(sdf.format(lCreatives.get(1).getCreatedAt())).isEqualTo("2018-11-16T03:05:23.241Z");
+	    Assertions.assertThat(sdf.format(lCreatives.get(1).getUpdatedAt())).isEqualTo("2018-11-16T03:05:23.241Z");
+	    Assertions.assertThat(sdf.format(lCreatives.get(2).getCreatedAt())).isEqualTo("2018-11-16T03:05:23.242Z");
+	    Assertions.assertThat(sdf.format(lCreatives.get(2).getUpdatedAt())).isEqualTo("2018-11-16T03:05:23.242Z");
+    }// test_create_creatives_should_success()
     
     @Test
     public void test_create_creatives_should_throw_SnapOAuthAccessTokenException_1() {
@@ -471,6 +512,8 @@ public class SnapCreativeElementTest {
 	    Assertions.assertThat(zone.getAdAccountId()).isEqualTo(interactionZone.getAdAccountId());
 	    Assertions.assertThat(zone.getName()).isEqualTo(interactionZone.getName());
 	    Assertions.assertThat(zone.getHeadline()).isEqualTo(interactionZone.getHeadline());
+	    Assertions.assertThat(sdf.format(zone.getCreatedAt())).isEqualTo("2018-11-16T03:26:23.130Z");
+	    Assertions.assertThat(sdf.format(zone.getUpdatedAt())).isEqualTo("2018-11-16T03:26:23.130Z");
 	    Assertions.assertThat(zone.getCreativeElements()).isNotEmpty();
 	    Assertions.assertThat(zone.getCreativeElements()).isNotNull();
 	    Assertions.assertThat(zone.getCreativeElements()).size().isEqualTo(interactionZone.getCreativeElements().size());
@@ -691,7 +734,7 @@ public class SnapCreativeElementTest {
 	c3.setDescription("Product 3");
 	c3.setInteractionType(InteractionTypeEnum.WEB_VIEW);
 	c3.setTitle("Best title");
-	c3.setButtonProperties(buttonProperties);
+	c3.setButtonProperties(buttonProperties3);
 	c3.setWebViewProperties(builder.build());
 	c3.setAdAccountId(adAccountID);
 	results.add(c3);
