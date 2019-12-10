@@ -55,9 +55,8 @@ public interface SnapAudienceSegmentInterface {
 	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
 	    SnapResponseErrorException, SnapArgumentException;
 
-    Optional<AudienceSegment> createSamLookalikes(String oAuthAccessToken, SamLookalikes sam)
+    public Optional<AudienceSegment> createSamLookalikes(String oAuthAccessToken, SamLookalikes sam)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException;
-    
-    
+
 }// SnapAudienceSegmentInterface

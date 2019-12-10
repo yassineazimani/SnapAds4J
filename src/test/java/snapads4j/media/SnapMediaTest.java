@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
@@ -946,9 +948,7 @@ public class SnapMediaTest {
 	Mockito.when(entityUtilsWrapper.toString(httpEntity))
 		.thenReturn(SnapResponseUtils.getSnapLargeMediaUploadMetaResponses());
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
 	    Assertions.assertThat(snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks)).isPresent();
 	    Assertions.assertThat(snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks).get())
 		    .isEqualTo(largeMediaID);
@@ -974,9 +974,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
 	    Assertions.assertThat(snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isPresent();
 	    Assertions
@@ -998,9 +996,7 @@ public class SnapMediaTest {
 	ObjectMapper mapper = new ObjectMapper();
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
 	    snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks);
 	}
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-1.mp4");
@@ -1030,9 +1026,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
 	    snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp);
 	}
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-1.mp4");
@@ -1041,48 +1035,42 @@ public class SnapMediaTest {
 
     @Test
     public void test_upload_large_media_should_throw_SnapOAuthAccessTokenException_1() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
+	List<File> chunks = Stream.of(new File[] { new File("") }).collect(Collectors.toList());
 	assertThatThrownBy(() -> snapMedia.uploadLargeMedia("", mediaID, "final.mov", chunks))
 		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
     }// test_upload_large_media_should_throw_SnapOAuthAccessTokenException_1()
 
     @Test
     public void test_upload_large_media_should_throw_SnapOAuthAccessTokenException_2() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
+	List<File> chunks = Stream.of(new File[] { new File("") }).collect(Collectors.toList());
 	assertThatThrownBy(() -> snapMedia.uploadLargeMedia(null, mediaID, "final.mov", chunks))
 		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
     }// test_upload_large_media_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
     public void test_upload_large_media_should_throw_SnapArgumentException_1() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
+	List<File> chunks = Stream.of(new File[] { new File("") }).collect(Collectors.toList());
 	assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, null, "final.mov", chunks))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("Media ID is missing");
     }// test_upload_large_media_should_throw_SnapOAuthAccessTokenException_1()
 
     @Test
     public void test_upload_large_media_should_throw_SnapArgumentException_2() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
+	List<File> chunks = Stream.of(new File[] { new File("") }).collect(Collectors.toList());
 	assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, "", "final.mov", chunks))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("Media ID is missing");
     }// test_upload_large_media_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
     public void test_upload_large_media_should_throw_SnapArgumentException_3() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
+	List<File> chunks = Stream.of(new File[] { new File("") }).collect(Collectors.toList());
 	assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "", chunks))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("Media's filename is missing");
     }// test_upload_large_media_should_throw_SnapOAuthAccessTokenException_3()
 
     @Test
     public void test_upload_large_media_should_throw_SnapArgumentException_4() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
+	List<File> chunks = Stream.of(new File[] { new File("") }).collect(Collectors.toList());
 	assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, null, chunks))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("Media's filename is missing");
     }// test_upload_large_media_should_throw_SnapOAuthAccessTokenException_4()
@@ -1107,9 +1095,7 @@ public class SnapMediaTest {
 		"vidsplay-rain-falling-on-window-1-1.mp4");
 	Optional<File> optFile2 = new FileUtils().getFileFromResources("videos/Wolf-27400.mp4", "Wolf-27400.mp4");
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks))
 		    .isInstanceOf(SnapArgumentException.class)
 		    .hasMessage("The chunk's n°2 max length mustn't exceed 31.8 MB");
@@ -1128,8 +1114,7 @@ public class SnapMediaTest {
 	Optional<File> optFile = new FileUtils().getFileFromResources("videos/vidsplay-rain-falling-on-window-1-1.mp4",
 		"vidsplay-rain-falling-on-window-1-1.mp4");
 	optFile.ifPresent(chuck -> {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(chuck);
+	    List<File> chunks = Stream.of(new File[] { chuck }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
 	});
@@ -1146,8 +1131,7 @@ public class SnapMediaTest {
 	Optional<File> optFile = new FileUtils().getFileFromResources("videos/vidsplay-rain-falling-on-window-1-1.mp4",
 		"vidsplay-rain-falling-on-window-1-1.mp4");
 	optFile.ifPresent(chuck -> {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(chuck);
+	    List<File> chunks = Stream.of(new File[] { chuck }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
 	});
@@ -1164,8 +1148,7 @@ public class SnapMediaTest {
 	Optional<File> optFile = new FileUtils().getFileFromResources("videos/vidsplay-rain-falling-on-window-1-1.mp4",
 		"vidsplay-rain-falling-on-window-1-1.mp4");
 	optFile.ifPresent(chuck -> {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(chuck);
+	    List<File> chunks = Stream.of(new File[] { chuck }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
 	});
@@ -1182,8 +1165,7 @@ public class SnapMediaTest {
 	Optional<File> optFile = new FileUtils().getFileFromResources("videos/vidsplay-rain-falling-on-window-1-1.mp4",
 		"vidsplay-rain-falling-on-window-1-1.mp4");
 	optFile.ifPresent(chuck -> {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(chuck);
+	    List<File> chunks = Stream.of(new File[] { chuck }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
 	});
@@ -1200,8 +1182,7 @@ public class SnapMediaTest {
 	Optional<File> optFile = new FileUtils().getFileFromResources("videos/vidsplay-rain-falling-on-window-1-1.mp4",
 		"vidsplay-rain-falling-on-window-1-1.mp4");
 	optFile.ifPresent(chuck -> {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(chuck);
+	    List<File> chunks = Stream.of(new File[] { chuck }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
 	});
@@ -1218,8 +1199,7 @@ public class SnapMediaTest {
 	Optional<File> optFile = new FileUtils().getFileFromResources("videos/vidsplay-rain-falling-on-window-1-1.mp4",
 		"vidsplay-rain-falling-on-window-1-1.mp4");
 	optFile.ifPresent(chuck -> {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(chuck);
+	    List<File> chunks = Stream.of(new File[] { chuck }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
 	});
@@ -1236,8 +1216,7 @@ public class SnapMediaTest {
 	Optional<File> optFile = new FileUtils().getFileFromResources("videos/vidsplay-rain-falling-on-window-1-1.mp4",
 		"vidsplay-rain-falling-on-window-1-1.mp4");
 	optFile.ifPresent(chuck -> {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(chuck);
+	    List<File> chunks = Stream.of(new File[] { chuck }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
 	});
@@ -1254,8 +1233,7 @@ public class SnapMediaTest {
 	Optional<File> optFile = new FileUtils().getFileFromResources("videos/vidsplay-rain-falling-on-window-1-1.mp4",
 		"vidsplay-rain-falling-on-window-1-1.mp4");
 	optFile.ifPresent(chuck -> {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(chuck);
+	    List<File> chunks = Stream.of(new File[] { chuck }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks))
 		    .isInstanceOf(SnapResponseErrorException.class)
 		    .hasMessage("Too Many Requests / Rate limit reached");
@@ -1273,8 +1251,7 @@ public class SnapMediaTest {
 	Optional<File> optFile = new FileUtils().getFileFromResources("videos/vidsplay-rain-falling-on-window-1-1.mp4",
 		"vidsplay-rain-falling-on-window-1-1.mp4");
 	optFile.ifPresent(chuck -> {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(chuck);
+	    List<File> chunks = Stream.of(new File[] { chuck }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
 	});
@@ -1291,8 +1268,7 @@ public class SnapMediaTest {
 	Optional<File> optFile = new FileUtils().getFileFromResources("videos/vidsplay-rain-falling-on-window-1-1.mp4",
 		"vidsplay-rain-falling-on-window-1-1.mp4");
 	optFile.ifPresent(chuck -> {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(chuck);
+	    List<File> chunks = Stream.of(new File[] { chuck }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
 	});
@@ -1309,8 +1285,7 @@ public class SnapMediaTest {
 	Optional<File> optFile = new FileUtils().getFileFromResources("videos/vidsplay-rain-falling-on-window-1-1.mp4",
 		"vidsplay-rain-falling-on-window-1-1.mp4");
 	optFile.ifPresent(chuck -> {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(chuck);
+	    List<File> chunks = Stream.of(new File[] { chuck }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
 	});
@@ -1332,9 +1307,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
 	}
@@ -1357,9 +1330,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
 	}
@@ -1382,9 +1353,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
 	}
@@ -1407,9 +1376,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks =Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
 	}
@@ -1432,9 +1399,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
 	}
@@ -1457,9 +1422,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
 	}
@@ -1482,9 +1445,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
 	}
@@ -1507,9 +1468,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
 	}
@@ -1532,9 +1491,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
 	}
@@ -1557,9 +1514,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
 	}
@@ -1582,9 +1537,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
 	}
@@ -1607,9 +1560,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = new ArrayList<>();
-	    chunks.add(optFile.get());
-	    chunks.add(optFile2.get());
+	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
 	}
@@ -1660,32 +1611,24 @@ public class SnapMediaTest {
     
     @Test
     public void test_get_all_media_should_throw_SnapOAuthAccessTokenException_1() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
 	assertThatThrownBy(() -> snapMedia.getAllMedia("", adAccountID))
 		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
     }// test_get_all_media_should_throw_SnapOAuthAccessTokenException_1()
 
     @Test
     public void test_get_all_media_should_throw_SnapOAuthAccessTokenException_2() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
 	assertThatThrownBy(() -> snapMedia.getAllMedia(null, adAccountID))
 		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
     }// test_get_all_media_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
     public void test_get_all_media_should_throw_SnapArgumentException_1() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
 	assertThatThrownBy(() -> snapMedia.getAllMedia(oAuthAccessToken, null))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is missing");
     }// test_get_all_media_should_throw_SnapOAuthAccessTokenException_1()
 
     @Test
     public void test_get_all_media_should_throw_SnapArgumentException_2() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
 	assertThatThrownBy(() -> snapMedia.getAllMedia(oAuthAccessToken, ""))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is missing");
     }// test_get_all_media_should_throw_SnapOAuthAccessTokenException_2()
@@ -1856,32 +1799,24 @@ public class SnapMediaTest {
 
     @Test
     public void test_get_specific_media_should_throw_SnapOAuthAccessTokenException_1() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
 	assertThatThrownBy(() -> snapMedia.getSpecificMedia("", mediaID))
 		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
     }// test_get_specific_media_should_throw_SnapOAuthAccessTokenException_1()
 
     @Test
     public void test_get_specific_media_should_throw_SnapOAuthAccessTokenException_2() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
 	assertThatThrownBy(() -> snapMedia.getSpecificMedia(null, mediaID))
 		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
     }// test_get_specific_media_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
     public void test_get_specific_media_should_throw_SnapArgumentException_1() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
 	assertThatThrownBy(() -> snapMedia.getSpecificMedia(oAuthAccessToken, null))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is missing");
     }// test_get_specific_media_should_throw_SnapOAuthAccessTokenException_1()
 
     @Test
     public void test_get_specific_media_should_throw_SnapArgumentException_2() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
 	assertThatThrownBy(() -> snapMedia.getSpecificMedia(oAuthAccessToken, ""))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is missing");
     }// test_get_specific_media_should_throw_SnapOAuthAccessTokenException_2()
@@ -2045,32 +1980,24 @@ public class SnapMediaTest {
 
     @Test
     public void test_get_preview_media_should_throw_SnapOAuthAccessTokenException_1() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
 	assertThatThrownBy(() -> snapMedia.getPreviewOfSpecificMedia("", mediaID))
 		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
     }// test_get_preview_media_should_throw_SnapOAuthAccessTokenException_1()
 
     @Test
     public void test_get_preview_media_should_throw_SnapOAuthAccessTokenException_2() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
 	assertThatThrownBy(() -> snapMedia.getPreviewOfSpecificMedia(null, mediaID))
 		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
     }// test_get_preview_media_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
     public void test_get_preview_media_should_throw_SnapArgumentException_1() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
 	assertThatThrownBy(() -> snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, null))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is missing");
     }// test_get_preview_media_should_throw_SnapOAuthAccessTokenException_1()
 
     @Test
     public void test_get_preview_media_should_throw_SnapArgumentException_2() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
 	assertThatThrownBy(() -> snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, ""))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is missing");
     }// test_get_preview_media_should_throw_SnapOAuthAccessTokenException_2()
@@ -2234,32 +2161,24 @@ public class SnapMediaTest {
 
     @Test
     public void test_get_thumbnail_media_should_throw_SnapOAuthAccessTokenException_1() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
 	assertThatThrownBy(() -> snapMedia.getThumbnailOfSpecificMedia("", mediaID))
 		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
     }// test_get_thumbnail_media_should_throw_SnapOAuthAccessTokenException_1()
 
     @Test
     public void test_get_thumbnail_media_should_throw_SnapOAuthAccessTokenException_2() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
 	assertThatThrownBy(() -> snapMedia.getThumbnailOfSpecificMedia(null, mediaID))
 		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
     }// test_get_thumbnail_media_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
     public void test_get_thumbnail_media_should_throw_SnapArgumentException_1() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
 	assertThatThrownBy(() -> snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, null))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is missing");
     }// test_get_thumbnail_media_should_throw_SnapOAuthAccessTokenException_1()
 
     @Test
     public void test_get_thumbnail_media_should_throw_SnapArgumentException_2() {
-	List<File> chunks = new ArrayList<>();
-	chunks.add(new File(""));
 	assertThatThrownBy(() -> snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, ""))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is missing");
     }// test_get_thumbnail_media_should_throw_SnapOAuthAccessTokenException_2()
