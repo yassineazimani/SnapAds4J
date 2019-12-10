@@ -23,11 +23,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
+import snapads4j.model.adsquads.AdSquad;
 import snapads4j.model.audience.size.AudienceSize;
 
 public interface SnapAudienceSizeInterface {
 
-    public Optional<AudienceSize> getAudienceSizeByAdAccountId(String oAuthAccessToken, String adAccountID) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    public Optional<AudienceSize> getAudienceSizeBySquadSpec(String oAuthAccessToken, String adAccountID, AdSquad adSquad) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
     JsonProcessingException, UnsupportedEncodingException;
     
     public Optional<AudienceSize> getAudienceSizeByAdSquadId(String oAuthAccessToken, String adSquadID)throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,

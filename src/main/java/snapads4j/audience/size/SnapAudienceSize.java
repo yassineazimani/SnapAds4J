@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
@@ -39,6 +40,7 @@ import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
+import snapads4j.model.adsquads.AdSquad;
 import snapads4j.model.audience.size.AudienceSize;
 import snapads4j.model.audience.size.SnapHttpResponseAudienceSize;
 import snapads4j.utils.EntityUtilsWrapper;
@@ -75,7 +77,7 @@ public class SnapAudienceSize implements SnapAudienceSizeInterface{
     }// SnapAudienceSize()
 
     @Override
-    public Optional<AudienceSize> getAudienceSizeByAdAccountId(String oAuthAccessToken, String adAccountID)
+    public Optional<AudienceSize> getAudienceSizeBySquadSpec(String oAuthAccessToken, String adAccountID, AdSquad adSquad)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
@@ -84,7 +86,33 @@ public class SnapAudienceSize implements SnapAudienceSizeInterface{
 	if (StringUtils.isEmpty(adAccountID)) {
 	    throw new SnapArgumentException("Ad Account ID is required");
 	}
+	if(adSquad == null) {
+	    throw new SnapArgumentException("AdSquad instance is required");
+	}
 	Optional<AudienceSize> result = Optional.empty();
+	final String url = this.endpointSizeByAdAccount.replace("{ID}", adAccountID);
+	HttpPost request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, adSquad);
+	try (CloseableHttpResponse response = httpClient.execute(request)) {
+	    int statusCode = response.getStatusLine().getStatusCode();
+	    if (statusCode >= 300) {
+		SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+		throw ex;
+	    }
+	    HttpEntity entity = response.getEntity();
+	    if (entity != null) {
+		String body = entityUtilsWrapper.toString(entity);
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		mapper.registerModule(new Jdk8Module());
+		SnapHttpResponseAudienceSize responseFromJson = mapper.readValue(body,
+			SnapHttpResponseAudienceSize.class);
+		if (responseFromJson != null) {
+		    result = responseFromJson.getAudienceSize();
+		}
+	    }
+	} catch (IOException e) {
+	    LOGGER.error("Impossible to get audience size, ad_account_id = {}", adAccountID, e);
+	}
 	return result;
     }// getAudienceSizeByAdAccountId()
 

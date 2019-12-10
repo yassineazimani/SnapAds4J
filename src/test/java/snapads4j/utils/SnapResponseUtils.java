@@ -1176,6 +1176,17 @@ public class SnapResponseUtils {
       	"}";
   }// getSnapSamLookalikesCreated()
   
+  public static String getSnapAudienceSizeBySquadSpec() {
+     return "{\r\n" + 
+     	"  \"request_status\": \"SUCCESS\",\r\n" + 
+     	"  \"request_id\": \"5848847200ff049b9c18549b500001737e616473617069736300016275696c642d39323764616530622d312d32372d3300010124\",\r\n" + 
+     	"  \"audience_size\": {\r\n" + 
+     	"    \"audience_size_minimum\": 15400000,\r\n" + 
+     	"    \"audience_size_maximum\": 21025000\r\n" + 
+     	"  }\r\n" + 
+     	"}"; 
+  }// getSnapAudienceSizeBySquadSpec()
+  
   public static String getSnapAudienceSizeByAdSquadID() {
       return "{\r\n" + 
       	"  \"request_status\": \"SUCCESS\",\r\n" + 

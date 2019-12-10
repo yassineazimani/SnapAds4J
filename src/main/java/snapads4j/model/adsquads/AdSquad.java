@@ -37,7 +37,7 @@ import snapads4j.enums.StatusEnum;
 import snapads4j.model.targeting.Targeting;
 
 /**
- * AdAccount
+ * AdSquad
  *
  * @author Yassine
  */
