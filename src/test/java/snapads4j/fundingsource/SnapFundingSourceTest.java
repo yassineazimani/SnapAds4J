@@ -329,6 +329,7 @@ public class SnapFundingSourceTest {
           assertThat(f.getNameCreditCard()).isEqualTo("Hooli Test Ad Account Funding Source");
           assertThat(f.getOrganizationId()).isEqualTo("40d6719b-da09-410b-9185-0cc9c0dfed1d");
           assertThat(f.getCurrency()).isEqualTo(CurrencyEnum.USD);
+          assertThat(f.toString()).isNotEmpty();
           assertThat(sdf.format(f.getCreatedAt())).isEqualTo("2016-08-11T22:03:54.337Z");
           assertThat(sdf.format(f.getUpdatedAt())).isEqualTo("2016-08-11T22:03:54.337Z");
         });

@@ -1786,6 +1786,7 @@ public class SnapMediaTest {
 	Assertions.assertThat(snapMedia.getSpecificMedia(oAuthAccessToken, mediaID)).isNotNull();
 	snapMedia.getSpecificMedia(oAuthAccessToken, mediaID)
 		.ifPresent(media -> {
+		    Assertions.assertThat(media.toString()).isNotEmpty();
 		    Assertions.assertThat(media.getId()).isEqualTo("a7bee653-1865-41cf-8cee-8ab85a205837");
 		    Assertions.assertThat(media.getName()).isEqualTo("Media A - Video");
 		    Assertions.assertThat(media.getFileName()).isEqualTo("sample.mov");

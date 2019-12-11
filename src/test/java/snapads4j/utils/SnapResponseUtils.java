@@ -1197,5 +1197,30 @@ public class SnapResponseUtils {
       	"    \"audience_size_maximum\": 19925000\r\n" + 
       	"  }\r\n" + 
       	"}";
-  }
+  }// getSnapAudienceSizeByAdSquadID()
+  
+  public static String getSnapBidEstimateByAdSquadID() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57affee300ff0d91229fabb9710001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010110\",\r\n" + 
+      	"  \"bid_estimate\": {\r\n" + 
+      	"    \"ad_squad_id\":\"c5995202-bfbc-45a0-9702-dd6841af52fe\",\r\n" + 
+      	"    \"optimization_goal\": \"IMPRESSIONS\",\r\n" + 
+      	"    \"bid_estimate_minimum\":8000000,\r\n" + 
+      	"    \"bid_estimate_maximum\":9000000\r\n" + 
+      	"  }\r\n" + 
+      	"}";
+  }// getSnapBidEstimateByAdSquadID()
+  
+  public static String getSnapBidEstimateBySquadSpec() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"success\",\r\n" + 
+      	"  \"request_id\": \"57affee300ff0d91229fabb9710001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010110\",\r\n" + 
+      	"  \"bid_estimate\": {\r\n" + 
+      	"    \"optimization_goal\": \"IMPRESSIONS\",\r\n" + 
+      	"    \"bid_estimate_minimum\":8000000,\r\n" + 
+      	"    \"bid_estimate_maximum\":9000000\r\n" + 
+      	"  }\r\n" + 
+      	"}";
+  }// getSnapBidEstimateBySquadSpec()
 } // SnapResponseUtils

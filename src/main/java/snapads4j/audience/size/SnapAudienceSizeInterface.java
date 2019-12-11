@@ -28,7 +28,7 @@ import snapads4j.model.audience.size.AudienceSize;
 
 public interface SnapAudienceSizeInterface {
 
-    public Optional<AudienceSize> getAudienceSizeBySquadSpec(String oAuthAccessToken, String adAccountID, AdSquad adSquad) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    public Optional<AudienceSize> getAudienceSizeByTargetingSpec(String oAuthAccessToken, String adAccountID, AdSquad adSquad) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
     JsonProcessingException, UnsupportedEncodingException;
     
     public Optional<AudienceSize> getAudienceSizeByAdSquadId(String oAuthAccessToken, String adSquadID)throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,

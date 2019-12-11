@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package snapads4j.audience.size;
+package snapads4j.bid;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -39,16 +39,12 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import snapads4j.enums.AdSquadTypeEnum;
-import snapads4j.enums.ContentTypeEnum;
 import snapads4j.enums.OptimizationGoalEnum;
-import snapads4j.enums.PlacementEnum;
-import snapads4j.enums.StatusEnum;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
-import snapads4j.model.adsquads.AdSquad;
-import snapads4j.model.audience.size.AudienceSize;
+import snapads4j.model.bid.BidEstimate;
+import snapads4j.model.bid.TargetingSpecBidEstimate;
 import snapads4j.model.demographics.Demographics;
 import snapads4j.model.demographics.DemographicsBuilder;
 import snapads4j.model.geolocation.GeoLocation;
@@ -58,11 +54,11 @@ import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.SnapResponseUtils;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SnapAudienceSizeTest {
+public class SnapBidEstimateTest {
 
     @Spy
-    private SnapAudienceSize snapAudienceSize;
-
+    private SnapBidEstimate snapBidEstimate;
+    
     @Mock
     private CloseableHttpClient httpClient;
 
@@ -82,358 +78,379 @@ public class SnapAudienceSizeTest {
 
     private final String adAccountId = "8adc3db7-8148-4fbf-999c-8d2266369d74";
 
-    private final String adSquadId = "c7b98952-4c6e-4f95-8cd1-cf0f17a77988";
+    private final String adSquadId = "c5995202-bfbc-45a0-9702-dd6841af52fe";
     
-    private AdSquad adSquad;
+    private TargetingSpecBidEstimate targetingSpecBidEstimate;
 
     @Before
     public void setUp() {
 	MockitoAnnotations.initMocks(this);
-	snapAudienceSize.setHttpClient(httpClient);
-	snapAudienceSize.setEntityUtilsWrapper(entityUtilsWrapper);
-	this.adSquad = initAdSquad();
+	snapBidEstimate.setHttpClient(httpClient);
+	snapBidEstimate.setEntityUtilsWrapper(entityUtilsWrapper);
+	this.targetingSpecBidEstimate = initTargetingSpec();
     } // setUp()
-
+    
     @Test
-    public void test_get_audience_size_by_squad_id_should_success() throws IOException, InterruptedException,
+    public void test_get_bid_estimate_by_squad_id_should_success() throws IOException, InterruptedException,
 	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
 	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
 	Mockito.when(entityUtilsWrapper.toString(httpEntity))
-		.thenReturn(SnapResponseUtils.getSnapAudienceSizeByAdSquadID());
-	Assertions.assertThatCode(() -> snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, adSquadId))
+		.thenReturn(SnapResponseUtils.getSnapBidEstimateByAdSquadID());
+	Assertions.assertThatCode(() -> snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, adSquadId))
 		.doesNotThrowAnyException();
-	Optional<AudienceSize> optSize = snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, adSquadId);
+	Optional<BidEstimate> optSize = snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, adSquadId);
 	Assertions.assertThat(optSize.isPresent()).isTrue();
 	optSize.ifPresent(s -> {
 	    Assertions.assertThat(s.getAdSquadId()).isNotEmpty();
 	    Assertions.assertThat(s.getAdSquadId()).isEqualTo(this.adSquadId);
-	    Assertions.assertThat(s.getAudienceSizeMinimum()).isEqualTo(16450000);
-	    Assertions.assertThat(s.getAudienceSizeMaximum()).isEqualTo(19925000);
+	    Assertions.assertThat(s.getOptimizationGoal()).isEqualTo(OptimizationGoalEnum.IMPRESSIONS);
+	    Assertions.assertThat(s.getBidEstimateMinimum()).isEqualTo(8000000);
+	    Assertions.assertThat(s.getBidEstimateMaximum()).isEqualTo(9000000);
 	});
-    }// test_get_audience_size_by_squad_id_should_success()
+    }// test_get_bid_estimate_by_squad_id_should_success()
 
     @Test
-    public void test_get_audience_size_by_squad_id_should_throw_SnapOAuthAccessTokenException_1() {
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(null, this.adSquadId))
+    public void test_get_bid_estimate_by_squad_id_should_throw_SnapOAuthAccessTokenException_1() {
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(null, this.adSquadId))
 		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
-    } // test_get_audience_size_by_squad_id_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_get_bid_estimate_by_squad_id_should_throw_SnapOAuthAccessTokenException_1()
 
     @Test
-    public void test_get_audience_size_by_squad_id_should_throw_SnapOAuthAccessTokenException_2() {
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId("", this.adSquadId))
+    public void test_get_bid_estimate_by_squad_id_should_throw_SnapOAuthAccessTokenException_2() {
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId("", this.adSquadId))
 		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
-    } // test_get_audience_size_by_squad_id_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_get_bid_estimate_by_squad_id_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
-    public void test_get_audience_size_by_squad_id_should_throw_IOException() throws ClientProtocolException,
+    public void test_get_bid_estimate_by_squad_id_should_throw_IOException() throws ClientProtocolException,
 	    IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-	snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, this.adSquadId);
-    }// test_get_audience_size_by_squad_id_should_throw_IOException()
+	snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, this.adSquadId);
+    }// test_get_bid_estimate_by_squad_id_should_throw_IOException()
 
     @Test
-    public void test_get_audience_size_by_squad_id_should_throw_throw_SnapArgumentException_when_id_is_null() {
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, null))
+    public void test_get_bid_estimate_by_squad_id_should_throw_throw_SnapArgumentException_when_id_is_null() {
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, null))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("AdSquad ID is required");
-    } // test_get_audience_size_by_squad_id_should_throw_throw_SnapArgumentException_when_adAccountId_is_null()
+    } // test_get_bid_estimate_by_squad_id_should_throw_throw_SnapArgumentException_when_adAccountId_is_null()
 
     @Test
-    public void test_get_audience_size_by_squad_id_should_throw_throw_SnapArgumentException_when_id_is_empty() {
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, ""))
+    public void test_get_bid_estimate_by_squad_id_should_throw_throw_SnapArgumentException_when_id_is_empty() {
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, ""))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("AdSquad ID is required");
-    } // test_get_audience_size_by_squad_id_should_throw_throw_SnapArgumentException_when_adAccountId_is_empty()
+    } // test_get_bid_estimate_by_squad_id_should_throw_throw_SnapArgumentException_when_adAccountId_is_empty()
 
     @Test
-    public void should_throw_exception_400_get_audience_size_by_squad_id() throws IOException, InterruptedException,
+    public void should_throw_exception_400_get_bid_estimate_by_squad_id() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(400);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, this.adSquadId))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, this.adSquadId))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
-    } // should_throw_exception_400_get_audience_size_by_squad_id()
+    } // should_throw_exception_400_get_bid_estimate_by_squad_id()
 
     @Test
-    public void should_throw_exception_401_get_audience_size_by_squad_id() throws IOException, InterruptedException,
+    public void should_throw_exception_401_get_bid_estimate_by_squad_id() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(401);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, this.adSquadId))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, this.adSquadId))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
-    } // should_throw_exception_401_get_audience_size_by_squad_id()
+    } // should_throw_exception_401_get_bid_estimate_by_squad_id()
 
     @Test
-    public void should_throw_exception_403_get_audience_size_by_squad_id() throws IOException, InterruptedException,
+    public void should_throw_exception_403_get_bid_estimate_by_squad_id() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(403);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, this.adSquadId))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, this.adSquadId))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
-    } // should_throw_exception_403_get_audience_size_by_squad_id()
+    } // should_throw_exception_403_get_bid_estimate_by_squad_id()
 
     @Test
-    public void should_throw_exception_404_get_audience_size_by_squad_id() throws IOException, InterruptedException,
+    public void should_throw_exception_404_get_bid_estimate_by_squad_id() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(404);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, this.adSquadId))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, this.adSquadId))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
-    } // should_throw_exception_404_get_audience_size_by_squad_id()
+    } // should_throw_exception_404_get_bid_estimate_by_squad_id()
 
     @Test
-    public void should_throw_exception_405_get_audience_size_by_squad_id() throws IOException, InterruptedException,
+    public void should_throw_exception_405_get_bid_estimate_by_squad_id() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(405);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, this.adSquadId))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, this.adSquadId))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
-    } // should_throw_exception_405_get_audience_size_by_squad_id()
+    } // should_throw_exception_405_get_bid_estimate_by_squad_id()
 
     @Test
-    public void should_throw_exception_406_get_audience_size_by_squad_id() throws IOException, InterruptedException,
+    public void should_throw_exception_406_get_bid_estimate_by_squad_id() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(406);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, this.adSquadId))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, this.adSquadId))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
-    } // should_throw_exception_406_get_audience_size_by_squad_id()
+    } // should_throw_exception_406_get_bid_estimate_by_squad_id()
 
     @Test
-    public void should_throw_exception_410_get_audience_size_by_squad_id() throws IOException, InterruptedException,
+    public void should_throw_exception_410_get_bid_estimate_by_squad_id() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(410);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, this.adSquadId))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, this.adSquadId))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
-    } // should_throw_exception_410_get_audience_size_by_squad_id()
+    } // should_throw_exception_410_get_bid_estimate_by_squad_id()
 
     @Test
-    public void should_throw_exception_418_get_audience_size_by_squad_id() throws IOException, InterruptedException,
+    public void should_throw_exception_418_get_bid_estimate_by_squad_id() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(418);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, this.adSquadId))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, this.adSquadId))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
-    } // should_throw_exception_418_get_audience_size_by_squad_id()
+    } // should_throw_exception_418_get_bid_estimate_by_squad_id()
 
     @Test
-    public void should_throw_exception_429_get_audience_size_by_squad_id() throws IOException, InterruptedException,
+    public void should_throw_exception_429_get_bid_estimate_by_squad_id() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(429);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, this.adSquadId))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, this.adSquadId))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
-    } // should_throw_exception_429_get_audience_size_by_squad_id()
+    } // should_throw_exception_429_get_bid_estimate_by_squad_id()
 
     @Test
-    public void should_throw_exception_500_get_audience_size_by_squad_id() throws IOException, InterruptedException,
+    public void should_throw_exception_500_get_bid_estimate_by_squad_id() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(500);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, this.adSquadId))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, this.adSquadId))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
-    } // should_throw_exception_500_get_audience_size_by_squad_id()
+    } // should_throw_exception_500_get_bid_estimate_by_squad_id()
 
     @Test
-    public void should_throw_exception_503_get_audience_size_by_squad_id() throws IOException, InterruptedException,
+    public void should_throw_exception_503_get_bid_estimate_by_squad_id() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(503);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, this.adSquadId))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, this.adSquadId))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
-    } // should_throw_exception_503_get_audience_size_by_squad_id()
+    } // should_throw_exception_503_get_bid_estimate_by_squad_id()
 
     @Test
-    public void should_throw_exception_1337_get_audience_size_by_squad_id() throws IOException, InterruptedException,
+    public void should_throw_exception_1337_get_bid_estimate_by_squad_id() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, this.adSquadId))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, this.adSquadId))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
-    } // should_throw_exception_1337_get_audience_size_by_squad_id()
+    } // should_throw_exception_1337_get_bid_estimate_by_squad_id()
     
     @Test
-    public void test_get_audience_size_by_squad_spec_should_success() throws IOException, InterruptedException,
+    public void test_get_bid_estimate_by_squad_spec_should_success() throws IOException, InterruptedException,
 	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
 	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
 	Mockito.when(entityUtilsWrapper.toString(httpEntity))
-		.thenReturn(SnapResponseUtils.getSnapAudienceSizeBySquadSpec());
-	Optional<AudienceSize> optSize = snapAudienceSize.getAudienceSizeByTargetingSpec(oAuthAccessToken, adAccountId, adSquad);
+		.thenReturn(SnapResponseUtils.getSnapBidEstimateBySquadSpec());
+	Optional<BidEstimate> optSize = snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, adAccountId, targetingSpecBidEstimate);
 	Assertions.assertThat(optSize.isPresent()).isTrue();
 	optSize.ifPresent(s -> {
-	    Assertions.assertThat(s.getAdSquadId()).isNull();
-	    Assertions.assertThat(s.getAudienceSizeMinimum()).isEqualTo(15400000);
-	    Assertions.assertThat(s.getAudienceSizeMaximum()).isEqualTo(21025000);
+	    Assertions.assertThat(s.getOptimizationGoal()).isEqualTo(OptimizationGoalEnum.IMPRESSIONS);
+	    Assertions.assertThat(s.getBidEstimateMinimum()).isEqualTo(8000000);
+	    Assertions.assertThat(s.getBidEstimateMaximum()).isEqualTo(9000000);
 	});
-    }// test_get_audience_size_by_squad_spec_should_success()
+    }// test_get_bid_estimate_by_squad_spec_should_success()
     
     @Test
-    public void test_get_audience_size_by_squad_spec_should_throw_SnapOAuthAccessTokenException_1() {
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec(null, this.adAccountId, adSquad))
+    public void test_get_bid_estimate_by_squad_spec_should_throw_SnapOAuthAccessTokenException_1() {
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(null, this.adAccountId, targetingSpecBidEstimate))
 		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
-    } // test_get_audience_size_by_squad_spec_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_get_bid_estimate_by_squad_spec_should_throw_SnapOAuthAccessTokenException_1()
 
     @Test
-    public void test_get_audience_size_by_squad_spec_should_throw_SnapOAuthAccessTokenException_2() {
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec("", this.adAccountId, adSquad))
+    public void test_get_bid_estimate_by_squad_spec_should_throw_SnapOAuthAccessTokenException_2() {
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec("", this.adAccountId, targetingSpecBidEstimate))
 		.isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken must to be given");
-    } // test_get_audience_size_by_squad_spec_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_get_bid_estimate_by_squad_spec_should_throw_SnapOAuthAccessTokenException_2()
     
     @Test
-    public void test_get_audience_size_by_squad_spec_should_throw_SnapArgumentException_when_adsquad_is_null() {
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec(oAuthAccessToken, this.adAccountId, null))
-		.isInstanceOf(SnapArgumentException.class).hasMessage("AdSquad instance is required");
-    } // test_get_audience_size_by_squad_spec_should_throw_SnapArgumentException_when_adsquad_is_null()
+    public void test_get_bid_estimate_by_squad_spec_should_throw_SnapArgumentException_when_ad_account_id_is_null() {
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, null, targetingSpecBidEstimate))
+		.isInstanceOf(SnapArgumentException.class).hasMessage("Ad Account ID is required");
+    } // test_get_bid_estimate_by_squad_spec_should_throw_SnapArgumentException_when_ad_account_id_is_null()
     
     @Test
-    public void test_get_audience_size_by_squad_spec_should_throw_IOException() throws ClientProtocolException,
+    public void test_get_bid_estimate_by_squad_spec_should_throw_SnapArgumentException_when_targetingSpecBidEstimate_is_null() {
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, this.adAccountId, null))
+		.isInstanceOf(SnapArgumentException.class).hasMessage("TargetingSpecBidEstimate instance is required");
+    } // test_get_bid_estimate_by_squad_spec_should_throw_SnapArgumentException_when_targetingSpecBidEstimate_is_null()
+    
+    @Test
+    public void test_get_bid_estimate_by_squad_spec_should_throw_SnapArgumentException_when_optimization_goal_is_null() {
+	targetingSpecBidEstimate.setOptimizationGoal(null);
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate))
+		.isInstanceOf(SnapArgumentException.class).hasMessage("Optimization goal is required");
+    } // test_get_bid_estimate_by_squad_spec_should_throw_SnapArgumentException_when_targetingSpecBidEstimate_is_null()
+    
+    @Test
+    public void test_get_bid_estimate_by_squad_spec_should_throw_SnapArgumentException_when_targeting_is_null() {
+	targetingSpecBidEstimate.setTargeting(null);
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate))
+		.isInstanceOf(SnapArgumentException.class).hasMessage("Targeting is required");
+    } // test_get_bid_estimate_by_squad_spec_should_throw_SnapArgumentException_when_targetingSpecBidEstimate_is_null()
+    
+    @Test
+    public void test_get_bid_estimate_by_squad_spec_should_throw_IOException() throws ClientProtocolException,
 	    IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
-	snapAudienceSize.getAudienceSizeByTargetingSpec(this.oAuthAccessToken, this.adAccountId, adSquad);
-    }// test_get_audience_size_by_squad_spec_should_throw_IOException()
+	snapBidEstimate.getBidEstimateBySquadSpec(this.oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate);
+    }// test_get_bid_estimate_by_squad_spec_should_throw_IOException()
     
     @Test
-    public void should_throw_exception_400_get_audience_size_by_squad_spec() throws IOException, InterruptedException,
+    public void should_throw_exception_400_get_bid_estimate_by_squad_spec() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(400);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec(oAuthAccessToken, this.adAccountId, adSquad))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
-    } // should_throw_exception_400_get_audience_size_by_squad_spec()
+    } // should_throw_exception_400_get_bid_estimate_by_squad_spec()
 
     @Test
-    public void should_throw_exception_401_get_audience_size_by_squad_spec() throws IOException, InterruptedException,
+    public void should_throw_exception_401_get_bid_estimate_by_squad_spec() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(401);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec(oAuthAccessToken, this.adAccountId, adSquad))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
-    } // should_throw_exception_401_get_audience_size_by_squad_spec()
+    } // should_throw_exception_401_get_bid_estimate_by_squad_spec()
 
     @Test
-    public void should_throw_exception_403_get_audience_size_by_squad_spec() throws IOException, InterruptedException,
+    public void should_throw_exception_403_get_bid_estimate_by_squad_spec() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(403);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec(oAuthAccessToken, this.adAccountId, adSquad))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
-    } // should_throw_exception_403_get_audience_size_by_squad_spec()
+    } // should_throw_exception_403_get_bid_estimate_by_squad_spec()
 
     @Test
-    public void should_throw_exception_404_get_audience_size_by_squad_spec() throws IOException, InterruptedException,
+    public void should_throw_exception_404_get_bid_estimate_by_squad_spec() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(404);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec(oAuthAccessToken, this.adAccountId, adSquad))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
-    } // should_throw_exception_404_get_audience_size_by_squad_spec()
+    } // should_throw_exception_404_get_bid_estimate_by_squad_spec()
 
     @Test
-    public void should_throw_exception_405_get_audience_size_by_squad_spec() throws IOException, InterruptedException,
+    public void should_throw_exception_405_get_bid_estimate_by_squad_spec() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(405);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec(oAuthAccessToken, this.adAccountId, adSquad))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
-    } // should_throw_exception_405_get_audience_size_by_squad_spec()
+    } // should_throw_exception_405_get_bid_estimate_by_squad_spec()
 
     @Test
-    public void should_throw_exception_406_get_audience_size_by_squad_spec() throws IOException, InterruptedException,
+    public void should_throw_exception_406_get_bid_estimate_by_squad_spec() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(406);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec(oAuthAccessToken, this.adAccountId, adSquad))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
-    } // should_throw_exception_406_get_audience_size_by_squad_spec()
+    } // should_throw_exception_406_get_bid_estimate_by_squad_spec()
 
     @Test
-    public void should_throw_exception_410_get_audience_size_by_squad_spec() throws IOException, InterruptedException,
+    public void should_throw_exception_410_get_bid_estimate_by_squad_spec() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(410);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec(oAuthAccessToken, this.adAccountId, adSquad))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
-    } // should_throw_exception_410_get_audience_size_by_squad_spec()
+    } // should_throw_exception_410_get_bid_estimate_by_squad_spec()
 
     @Test
-    public void should_throw_exception_418_get_audience_size_by_squad_spec() throws IOException, InterruptedException,
+    public void should_throw_exception_418_get_bid_estimate_by_squad_spec() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(418);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec(oAuthAccessToken, this.adAccountId, adSquad))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
-    } // should_throw_exception_418_get_audience_size_by_squad_spec()
+    } // should_throw_exception_418_get_bid_estimate_by_squad_spec()
 
     @Test
-    public void should_throw_exception_429_get_audience_size_by_squad_spec() throws IOException, InterruptedException,
+    public void should_throw_exception_429_get_bid_estimate_by_squad_spec() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(429);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec(oAuthAccessToken, this.adAccountId, adSquad))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
-    } // should_throw_exception_429_get_audience_size_by_squad_spec()
+    } // should_throw_exception_429_get_bid_estimate_by_squad_spec()
 
     @Test
-    public void should_throw_exception_500_get_audience_size_by_squad_spec() throws IOException, InterruptedException,
+    public void should_throw_exception_500_get_bid_estimate_by_squad_spec() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(500);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec(oAuthAccessToken, this.adAccountId, adSquad))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
-    } // should_throw_exception_500_get_audience_size_by_squad_spec()
+    } // should_throw_exception_500_get_bid_estimate_by_squad_spec()
 
     @Test
-    public void should_throw_exception_503_get_audience_size_by_squad_spec() throws IOException, InterruptedException,
+    public void should_throw_exception_503_get_bid_estimate_by_squad_spec() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(503);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec(oAuthAccessToken, this.adAccountId, adSquad))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
-    } // should_throw_exception_503_get_audience_size_by_squad_spec()
+    } // should_throw_exception_503_get_bid_estimate_by_squad_spec()
 
     @Test
-    public void should_throw_exception_1337_get_audience_size_by_squad_spec() throws IOException, InterruptedException,
+    public void should_throw_exception_1337_get_bid_estimate_by_squad_spec() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
-	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec(oAuthAccessToken, this.adAccountId, adSquad))
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
-    } // should_throw_exception_1337_get_audience_size_by_squad_spec()
+    } // should_throw_exception_1337_get_bid_estimate_by_squad_spec()
     
-    private AdSquad initAdSquad() {
+    private TargetingSpecBidEstimate initTargetingSpec() {
 	TargetingBuilder targetBuilder = new TargetingBuilder();
 	List<GeoLocation> geos = new ArrayList<>();
 	geos.add(new GeolocationBuilder().setCountryCode("us").build());
@@ -445,18 +462,9 @@ public class SnapAudienceSizeTest {
 	ageGroups.add("21-24");
 	demographics.add(new DemographicsBuilder().setAgeGroups(ageGroups).build());
 	targetBuilder.setDemographics(demographics);
-	AdSquad adsquad = new AdSquad();
-	adsquad.setOptimizationGoal(OptimizationGoalEnum.APP_INSTALLS);
-	adsquad.setPlacement(PlacementEnum.CONTENT);
-	adsquad.setType(AdSquadTypeEnum.SNAP_ADS);
-	adsquad.setBidMicro(6000000.);
-	adsquad.setAutoBid(false);
-	adsquad.setDailyBudgetMicro(50000000.);
-	adsquad.setName("App Install, United States, All Genders, 13-24");
-	adsquad.setStatus(StatusEnum.ACTIVE);
-	adsquad.setIncludedContentTypes(ContentTypeEnum.SCIENCE_TECHNOLOGY);
-	adsquad.setTargeting(targetBuilder.build());
-	return adsquad;
+	TargetingSpecBidEstimate targetingSpecBidEstimate = new TargetingSpecBidEstimate();
+	targetingSpecBidEstimate.setOptimizationGoal(OptimizationGoalEnum.APP_INSTALLS);
+	targetingSpecBidEstimate.setTargeting(targetBuilder.build());
+	return targetingSpecBidEstimate;
     }// initAdSquad()
-
-}// snapAudienceSizeTest
+}// SnapBidEstimateTest

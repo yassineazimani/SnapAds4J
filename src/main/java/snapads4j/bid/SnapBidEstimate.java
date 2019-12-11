@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package snapads4j.audience.size;
+package snapads4j.bid;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -34,23 +34,21 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
-import lombok.Getter;
 import lombok.Setter;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
-import snapads4j.model.adsquads.AdSquad;
-import snapads4j.model.audience.size.AudienceSize;
-import snapads4j.model.audience.size.SnapHttpResponseAudienceSize;
+import snapads4j.model.bid.BidEstimate;
+import snapads4j.model.bid.SnapHttpResponseBidEstimate;
+import snapads4j.model.bid.TargetingSpecBidEstimate;
 import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.FileProperties;
 import snapads4j.utils.HttpUtils;
 
-@Getter
 @Setter
-public class SnapAudienceSize implements SnapAudienceSizeInterface{
-    
+public class SnapBidEstimate implements SnapBidEstimateInterface {
+
     private FileProperties fp;
 
     private String apiUrl;
@@ -63,21 +61,21 @@ public class SnapAudienceSize implements SnapAudienceSizeInterface{
 
     private EntityUtilsWrapper entityUtilsWrapper;
     
-    private static final Logger LOGGER = LogManager.getLogger(SnapAudienceSize.class);
+    private static final Logger LOGGER = LogManager.getLogger(SnapBidEstimate.class);
     
-    public SnapAudienceSize() {
+    public SnapBidEstimate() {
 	this.fp = new FileProperties();
 	this.apiUrl = (String) fp.getProperties().get("api.url");
 	this.endpointSizeByAdAccount = this.apiUrl
-		+ (String) fp.getProperties().get("api.url.audience.size.by.adaccount");
+		+ (String) fp.getProperties().get("api.url.bid.estimate.by.adaccount");
 	this.endpointSizeByAdSquad = this.apiUrl +
-		(String) fp.getProperties().get("api.url.audience.size.by.adsquad");
+		(String) fp.getProperties().get("api.url.bid.estimate.by.adsquad");
 	this.httpClient = HttpClients.createDefault();
 	this.entityUtilsWrapper = new EntityUtilsWrapper();
-    }// SnapAudienceSize()
-
+    }// SnapBidEstimate()
+    
     @Override
-    public Optional<AudienceSize> getAudienceSizeByTargetingSpec(String oAuthAccessToken, String adAccountID, AdSquad adSquad)
+    public Optional<BidEstimate> getBidEstimateBySquadSpec(String oAuthAccessToken, String adAccountID, TargetingSpecBidEstimate targetingSpecBidEstimate)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
@@ -86,12 +84,10 @@ public class SnapAudienceSize implements SnapAudienceSizeInterface{
 	if (StringUtils.isEmpty(adAccountID)) {
 	    throw new SnapArgumentException("Ad Account ID is required");
 	}
-	if(adSquad == null) {
-	    throw new SnapArgumentException("AdSquad instance is required");
-	}
-	Optional<AudienceSize> result = Optional.empty();
+	this.checkTargetingSpecBidEstimate(targetingSpecBidEstimate);
+	Optional<BidEstimate> result = Optional.empty();
 	final String url = this.endpointSizeByAdAccount.replace("{ID}", adAccountID);
-	HttpPost request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, adSquad);
+	HttpPost request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, targetingSpecBidEstimate);
 	try (CloseableHttpResponse response = httpClient.execute(request)) {
 	    int statusCode = response.getStatusLine().getStatusCode();
 	    if (statusCode >= 300) {
@@ -104,20 +100,20 @@ public class SnapAudienceSize implements SnapAudienceSizeInterface{
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		mapper.registerModule(new Jdk8Module());
-		SnapHttpResponseAudienceSize responseFromJson = mapper.readValue(body,
-			SnapHttpResponseAudienceSize.class);
+		SnapHttpResponseBidEstimate responseFromJson = mapper.readValue(body,
+			SnapHttpResponseBidEstimate.class);
 		if (responseFromJson != null) {
-		    result = responseFromJson.getAudienceSize();
+		    result = responseFromJson.getBidEstimate();
 		}
 	    }
 	} catch (IOException e) {
-	    LOGGER.error("Impossible to get audience size, ad_account_id = {}", adAccountID, e);
+	    LOGGER.error("Impossible to get bid estimate, ad_account_id = {}", adAccountID, e);
 	}
 	return result;
-    }// getAudienceSizeByAdAccountId()
+    }// getBidEstimateBySquadSpec()
 
     @Override
-    public Optional<AudienceSize> getAudienceSizeByAdSquadId(String oAuthAccessToken, String adSquadID)
+    public Optional<BidEstimate> getBidEstimateByAdSquadId(String oAuthAccessToken, String adSquadID)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
@@ -126,7 +122,7 @@ public class SnapAudienceSize implements SnapAudienceSizeInterface{
 	if (StringUtils.isEmpty(adSquadID)) {
 	    throw new SnapArgumentException("AdSquad ID is required");
 	}
-	Optional<AudienceSize> result = Optional.empty();
+	Optional<BidEstimate> result = Optional.empty();
 	final String url = this.endpointSizeByAdSquad.replace("{ID}", adSquadID);
 	HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
 	try (CloseableHttpResponse response = httpClient.execute(request)) {
@@ -141,16 +137,34 @@ public class SnapAudienceSize implements SnapAudienceSizeInterface{
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		mapper.registerModule(new Jdk8Module());
-		SnapHttpResponseAudienceSize responseFromJson = mapper.readValue(body,
-			SnapHttpResponseAudienceSize.class);
+		SnapHttpResponseBidEstimate responseFromJson = mapper.readValue(body,
+			SnapHttpResponseBidEstimate.class);
 		if (responseFromJson != null) {
-		    result = responseFromJson.getAudienceSize();
+		    result = responseFromJson.getBidEstimate();
 		}
 	    }
 	} catch (IOException e) {
-	    LOGGER.error("Impossible to get audience size, ad_squad_id = {}", adSquadID, e);
+	    LOGGER.error("Impossible to get bid estimate, ad_squad_id = {}", adSquadID, e);
 	}
 	return result;
-    }// getAudienceSizeByAdSquadId()
+    }// getBidEstimateByAdSquadId()
+    
+    private void checkTargetingSpecBidEstimate(TargetingSpecBidEstimate targetingSpecBidEstimate) throws SnapArgumentException {
+	if(targetingSpecBidEstimate == null) {
+	    throw new SnapArgumentException("TargetingSpecBidEstimate instance is required");
+	}
+	StringBuilder sb = new StringBuilder();
+	if(targetingSpecBidEstimate.getOptimizationGoal() == null) {
+	    sb.append("Optimization goal is required,");
+	}
+	if(targetingSpecBidEstimate.getTargeting() == null) {
+	    sb.append("Targeting is required,");
+	}
+	String finalErrors = sb.toString();
+	if (!StringUtils.isEmpty(finalErrors)) {
+	    finalErrors = finalErrors.substring(0, finalErrors.length() - 1);
+	    throw new SnapArgumentException(finalErrors);
+	}
+    }// checkTargetingSpecBidEstimate()
 
-}// SnapAudienceSize
+}// SnapBidEstimate

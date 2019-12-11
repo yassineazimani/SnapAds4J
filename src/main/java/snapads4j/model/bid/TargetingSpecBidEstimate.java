@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package snapads4j.model.audience.size;
+package snapads4j.model.bid;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
+import snapads4j.enums.OptimizationGoalEnum;
+import snapads4j.model.targeting.Targeting;
 
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class AudienceSize {
+public class TargetingSpecBidEstimate {
 
-    @JsonProperty("ad_squad_id")
-    private String adSquadId;
+    /** Optimization Goal */
+    @JsonProperty("optimization_goal")
+    private OptimizationGoalEnum optimizationGoal;
     
-    @JsonProperty("audience_size_minimum")
-    private long audienceSizeMinimum;
+    /** Targeting spec */
+    private Targeting targeting;
     
-    @JsonProperty("audience_size_maximum")
-    private long audienceSizeMaximum;
-    
-}// AudienceSize
+}// TargetingSpecBidEstimate()

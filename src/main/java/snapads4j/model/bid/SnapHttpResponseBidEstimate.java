@@ -13,26 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package snapads4j.model.audience.size;
+package snapads4j.model.bid;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.Optional;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import snapads4j.model.SnapHttpResponse;
 
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class AudienceSize {
+@NoArgsConstructor
+public class SnapHttpResponseBidEstimate extends SnapHttpResponse{
 
-    @JsonProperty("ad_squad_id")
-    private String adSquadId;
+    @JsonProperty("bid_estimate")
+    private Optional<BidEstimate> bidEstimate;
     
-    @JsonProperty("audience_size_minimum")
-    private long audienceSizeMinimum;
-    
-    @JsonProperty("audience_size_maximum")
-    private long audienceSizeMaximum;
-    
-}// AudienceSize
+}// SnapHttpResponseBidEstimate

@@ -24,7 +24,7 @@ URL Marketing API SnapChat : https://developers.snapchat.com/ads/
 * SAM - Lookalikes
 * Audience Insights (in progress)
 * Audience Size 
-* Bid Estimate (in progress)
+* Bid Estimate
 * Measurement (in progress)
 * Audit Logs (in progress)
 * Snap Pixel (in progress)

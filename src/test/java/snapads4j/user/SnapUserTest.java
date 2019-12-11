@@ -89,6 +89,7 @@ public class SnapUserTest {
 	Optional<AuthenticatedUser> optUser = snapUser.aboutMe(oAuthAccessToken);
 	assertThat(optUser.isPresent()).isTrue();
 	optUser.ifPresent(user -> {
+	    assertThat(user.toString()).isNotEmpty();
 	    assertThat(user.getDisplayName()).isEqualTo("Honey Badger");
 	    assertThat(user.getEmail()).isEqualTo("honey.badger@hooli.com");
 	    assertThat(user.getId()).isEqualTo("2f5dd7e6-fcd1-4324-8455-1ea4d96caaaa");

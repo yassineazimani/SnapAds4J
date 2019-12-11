@@ -140,7 +140,7 @@ public class AdSquad {
 
   /** Status of the reach and frequency booking */
   @JsonProperty("reach_and_frequency_status")
-  private ReachFrequencyStatusEnum reachAndFrequency_status;
+  private ReachFrequencyStatusEnum reachAndFrequencyStatus;
 
   /** Type of delivery */
   @JsonProperty("delivery_constraint")
