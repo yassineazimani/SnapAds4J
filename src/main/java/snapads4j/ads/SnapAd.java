@@ -107,7 +107,6 @@ public class SnapAd implements SnapAdInterface {
 	final String url = this.endpointCreateAd.replace("{ad_squad_id}", ad.getAdSquadId());
 	SnapHttpRequestAd reqBody = new SnapHttpRequestAd();
 	reqBody.addAd(ad);
-	LOGGER.info("Body create ad => {}", reqBody);
 	HttpPost request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, reqBody);
 	try (CloseableHttpResponse response = httpClient.execute(request)) {
 	    int statusCode = response.getStatusLine().getStatusCode();
@@ -142,7 +141,6 @@ public class SnapAd implements SnapAdInterface {
 	final String url = this.endpointUpdateAd.replace("{ad_squad_id}", ad.getAdSquadId());
 	SnapHttpRequestAd reqBody = new SnapHttpRequestAd();
 	reqBody.addAd(ad);
-	LOGGER.info("Body update ad squad => {}", reqBody);
 	HttpPut request = HttpUtils.preparePutRequestObject(url, oAuthAccessToken, reqBody);
 	try (CloseableHttpResponse response = httpClient.execute(request)) {
 	    int statusCode = response.getStatusLine().getStatusCode();

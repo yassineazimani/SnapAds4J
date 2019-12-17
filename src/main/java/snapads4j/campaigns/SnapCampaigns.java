@@ -116,7 +116,6 @@ public class SnapCampaigns implements SnapCampaignsInterface {
 	final String url = this.endpointCreationCampaign.replace("{ad_account_id}", campaign.getAdAccountId());
 	SnapHttpRequestCampaign reqBody = new SnapHttpRequestCampaign();
 	reqBody.addCampaign(campaign);
-	LOGGER.info("Body create campaign => {}", reqBody);
 	HttpPost request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, reqBody);
 	try (CloseableHttpResponse response = httpClient.execute(request)) {
 	    int statusCode = response.getStatusLine().getStatusCode();
@@ -152,7 +151,6 @@ public class SnapCampaigns implements SnapCampaignsInterface {
 	final String url = this.endpointUpdateCampaign.replace("{ad_account_id}", campaign.getAdAccountId());
 	SnapHttpRequestCampaign reqBody = new SnapHttpRequestCampaign();
 	reqBody.addCampaign(campaign);
-	LOGGER.info("Body update campaign => {}", reqBody);
 	HttpPut request = HttpUtils.preparePutRequestObject(url, oAuthAccessToken, reqBody);
 	try (CloseableHttpResponse response = httpClient.execute(request)) {
 	    int statusCode = response.getStatusLine().getStatusCode();

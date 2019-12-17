@@ -1223,4 +1223,175 @@ public class SnapResponseUtils {
       	"  }\r\n" + 
       	"}";
   }// getSnapBidEstimateBySquadSpec()
+  
+  public static String getChangeLogsForCampaign() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5d2f4a2e00ff0b2d2797e383a20001737e616473617069736300016275696c642d32613361333938642d312d3237332d3100010126\",\r\n" + 
+      	"    \"paging\": {},\r\n" + 
+      	"    \"changelogs\": [\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"changelog\": {\r\n" + 
+      	"                \"id\": \"f9fd14cf-1bb0-4592-beeb-9d7e358e746b\",\r\n" + 
+      	"                \"updated_at\": \"2019-07-17T16:17:30.194Z\",\r\n" + 
+      	"                \"created_at\": \"2019-07-17T16:17:30.194Z\",\r\n" + 
+      	"                \"name\": \"Badger Campaign - July 2019\",\r\n" + 
+      	"                \"action\": \"UPDATED\",\r\n" + 
+      	"                \"user_id\": \"a71cfcae-895d-4314-9460-e2ffd2515dd0\",\r\n" + 
+      	"                \"email\": \"honey.badger@hooli.com\",\r\n" + 
+      	"                \"event_at\": \"2019-07-17T16:17:29.991Z\",\r\n" + 
+      	"                \"app_id\": \"87947032-5fbd-46a7-ba60-073ca8efefbb\",\r\n" + 
+      	"                \"app_name\": \"Honey badger App\",\r\n" + 
+      	"                \"entity_id\": \"dcc3f407-7049-47aa-8300-6cce946ed04e\",\r\n" + 
+      	"                \"entity_type\": \"CAMPAIGN\",\r\n" + 
+      	"                \"update_value_records\": {\r\n" + 
+      	"                    \"status\": {\r\n" + 
+      	"                        \"before_value\": \"\\\"ACTIVE\\\"\",\r\n" + 
+      	"                        \"after_value\": \"\\\"PAUSED\\\"\"\r\n" + 
+      	"                    }\r\n" + 
+      	"                }\r\n" + 
+      	"            }\r\n" + 
+      	"        },\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"changelog\": {\r\n" + 
+      	"                \"id\": \"3cd457c6-077d-4d4b-9647-73a97045e709\",\r\n" + 
+      	"                \"updated_at\": \"2019-07-17T15:54:59.955Z\",\r\n" + 
+      	"                \"created_at\": \"2019-07-17T15:54:59.955Z\",\r\n" + 
+      	"                \"name\": \"Badger Campaign - July 2019\",\r\n" + 
+      	"                \"action\": \"UPDATED\",\r\n" + 
+      	"                \"user_id\": \"a71cfcae-895d-4314-9460-e2ffd2515dd0\",\r\n" + 
+      	"                \"email\": \"honey.badger@hooli.com\",\r\n" + 
+      	"                \"event_at\": \"2019-07-17T15:54:59.755Z\",\r\n" + 
+      	"                \"app_id\": \"87947032-5fbd-46a7-ba60-073ca8efefbb\",\r\n" + 
+      	"                \"app_name\": \"Honey badger App\",\r\n" + 
+      	"                \"entity_id\": \"dcc3f407-7049-47aa-8300-6cce946ed04e\",\r\n" + 
+      	"                \"entity_type\": \"CAMPAIGN\",\r\n" + 
+      	"                \"update_value_records\": {\r\n" + 
+      	"                    \"end_time\": {\r\n" + 
+      	"                        \"after_value\": \"1563580491000\"\r\n" + 
+      	"                    }\r\n" + 
+      	"                }\r\n" + 
+      	"            }\r\n" + 
+      	"        }\r\n" + 
+      	"    ]\r\n" + 
+      	"}";
+  }// getChangeLogsForCampaign()
+  
+  public static String getChangeLogsForAdSquad() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5d2f495400ff05e47e72eb0f710001737e616473617069736300016275696c642d32613361333938642d312d3237332d310001011a\",\r\n" + 
+      	"    \"paging\": {},\r\n" + 
+      	"    \"changelogs\": [\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"changelog\": {\r\n" + 
+      	"                \"id\": \"ae2161fb-737a-4f3c-9a3d-e6c83d9c9e30\",\r\n" + 
+      	"                \"updated_at\": \"2019-07-17T15:58:40.150Z\",\r\n" + 
+      	"                \"created_at\": \"2019-07-17T15:58:40.150Z\",\r\n" + 
+      	"                \"name\": \"Badger Ad Squad - July 2019\",\r\n" + 
+      	"                \"action\": \"UPDATED\",\r\n" + 
+      	"                \"user_id\": \"a71cfcae-895d-4314-9460-e2ffd2515dd0\",\r\n" + 
+      	"                \"email\": \"honey.badger@hooli.com\",\r\n" + 
+      	"                \"event_at\": \"2019-07-17T15:58:39.872Z\",\r\n" + 
+      	"                \"app_id\": \"e9bdc78d-81fa-4470-8f6b-2a3d6f0487b3\",\r\n" + 
+      	"                \"app_name\": \"Honey badger App\",\r\n" + 
+      	"                \"entity_id\": \"c478150d-b177-4ecb-938d-f5157375f937\",\r\n" + 
+      	"                \"entity_type\": \"AD_SQUAD\",\r\n" + 
+      	"                \"update_value_records\": {\r\n" + 
+      	"                    \"bid_micro\": {\r\n" + 
+      	"                        \"before_value\": \"868402\",\r\n" + 
+      	"                        \"after_value\": \"876174\"\r\n" + 
+      	"                    }\r\n" + 
+      	"                }\r\n" + 
+      	"            }\r\n" + 
+      	"        }\r\n" + 
+      	"    ]\r\n" + 
+      	"}";
+  }// getChangeLogsForAdSquad()
+  
+  public static String getChangeLogsForAd() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5d39e22900ff08cd2599670abb0001737e616473617069736300016275696c642d30633939333234362d312d3237352d300001014c\",\r\n" + 
+      	"    \"paging\": {},\r\n" + 
+      	"    \"changelogs\": [\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"changelog\": {\r\n" + 
+      	"                \"id\": \"36f4b88b-1c24-41f5-af86-24983795edd7\",\r\n" + 
+      	"                \"updated_at\": \"2019-07-25T17:08:51.279Z\",\r\n" + 
+      	"                \"created_at\": \"2019-07-25T17:08:51.279Z\",\r\n" + 
+      	"                \"name\": \"Badger Holiday Ad 2019\",\r\n" + 
+      	"                \"action\": \"UPDATED\",\r\n" + 
+      	"                \"user_id\": \"a71cfcae-895d-4314-9460-e2ffd2515dd0\",\r\n" + 
+      	"                \"email\": \"honey.badger@hooli.com\",\r\n" + 
+      	"                \"event_at\": \"2019-07-25T17:08:51.030Z\",\r\n" + 
+      	"                \"app_id\": \"87947032-5fbd-46a7-ba60-073ca8efefbb\",\r\n" + 
+      	"                \"app_name\": \"Honey badger App\",\r\n" + 
+      	"                \"entity_id\": \"cd88b368-35a3-46f4-b37f-2f1a72db2692\",\r\n" + 
+      	"                \"entity_type\": \"AD\",\r\n" + 
+      	"                \"update_value_records\": {\r\n" + 
+      	"                    \"status\": {\r\n" + 
+      	"                        \"before_value\": \"\\\"ACTIVE\\\"\",\r\n" + 
+      	"                        \"after_value\": \"\\\"PAUSED\\\"\"\r\n" + 
+      	"                    }\r\n" + 
+      	"                }\r\n" + 
+      	"            }\r\n" + 
+      	"        }\r\n" + 
+      	"    ]\r\n" + 
+      	"}";
+  }// getChangeLogsForAd()
+  
+  public static String getChangeLogsForCreative() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5d39de6000ff01c2268bd5c37b0001737e616473617069736300016275696c642d30633939333234362d312d3237352d300001010a\",\r\n" + 
+      	"    \"paging\": {},\r\n" + 
+      	"    \"changelogs\": [\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"changelog\": {\r\n" + 
+      	"                \"id\": \"a94cb9ed-0171-402a-aee7-ffecae0ce7bc\",\r\n" + 
+      	"                \"updated_at\": \"2019-07-17T16:27:00.717Z\",\r\n" + 
+      	"                \"created_at\": \"2019-07-17T16:27:00.717Z\",\r\n" + 
+      	"                \"name\": \"Badger Rush\",\r\n" + 
+      	"                \"action\": \"UPDATED\",\r\n" + 
+      	"                \"user_id\": \"a71cfcae-895d-4314-9460-e2ffd2515dd0\",\r\n" + 
+      	"                \"email\": \"honey.badger@hooli.com\",\r\n" + 
+      	"                \"event_at\": \"2019-07-17T16:27:00.566Z\",\r\n" + 
+      	"                \"app_id\": \"e9bdc78d-81fa-4470-8f6b-2a3d6f0487b3\",\r\n" + 
+      	"                \"app_name\": \"Honey Badger App\",\r\n" + 
+      	"                \"entity_id\": \"6475383b-cb70-4353-93b2-b227054169ae\",\r\n" + 
+      	"                \"entity_type\": \"CREATIVE\",\r\n" + 
+      	"                \"update_value_records\": {\r\n" + 
+      	"                    \"call_to_action\": {\r\n" + 
+      	"                        \"before_value\": \"\\\"MORE\\\"\",\r\n" + 
+      	"                        \"after_value\": \"\\\"SIGN UP\\\"\"\r\n" + 
+      	"                    }\r\n" + 
+      	"                }\r\n" + 
+      	"            }\r\n" + 
+      	"        },\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"changelog\": {\r\n" + 
+      	"                \"id\": \"72b18e3a-598a-4e29-a288-980613de3714\",\r\n" + 
+      	"                \"updated_at\": \"2019-07-17T16:07:00.985Z\",\r\n" + 
+      	"                \"created_at\": \"2019-07-17T16:07:00.985Z\",\r\n" + 
+      	"                \"name\": \"Badger Rush\",\r\n" + 
+      	"                \"action\": \"CREATED\",\r\n" + 
+      	"                \"user_id\": \"a71cfcae-895d-4314-9460-e2ffd2515dd0\",\r\n" + 
+      	"                \"email\": \"honey.badger@hooli.com\",\r\n" + 
+      	"                \"event_at\": \"2019-07-17T16:07:00.629Z\",\r\n" + 
+      	"                \"app_id\": \"e9bdc78d-81fa-4470-8f6b-2a3d6f0487b3\",\r\n" + 
+      	"                \"app_name\": \"Honey Badger App\",\r\n" + 
+      	"                \"entity_id\": \"6475383b-cb70-4353-93b2-b227054169ae\",\r\n" + 
+      	"                \"entity_type\": \"CREATIVE\"\r\n" + 
+      	"            }\r\n" + 
+      	"        }\r\n" + 
+      	"    ]\r\n" + 
+      	"}";
+  }// getChangeLogsForCreative()
 } // SnapResponseUtils
