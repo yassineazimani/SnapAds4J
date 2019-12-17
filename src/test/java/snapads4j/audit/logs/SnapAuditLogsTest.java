@@ -16,6 +16,7 @@
 package snapads4j.audit.logs;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -24,9 +25,11 @@ import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -134,6 +137,175 @@ public class SnapAuditLogsTest {
     }// test_fetch_change_logs_for_campaign_should_success()
     
     @Test
+    public void test_fetch_change_logs_for_campaign_should_throw_SnapOAuthAccessTokenException_when_token_is_null () {
+	Assertions.assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCampaign(null, campaignId))
+		.hasMessage("The OAuthAccessToken must to be given")
+		.isInstanceOf(SnapOAuthAccessTokenException.class);
+    }// test_fetch_change_logs_for_campaign_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
+    
+    @Test
+    public void test_fetch_change_logs_for_campaign_should_throw_SnapOAuthAccessTokenException_when_token_is_empty () {
+	Assertions.assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCampaign("", campaignId))
+		.hasMessage("The OAuthAccessToken must to be given")
+		.isInstanceOf(SnapOAuthAccessTokenException.class);
+    }// test_fetch_change_logs_for_campaign_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
+    
+    @Test
+    public void test_fetch_change_logs_for_campaign_should_throw_SnapArgumentException_when_campaign_id_is_null () {
+	Assertions.assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCampaign(oAuthAccessToken, null))
+	.hasMessage("Campaign ID is required")
+	.isInstanceOf(SnapArgumentException.class);
+    }// test_fetch_change_logs_for_campaign_should_throw_SnapArgumentException_when_campaign_id_is_null()
+    
+    @Test
+    public void test_fetch_change_logs_for_campaign_should_throw_SnapArgumentException_when_campaign_id_is_empty () {
+	Assertions.assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCampaign(oAuthAccessToken, ""))
+	.hasMessage("Campaign ID is required")
+	.isInstanceOf(SnapArgumentException.class);
+    }// test_fetch_change_logs_for_campaign_should_throw_SnapArgumentException_when_campaign_id_is_empty()
+    
+    @Test
+    public void test_fetch_change_logs_for_campaign_should_throw_IOException() throws ClientProtocolException, IOException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
+	snapAuditLogs.fetchChangeLogsForCampaign(oAuthAccessToken, campaignId);
+    }// test_fetch_change_logs_for_campaign_should_throw_IOException()
+    
+    @Test
+public void should_throw_exception_400_fetch_change_logs_for_campaign() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(400);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCampaign(oAuthAccessToken, campaignId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
+} // should_throw_exception_401_fetch_change_logs_for_campaign()
+	
+	@Test
+public void should_throw_exception_401_fetch_change_logs_for_campaign() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(401);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCampaign(oAuthAccessToken, campaignId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
+} // should_throw_exception_401_fetch_change_logs_for_campaign()
+
+@Test
+public void should_throw_exception_403_fetch_change_logs_for_campaign() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(403);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCampaign(oAuthAccessToken, campaignId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
+} // should_throw_exception_403_fetch_change_logs_for_campaign()
+
+@Test
+public void should_throw_exception_404_fetch_change_logs_for_campaign() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(404);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCampaign(oAuthAccessToken, campaignId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
+} // should_throw_exception_404_fetch_change_logs_for_campaign()
+
+@Test
+public void should_throw_exception_405_fetch_change_logs_for_campaign() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(405);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCampaign(oAuthAccessToken, campaignId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
+} // should_throw_exception_405_fetch_change_logs_for_campaign()
+
+@Test
+public void should_throw_exception_406_fetch_change_logs_for_campaign() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(406);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCampaign(oAuthAccessToken, campaignId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
+} // should_throw_exception_406_fetch_change_logs_for_campaign()
+
+@Test
+public void should_throw_exception_410_fetch_change_logs_for_campaign() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(410);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCampaign(oAuthAccessToken, campaignId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
+} // should_throw_exception_410_fetch_change_logs_for_campaign()
+
+@Test
+public void should_throw_exception_418_fetch_change_logs_for_campaign() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(418);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCampaign(oAuthAccessToken, campaignId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
+} // should_throw_exception_418_fetch_change_logs_for_campaign()
+
+@Test
+public void should_throw_exception_429_fetch_change_logs_for_campaign() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(429);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCampaign(oAuthAccessToken, campaignId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
+} // should_throw_exception_429_fetch_change_logs_for_campaign()
+
+@Test
+public void should_throw_exception_500_fetch_change_logs_for_campaign() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(500);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCampaign(oAuthAccessToken, campaignId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
+} // should_throw_exception_500_fetch_change_logs_for_campaign()
+
+@Test
+public void should_throw_exception_503_fetch_change_logs_for_campaign() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(503);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCampaign(oAuthAccessToken, campaignId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
+} // should_throw_exception_503_fetch_change_logs_for_campaign()
+
+@Test
+public void should_throw_exception_1337_fetch_change_logs_for_campaign() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCampaign(oAuthAccessToken, campaignId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
+} // should_throw_exception_1337_fetch_change_logs_for_campaign()
+    
+    @Test
     public void test_fetch_change_logs_for_ad_squad_should_success() throws SnapResponseErrorException,
 	    SnapOAuthAccessTokenException, SnapArgumentException, IOException, InterruptedException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
@@ -168,6 +340,175 @@ public class SnapAuditLogsTest {
     }// test_fetch_change_logs_for_ad_squad_should_success()
     
     @Test
+    public void test_fetch_change_logs_for_ad_squad_should_throw_SnapOAuthAccessTokenException_when_token_is_null () {
+	Assertions.assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAdSquad(null, adSquadId))
+		.hasMessage("The OAuthAccessToken must to be given")
+		.isInstanceOf(SnapOAuthAccessTokenException.class);
+    }// test_fetch_change_logs_for_ad_squad_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
+    
+    @Test
+    public void test_fetch_change_logs_for_ad_squad_should_throw_SnapOAuthAccessTokenException_when_token_is_empty () {
+	Assertions.assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAdSquad("", adSquadId))
+		.hasMessage("The OAuthAccessToken must to be given")
+		.isInstanceOf(SnapOAuthAccessTokenException.class);
+    }// test_fetch_change_logs_for_ad_squad_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
+    
+    @Test
+    public void test_fetch_change_logs_for_ad_squad_should_throw_SnapArgumentException_when_ad_squad_id_is_null () {
+	Assertions.assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAdSquad(oAuthAccessToken, null))
+	.hasMessage("AdSquad ID is required")
+	.isInstanceOf(SnapArgumentException.class);
+    }// test_fetch_change_logs_for_ad_squad_should_throw_SnapArgumentException_when_ad_squad_id_is_null()
+    
+    @Test
+    public void test_fetch_change_logs_for_ad_squad_should_throw_SnapArgumentException_when_ad_squad_id_is_empty () {
+	Assertions.assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAdSquad(oAuthAccessToken, ""))
+	.hasMessage("AdSquad ID is required")
+	.isInstanceOf(SnapArgumentException.class);
+    }// test_fetch_change_logs_for_ad_squad_should_throw_SnapArgumentException_when_ad_squad_id_is_empty()
+    
+    @Test
+    public void test_fetch_change_logs_for_ad_squad_should_throw_IOException() throws ClientProtocolException, IOException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
+	snapAuditLogs.fetchChangeLogsForAdSquad(oAuthAccessToken, adSquadId);
+    }// test_fetch_change_logs_for_ad_squad_should_throw_IOException()
+    
+    @Test
+public void should_throw_exception_400_fetch_change_logs_for_ad_squad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(400);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAdSquad(oAuthAccessToken, adSquadId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
+} // should_throw_exception_401_fetch_change_logs_for_ad_squad()
+	
+	@Test
+public void should_throw_exception_401_fetch_change_logs_for_ad_squad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(401);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAdSquad(oAuthAccessToken, adSquadId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
+} // should_throw_exception_401_fetch_change_logs_for_ad_squad()
+
+@Test
+public void should_throw_exception_403_fetch_change_logs_for_ad_squad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(403);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAdSquad(oAuthAccessToken, adSquadId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
+} // should_throw_exception_403_fetch_change_logs_for_ad_squad()
+
+@Test
+public void should_throw_exception_404_fetch_change_logs_for_ad_squad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(404);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAdSquad(oAuthAccessToken, adSquadId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
+} // should_throw_exception_404_fetch_change_logs_for_ad_squad()
+
+@Test
+public void should_throw_exception_405_fetch_change_logs_for_ad_squad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(405);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAdSquad(oAuthAccessToken, adSquadId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
+} // should_throw_exception_405_fetch_change_logs_for_ad_squad()
+
+@Test
+public void should_throw_exception_406_fetch_change_logs_for_ad_squad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(406);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAdSquad(oAuthAccessToken, adSquadId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
+} // should_throw_exception_406_fetch_change_logs_for_ad_squad()
+
+@Test
+public void should_throw_exception_410_fetch_change_logs_for_ad_squad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(410);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAdSquad(oAuthAccessToken, adSquadId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
+} // should_throw_exception_410_fetch_change_logs_for_ad_squad()
+
+@Test
+public void should_throw_exception_418_fetch_change_logs_for_ad_squad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(418);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAdSquad(oAuthAccessToken, adSquadId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
+} // should_throw_exception_418_fetch_change_logs_for_ad_squad()
+
+@Test
+public void should_throw_exception_429_fetch_change_logs_for_ad_squad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(429);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAdSquad(oAuthAccessToken, adSquadId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
+} // should_throw_exception_429_fetch_change_logs_for_ad_squad()
+
+@Test
+public void should_throw_exception_500_fetch_change_logs_for_ad_squad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(500);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAdSquad(oAuthAccessToken, adSquadId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
+} // should_throw_exception_500_fetch_change_logs_for_ad_squad()
+
+@Test
+public void should_throw_exception_503_fetch_change_logs_for_ad_squad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(503);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAdSquad(oAuthAccessToken, adSquadId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
+} // should_throw_exception_503_fetch_change_logs_for_ad_squad()
+
+@Test
+public void should_throw_exception_1337_fetch_change_logs_for_ad_squad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAdSquad(oAuthAccessToken, adSquadId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
+} // should_throw_exception_1337_fetch_change_logs_for_ad_squad()
+    
+    @Test
     public void test_fetch_change_logs_for_ad_should_success() throws SnapResponseErrorException,
 	    SnapOAuthAccessTokenException, SnapArgumentException, IOException, InterruptedException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
@@ -200,6 +541,175 @@ public class SnapAuditLogsTest {
 	assertThat(logs.get(0).getUpdateValueRecords().get("status").get("before_value")).isEqualTo("\"ACTIVE\"");
 	assertThat(logs.get(0).getUpdateValueRecords().get("status").get("after_value")).isEqualTo("\"PAUSED\"");
     }// test_fetch_change_logs_for_ad_should_success()
+    
+    @Test
+    public void test_fetch_change_logs_for_ad_should_throw_SnapOAuthAccessTokenException_when_token_is_null () {
+	Assertions.assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAd(null, adId))
+		.hasMessage("The OAuthAccessToken must to be given")
+		.isInstanceOf(SnapOAuthAccessTokenException.class);
+    }// test_fetch_change_logs_for_ad_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
+    
+    @Test
+    public void test_fetch_change_logs_for_ad_should_throw_SnapOAuthAccessTokenException_when_token_is_empty () {
+	Assertions.assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAd("", adId))
+		.hasMessage("The OAuthAccessToken must to be given")
+		.isInstanceOf(SnapOAuthAccessTokenException.class);
+    }// test_fetch_change_logs_for_ad_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
+    
+    @Test
+    public void test_fetch_change_logs_for_ad_should_throw_SnapArgumentException_when_ad_id_is_null () {
+	Assertions.assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAd(oAuthAccessToken, null))
+	.hasMessage("Ad ID is required")
+	.isInstanceOf(SnapArgumentException.class);
+    }// test_fetch_change_logs_for_ad_should_throw_SnapArgumentException_when_ad_id_is_null()
+    
+    @Test
+    public void test_fetch_change_logs_for_ad_should_throw_SnapArgumentException_when_ad_id_is_empty () {
+	Assertions.assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAd(oAuthAccessToken, ""))
+	.hasMessage("Ad ID is required")
+	.isInstanceOf(SnapArgumentException.class);
+    }// test_fetch_change_logs_for_ad_should_throw_SnapArgumentException_when_ad_id_is_empty()
+    
+    @Test
+    public void test_fetch_change_logs_for_ad_should_throw_IOException() throws ClientProtocolException, IOException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
+	snapAuditLogs.fetchChangeLogsForAd(oAuthAccessToken, adId);
+    }// test_fetch_change_logs_for_ad_should_throw_IOException()
+    
+    @Test
+public void should_throw_exception_400_fetch_change_logs_for_ad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(400);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAd(oAuthAccessToken, adId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
+} // should_throw_exception_401_fetch_change_logs_for_ad()
+	
+	@Test
+public void should_throw_exception_401_fetch_change_logs_for_ad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(401);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAd(oAuthAccessToken, adId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
+} // should_throw_exception_401_fetch_change_logs_for_ad()
+
+@Test
+public void should_throw_exception_403_fetch_change_logs_for_ad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(403);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAd(oAuthAccessToken, adId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
+} // should_throw_exception_403_fetch_change_logs_for_ad()
+
+@Test
+public void should_throw_exception_404_fetch_change_logs_for_ad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(404);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAd(oAuthAccessToken, adId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
+} // should_throw_exception_404_fetch_change_logs_for_ad()
+
+@Test
+public void should_throw_exception_405_fetch_change_logs_for_ad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(405);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAd(oAuthAccessToken, adId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
+} // should_throw_exception_405_fetch_change_logs_for_ad()
+
+@Test
+public void should_throw_exception_406_fetch_change_logs_for_ad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(406);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAd(oAuthAccessToken, adId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
+} // should_throw_exception_406_fetch_change_logs_for_ad()
+
+@Test
+public void should_throw_exception_410_fetch_change_logs_for_ad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(410);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAd(oAuthAccessToken, adId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
+} // should_throw_exception_410_fetch_change_logs_for_ad()
+
+@Test
+public void should_throw_exception_418_fetch_change_logs_for_ad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(418);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAd(oAuthAccessToken, adId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
+} // should_throw_exception_418_fetch_change_logs_for_ad()
+
+@Test
+public void should_throw_exception_429_fetch_change_logs_for_ad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(429);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAd(oAuthAccessToken, adId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
+} // should_throw_exception_429_fetch_change_logs_for_ad()
+
+@Test
+public void should_throw_exception_500_fetch_change_logs_for_ad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(500);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAd(oAuthAccessToken, adId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
+} // should_throw_exception_500_fetch_change_logs_for_ad()
+
+@Test
+public void should_throw_exception_503_fetch_change_logs_for_ad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(503);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAd(oAuthAccessToken, adId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
+} // should_throw_exception_503_fetch_change_logs_for_ad()
+
+@Test
+public void should_throw_exception_1337_fetch_change_logs_for_ad() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForAd(oAuthAccessToken, adId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
+} // should_throw_exception_1337_fetch_change_logs_for_ad()
     
     @Test
     public void test_fetch_change_logs_for_creative_should_success() throws SnapResponseErrorException,
@@ -248,5 +758,174 @@ public class SnapAuditLogsTest {
 	assertThat(sdf.format(logs.get(1).getEventAt())).isEqualTo("2019-07-17T16:07:00.629Z");
 	assertThat(logs.get(1).getUpdateValueRecords()).isNull();
     }// test_fetch_change_logs_for_creative_should_success()
+    
+    @Test
+    public void test_fetch_change_logs_for_creative_should_throw_SnapOAuthAccessTokenException_when_token_is_null () {
+	Assertions.assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCreative(null, creativeId))
+		.hasMessage("The OAuthAccessToken must to be given")
+		.isInstanceOf(SnapOAuthAccessTokenException.class);
+    }// test_fetch_change_logs_for_creative_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
+    
+    @Test
+    public void test_fetch_change_logs_for_creative_should_throw_SnapOAuthAccessTokenException_when_token_is_empty () {
+	Assertions.assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCreative("", creativeId))
+		.hasMessage("The OAuthAccessToken must to be given")
+		.isInstanceOf(SnapOAuthAccessTokenException.class);
+    }// test_fetch_change_logs_for_creative_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
+    
+    @Test
+    public void test_fetch_change_logs_for_creative_should_throw_SnapArgumentException_when_creative_id_is_null () {
+	Assertions.assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCreative(oAuthAccessToken, null))
+	.hasMessage("Creative ID is required")
+	.isInstanceOf(SnapArgumentException.class);
+    }// test_fetch_change_logs_for_creative_should_throw_SnapArgumentException_when_creative_id_is_null()
+    
+    @Test
+    public void test_fetch_change_logs_for_creative_should_throw_SnapArgumentException_when_creative_id_is_empty () {
+	Assertions.assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCreative(oAuthAccessToken, ""))
+	.hasMessage("Creative ID is required")
+	.isInstanceOf(SnapArgumentException.class);
+    }// test_fetch_change_logs_for_creative_should_throw_SnapArgumentException_when_creative_id_is_empty()
+    
+    @Test
+    public void test_fetch_change_logs_for_creative_should_throw_IOException() throws ClientProtocolException, IOException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
+	snapAuditLogs.fetchChangeLogsForCreative(oAuthAccessToken, creativeId);
+    }// test_fetch_change_logs_for_creative_should_throw_IOException()
+    
+    @Test
+public void should_throw_exception_400_fetch_change_logs_for_creative() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(400);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCreative(oAuthAccessToken, creativeId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
+} // should_throw_exception_401_fetch_change_logs_for_creative()
+	
+	@Test
+public void should_throw_exception_401_fetch_change_logs_for_creative() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(401);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCreative(oAuthAccessToken, creativeId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
+} // should_throw_exception_401_fetch_change_logs_for_creative()
+
+@Test
+public void should_throw_exception_403_fetch_change_logs_for_creative() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(403);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCreative(oAuthAccessToken, creativeId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
+} // should_throw_exception_403_fetch_change_logs_for_creative()
+
+@Test
+public void should_throw_exception_404_fetch_change_logs_for_creative() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(404);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCreative(oAuthAccessToken, creativeId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
+} // should_throw_exception_404_fetch_change_logs_for_creative()
+
+@Test
+public void should_throw_exception_405_fetch_change_logs_for_creative() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(405);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCreative(oAuthAccessToken, creativeId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
+} // should_throw_exception_405_fetch_change_logs_for_creative()
+
+@Test
+public void should_throw_exception_406_fetch_change_logs_for_creative() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(406);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCreative(oAuthAccessToken, creativeId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
+} // should_throw_exception_406_fetch_change_logs_for_creative()
+
+@Test
+public void should_throw_exception_410_fetch_change_logs_for_creative() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(410);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCreative(oAuthAccessToken, creativeId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
+} // should_throw_exception_410_fetch_change_logs_for_creative()
+
+@Test
+public void should_throw_exception_418_fetch_change_logs_for_creative() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(418);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCreative(oAuthAccessToken, creativeId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
+} // should_throw_exception_418_fetch_change_logs_for_creative()
+
+@Test
+public void should_throw_exception_429_fetch_change_logs_for_creative() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(429);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCreative(oAuthAccessToken, creativeId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
+} // should_throw_exception_429_fetch_change_logs_for_creative()
+
+@Test
+public void should_throw_exception_500_fetch_change_logs_for_creative() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(500);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCreative(oAuthAccessToken, creativeId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
+} // should_throw_exception_500_fetch_change_logs_for_creative()
+
+@Test
+public void should_throw_exception_503_fetch_change_logs_for_creative() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(503);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCreative(oAuthAccessToken, creativeId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
+} // should_throw_exception_503_fetch_change_logs_for_creative()
+
+@Test
+public void should_throw_exception_1337_fetch_change_logs_for_creative() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+	Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
+	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+	assertThatThrownBy(() -> snapAuditLogs.fetchChangeLogsForCreative(oAuthAccessToken, creativeId))
+		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
+} // should_throw_exception_1337_fetch_change_logs_for_creative()
     
 }// SnapAuditLogsTest

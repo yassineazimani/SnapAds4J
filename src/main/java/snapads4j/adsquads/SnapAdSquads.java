@@ -108,7 +108,6 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 	final String url = this.endpointCreationAdSquad.replace("{campaign_id}", adSquad.getCampaignId());
 	SnapHttpRequestAdSquad reqBody = new SnapHttpRequestAdSquad();
 	reqBody.addAdSquad(adSquad);
-	LOGGER.info("Body create ad squad => {}", reqBody);
 	HttpPost request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, reqBody);
 	try (CloseableHttpResponse response = httpClient.execute(request)) {
 	    int statusCode = response.getStatusLine().getStatusCode();
@@ -143,7 +142,6 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 	final String url = this.endpointUpdateAdSquad.replace("{campaign_id}", adSquad.getCampaignId());
 	SnapHttpRequestAdSquad reqBody = new SnapHttpRequestAdSquad();
 	reqBody.addAdSquad(adSquad);
-	LOGGER.info("Body update ad squad => {}", reqBody);
 	HttpPut request = HttpUtils.preparePutRequestObject(url, oAuthAccessToken, reqBody);
 	try (CloseableHttpResponse response = httpClient.execute(request)) {
 	    int statusCode = response.getStatusLine().getStatusCode();
