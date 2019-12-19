@@ -28,5 +28,5 @@ public enum ConfigPlacementEnum {
   AUTOMATIC,
   /** CUSTOM */
   @JsonProperty("CUSTOM")
-  CUSTOM;
+  CUSTOM
 } // ConfigPlacementEnum

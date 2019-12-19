@@ -97,5 +97,5 @@ public enum CreativeTypeEnum {
      * COLLECTION
      */
     @JsonProperty("COLLECTION")
-    COLLECTION;
+    COLLECTION
 }// CreativeTypeEnum

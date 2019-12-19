@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.organization.Organization;
@@ -39,9 +40,10 @@ public interface SnapOrganizationInterface {
    * @return All organizations {@link #Organization}
    * @throws SnapResponseErrorException
    * @throws SnapOAuthAccessTokenException
+ * @throws SnapExecutionException 
    */
   public List<Organization> getAllOrganizations(String oAuthAccessToken)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException;
+      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapExecutionException;
 
   /**
    * Get specific organization
@@ -53,9 +55,10 @@ public interface SnapOrganizationInterface {
    * @return specific organization {@link #Organization}
    * @throws SnapResponseErrorException
    * @throws SnapOAuthAccessTokenException
+ * @throws SnapExecutionException 
    */
   public Optional<Organization> getSpecificOrganization(String oAuthAccessToken, String id)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
+      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
   /**
    * Get all organizations with ad accounts
@@ -66,7 +69,8 @@ public interface SnapOrganizationInterface {
    * @return All organizations {@link #Organization}
    * @throws SnapResponseErrorException
    * @throws SnapOAuthAccessTokenException
+ * @throws SnapExecutionException 
    */
   public List<OrganizationWithAdAccount> getAllOrganizationsWithAdAccounts(String oAuthAccessToken)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException;
+      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapExecutionException;
 } // SnapOrganizationInterface

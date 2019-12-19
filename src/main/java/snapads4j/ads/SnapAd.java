@@ -43,6 +43,7 @@ import snapads4j.adsquads.SnapAdSquads;
 import snapads4j.enums.CheckAdEnum;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.ads.Ad;
@@ -98,7 +99,7 @@ public class SnapAd implements SnapAdInterface {
 
     @Override
     public Optional<Ad> createAd(String oAuthAccessToken, Ad ad) throws SnapOAuthAccessTokenException, JsonProcessingException,
-	    SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException {
+	    SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -126,13 +127,14 @@ public class SnapAd implements SnapAdInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to create ad, ad_squad_id = {}", ad.getAdSquadId(), e);
+	    throw new SnapExecutionException("Impossible to create ad", e);
 	}
 	return result;
     }// createAd()
 
     @Override
     public Optional<Ad> updateAd(String oAuthAccessToken, Ad ad) throws SnapOAuthAccessTokenException, JsonProcessingException,
-	    SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException {
+	    SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -160,18 +162,19 @@ public class SnapAd implements SnapAdInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to update ad, id = {}", ad.getId(), e);
+	    throw new SnapExecutionException("Impossible to update ad", e);
 	}
 	return result;
     }// updateAd()
 
     @Override
     public List<Ad> getAllAdsFromAdSquad(String oAuthAccessToken, String adSquadId)
-	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException {
+	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	if (StringUtils.isEmpty(adSquadId)) {
-	    throw new SnapArgumentException("The AdSquad ID is mandatory");
+	    throw new SnapArgumentException("The AdSquad ID is required");
 	}
 	List<Ad> results = new ArrayList<>();
 	final String url = this.endpointAllAdsAdSquad.replace("{ad_squad_id}", adSquadId);
@@ -194,18 +197,19 @@ public class SnapAd implements SnapAdInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get all ads, adSquadId = {}", adSquadId, e);
+	    throw new SnapExecutionException("Impossible to get all ads", e);
 	}
 	return results;
     }// getAllAdsFromAdSquad()
 
     @Override
     public List<Ad> getAllAdsFromAdAccount(String oAuthAccessToken, String adAccountId)
-	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException {
+	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	if (StringUtils.isEmpty(adAccountId)) {
-	    throw new SnapArgumentException("The AdAccount ID is mandatory");
+	    throw new SnapArgumentException("The AdAccount ID is required");
 	}
 	List<Ad> results = new ArrayList<>();
 	final String url = this.endpointAllAdsAdAccount.replace("{ad_account_id}", adAccountId);
@@ -228,18 +232,19 @@ public class SnapAd implements SnapAdInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get all ads, adAccountId = {}", adAccountId, e);
+	    throw new SnapExecutionException("Impossible to get all ads", e);
 	}
 	return results;
     }// getAllAdsFromAdAccount()
 
     @Override
     public Optional<Ad> getSpecificAd(String oAuthAccessToken, String id)
-	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException {
+	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	if (StringUtils.isEmpty(id)) {
-	    throw new SnapArgumentException("The AdSquad ID is mandatory");
+	    throw new SnapArgumentException("The AdSquad ID is required");
 	}
 	Optional<Ad> result = Optional.empty();
 	final String url = this.endpointSpecificAd + id;
@@ -262,18 +267,19 @@ public class SnapAd implements SnapAdInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get specific Ad, id = {}", id, e);
+	    throw new SnapExecutionException("Impossible to get specific Ad", e);
 	}
 	return result;
     }// getSpecificAd()
 
     @Override
     public void deleteAd(String oAuthAccessToken, String id)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	if (StringUtils.isEmpty(id)) {
-	    throw new SnapArgumentException("The Ad ID is mandatory");
+	    throw new SnapArgumentException("The Ad ID is required");
 	}
 	final String url = this.endpointDeleteAd + id;
 	HttpDelete request = HttpUtils.prepareDeleteRequest(url, oAuthAccessToken);
@@ -285,6 +291,7 @@ public class SnapAd implements SnapAdInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to delete specific ad, id = {}", id, e);
+	    throw new SnapExecutionException("Impossible to delete specific ad", e);
 	}
     }// deleteAd()
 

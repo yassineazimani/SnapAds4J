@@ -23,5 +23,5 @@ public enum TypeCreationSpecDetails {
     @JsonProperty("SIMILARITY")
     SIMILARITY, 
     @JsonProperty("REACH")
-    REACH;
+    REACH
 }// TypeCreationSpecDetails

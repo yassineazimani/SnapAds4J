@@ -37,6 +37,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import lombok.Setter;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.bid.BidEstimate;
@@ -77,7 +78,7 @@ public class SnapBidEstimate implements SnapBidEstimateInterface {
     @Override
     public Optional<BidEstimate> getBidEstimateBySquadSpec(String oAuthAccessToken, String adAccountID, TargetingSpecBidEstimate targetingSpecBidEstimate)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -108,6 +109,7 @@ public class SnapBidEstimate implements SnapBidEstimateInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get bid estimate, ad_account_id = {}", adAccountID, e);
+	    throw new SnapExecutionException("Impossible to get bid estimate", e);
 	}
 	return result;
     }// getBidEstimateBySquadSpec()
@@ -115,7 +117,7 @@ public class SnapBidEstimate implements SnapBidEstimateInterface {
     @Override
     public Optional<BidEstimate> getBidEstimateByAdSquadId(String oAuthAccessToken, String adSquadID)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -145,6 +147,7 @@ public class SnapBidEstimate implements SnapBidEstimateInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get bid estimate, ad_squad_id = {}", adSquadID, e);
+	    throw new SnapExecutionException("Impossible to get bid estimate", e);
 	}
 	return result;
     }// getBidEstimateByAdSquadId()

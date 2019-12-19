@@ -28,5 +28,5 @@ public enum ReachFrequencyStatusEnum {
   @JsonProperty("ACTIVE")
   ACTIVE,
   @JsonProperty("FAILED")
-  FAILED;
+  FAILED
 } // ReachFrequencyStatusEnum

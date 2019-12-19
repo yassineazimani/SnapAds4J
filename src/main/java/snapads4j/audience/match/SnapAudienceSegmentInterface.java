@@ -22,6 +22,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapNormalizeArgumentException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
@@ -30,33 +31,37 @@ import snapads4j.model.audience.match.FormUserForAudienceSegment;
 import snapads4j.model.audience.match.SamLookalikes;
 
 public interface SnapAudienceSegmentInterface {
-    
+
     public Optional<AudienceSegment> createAudienceSegment(String oAuthAccessToken, AudienceSegment segment)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException;
-    
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
+
     public Optional<AudienceSegment> updateAudienceSegment(String oAuthAccessToken, AudienceSegment segment)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException;
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 
-    public List<AudienceSegment> getAllAudienceSegments(String oAuthAccessToken, String adAccountID) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-    JsonProcessingException, UnsupportedEncodingException;
-    
-    public Optional<AudienceSegment> getSpecificAudienceSegment(String oAuthAccessToken, String segmentID) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-    JsonProcessingException, UnsupportedEncodingException;
-    
-    public int addUserToSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment) throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException, SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException;
-    
+    public List<AudienceSegment> getAllAudienceSegments(String oAuthAccessToken, String adAccountID)
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
+
+    public Optional<AudienceSegment> getSpecificAudienceSegment(String oAuthAccessToken, String segmentID)
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
+
+    public int addUserToSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment)
+	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
+	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException, SnapExecutionException;
+
     public int deleteUserFromSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment)
 	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
-	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException;
+	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException, SnapExecutionException;
 
     public Optional<AudienceSegment> deleteAllUsersFromSegment(String oAuthAccessToken, String segmentID)
 	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
-	    SnapResponseErrorException, SnapArgumentException;
+	    SnapResponseErrorException, SnapArgumentException, SnapExecutionException;
 
     public Optional<AudienceSegment> createSamLookalikes(String oAuthAccessToken, SamLookalikes sam)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException;
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 
 }// SnapAudienceSegmentInterface

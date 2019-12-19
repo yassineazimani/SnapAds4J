@@ -30,5 +30,5 @@ public enum FrequencyCapIntervalEnum {
   HOURS,
   /** Days */
   @JsonProperty("DAYS")
-  DAYS;
+  DAYS
 } // FrequencyCapIntervalEnum

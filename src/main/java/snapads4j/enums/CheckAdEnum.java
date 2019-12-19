@@ -24,5 +24,5 @@ public enum CheckAdEnum {
   /** For creation Ad */
   CREATION,
   /** For update Ad */
-  UPDATE;
+  UPDATE
 } // CheckAdEnum

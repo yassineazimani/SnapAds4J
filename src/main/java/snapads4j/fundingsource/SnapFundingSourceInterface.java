@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.fundingsource.FundingSource;
@@ -41,9 +42,10 @@ public interface SnapFundingSourceInterface {
    * @throws SnapOAuthAccessTokenException
    * @throws SnapArgumentException
    * @return funding sources
+ * @throws SnapExecutionException 
    */
   public List<FundingSource> getAllFundingSource(String oAuthAccessToken, String organizationID)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
+      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
   /**
    * Get a specific funding source.
@@ -56,7 +58,8 @@ public interface SnapFundingSourceInterface {
    * @throws SnapOAuthAccessTokenException
    * @throws SnapArgumentException
    * @return funding source
+ * @throws SnapExecutionException 
    */
   public Optional<FundingSource> getSpecificFundingSource(String oAuthAccessToken, String id)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
+      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 } // SnapFundingSourceInterface

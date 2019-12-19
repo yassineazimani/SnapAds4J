@@ -38,6 +38,7 @@ import lombok.Getter;
 import lombok.Setter;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.adsquads.AdSquad;
@@ -79,7 +80,7 @@ public class SnapAudienceSize implements SnapAudienceSizeInterface{
     @Override
     public Optional<AudienceSize> getAudienceSizeByTargetingSpec(String oAuthAccessToken, String adAccountID, AdSquad adSquad)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -112,6 +113,7 @@ public class SnapAudienceSize implements SnapAudienceSizeInterface{
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get audience size, ad_account_id = {}", adAccountID, e);
+	    throw new SnapExecutionException("Impossible to get audience size", e);
 	}
 	return result;
     }// getAudienceSizeByAdAccountId()
@@ -119,7 +121,7 @@ public class SnapAudienceSize implements SnapAudienceSizeInterface{
     @Override
     public Optional<AudienceSize> getAudienceSizeByAdSquadId(String oAuthAccessToken, String adSquadID)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -149,6 +151,7 @@ public class SnapAudienceSize implements SnapAudienceSizeInterface{
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get audience size, ad_squad_id = {}", adSquadID, e);
+	    throw new SnapExecutionException("Impossible to get audience size", e);
 	}
 	return result;
     }// getAudienceSizeByAdSquadId()

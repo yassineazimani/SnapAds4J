@@ -46,5 +46,5 @@ public enum StatusEnum {
   SUCCESS,
   /** Status deleted */
   @JsonProperty("DELETED")
-  DELETED;
+  DELETED
 } // StatusEnum

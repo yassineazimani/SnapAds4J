@@ -22,6 +22,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.adaccount.AdAccount;
@@ -39,9 +40,10 @@ public interface SnapAdAccountInterface {
    * @throws SnapResponseErrorException
    * @throws SnapOAuthAccessTokenException
    * @throws SnapArgumentException
+ * @throws SnapExecutionException 
    */
   public List<AdAccount> getAllAdAccounts(String oAuthAccessToken, String organizationID)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
+      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
   /**
    * Get specific ad account
@@ -53,9 +55,10 @@ public interface SnapAdAccountInterface {
    * @return specific ad account
    * @throws SnapResponseErrorException
    * @throws SnapOAuthAccessTokenException
+ * @throws SnapExecutionException 
    */
   public Optional<AdAccount> getSpecificAdAccount(String oAuthAccessToken, String id)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
+      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
   /**
    * Update a specific ad account
@@ -73,8 +76,9 @@ public interface SnapAdAccountInterface {
    * @throws UnsupportedEncodingException 
    * 
    * @return AdAccount updated
+ * @throws SnapExecutionException 
    */
   public Optional<AdAccount> updateAdAccount(String oAuthAccessToken, AdAccount adAccount)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-          JsonProcessingException, UnsupportedEncodingException;
+          JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 } // SnapAdAccountInterface

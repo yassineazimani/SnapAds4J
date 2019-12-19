@@ -24,5 +24,5 @@ public enum AdAccountTypeEnum {
 
   /** Partner */
   @JsonProperty("PARTNER")
-  PARTNER,
+  PARTNER
 } // AdAccountTypeEnum

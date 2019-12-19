@@ -52,5 +52,5 @@ public enum ContentTypeEnum {
   SPORTS,
   /** YOUNG_BOLD */
   @JsonProperty("YOUNG_BOLD")
-  YOUNG_BOLD;
+  YOUNG_BOLD
 } // ContentTypeEnum

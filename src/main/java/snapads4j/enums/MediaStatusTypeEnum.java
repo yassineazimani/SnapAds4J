@@ -23,5 +23,5 @@ public enum MediaStatusTypeEnum {
     PENDING_UPLOAD,
     /** Ready */
     @JsonProperty("READY")
-    READY;
+    READY
 }// MediaStatusTypeEnum

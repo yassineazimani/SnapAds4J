@@ -17,6 +17,7 @@ package snapads4j.user;
 
 import java.util.Optional;
 
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.user.AuthenticatedUser;
@@ -36,7 +37,8 @@ public interface SnapUserInterface {
    * @return AuthenticatedUser {@link #AuthenticatedUser}
    * @throws SnapOAuthAccessTokenException
    * @throws SnapResponseErrorException
+ * @throws SnapExecutionException 
    */
   public Optional<AuthenticatedUser> aboutMe(String oAuthAccessToken)
-      throws SnapOAuthAccessTokenException, SnapResponseErrorException;
+      throws SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
 } // SnapUserInterface

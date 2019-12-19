@@ -36,6 +36,7 @@ import lombok.Getter;
 import lombok.Setter;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.organization.Organization;
@@ -82,10 +83,11 @@ public class SnapOrganization implements SnapOrganizationInterface {
      * @return All organizations
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
+     * @throws SnapExecutionException 
      */
     @Override
     public List<Organization> getAllOrganizations(String oAuthAccessToken)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException {
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -111,6 +113,7 @@ public class SnapOrganization implements SnapOrganizationInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get all organizations", e);
+	    throw new SnapExecutionException("Impossible to get all organizations", e);
 	}
 	return organizations;
     } // getAllOrganizations()
@@ -124,10 +127,11 @@ public class SnapOrganization implements SnapOrganizationInterface {
      * @return All organizations
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
+     * @throws SnapExecutionException 
      */
     @Override
     public List<OrganizationWithAdAccount> getAllOrganizationsWithAdAccounts(String oAuthAccessToken)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException {
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -153,6 +157,7 @@ public class SnapOrganization implements SnapOrganizationInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get all organizations with Ad-accounts", e);
+	    throw new SnapExecutionException("Impossible to get all organizations with Ad-accounts", e);
 	}
 	return organizations;
     } // getAllOrganizationsWithAdAccounts()
@@ -168,12 +173,13 @@ public class SnapOrganization implements SnapOrganizationInterface {
      * @return All organizations
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
+     * @throws SnapExecutionException 
      */
     @Override
     public Optional<Organization> getSpecificOrganization(String oAuthAccessToken, String id)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(id)) {
-	    throw new SnapArgumentException("The organization ID is mandatory");
+	    throw new SnapArgumentException("The organization ID is required");
 	}
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
@@ -200,6 +206,7 @@ public class SnapOrganization implements SnapOrganizationInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get specific organization with id = {}", id, e);
+	    throw new SnapExecutionException("Impossible to get specific organization", e);
 	}
 	return result;
     } // getSpecificOrganization()

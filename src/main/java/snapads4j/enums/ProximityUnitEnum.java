@@ -31,5 +31,5 @@ public enum ProximityUnitEnum {
   @JsonProperty("FEET")
   FEET,
   @JsonProperty("KILOMETERS")
-  KILOMETERS;
+  KILOMETERS
 } // ProximityUnitEnum

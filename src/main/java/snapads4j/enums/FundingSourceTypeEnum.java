@@ -34,5 +34,5 @@ public enum FundingSourceTypeEnum {
   COUPON,
   /** Paypal */
   @JsonProperty("PAYPAL")
-  PAYPAL;
+  PAYPAL
 } // FundingSourceTypeEnum

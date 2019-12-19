@@ -33,5 +33,5 @@ public enum SnapChatPositionsEnum {
   FEED,
   /** CAMERA */
   @JsonProperty("CAMERA")
-  CAMERA;
+  CAMERA
 } // SnapChatPositionsEnum

@@ -22,6 +22,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.campaigns.Campaign;
@@ -47,10 +48,11 @@ public interface SnapCampaignsInterface {
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
      * @return Campaign created
+     * @throws SnapExecutionException 
      */
     public Optional<Campaign> createCampaign(String oAuthAccessToken, Campaign campaign)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException;
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 
     /**
      * Update a campaign.
@@ -66,10 +68,11 @@ public interface SnapCampaignsInterface {
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
      * @return Campaign updated
+     * @throws SnapExecutionException 
      */
     public Optional<Campaign> updateCampaign(String oAuthAccessToken, Campaign campaign)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException;
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 
     /**
      * Get all campaigns of an ad account.
@@ -83,9 +86,10 @@ public interface SnapCampaignsInterface {
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
      * @return all campaigns {@link #Campaign}
+     * @throws SnapExecutionException 
      */
     public List<Campaign> getAllCampaigns(String oAuthAccessToken, String adAccountId)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
     /**
      * Get specific campaign.
@@ -99,9 +103,10 @@ public interface SnapCampaignsInterface {
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
      * @return campaign {@link #Campaign}
+     * @throws SnapExecutionException 
      */
     public Optional<Campaign> getSpecificCampaign(String oAuthAccessToken, String id)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
     /**
      * Delete a specific campaign.
@@ -114,7 +119,8 @@ public interface SnapCampaignsInterface {
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
+     * @throws SnapExecutionException 
      */
     public void deleteCampaign(String oAuthAccessToken, String id)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 } // SnapCampaignsInterface

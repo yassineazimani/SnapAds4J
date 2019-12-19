@@ -31,5 +31,5 @@ public enum UploadStatusEnum {
   PROCESSING,
   /** All received uploads have been processed and matched. Audience size reflects segment size */
   @JsonProperty("COMPLETE")
-  COMPLETE;
+  COMPLETE
 } // UploadStatusEnum

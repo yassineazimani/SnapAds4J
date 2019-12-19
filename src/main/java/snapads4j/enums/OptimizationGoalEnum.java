@@ -95,5 +95,5 @@ public enum OptimizationGoalEnum {
    * exceeded
    */
   @JsonProperty("APP_SIGNUP")
-  APP_SIGNUP;
+  APP_SIGNUP
 } // OptimizationGoalEnum

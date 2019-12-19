@@ -26,5 +26,5 @@ public enum GenderEnum {
   @JsonProperty("MALE")
   MALE,
   @JsonProperty("FEMALE")
-  FEMALE;
+  FEMALE
 } // GenderEnum

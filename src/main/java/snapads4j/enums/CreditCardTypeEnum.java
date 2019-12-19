@@ -53,5 +53,5 @@ public enum CreditCardTypeEnum {
 
   /** Unknown */
   @JsonProperty("UNKNOWN")
-  UNKNOWN;
+  UNKNOWN
 } // CreditCardTypeEnum

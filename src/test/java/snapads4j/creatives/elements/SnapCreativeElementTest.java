@@ -28,6 +28,7 @@ import org.mockito.Spy;
 import snapads4j.enums.CreativeTypeEnum;
 import snapads4j.enums.InteractionTypeEnum;
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.creatives.WebViewPropertiesBuilder;
@@ -82,7 +83,7 @@ public class SnapCreativeElementTest {
 
     @Test
     public void test_create_creative_should_success() throws ClientProtocolException, IOException,
-	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
@@ -157,11 +158,12 @@ public class SnapCreativeElementTest {
     }// test_create_creative_should_throw_SnapArgumentException_4()
 
     @Test
-    public void test_create_creative_should_throw_IOException() throws ClientProtocolException, IOException,
+    public void test_create_creative_should_throw_SnapExecutionException() throws ClientProtocolException, IOException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
-	snapCreative.createCreativeElement(oAuthAccessToken, creative);
-    }// test_create_creative_should_throw_IOException()
+	assertThatThrownBy(() -> snapCreative.createCreativeElement(oAuthAccessToken, creative))
+	.isInstanceOf(SnapExecutionException.class);
+    }// test_create_creative_should_throw_SnapExecutionException()
 
     @Test
     public void should_throw_exception_400_create_creative() throws IOException, InterruptedException,
@@ -287,7 +289,7 @@ public class SnapCreativeElementTest {
 
     @Test
     public void test_create_creatives_should_success() throws ClientProtocolException, IOException,
-	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
@@ -382,11 +384,12 @@ public class SnapCreativeElementTest {
     }// test_create_creatives_should_throw_SnapArgumentException_5()
 
     @Test
-    public void test_create_creatives_should_throw_IOException() throws ClientProtocolException, IOException,
+    public void test_create_creatives_should_throw_SnapExecutionException() throws ClientProtocolException, IOException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
-	snapCreative.createCreativeElements(oAuthAccessToken, creatives);
-    }// test_create_creatives_should_throw_IOException()
+	assertThatThrownBy(() -> snapCreative.createCreativeElements(oAuthAccessToken, creatives))
+	.isInstanceOf(SnapExecutionException.class);
+    }// test_create_creatives_should_throw_SnapExecutionException()
 
     @Test
     public void should_throw_exception_400_create_creatives() throws IOException, InterruptedException,
@@ -512,7 +515,7 @@ public class SnapCreativeElementTest {
 
     @Test
     public void test_create_interaction_zone_should_success() throws ClientProtocolException, IOException,
-	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
@@ -570,11 +573,12 @@ public class SnapCreativeElementTest {
     }// test_create_interaction_zone_should_throw_SnapArgumentException_2()
 
     @Test
-    public void test_create_interaction_zone_should_throw_IOException() throws ClientProtocolException, IOException,
+    public void test_create_interaction_zone_should_throw_SnapExecutionException() throws ClientProtocolException, IOException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
-	snapCreative.createInteractionZone(oAuthAccessToken, interactionZone);
-    }// test_create_interaction_zone_should_throw_IOException()
+	assertThatThrownBy(() -> snapCreative.createInteractionZone(oAuthAccessToken, interactionZone))
+	.isInstanceOf(SnapExecutionException.class);
+    }// test_create_interaction_zone_should_throw_SnapExecutionException()
 
     @Test
     public void should_throw_exception_400_create_interaction_zone() throws IOException, InterruptedException,

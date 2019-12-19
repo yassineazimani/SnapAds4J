@@ -47,6 +47,7 @@ import snapads4j.enums.SourceTypeEnum;
 import snapads4j.enums.StatusEnum;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapNormalizeArgumentException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
@@ -122,7 +123,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
     @Override
     public Optional<AudienceSegment> createAudienceSegment(String oAuthAccessToken, AudienceSegment segment)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -151,6 +152,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to create audience segment, ad_account_id = {}", segment.getAdAccountId(), e);
+	    throw new SnapExecutionException("Impossible to create audience segment", e);
 	}
 	return result;
     }// createAudienceSegment()
@@ -158,7 +160,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
     @Override
     public Optional<AudienceSegment> createSamLookalikes(String oAuthAccessToken, SamLookalikes sam)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -187,6 +189,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to create sam lookalikes, ad_account_id = {}", sam.getAdAccountId(), e);
+	    throw new SnapExecutionException("Impossible to create sam lookalikes", e);
 	}
 	return result;
     }// createSamLookalikes()
@@ -194,7 +197,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
     @Override
     public Optional<AudienceSegment> updateAudienceSegment(String oAuthAccessToken, AudienceSegment segment)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -223,6 +226,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to update audience segment, ad_account_id = {}", segment.getAdAccountId(), e);
+	    throw new SnapExecutionException("Impossible to update audience segment", e);
 	}
 	return result;
     }// updateAudienceSegment()
@@ -230,7 +234,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
     @Override
     public List<AudienceSegment> getAllAudienceSegments(String oAuthAccessToken, String adAccountID)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -259,6 +263,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get all audience segments, ad_account_id = {}", adAccountID, e);
+	    throw new SnapExecutionException("Impossible to get all audience segments", e);
 	}
 	return results;
     }// getAllAudienceSegments()
@@ -266,7 +271,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
     @Override
     public Optional<AudienceSegment> getSpecificAudienceSegment(String oAuthAccessToken, String segmentID)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -295,6 +300,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get all audience segments, segmentID = {}", segmentID, e);
+	    throw new SnapExecutionException("Impossible to get all audience segments", e);
 	}
 	return result;
     }// getSpecificAudienceSegment()
@@ -302,11 +308,12 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
     /**
      * 
      * Type schema mobile_ad_id regex isn't checked here unlike phone and email.
+     * @throws SnapExecutionException 
      */
     @Override
     public int addUserToSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment)
 	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
-	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException {
+	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -342,6 +349,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	    } catch (IOException ie) {
 		LOGGER.error("Impossible to add user to an existant segment, segmentID = {}",
 			formUserForAudienceSegment.getId(), ie);
+		throw new SnapExecutionException("Impossible to add user to an existant segment", ie);
 	    }
 	}
 	return result;
@@ -350,11 +358,12 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
     /**
      * 
      * Type schema mobile_ad_id regex isn't checked here unlike phone and email.
+     * @throws SnapExecutionException 
      */
     @Override
     public int deleteUserFromSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment)
 	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
-	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException {
+	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -390,6 +399,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	    } catch (IOException ie) {
 		LOGGER.error("Impossible to delete user to an existant segment, segmentID = {}",
 			formUserForAudienceSegment.getId(), ie);
+		throw new SnapExecutionException("Impossible to delete user to an existant segment", ie);
 	    }
 	}
 	return result;
@@ -398,7 +408,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
     @Override
     public Optional<AudienceSegment> deleteAllUsersFromSegment(String oAuthAccessToken, String segmentID)
 	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
-	    SnapResponseErrorException, SnapArgumentException {
+	    SnapResponseErrorException, SnapArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -427,13 +437,14 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	    }
 	} catch (IOException ie) {
 	    LOGGER.error("Impossible to delete all users from segment, segmentID = {}", segmentID, ie);
+	    throw new SnapExecutionException("Impossible to delete all users from segment", ie);
 	}
 	return result;
     }// deleteAllUsersFromSegment()
 
     public boolean deleteAudienceSegment(String oAuthAccessToken, String segmentID)
 	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
-	    SnapResponseErrorException, SnapArgumentException {
+	    SnapResponseErrorException, SnapArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -462,6 +473,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 	    }
 	} catch (IOException ie) {
 	    LOGGER.error("Impossible to delete audience segment, segmentID = {}", segmentID, ie);
+	    throw new SnapExecutionException("Impossible to delete audience segment", ie);
 	}
 	return result;
     }// deleteAudienceSegment()

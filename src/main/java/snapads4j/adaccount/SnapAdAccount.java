@@ -41,6 +41,7 @@ import lombok.Getter;
 import lombok.Setter;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.adaccount.AdAccount;
@@ -98,15 +99,16 @@ public class SnapAdAccount implements SnapAdAccountInterface {
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
+     * @throws SnapExecutionException 
      */
     @Override
     public List<AdAccount> getAllAdAccounts(String oAuthAccessToken, String organizationID)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	if (StringUtils.isEmpty(organizationID)) {
-	    throw new SnapArgumentException("The organization ID is mandatory");
+	    throw new SnapArgumentException("The organization ID is required");
 	}
 	List<AdAccount> adAccounts = new ArrayList<>();
 	final String url = this.endpointAllAdAccounts.replace("{organization-id}", organizationID);
@@ -129,6 +131,7 @@ public class SnapAdAccount implements SnapAdAccountInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get all ad accounts, organizationID = {}", organizationID, e);
+	    throw new SnapExecutionException("Impossible to get all ad accounts", e);
 	}
 	return adAccounts;
     } // getAllAdAccounts()
@@ -144,12 +147,13 @@ public class SnapAdAccount implements SnapAdAccountInterface {
      * @return specific ad account
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
+     * @throws SnapExecutionException 
      */
     @Override
     public Optional<AdAccount> getSpecificAdAccount(String oAuthAccessToken, String id)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(id)) {
-	    throw new SnapArgumentException("The Ad Account ID is mandatory");
+	    throw new SnapArgumentException("The Ad Account ID is required");
 	}
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
@@ -175,6 +179,7 @@ public class SnapAdAccount implements SnapAdAccountInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get specific ad account, id = {}", id, e);
+	    throw new SnapExecutionException("Impossible to get specific ad account", e);
 	}
 	return result;
     } // getSpecificAdAccount()
@@ -193,11 +198,12 @@ public class SnapAdAccount implements SnapAdAccountInterface {
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
      * @return AdAccount updated
+     * @throws SnapExecutionException 
      */
     @Override
     public Optional<AdAccount> updateAdAccount(String oAuthAccessToken, AdAccount adAccount)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -225,6 +231,7 @@ public class SnapAdAccount implements SnapAdAccountInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to update ad account, id = {}", adAccount.getId(), e);
+	    throw new SnapExecutionException("Impossible to update ad account", e);
 	}
 	return result;
     } // updateAdAccount()

@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.bid.BidEstimate;
@@ -14,9 +15,9 @@ import snapads4j.model.bid.TargetingSpecBidEstimate;
 public interface SnapBidEstimateInterface {
 
     public Optional<BidEstimate> getBidEstimateBySquadSpec(String oAuthAccessToken, String adAccountID, TargetingSpecBidEstimate targetingSpecBidEstimate) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-    JsonProcessingException, UnsupportedEncodingException;
+    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
     public Optional<BidEstimate> getBidEstimateByAdSquadId(String oAuthAccessToken, String adSquadID)throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-    JsonProcessingException, UnsupportedEncodingException;
+    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
 }// SnapBidEstimateInterface

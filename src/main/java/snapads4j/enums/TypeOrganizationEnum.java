@@ -29,5 +29,5 @@ public enum TypeOrganizationEnum {
 
   /** Partner */
   @JsonProperty("PARTNER")
-  PARTNER;
+  PARTNER
 } // TypeUserEnum

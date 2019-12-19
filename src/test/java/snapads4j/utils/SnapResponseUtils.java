@@ -1394,4 +1394,70 @@ public class SnapResponseUtils {
       	"    ]\r\n" + 
       	"}";
   }// getChangeLogsForCreative()
+  
+  public static String getPixelAssociatedWithAdAccount() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5a0253c100ff013af0e5dd11d40001737e616473617069736300016275696c642d61306563656639392d312d3131392d3300010124\",\r\n" + 
+      	"    \"pixels\": [\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"pixel\": {\r\n" + 
+      	"                \"id\": \"6abc82ca-4a3a-4391-98ba-0317a8471234\",\r\n" + 
+      	"                \"updated_at\": \"2017-03-15T18:19:08.576Z\",\r\n" + 
+      	"                \"created_at\": \"2017-03-15T18:19:08.576Z\",\r\n" + 
+      	"                \"effective_status\": \"ACTIVE\",\r\n" + 
+      	"                \"name\": \"Test pixel\",\r\n" + 
+      	"                \"ad_account_id\": \"3cb7c65d-a943-448b-90aa-bd6bac71dabc\",\r\n" + 
+      	"                \"status\": \"ACTIVE\",\r\n" + 
+      	"                \"pixel_javascript\": \"<!-- Snap Pixel Code -->\\n<script type='text/javascript'>\\n(function(e,t,n){if(e.snaptr)return;var a=e.snaptr=function()\\n{a.handleRequest?a.handleRequest.apply(a,arguments):a.queue.push(arguments)};\\na.queue=[];var s='script';r=t.createElement(s);r.async=!0;\\nr.src=n;var u=t.getElementsByTagName(s)[0];\\nu.parentNode.insertBefore(r,u);})(window,document,\\n'https://sc-static.net/scevent.min.js');\\n\\nsnaptr('init', '6abc82ca-4a3a-4391-98ba-0317a8471234', {\\n'user_email': '__INSERT_USER_EMAIL__'\\n});\\n\\nsnaptr('track', 'PAGE_VIEW');\\n\\n</script>\\n<!-- End Snap Pixel Code -->\"\r\n" + 
+      	"            }\r\n" + 
+      	"        }\r\n" + 
+      	"    ]\r\n" + 
+      	"}";
+  }// getPixelAssociatedWithAdAccount()
+  
+  public static String getSpecificPixel() {
+      return "{\r\n" + 
+      	"    \"request_status\": \"SUCCESS\",\r\n" + 
+      	"    \"request_id\": \"5a025dac00ff011af30b6a01d00001737e616473617069736300016275696c642d61306563656639392d312d3131392d3300010162\",\r\n" + 
+      	"    \"pixels\": [\r\n" + 
+      	"        {\r\n" + 
+      	"            \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"            \"pixel\": {\r\n" + 
+      	"                \"id\": \"sf6f3815-3527-49e3-a5a7-b9681b31daf4\",\r\n" + 
+      	"                \"updated_at\": \"2017-03-15T18:19:08.576Z\",\r\n" + 
+      	"                \"created_at\": \"2017-03-15T18:19:08.576Z\",\r\n" + 
+      	"                \"effective_status\": \"ACTIVE\",\r\n" + 
+      	"                \"name\": \"Test pixel\",\r\n" + 
+      	"                \"ad_account_id\": \"3cb7c65d-a943-448b-90aa-bd6bac71dabc\",\r\n" + 
+      	"                \"status\": \"ACTIVE\",\r\n" + 
+      	"                \"pixel_javascript\": \"<!-- Snap Pixel Code -->\\n<script type='text/javascript'>\\n(function(e,t,n){if(e.snaptr)return;var a=e.snaptr=function()\\n{a.handleRequest?a.handleRequest.apply(a,arguments):a.queue.push(arguments)};\\na.queue=[];var s='script';r=t.createElement(s);r.async=!0;\\nr.src=n;var u=t.getElementsByTagName(s)[0];\\nu.parentNode.insertBefore(r,u);})(window,document,\\n'https://sc-static.net/scevent.min.js');\\n\\nsnaptr('init', 'sf6f3815-3527-49e3-a5a7-b9681b31daf4', {\\n'user_email': '__INSERT_USER_EMAIL__'\\n});\\n\\nsnaptr('track', 'PAGE_VIEW');\\n\\n</script>\\n<!-- End Snap Pixel Code -->\"\r\n" + 
+      	"            }\r\n" + 
+      	"        }\r\n" + 
+      	"    ]\r\n" + 
+      	"}";
+  }// getSpecificPixel()
+  
+  public static String getPixelUpdated() {
+      return "{\r\n" + 
+      	"  \"request_status\": \"SUCCESS\",\r\n" + 
+      	"  \"request_id\": \"589a3df500ff035b6c6fefa6340001737e616473617069736300016275696c642d62666138636139332d312d33392d3400010123\",\r\n" + 
+      	"  \"pixels\": [\r\n" + 
+      	"    {\r\n" + 
+      	"      \"sub_request_status\": \"SUCCESS\",\r\n" + 
+      	"      \"pixel\": {\r\n" + 
+      	"        \"id\": \"ef6f3815-3527-49e3-a5a7-b9681b31daf4\",\r\n" + 
+      	"        \"updated_at\": \"2017-02-07T21:36:53.324Z\",\r\n" + 
+      	"        \"created_at\": \"2017-02-07T19:14:05.852Z\",\r\n" + 
+      	"        \"effective_status\": \"ACTIVE\",\r\n" + 
+      	"        \"name\": \"New pixel name\",\r\n" + 
+      	"        \"ad_account_id\": \"3cb7c65d-a943-448b-90aa-bd6bac71dabc\",\r\n" + 
+      	"        \"status\": \"ACTIVE\"\r\n" + 
+      	"      }\r\n" + 
+      	"    }\r\n" + 
+      	"  ]\r\n" + 
+      	"}";
+  }// getPixelUpdated()
+  
 } // SnapResponseUtils

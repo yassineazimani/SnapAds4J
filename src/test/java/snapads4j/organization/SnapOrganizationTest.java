@@ -42,6 +42,7 @@ import snapads4j.enums.CurrencyEnum;
 import snapads4j.enums.StatusEnum;
 import snapads4j.enums.TypeOrganizationEnum;
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.organization.AdAccount;
@@ -80,7 +81,7 @@ public class SnapOrganizationTest {
 
     @Before
     public void setUp() {
-	MockitoAnnotations.initMocks(snapOrganization);
+	MockitoAnnotations.initMocks(this);
 	snapOrganization.setHttpClient(httpClient);
 	snapOrganization.setEntityUtilsWrapper(entityUtilsWrapper);
 	sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -88,7 +89,7 @@ public class SnapOrganizationTest {
 
     @Test
     public void should_given_all_organizations()
-	    throws IOException, InterruptedException, SnapResponseErrorException, SnapOAuthAccessTokenException {
+	    throws IOException, InterruptedException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
@@ -257,7 +258,7 @@ public class SnapOrganizationTest {
 
     @Test
     public void should_given_all_organizations_with_adaccounts()
-	    throws IOException, InterruptedException, SnapResponseErrorException, SnapOAuthAccessTokenException {
+	    throws IOException, InterruptedException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
@@ -466,7 +467,7 @@ public class SnapOrganizationTest {
 
     @Test
     public void should_given_specific_organization() throws IOException, InterruptedException,
-	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
@@ -501,14 +502,14 @@ public class SnapOrganizationTest {
     public void should_throw_exception_argument_id_2_specific_organization() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	assertThatThrownBy(() -> snapOrganization.getSpecificOrganization(oAuthAccessToken, null))
-		.isInstanceOf(SnapArgumentException.class).hasMessage("The organization ID is mandatory");
+		.isInstanceOf(SnapArgumentException.class).hasMessage("The organization ID is required");
     } // should_throw_exception_argument_id_2_specific_organization()
 
     @Test
     public void should_throw_exception_argument_id_specific_organization() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	assertThatThrownBy(() -> snapOrganization.getSpecificOrganization(oAuthAccessToken, ""))
-		.isInstanceOf(SnapArgumentException.class).hasMessage("The organization ID is mandatory");
+		.isInstanceOf(SnapArgumentException.class).hasMessage("The organization ID is required");
     } // should_throw_exception_argument_id_specific_organization()
 
     @Test

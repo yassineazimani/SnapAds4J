@@ -36,6 +36,7 @@ import lombok.Getter;
 import lombok.Setter;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.fundingsource.FundingSource;
@@ -90,15 +91,16 @@ public class SnapFundingSource implements SnapFundingSourceInterface {
    * @throws SnapOAuthAccessTokenException
    * @throws SnapArgumentException
    * @return funding sources
+ * @throws SnapExecutionException 
    */
   @Override
   public List<FundingSource> getAllFundingSource(String oAuthAccessToken, String organizationID)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
     if (StringUtils.isEmpty(oAuthAccessToken)) {
       throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
     }
     if (StringUtils.isEmpty(organizationID)) {
-      throw new SnapArgumentException("The organization ID is mandatory");
+      throw new SnapArgumentException("The organization ID is required");
     }
     List<FundingSource> fundingSources = new ArrayList<>();
     final String url = this.endpointAllFundingSource.replace("{organization-id}", organizationID);
@@ -122,6 +124,7 @@ public class SnapFundingSource implements SnapFundingSourceInterface {
       }}
     } catch (IOException e) {
       LOGGER.error("Impossible to get all funding source, organizationID = {}", organizationID, e);
+      throw new SnapExecutionException("Impossible to get all funding source", e);
     }
     return fundingSources;
   } // getAllFundingSource()
@@ -137,12 +140,13 @@ public class SnapFundingSource implements SnapFundingSourceInterface {
    * @throws SnapOAuthAccessTokenException
    * @throws SnapArgumentException
    * @return funding source
+ * @throws SnapExecutionException 
    */
   @Override
   public Optional<FundingSource> getSpecificFundingSource(String oAuthAccessToken, String id)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
     if (StringUtils.isEmpty(id)) {
-      throw new SnapArgumentException("The Funding source ID is mandatory");
+      throw new SnapArgumentException("The Funding source ID is required");
     }
     if (StringUtils.isEmpty(oAuthAccessToken)) {
       throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
@@ -169,6 +173,7 @@ public class SnapFundingSource implements SnapFundingSourceInterface {
       }}
     } catch (IOException e) {
       LOGGER.error("Impossible to get specific funding source, id = {}", id, e);
+      throw new SnapExecutionException("Impossible to get specific funding source", e);
     }
     return result;
   } // getSpecificFundingSource()

@@ -38,6 +38,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.user.AuthenticatedUser;
@@ -80,7 +81,7 @@ public class SnapUserTest {
 
     @Test
     public void test_aboutMe_should_success()
-	    throws SnapOAuthAccessTokenException, SnapResponseErrorException, IOException, InterruptedException {
+	    throws SnapOAuthAccessTokenException, SnapResponseErrorException, IOException, InterruptedException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);

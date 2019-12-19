@@ -44,6 +44,7 @@ import lombok.Setter;
 import snapads4j.enums.CheckAdEnum;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.creatives.AppInstallProperties;
@@ -104,7 +105,7 @@ public class SnapCreative implements SnapCreativeInterface {
     @Override
     public Optional<Creative> createCreative(String oAuthAccessToken, Creative creative)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -132,6 +133,7 @@ public class SnapCreative implements SnapCreativeInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to create creative, ad_account_id = {}", creative.getAdAccountId(), e);
+	    throw new SnapExecutionException("Impossible to create creative", e);
 	}
 	return result;
     }// createCreative()
@@ -139,7 +141,7 @@ public class SnapCreative implements SnapCreativeInterface {
     @Override
     public Optional<Creative> updateCreative(String oAuthAccessToken, Creative creative)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -167,6 +169,7 @@ public class SnapCreative implements SnapCreativeInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to update creative, id = {}", creative.getId(), e);
+	    throw new SnapExecutionException("Impossible to update creative", e);
 	}
 	return result;
     }// updateCreative()
@@ -174,12 +177,12 @@ public class SnapCreative implements SnapCreativeInterface {
     @Override
     public Optional<Creative> getSpecificCreative(String oAuthAccessToken, String id)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	if (StringUtils.isEmpty(id)) {
-	    throw new SnapArgumentException("The Creative ID is mandatory");
+	    throw new SnapArgumentException("The Creative ID is required");
 	}
 	Optional<Creative> result = Optional.empty();
 	final String url = this.endpointSpecificCreative + id;
@@ -202,6 +205,7 @@ public class SnapCreative implements SnapCreativeInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get specific Creative, id = {}", id, e);
+	    throw new SnapExecutionException("Impossible to get specific Creative", e);
 	}
 	return result;
     }// getSpecificCreative()
@@ -209,12 +213,12 @@ public class SnapCreative implements SnapCreativeInterface {
     @Override
     public List<Creative> getAllCreative(String oAuthAccessToken, String adAccountId)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	if (StringUtils.isEmpty(adAccountId)) {
-	    throw new SnapArgumentException("The AdAccount ID is mandatory");
+	    throw new SnapArgumentException("The AdAccount ID is required");
 	}
 	List<Creative> results = new ArrayList<>();
 	final String url = this.endpointAllCreatives.replace("{ad_account_id}", adAccountId);
@@ -237,13 +241,14 @@ public class SnapCreative implements SnapCreativeInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get all creatives, adAccountId = {}", adAccountId, e);
+	    throw new SnapExecutionException("Impossible to get all creatives", e);
 	}
 	return results;
     }// getAllCreative()
 
     @Override
     public Map<String, Object> getPreviewCreative(String oAuthAccessToken, String creativeID)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -273,6 +278,7 @@ public class SnapCreative implements SnapCreativeInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get preview of creative, creativeID = {}", creativeID, e);
+	    throw new SnapExecutionException("Impossible to get preview of creative", e);
 	}
 	return result;
     }// getPreviewCreative()
