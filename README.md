@@ -25,11 +25,25 @@ URL Marketing API SnapChat : https://developers.snapchat.com/ads/
 * Audience Size 
 * Bid Estimate
 * Audit Logs
-* Snap Pixel (in progress)
+* Snap Pixel
+* Measurements (in progress)
 
-## Installation
+## Requirements
+
+You need to have minimum JDK/JRE Java 8 to use SnapAds4J.
+To download JDK/JRE, go here : 
+
+https://adoptopenjdk.net/
+
+## Get Started
 
 Very soon...
+
+## Code examples
+
+Very soon...
+
+## Wanna join the project
 
 ## License
 
@@ -51,7 +65,4 @@ Apache commons (lang3, codec, collections, httpcomponents): [License Apache Comm
 
 cobertura-maven-plugin: [License Corbertura Maven Plugin](http://www.mojohaus.org/cobertura-maven-plugin/license.html)
 
-## Code examples
-
-Very soon...
 

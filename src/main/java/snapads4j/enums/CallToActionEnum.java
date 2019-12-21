@@ -47,5 +47,5 @@ public enum CallToActionEnum {
      * VIEW_MORE
      */
     @JsonProperty("VIEW_MORE")
-    VIEW_MORE;
+    VIEW_MORE
 }// CallToActionEnum

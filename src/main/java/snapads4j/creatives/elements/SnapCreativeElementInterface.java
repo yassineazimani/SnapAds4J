@@ -22,6 +22,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.creatives.elements.CreativeElement;
@@ -39,10 +40,11 @@ public interface SnapCreativeElementInterface {
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
+     * @throws SnapExecutionException 
      */
-    public Optional<CreativeElement> createCreativeElement(String oAuthAccessToken, CreativeElement creative)
+    Optional<CreativeElement> createCreativeElement(String oAuthAccessToken, CreativeElement creative)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException;
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
     /**
      * 
@@ -54,24 +56,26 @@ public interface SnapCreativeElementInterface {
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
+     * @throws SnapExecutionException 
      */
-    public List<CreativeElement> createCreativeElements(String oAuthAccessToken, List<CreativeElement> creatives)
+    List<CreativeElement> createCreativeElements(String oAuthAccessToken, List<CreativeElement> creatives)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException;
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
     /**
      * 
      * @param oAuthAccessToken
-     * @param creative
+     * @param interactionZone
      * @return
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
+     * @throws SnapExecutionException 
      */
-    public Optional<InteractionZone> createInteractionZone(String oAuthAccessToken, InteractionZone interactionZone)
+    Optional<InteractionZone> createInteractionZone(String oAuthAccessToken, InteractionZone interactionZone)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException;
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
 }// SnapCreativeElementInterface

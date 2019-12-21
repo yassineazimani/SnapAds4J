@@ -26,5 +26,5 @@ public enum MediaTypeEnum {
     IMAGE,
     /** Lens package */
     @JsonProperty("LENS_PACKAGE")
-    LENS_PACKAGE;
+    LENS_PACKAGE
 }// MediaTypeEnum

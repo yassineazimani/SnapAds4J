@@ -24,5 +24,5 @@ public enum CheckAdSquadEnum {
   /** For creation Ad Squad */
   CREATION,
   /** For update Ad Squad */
-  UPDATE;
+  UPDATE
 } // CheckAdSquadEnum

@@ -47,5 +47,5 @@ public enum ReviewStatusEnum {
      * FAILED
      */
     @JsonProperty("REJECTED")
-    REJECTED;
+    REJECTED
 }// ReviewStatusEnum

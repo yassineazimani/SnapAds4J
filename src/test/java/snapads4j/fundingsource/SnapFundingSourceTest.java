@@ -44,6 +44,7 @@ import snapads4j.enums.CurrencyEnum;
 import snapads4j.enums.FundingSourceTypeEnum;
 import snapads4j.enums.StatusEnum;
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.fundingsource.FundingSource;
@@ -92,7 +93,7 @@ public class SnapFundingSourceTest {
   @Test
   public void test_getAllFundingSource_should_success()
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-          IOException, InterruptedException {
+          IOException, InterruptedException, SnapExecutionException {
       Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
@@ -155,14 +156,14 @@ public class SnapFundingSourceTest {
   public void test_getAllFundingSource_should_throw_SnapArgumentException_1() {
     assertThatThrownBy(() -> fundingSource.getAllFundingSource(oAuthAccessToken, null))
         .isInstanceOf(SnapArgumentException.class)
-        .hasMessage("The organization ID is mandatory");
+        .hasMessage("The organization ID is required");
   } // test_getAllFundingSource_should_throw_SnapArgumentException_1()
 
   @Test
   public void test_getAllFundingSource_should_throw_SnapArgumentException_2() {
     assertThatThrownBy(() -> fundingSource.getAllFundingSource(oAuthAccessToken, ""))
         .isInstanceOf(SnapArgumentException.class)
-        .hasMessage("The organization ID is mandatory");
+        .hasMessage("The organization ID is required");
   } // test_getAllFundingSource_should_throw_SnapArgumentException_2()
 
   @Test
@@ -313,7 +314,7 @@ public class SnapFundingSourceTest {
   @Test
   public void test_getSpecificFundingSource_should_success()
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-          IOException, InterruptedException {
+          IOException, InterruptedException, SnapExecutionException {
       Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
@@ -353,14 +354,14 @@ public class SnapFundingSourceTest {
   public void test_getSpecificFundingSource_should_throw_SnapArgumentException_1() {
     assertThatThrownBy(() -> fundingSource.getSpecificFundingSource(oAuthAccessToken, null))
         .isInstanceOf(SnapArgumentException.class)
-        .hasMessage("The Funding source ID is mandatory");
+        .hasMessage("The Funding source ID is required");
   } // test_getSpecificFundingSource_should_throw_SnapArgumentException_1()
 
   @Test
   public void test_getSpecificFundingSource_should_throw_SnapArgumentException_2() {
     assertThatThrownBy(() -> fundingSource.getSpecificFundingSource(oAuthAccessToken, ""))
         .isInstanceOf(SnapArgumentException.class)
-        .hasMessage("The Funding source ID is mandatory");
+        .hasMessage("The Funding source ID is required");
   } // test_getSpecificFundingSource_should_throw_SnapArgumentException_2()
 
   @Test
@@ -509,14 +510,16 @@ public class SnapFundingSourceTest {
   } // should_throw_exception_1337_getSpecificFundingSource()
   
   @Test
-  public void test_getAllFundingSource_should_throw_IOException() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+  public void test_getAllFundingSource_should_throw_SnapExecutionException() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-	fundingSource.getAllFundingSource(oAuthAccessToken, id);
-  }// test_getAllFundingSource_should_throw_IOException()
+	assertThatThrownBy(() -> fundingSource.getAllFundingSource(oAuthAccessToken, id))
+		.isInstanceOf(SnapExecutionException.class);
+  }// test_getAllFundingSource_should_throw_SnapExecutionException()
   
   @Test
-  public void test_getSpecificFundingSource_should_throw_IOException() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+  public void test_getSpecificFundingSource_should_throw_SnapExecutionException() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-	fundingSource.getSpecificFundingSource(oAuthAccessToken, id);
-  }// test_getSpecificFundingSource_should_throw_IOException()
+	assertThatThrownBy(() -> fundingSource.getSpecificFundingSource(oAuthAccessToken, id))
+		.isInstanceOf(SnapExecutionException.class);
+  }// test_getSpecificFundingSource_should_throw_SnapExecutionException()
 } // SnapFundingSourceTest

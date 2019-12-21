@@ -42,5 +42,5 @@ public enum PackagingStatusEnum {
      * FAILED
      */
     @JsonProperty("FAILED")
-    FAILED;
+    FAILED
 }// PackagingStatusEnum

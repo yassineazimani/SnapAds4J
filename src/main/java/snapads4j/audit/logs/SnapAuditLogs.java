@@ -36,6 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Setter;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.audit.logs.AuditLog;
@@ -83,7 +84,7 @@ public class SnapAuditLogs implements SnapAuditLogsInterface {
     @Override
     public List<AuditLog> fetchChangeLogsForCampaign(String oAuthAccessToken, String campaignId)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -112,6 +113,7 @@ public class SnapAuditLogs implements SnapAuditLogsInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get audit logs, campaign_id = {}", campaignId, e);
+	    throw new SnapExecutionException("Impossible to get audit logs", e);
 	}
 	return results;
     }// fetchChangeLogsForCampaign()
@@ -119,7 +121,7 @@ public class SnapAuditLogs implements SnapAuditLogsInterface {
     @Override
     public List<AuditLog> fetchChangeLogsForAdSquad(String oAuthAccessToken, String adSquadId)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -148,6 +150,7 @@ public class SnapAuditLogs implements SnapAuditLogsInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get audit logs, ad_squad_id = {}", adSquadId, e);
+	    throw new SnapExecutionException("Impossible to get audit logs", e);
 	}
 	return results;
     }// fetchChangeLogsForAdSquad()
@@ -155,7 +158,7 @@ public class SnapAuditLogs implements SnapAuditLogsInterface {
     @Override
     public List<AuditLog> fetchChangeLogsForAd(String oAuthAccessToken, String adId)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -184,6 +187,7 @@ public class SnapAuditLogs implements SnapAuditLogsInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get audit logs, ad_id = {}", adId, e);
+	    throw new SnapExecutionException("Impossible to get audit logs", e);
 	}
 	return results;
     }// fetchChangeLogsForAd()
@@ -191,7 +195,7 @@ public class SnapAuditLogs implements SnapAuditLogsInterface {
     @Override
     public List<AuditLog> fetchChangeLogsForCreative(String oAuthAccessToken, String creativeId)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -220,6 +224,7 @@ public class SnapAuditLogs implements SnapAuditLogsInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get audit logs, creative_id = {}", creativeId, e);
+	    throw new SnapExecutionException("Impossible to get audit logs", e);
 	}
 	return results;
     }// fetchChangeLogsForCreative()

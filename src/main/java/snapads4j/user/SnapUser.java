@@ -32,6 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import snapads4j.exceptions.SnapExceptionsUtils;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.user.AuthenticatedUser;
@@ -73,10 +74,11 @@ public class SnapUser implements SnapUserInterface {
      * @return AuthenticatedUser {@link #AuthenticatedUser}
      * @throws SnapOAuthAccessTokenException
      * @throws SnapResponseErrorException
+     * @throws SnapExecutionException 
      */
     @Override
     public Optional<AuthenticatedUser> aboutMe(String oAuthAccessToken)
-	    throws SnapOAuthAccessTokenException, SnapResponseErrorException {
+	    throws SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -99,6 +101,7 @@ public class SnapUser implements SnapUserInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get informations about me", e);
+	    throw new SnapExecutionException("Impossible to get informations about me", e);
 	}
 	return result;
     } // aboutMe()

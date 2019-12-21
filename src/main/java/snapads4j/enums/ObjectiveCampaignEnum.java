@@ -24,5 +24,5 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public enum ObjectiveCampaignEnum {
   @JsonProperty("BRAND_AWARENESS")
-  BRAND_AWARENESS;
+  BRAND_AWARENESS
 } // ObjectiveCampaignEnum

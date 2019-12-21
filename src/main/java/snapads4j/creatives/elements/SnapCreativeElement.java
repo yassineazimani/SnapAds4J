@@ -41,6 +41,7 @@ import snapads4j.enums.CreativeTypeEnum;
 import snapads4j.enums.InteractionTypeEnum;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.creatives.elements.CreativeElement;
@@ -86,7 +87,7 @@ public class SnapCreativeElement implements SnapCreativeElementInterface {
     @Override
     public Optional<CreativeElement> createCreativeElement(String oAuthAccessToken, CreativeElement creative)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -114,6 +115,7 @@ public class SnapCreativeElement implements SnapCreativeElementInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to create creative element, ad_account_id = {}", creative.getAdAccountId(), e);
+	    throw new SnapExecutionException("Impossible to create creative element", e);
 	}
 	return result;
     }// createCreativeElement()
@@ -121,7 +123,7 @@ public class SnapCreativeElement implements SnapCreativeElementInterface {
     @Override
     public List<CreativeElement> createCreativeElements(String oAuthAccessToken, List<CreativeElement> creatives)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -149,6 +151,7 @@ public class SnapCreativeElement implements SnapCreativeElementInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to create creative elements, ad_account_id = {}", creatives.get(0).getAdAccountId(), e);
+	    throw new SnapExecutionException("Impossible to create creative elements", e);
 	}
 	return results;
     }// createCreativeElements()
@@ -156,7 +159,7 @@ public class SnapCreativeElement implements SnapCreativeElementInterface {
     @Override
     public Optional<InteractionZone> createInteractionZone(String oAuthAccessToken, InteractionZone interactionZone)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -184,6 +187,7 @@ public class SnapCreativeElement implements SnapCreativeElementInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to create interaction zone, ad_account_id = {}", interactionZone.getAdAccountId(), e);
+	    throw new SnapExecutionException("Impossible to create interaction zone", e);
 	}
 	return result;
     }// createInteractionZone()

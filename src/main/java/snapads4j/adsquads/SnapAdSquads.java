@@ -42,6 +42,7 @@ import lombok.Setter;
 import snapads4j.enums.CheckAdSquadEnum;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.adsquads.AdSquad;
@@ -99,7 +100,7 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
     @Override
     public Optional<AdSquad> createAdSquad(String oAuthAccessToken, AdSquad adSquad)
 	    throws JsonProcessingException, SnapOAuthAccessTokenException, SnapResponseErrorException,
-	    SnapArgumentException, UnsupportedEncodingException {
+	    SnapArgumentException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -127,13 +128,14 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to create ad squad, campaign_id = {}", adSquad.getCampaignId(), e);
+	    throw new SnapExecutionException("Impossible to create ad squad", e);
 	}
 	return result;
     } // createAdSquad()
 
     @Override
     public Optional<AdSquad> updateAdSquad(String oAuthAccessToken, AdSquad adSquad) throws SnapOAuthAccessTokenException,
-	    JsonProcessingException, SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException {
+	    JsonProcessingException, SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -161,18 +163,19 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to update ad squad, id = {}", adSquad.getId(), e);
+	    throw new SnapExecutionException("Impossible to update ad squad", e);
 	}
 	return result;
     } // updateAdSquad()
 
     @Override
     public List<AdSquad> getAllAdSquadsFromCampaign(String oAuthAccessToken, String campaignId)
-	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException {
+	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	if (StringUtils.isEmpty(campaignId)) {
-	    throw new SnapArgumentException("The Campaign ID is mandatory");
+	    throw new SnapArgumentException("The Campaign ID is required");
 	}
 	List<AdSquad> results = new ArrayList<>();
 	final String url = this.endpointAllAdSquadsCampaign.replace("{campaign_id}", campaignId);
@@ -195,18 +198,19 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get all adsquads, campaignId = {}", campaignId, e);
+	    throw new SnapExecutionException("Impossible to get all adsquads", e);
 	}
 	return results;
     } // getAllAdSquadsFromCampaign()
 
     @Override
     public List<AdSquad> getAllAdSquadsFromAdAccount(String oAuthAccessToken, String adAccountId)
-	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException {
+	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	if (StringUtils.isEmpty(adAccountId)) {
-	    throw new SnapArgumentException("The AdAccount ID is mandatory");
+	    throw new SnapArgumentException("The AdAccount ID is required");
 	}
 	List<AdSquad> results = new ArrayList<>();
 	final String url = this.endpointAllAdSquadsAdAccount.replace("{ad_account_id}", adAccountId);
@@ -229,18 +233,19 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get all adsquads, adAccountId = {}", adAccountId, e);
+	    throw new SnapExecutionException("Impossible to get all adsquads", e);
 	}
 	return results;
     } // getAllAdSquadsFromAdAccount()
 
     @Override
     public Optional<AdSquad> getSpecificAdSquad(String oAuthAccessToken, String id)
-	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException {
+	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	if (StringUtils.isEmpty(id)) {
-	    throw new SnapArgumentException("The AdSquad ID is mandatory");
+	    throw new SnapArgumentException("The AdSquad ID is required");
 	}
 	Optional<AdSquad> result = Optional.empty();
 	final String url = this.endpointSpecificAdSquad + id;
@@ -263,18 +268,19 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get specific AdSquad, id = {}", id, e);
+	    throw new SnapExecutionException("Impossible to get specific AdSquad", e);
 	}
 	return result;
     } // getSpecificAdSquad()
 
     @Override
     public void deleteAdSquad(String oAuthAccessToken, String id)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	if (StringUtils.isEmpty(id)) {
-	    throw new SnapArgumentException("The Ad Squad ID is mandatory");
+	    throw new SnapArgumentException("The Ad Squad ID is required");
 	}
 	final String url = this.endpointDeleteAdSquad + id;
 	HttpDelete request = HttpUtils.prepareDeleteRequest(url, oAuthAccessToken);
@@ -286,6 +292,7 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to delete specific ad squad, id = {}", id, e);
+	    throw new SnapExecutionException("Impossible to delete specific ad squad", e);
 	}
     } // deleteAdSquad()
 

@@ -28,5 +28,5 @@ public enum SchemaEnum {
     @JsonProperty("MOBILE_AD_ID_SHA256")
     MOBILE_AD_ID_SHA256,
     @JsonProperty("PHONE_SHA256")
-    PHONE_SHA256;
+    PHONE_SHA256
 }// SchemaEnum

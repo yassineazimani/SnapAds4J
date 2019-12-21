@@ -28,5 +28,5 @@ public enum MediaTypeImageEnum {
     /**
      * Image for top snap image.
      */
-    TOP_SNAP;
+    TOP_SNAP
 }// MediaTypeImageEnum

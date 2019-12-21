@@ -28,5 +28,5 @@ public enum BuyModelEnum {
   AUCTION,
   /** RESERVED */
   @JsonProperty("RESERVED")
-  RESERVED;
+  RESERVED
 } // BuyModelEnum

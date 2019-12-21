@@ -31,5 +31,5 @@ public enum TargetableStatusEnum {
   TOO_FEW_USERS,
   /** Segment is ready to target */
   @JsonProperty("READY")
-  READY;
+  READY
 } // TargetableStatusEnum

@@ -24,5 +24,5 @@ public enum CheckCampaignEnum {
   /** For creation campaign */
   CREATION,
   /** For update campaign */
-  UPDATE;
+  UPDATE
 } // CheckCampaignEnum

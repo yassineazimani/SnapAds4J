@@ -24,5 +24,5 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public enum DeliveryConstraintEnum {
   @JsonProperty("REACH_AND_FREQUENCY")
-  REACH_AND_FREQUENCY;
+  REACH_AND_FREQUENCY
 } // DeliveryConstraintEnum

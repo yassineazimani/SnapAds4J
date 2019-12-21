@@ -20,7 +20,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +45,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -54,6 +52,7 @@ import snapads4j.enums.MediaStatusTypeEnum;
 import snapads4j.enums.MediaTypeEnum;
 import snapads4j.enums.MediaTypeImageEnum;
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.media.CreativeMedia;
@@ -96,11 +95,11 @@ public class SnapMediaTest {
     private final String mediaID = "a7bee653-1865-41cf-8cee-8ab85a205837";
 
     private final String largeMediaID = "7536bbc5-0074-4dc4-b654-5ba9cd9f9441";
-    
+
     private CreativeMedia media;
 
     private CreativeMedia mediaFail;
-    
+
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     @Before
@@ -114,25 +113,24 @@ public class SnapMediaTest {
     } // setUp()
 
     @Test
-    public void test_create_media_should_success_1() throws IOException, InterruptedException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+    public void test_create_media_should_success_1() throws IOException, InterruptedException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
 	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-	Mockito.when(entityUtilsWrapper.toString(httpEntity))
-	.thenReturn(SnapResponseUtils.getSnapMediaCreated());
+	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapMediaCreated());
 	Assertions.assertThatCode(() -> snapMedia.createMedia(oAuthAccessToken, media)).doesNotThrowAnyException();
 	Assertions.assertThat(snapMedia.createMedia(oAuthAccessToken, media)).isNotNull();
-	snapMedia.createMedia(oAuthAccessToken, media)
-		.ifPresent(media -> {
-		    Assertions.assertThat(media.getId()).isEqualTo("a7bee653-1865-41cf-8cee-8ab85a205837");
-		    Assertions.assertThat(media.getName()).isEqualTo("Media A - Video");
-		    Assertions.assertThat(media.getAdAccountId()).isEqualTo(adAccountID);
-		    Assertions.assertThat(media.getType()).isEqualTo(MediaTypeEnum.VIDEO);
-		    Assertions.assertThat(media.getMediaStatus()).isEqualTo(MediaStatusTypeEnum.PENDING_UPLOAD);
-		    assertThat(sdf.format(media.getCreatedAt())).isEqualTo("2016-08-14T06:18:01.855Z");
-		    assertThat(sdf.format(media.getUpdatedAt())).isEqualTo("2016-08-14T06:18:01.855Z");
-		});
+	snapMedia.createMedia(oAuthAccessToken, media).ifPresent(media -> {
+	    Assertions.assertThat(media.getId()).isEqualTo("a7bee653-1865-41cf-8cee-8ab85a205837");
+	    Assertions.assertThat(media.getName()).isEqualTo("Media A - Video");
+	    Assertions.assertThat(media.getAdAccountId()).isEqualTo(adAccountID);
+	    Assertions.assertThat(media.getType()).isEqualTo(MediaTypeEnum.VIDEO);
+	    Assertions.assertThat(media.getMediaStatus()).isEqualTo(MediaStatusTypeEnum.PENDING_UPLOAD);
+	    assertThat(sdf.format(media.getCreatedAt())).isEqualTo("2016-08-14T06:18:01.855Z");
+	    assertThat(sdf.format(media.getUpdatedAt())).isEqualTo("2016-08-14T06:18:01.855Z");
+	});
     }// test_create_media_should_success_1()
 
     @Test
@@ -209,11 +207,12 @@ public class SnapMediaTest {
     }// test_create_media_should_throw_SnapOAuthAccessTokenException_6()
 
     @Test
-    public void test_create_media_should_throw_IOException() throws ClientProtocolException, IOException,
+    public void test_create_media_should_throw_SnapExecutionException() throws ClientProtocolException, IOException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
-	snapMedia.createMedia(oAuthAccessToken, media);
-    }// test_create_media_should_throw_IOException()
+	assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, media))
+		.isInstanceOf(SnapExecutionException.class);
+    }// test_create_media_should_throw_SnapExecutionException()
 
     @Test
     public void should_throw_exception_401_create_media() throws IOException, InterruptedException,
@@ -367,20 +366,16 @@ public class SnapMediaTest {
     }// test_upload_media_video_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
-    public void test_upload_media_video_should_throw_IOException() throws ClientProtocolException, IOException {
+    public void test_upload_media_video_should_throw_SnapExecutionException() throws ClientProtocolException, IOException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
 	Optional<File> optFile = new FileUtils().getFileFromResources("videos/vidsplay-rain-falling-on-window-1-1.mp4",
 		"vidsplay-rain-falling-on-window-1-1.mp4");
 	optFile.ifPresent((mediaFile) -> {
-	    try {
-		snapMedia.uploadMediaVideo(oAuthAccessToken, mediaID, mediaFile);
-	    } catch (JsonProcessingException | UnsupportedEncodingException | SnapResponseErrorException
-		    | SnapOAuthAccessTokenException | SnapArgumentException e) {
-		e.printStackTrace();
-	    }
+	    assertThatThrownBy(() -> snapMedia.uploadMediaVideo(oAuthAccessToken, mediaID, mediaFile))
+		    .isInstanceOf(SnapExecutionException.class);
 	});
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-1.mp4");
-    }// test_upload_media_video_should_throw_IOException()
+    }// test_upload_media_video_should_throw_SnapExecutionException()
 
     @Test
     public void test_upload_media_video_should_throw_SnapArgumentException_1() {
@@ -472,19 +467,16 @@ public class SnapMediaTest {
     }// test_upload_media_image_should_success_4()
 
     @Test
-    public void test_upload_media_image_should_throw_IOException() throws ClientProtocolException, IOException {
+    public void test_upload_media_image_should_throw_SnapExecutionException() throws ClientProtocolException, IOException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
 	Optional<File> optFile = new FileUtils().getFileFromResources("images/app-icon-5.jpeg", "app-icon-5.jpeg");
 	optFile.ifPresent((mediaFile) -> {
-	    try {
-		snapMedia.uploadMediaImage(oAuthAccessToken, mediaID, mediaFile, MediaTypeImageEnum.TOP_SNAP);
-	    } catch (JsonProcessingException | UnsupportedEncodingException | SnapResponseErrorException
-		    | SnapOAuthAccessTokenException | SnapArgumentException e) {
-		e.printStackTrace();
-	    }
+	    assertThatThrownBy(
+		    () -> snapMedia.uploadMediaImage(oAuthAccessToken, mediaID, mediaFile, MediaTypeImageEnum.TOP_SNAP))
+			    .isInstanceOf(SnapExecutionException.class);
 	});
 	FileUtils.deleteFile("app-icon-5.jpeg");
-    }// test_upload_media_image_should_throw_IOException()
+    }// test_upload_media_image_should_throw_SnapExecutionException()
 
     @Test
     public void test_upload_media_image_should_throw_SnapOAuthAccessTokenException_1() {
@@ -932,8 +924,8 @@ public class SnapMediaTest {
      * test_upload_large_media_chunks_should_success
      */
     @Test
-    public void test_upload_large_media_should_success()
-	    throws IOException, SnapArgumentException, SnapResponseErrorException, SnapOAuthAccessTokenException {
+    public void test_upload_large_media_should_success() throws IOException, SnapArgumentException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
@@ -948,7 +940,7 @@ public class SnapMediaTest {
 	Mockito.when(entityUtilsWrapper.toString(httpEntity))
 		.thenReturn(SnapResponseUtils.getSnapLargeMediaUploadMetaResponses());
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
 	    Assertions.assertThat(snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks)).isPresent();
 	    Assertions.assertThat(snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks).get())
 		    .isEqualTo(largeMediaID);
@@ -958,8 +950,8 @@ public class SnapMediaTest {
     }// test_upload_large_media_should_success()
 
     @Test
-    public void test_upload_large_media_chunks_should_success()
-	    throws IOException, SnapArgumentException, SnapResponseErrorException, SnapOAuthAccessTokenException {
+    public void test_upload_large_media_chunks_should_success() throws IOException, SnapArgumentException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
@@ -974,7 +966,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
 	    Assertions.assertThat(snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isPresent();
 	    Assertions
@@ -986,7 +978,7 @@ public class SnapMediaTest {
     }// test_upload_large_media_chunks_should_success()
 
     @Test
-    public void test_upload_large_media_should_throw_IOException() throws ClientProtocolException, IOException,
+    public void test_upload_large_media_should_throw_SnapExecutionException() throws ClientProtocolException, IOException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
 	Optional<File> optFile = new FileUtils().getFileFromResources("videos/vidsplay-rain-falling-on-window-1-1.mp4",
@@ -996,12 +988,13 @@ public class SnapMediaTest {
 	ObjectMapper mapper = new ObjectMapper();
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
-	    snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks);
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
+	    assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "lfv.mp4", chunks))
+		    .isInstanceOf(SnapExecutionException.class);
 	}
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-1.mp4");
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-2.mp4");
-    }// test_upload_large_media_should_throw_IOException()
+    }// test_upload_large_media_should_throw_SnapExecutionException()
 
     @Test
     public void test_upload_large_media_update_response_throw_SnapResponseErrorException() {
@@ -1014,7 +1007,7 @@ public class SnapMediaTest {
     }// test_upload_large_media_update_response_throw_SnapResponseErrorException()
 
     @Test
-    public void test_upload_large_media_chunks_should_throw_IOException()
+    public void test_upload_large_media_chunks_should_throw_SnapExecutionException()
 	    throws ClientProtocolException, IOException, SnapResponseErrorException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
 	Optional<File> optFile = new FileUtils().getFileFromResources("videos/vidsplay-rain-falling-on-window-1-1.mp4",
@@ -1026,12 +1019,13 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
-	    snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp);
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
+	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
+		    .isInstanceOf(SnapExecutionException.class);
 	}
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-1.mp4");
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-2.mp4");
-    }// test_upload_large_media_chunks_should_throw_IOException()
+    }// test_upload_large_media_chunks_should_throw_SnapExecutionException()
 
     @Test
     public void test_upload_large_media_should_throw_SnapOAuthAccessTokenException_1() {
@@ -1307,7 +1301,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
 	}
@@ -1330,14 +1324,14 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
 	}
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-1.mp4");
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-2.mp4");
     }// should_throw_exception_401_upload_large_media_chunks()
-    
+
     @Test
     public void should_throw_exception_403_upload_large_media_chunks()
 	    throws IOException, SnapArgumentException, SnapResponseErrorException, SnapOAuthAccessTokenException {
@@ -1353,14 +1347,14 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
 	}
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-1.mp4");
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-2.mp4");
     }// should_throw_exception_403_upload_large_media_chunks()
-    
+
     @Test
     public void should_throw_exception_404_upload_large_media_chunks()
 	    throws IOException, SnapArgumentException, SnapResponseErrorException, SnapOAuthAccessTokenException {
@@ -1376,14 +1370,14 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks =Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
 	}
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-1.mp4");
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-2.mp4");
     }// should_throw_exception_404_upload_large_media_chunks()
-    
+
     @Test
     public void should_throw_exception_405_upload_large_media_chunks()
 	    throws IOException, SnapArgumentException, SnapResponseErrorException, SnapOAuthAccessTokenException {
@@ -1399,14 +1393,14 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
 	}
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-1.mp4");
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-2.mp4");
     }// should_throw_exception_405_upload_large_media_chunks()
-    
+
     @Test
     public void should_throw_exception_406_upload_large_media_chunks()
 	    throws IOException, SnapArgumentException, SnapResponseErrorException, SnapOAuthAccessTokenException {
@@ -1422,14 +1416,14 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
 	}
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-1.mp4");
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-2.mp4");
     }// should_throw_exception_406_upload_large_media_chunks()
-    
+
     @Test
     public void should_throw_exception_410_upload_large_media_chunks()
 	    throws IOException, SnapArgumentException, SnapResponseErrorException, SnapOAuthAccessTokenException {
@@ -1445,14 +1439,14 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
 	}
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-1.mp4");
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-2.mp4");
     }// should_throw_exception_410_upload_large_media_chunks()
-    
+
     @Test
     public void should_throw_exception_418_upload_large_media_chunks()
 	    throws IOException, SnapArgumentException, SnapResponseErrorException, SnapOAuthAccessTokenException {
@@ -1468,7 +1462,7 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
 	}
@@ -1491,14 +1485,15 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
-		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
+		    .isInstanceOf(SnapResponseErrorException.class)
+		    .hasMessage("Too Many Requests / Rate limit reached");
 	}
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-1.mp4");
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-2.mp4");
     }// should_throw_exception_429_upload_large_media_chunks()
-    
+
     @Test
     public void should_throw_exception_500_upload_large_media_chunks()
 	    throws IOException, SnapArgumentException, SnapResponseErrorException, SnapOAuthAccessTokenException {
@@ -1514,14 +1509,14 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
 	}
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-1.mp4");
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-2.mp4");
     }// should_throw_exception_500_upload_large_media_chunks()
-    
+
     @Test
     public void should_throw_exception_503_upload_large_media_chunks()
 	    throws IOException, SnapArgumentException, SnapResponseErrorException, SnapOAuthAccessTokenException {
@@ -1537,14 +1532,14 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
 	}
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-1.mp4");
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-2.mp4");
     }// should_throw_exception_503_upload_large_media_chunks()
-    
+
     @Test
     public void should_throw_exception_1337_upload_large_media_chunks()
 	    throws IOException, SnapArgumentException, SnapResponseErrorException, SnapOAuthAccessTokenException {
@@ -1560,23 +1555,24 @@ public class SnapMediaTest {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	SnapHttpResponseUploadMedia resp = mapper.readValue(metaResponses, SnapHttpResponseUploadMedia.class);
 	if (optFile.isPresent() && optFile2.isPresent()) {
-	    List<File> chunks = Stream.of(new File[] {optFile.get(), optFile2.get()}).collect(Collectors.toList());
+	    List<File> chunks = Stream.of(new File[] { optFile.get(), optFile2.get() }).collect(Collectors.toList());
 	    assertThatThrownBy(() -> snapMedia._uploadLargeMediaUpdateChunks(oAuthAccessToken, mediaID, chunks, resp))
 		    .isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
 	}
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-1.mp4");
 	FileUtils.deleteFile("vidsplay-rain-falling-on-window-1-2.mp4");
     }// should_throw_exception_1337_upload_large_media_chunks()
-    
+
     @Test
-    public void test_get_all_media_should_success() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+    public void test_get_all_media_should_success() throws ClientProtocolException, IOException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
 	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-	Mockito.when(entityUtilsWrapper.toString(httpEntity))
-	.thenReturn(SnapResponseUtils.getSnapAllMedia());
-	Assertions.assertThatCode(() -> snapMedia.getAllMedia(oAuthAccessToken, adAccountID)).doesNotThrowAnyException();
+	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapAllMedia());
+	Assertions.assertThatCode(() -> snapMedia.getAllMedia(oAuthAccessToken, adAccountID))
+		.doesNotThrowAnyException();
 	List<CreativeMedia> medias = snapMedia.getAllMedia(oAuthAccessToken, adAccountID);
 	Assertions.assertThat(medias).isNotNull();
 	Assertions.assertThat(medias).isNotEmpty();
@@ -1586,29 +1582,29 @@ public class SnapMediaTest {
 	Assertions.assertThat(medias.get(0).getAdAccountId()).isEqualTo(adAccountID);
 	Assertions.assertThat(medias.get(0).getType()).isEqualTo(MediaTypeEnum.VIDEO);
 	Assertions.assertThat(medias.get(0).getMediaStatus()).isEqualTo(MediaStatusTypeEnum.PENDING_UPLOAD);
-	    assertThat(sdf.format(medias.get(0).getCreatedAt())).isEqualTo("2016-08-12T20:39:57.029Z");
-	    assertThat(sdf.format(medias.get(0).getUpdatedAt())).isEqualTo("2016-08-12T20:39:57.029Z");
-	
+	assertThat(sdf.format(medias.get(0).getCreatedAt())).isEqualTo("2016-08-12T20:39:57.029Z");
+	assertThat(sdf.format(medias.get(0).getUpdatedAt())).isEqualTo("2016-08-12T20:39:57.029Z");
+
 	Assertions.assertThat(medias.get(1).getId()).isEqualTo("a7bee653-1865-41cf-8cee-8ab85a205837");
 	Assertions.assertThat(medias.get(1).getName()).isEqualTo("Media A - Video");
 	Assertions.assertThat(medias.get(1).getFileName()).isEqualTo("sample.mov");
 	Assertions.assertThat(medias.get(1).getAdAccountId()).isEqualTo(adAccountID);
 	Assertions.assertThat(medias.get(1).getType()).isEqualTo(MediaTypeEnum.VIDEO);
 	Assertions.assertThat(medias.get(1).getMediaStatus()).isEqualTo(MediaStatusTypeEnum.READY);
-	    assertThat(sdf.format(medias.get(1).getCreatedAt())).isEqualTo("2016-08-14T06:23:37.086Z");
-	    assertThat(sdf.format(medias.get(1).getUpdatedAt())).isEqualTo("2016-08-14T06:24:28.378Z");
-	
+	assertThat(sdf.format(medias.get(1).getCreatedAt())).isEqualTo("2016-08-14T06:23:37.086Z");
+	assertThat(sdf.format(medias.get(1).getUpdatedAt())).isEqualTo("2016-08-14T06:24:28.378Z");
+
 	Assertions.assertThat(medias.get(2).getId()).isEqualTo("ab32d7e5-1f80-4e1a-a76b-3c543d2b28e4");
 	Assertions.assertThat(medias.get(2).getName()).isEqualTo("App Icon");
 	Assertions.assertThat(medias.get(2).getFileName()).isEqualTo("Mobile Strike.png");
 	Assertions.assertThat(medias.get(2).getAdAccountId()).isEqualTo(adAccountID);
 	Assertions.assertThat(medias.get(2).getType()).isEqualTo(MediaTypeEnum.IMAGE);
 	Assertions.assertThat(medias.get(2).getMediaStatus()).isEqualTo(MediaStatusTypeEnum.READY);
-	    assertThat(sdf.format(medias.get(2).getCreatedAt())).isEqualTo("2016-08-12T17:36:59.740Z");
-	    assertThat(sdf.format(medias.get(2).getUpdatedAt())).isEqualTo("2016-08-12T17:38:01.918Z");
-    
+	assertThat(sdf.format(medias.get(2).getCreatedAt())).isEqualTo("2016-08-12T17:36:59.740Z");
+	assertThat(sdf.format(medias.get(2).getUpdatedAt())).isEqualTo("2016-08-12T17:38:01.918Z");
+
     }// test_get_all_media_should_success()
-    
+
     @Test
     public void test_get_all_media_should_throw_SnapOAuthAccessTokenException_1() {
 	assertThatThrownBy(() -> snapMedia.getAllMedia("", adAccountID))
@@ -1629,17 +1625,18 @@ public class SnapMediaTest {
 
     @Test
     public void test_get_all_media_should_throw_SnapArgumentException_2() {
-	assertThatThrownBy(() -> snapMedia.getAllMedia(oAuthAccessToken, ""))
-		.isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is missing");
+	assertThatThrownBy(() -> snapMedia.getAllMedia(oAuthAccessToken, "")).isInstanceOf(SnapArgumentException.class)
+		.hasMessage("The Ad Account ID is missing");
     }// test_get_all_media_should_throw_SnapOAuthAccessTokenException_2()
-    
+
     @Test
-    public void test_all_media_should_throw_IOException() throws ClientProtocolException, IOException,
+    public void test_all_media_should_throw_SnapExecutionException() throws ClientProtocolException, IOException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-	snapMedia.getAllMedia(oAuthAccessToken, adAccountID);
-    }// test_all_media_should_throw_IOException()
-    
+	assertThatThrownBy(() -> snapMedia.getAllMedia(oAuthAccessToken, adAccountID))
+		.isInstanceOf(SnapExecutionException.class);
+    }// test_all_media_should_throw_SnapExecutionException()
+
     @Test
     public void should_throw_exception_400_all_media() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
@@ -1773,29 +1770,29 @@ public class SnapMediaTest {
 	assertThatThrownBy(() -> snapMedia.getAllMedia(oAuthAccessToken, adAccountID))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     } // should_throw_exception_1337_all_media()
-    
+
     @Test
-    public void test_get_specific_media_should_success() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+    public void test_get_specific_media_should_success() throws ClientProtocolException, IOException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
 	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-	Mockito.when(entityUtilsWrapper.toString(httpEntity))
-	.thenReturn(SnapResponseUtils.getSnapSpecificMedia());
-	Assertions.assertThatCode(() -> snapMedia.getSpecificMedia(oAuthAccessToken, mediaID)).doesNotThrowAnyException();
+	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapSpecificMedia());
+	Assertions.assertThatCode(() -> snapMedia.getSpecificMedia(oAuthAccessToken, mediaID))
+		.doesNotThrowAnyException();
 	Assertions.assertThat(snapMedia.getSpecificMedia(oAuthAccessToken, mediaID)).isNotNull();
-	snapMedia.getSpecificMedia(oAuthAccessToken, mediaID)
-		.ifPresent(media -> {
-		    Assertions.assertThat(media.toString()).isNotEmpty();
-		    Assertions.assertThat(media.getId()).isEqualTo("a7bee653-1865-41cf-8cee-8ab85a205837");
-		    Assertions.assertThat(media.getName()).isEqualTo("Media A - Video");
-		    Assertions.assertThat(media.getFileName()).isEqualTo("sample.mov");
-		    Assertions.assertThat(media.getAdAccountId()).isEqualTo(adAccountID);
-		    Assertions.assertThat(media.getType()).isEqualTo(MediaTypeEnum.VIDEO);
-		    Assertions.assertThat(media.getMediaStatus()).isEqualTo(MediaStatusTypeEnum.READY);
-		    Assertions.assertThat(sdf.format(media.getCreatedAt())).isEqualTo("2016-08-14T06:23:37.086Z");
-		    Assertions.assertThat(sdf.format(media.getUpdatedAt())).isEqualTo("2016-08-14T06:24:28.378Z");
-		});
+	snapMedia.getSpecificMedia(oAuthAccessToken, mediaID).ifPresent(media -> {
+	    Assertions.assertThat(media.toString()).isNotEmpty();
+	    Assertions.assertThat(media.getId()).isEqualTo("a7bee653-1865-41cf-8cee-8ab85a205837");
+	    Assertions.assertThat(media.getName()).isEqualTo("Media A - Video");
+	    Assertions.assertThat(media.getFileName()).isEqualTo("sample.mov");
+	    Assertions.assertThat(media.getAdAccountId()).isEqualTo(adAccountID);
+	    Assertions.assertThat(media.getType()).isEqualTo(MediaTypeEnum.VIDEO);
+	    Assertions.assertThat(media.getMediaStatus()).isEqualTo(MediaStatusTypeEnum.READY);
+	    Assertions.assertThat(sdf.format(media.getCreatedAt())).isEqualTo("2016-08-14T06:23:37.086Z");
+	    Assertions.assertThat(sdf.format(media.getUpdatedAt())).isEqualTo("2016-08-14T06:24:28.378Z");
+	});
     }// test_get_specific_media_should_success()
 
     @Test
@@ -1821,14 +1818,15 @@ public class SnapMediaTest {
 	assertThatThrownBy(() -> snapMedia.getSpecificMedia(oAuthAccessToken, ""))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is missing");
     }// test_get_specific_media_should_throw_SnapOAuthAccessTokenException_2()
-    
+
     @Test
-    public void test_specific_media_should_throw_IOException() throws ClientProtocolException, IOException,
+    public void test_specific_media_should_throw_SnapExecutionException() throws ClientProtocolException, IOException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-	snapMedia.getSpecificMedia(oAuthAccessToken, mediaID);
-    }// test_specific_media_should_throw_IOException()
-    
+	assertThatThrownBy(() -> snapMedia.getSpecificMedia(oAuthAccessToken, mediaID))
+		.isInstanceOf(SnapExecutionException.class);
+    }// test_specific_media_should_throw_SnapExecutionException()
+
     @Test
     public void should_throw_exception_400_specific_media() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
@@ -1962,21 +1960,25 @@ public class SnapMediaTest {
 	assertThatThrownBy(() -> snapMedia.getSpecificMedia(oAuthAccessToken, mediaID))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     } // should_throw_exception_1337_specific_media()
-    
+
     @Test
-    public void test_get_preview_media_should_success() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+    public void test_get_preview_media_should_success() throws ClientProtocolException, IOException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
 	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-	Mockito.when(entityUtilsWrapper.toString(httpEntity))
-	.thenReturn(SnapResponseUtils.getSnapPreviewMedia());
-	Assertions.assertThatCode(() -> snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, mediaID)).doesNotThrowAnyException();
+	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapPreviewMedia());
+	Assertions.assertThatCode(() -> snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, mediaID))
+		.doesNotThrowAnyException();
 	Assertions.assertThat(snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, mediaID)).isNotNull();
 	Assertions.assertThat(snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, mediaID)).isNotEmpty();
-	Assertions.assertThat(snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, mediaID).containsKey("link")).isTrue();
-	Assertions.assertThat(snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, mediaID).containsKey("expiresAt")).isTrue();
-	Assertions.assertThat(snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, mediaID).get("link")).isEqualTo("https://adsapisc.appspot.com/media/video_preview?media_id=8e781365-ce4c-4336-8c53-f6a1f7c50af1&expires_at=1521063563303&signature=MGQCMA1DRI6uBax3GSq93E8hp5b3P2Ebg0lIlPa8iGML9rs1B9WFmPeHH6ttvx_rmDG5AgIwY0pjIvEEpwOXM8o3h9Hst60DjRN9Mw7am7OmkdrBGfoI4IiHBflv0XpK87Tnb_BE");
+	Assertions.assertThat(snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, mediaID).containsKey("link"))
+		.isTrue();
+	Assertions.assertThat(snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, mediaID).containsKey("expiresAt"))
+		.isTrue();
+	Assertions.assertThat(snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, mediaID).get("link")).isEqualTo(
+		"https://adsapisc.appspot.com/media/video_preview?media_id=8e781365-ce4c-4336-8c53-f6a1f7c50af1&expires_at=1521063563303&signature=MGQCMA1DRI6uBax3GSq93E8hp5b3P2Ebg0lIlPa8iGML9rs1B9WFmPeHH6ttvx_rmDG5AgIwY0pjIvEEpwOXM8o3h9Hst60DjRN9Mw7am7OmkdrBGfoI4IiHBflv0XpK87Tnb_BE");
     }// test_get_preview_media_should_success()
 
     @Test
@@ -2002,14 +2004,15 @@ public class SnapMediaTest {
 	assertThatThrownBy(() -> snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, ""))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is missing");
     }// test_get_preview_media_should_throw_SnapOAuthAccessTokenException_2()
-    
+
     @Test
-    public void test_preview_media_should_throw_IOException() throws ClientProtocolException, IOException,
+    public void test_preview_media_should_throw_SnapExecutionException() throws ClientProtocolException, IOException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-	snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, mediaID);
-    }// test_preview_media_should_throw_IOException()
-    
+	assertThatThrownBy(() -> snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, mediaID))
+		.isInstanceOf(SnapExecutionException.class);
+    }// test_preview_media_should_throw_SnapExecutionException()
+
     @Test
     public void should_throw_exception_400_preview_media() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
@@ -2143,21 +2146,25 @@ public class SnapMediaTest {
 	assertThatThrownBy(() -> snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, mediaID))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     } // should_throw_exception_1337_preview_media()
-    
+
     @Test
-    public void test_get_thumbnail_media_should_success() throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+    public void test_get_thumbnail_media_should_success() throws ClientProtocolException, IOException,
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
 	Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-	Mockito.when(entityUtilsWrapper.toString(httpEntity))
-	.thenReturn(SnapResponseUtils.getSnapThumbnailMedia());
-	Assertions.assertThatCode(() -> snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, mediaID)).doesNotThrowAnyException();
+	Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapThumbnailMedia());
+	Assertions.assertThatCode(() -> snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, mediaID))
+		.doesNotThrowAnyException();
 	Assertions.assertThat(snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, mediaID)).isNotNull();
 	Assertions.assertThat(snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, mediaID)).isNotEmpty();
-	Assertions.assertThat(snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, mediaID).containsKey("link")).isTrue();
-	Assertions.assertThat(snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, mediaID).containsKey("expiresAt")).isTrue();
-	Assertions.assertThat(snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, mediaID).get("link")).isEqualTo("https://adsapisc.appspot.com/media/video_thumbnail?media_id=095a4a6d-01b0-4f6c-8901-41ee38c7b540&expires_at=1536870570555&signature=MGQCMBQ_NfJM0yZCrdyLiEon4Lkbei0zFJF2HpLiHa2NvSLV2JyOVhLqHfQgqbDWUuzaCQIwHzPj_ZFtPNk688SoFiKWUIFEKKBMhSm8t4moy9xlfgnoSv-8LMQ1omM_P8QCj7O9");
+	Assertions.assertThat(snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, mediaID).containsKey("link"))
+		.isTrue();
+	Assertions.assertThat(snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, mediaID).containsKey("expiresAt"))
+		.isTrue();
+	Assertions.assertThat(snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, mediaID).get("link")).isEqualTo(
+		"https://adsapisc.appspot.com/media/video_thumbnail?media_id=095a4a6d-01b0-4f6c-8901-41ee38c7b540&expires_at=1536870570555&signature=MGQCMBQ_NfJM0yZCrdyLiEon4Lkbei0zFJF2HpLiHa2NvSLV2JyOVhLqHfQgqbDWUuzaCQIwHzPj_ZFtPNk688SoFiKWUIFEKKBMhSm8t4moy9xlfgnoSv-8LMQ1omM_P8QCj7O9");
     }// test_get_thumbnail_media_should_success()
 
     @Test
@@ -2183,14 +2190,15 @@ public class SnapMediaTest {
 	assertThatThrownBy(() -> snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, ""))
 		.isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is missing");
     }// test_get_thumbnail_media_should_throw_SnapOAuthAccessTokenException_2()
-    
+
     @Test
-    public void test_thumbnail_media_should_throw_IOException() throws ClientProtocolException, IOException,
+    public void test_thumbnail_media_should_throw_SnapExecutionException() throws ClientProtocolException, IOException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-	snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, mediaID);
-    }// test_thumbnail_media_should_throw_IOException()
-    
+	assertThatThrownBy(() -> snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, mediaID))
+		.isInstanceOf(SnapExecutionException.class);
+    }// test_thumbnail_media_should_throw_SnapExecutionException()
+
     @Test
     public void should_throw_exception_400_thumbnail_media() throws IOException, InterruptedException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
@@ -2261,7 +2269,7 @@ public class SnapMediaTest {
 
     @Test
     public void should_throw_exception_410_thumbnail_media() throws IOException, InterruptedException,
-	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(410);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
@@ -2294,7 +2302,7 @@ public class SnapMediaTest {
 
     @Test
     public void should_throw_exception_500_thumbnail_media() throws IOException, InterruptedException,
-	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(500);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
@@ -2324,7 +2332,7 @@ public class SnapMediaTest {
 	assertThatThrownBy(() -> snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, mediaID))
 		.isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     } // should_throw_exception_1337_thumbnail_media()
-    
+
     /**
      * Initialize a creative media
      * 

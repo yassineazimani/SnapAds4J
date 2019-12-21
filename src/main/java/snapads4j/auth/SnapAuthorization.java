@@ -37,6 +37,7 @@ import lombok.Setter;
 import snapads4j.config.SnapConfiguration;
 import snapads4j.exceptions.SnapAuthorizationException;
 import snapads4j.exceptions.SnapExceptionsUtils;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.auth.Auth;
 import snapads4j.model.auth.TokenResponse;
@@ -87,7 +88,7 @@ public class SnapAuthorization {
     } // getOAuthAuthorizationURI()
 
     public TokenResponse getOAuthAccessToken(String oauthCode) throws JsonProcessingException,
-	    SnapAuthorizationException, SnapResponseErrorException, UnsupportedEncodingException {
+	    SnapAuthorizationException, SnapResponseErrorException, UnsupportedEncodingException, SnapExecutionException {
 	TokenResponse responseFromJson = null;
 	if (this.configuration == null) {
 	    throw new SnapAuthorizationException("Configuration unfound");
@@ -126,12 +127,13 @@ public class SnapAuthorization {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get OAuthAccessToken with oauthCode {}", oauthCode, e);
+	    throw new SnapExecutionException("Impossible to get OAuthAccessToken", e);
 	}
 	return responseFromJson;
     } // getOAuthAccessToken()
 
     public TokenResponse refreshToken(String refreshToken) throws JsonProcessingException, SnapAuthorizationException,
-	    SnapResponseErrorException, UnsupportedEncodingException {
+	    SnapResponseErrorException, UnsupportedEncodingException, SnapExecutionException {
 	TokenResponse responseFromJson = null;
 	if (this.configuration == null) {
 	    throw new SnapAuthorizationException("Configuration unfound");
@@ -170,6 +172,7 @@ public class SnapAuthorization {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get refresh token with old refresh token {}", refreshToken, e);
+	    throw new SnapExecutionException("Impossible to refresh token with old refresh token", e);
 	}
 	return responseFromJson;
     } // refreshToken()

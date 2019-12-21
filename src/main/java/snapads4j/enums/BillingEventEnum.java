@@ -25,5 +25,5 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum BillingEventEnum {
   /** IMPRESSION */
   @JsonProperty("IMPRESSION")
-  IMPRESSION;
+  IMPRESSION
 } // BillingEventEnum

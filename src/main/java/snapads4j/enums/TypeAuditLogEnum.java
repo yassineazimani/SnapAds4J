@@ -31,5 +31,5 @@ public enum TypeAuditLogEnum {
     @JsonProperty("CAMPAIGN")
     CAMPAIGN,
     @JsonProperty("CREATIVE")
-    CREATIVE;
+    CREATIVE
 }// TypeAuditLogEnum

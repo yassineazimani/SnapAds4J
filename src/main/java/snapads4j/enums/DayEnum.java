@@ -36,5 +36,5 @@ public enum DayEnum {
   @JsonProperty("saturday")
   SATURDAY,
   @JsonProperty("sunday")
-  SUNDAY;
+  SUNDAY
 } // DayEnum

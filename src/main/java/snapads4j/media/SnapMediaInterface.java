@@ -25,6 +25,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import snapads4j.enums.MediaTypeImageEnum;
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.media.CreativeMedia;
@@ -42,9 +43,10 @@ public interface SnapMediaInterface {
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
+     * @throws SnapExecutionException 
      */
-    public Optional<CreativeMedia> createMedia(String oAuthAccessToken, CreativeMedia media) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-    JsonProcessingException, UnsupportedEncodingException;
+    Optional<CreativeMedia> createMedia(String oAuthAccessToken, CreativeMedia media) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
     /**
      * 
@@ -57,10 +59,11 @@ public interface SnapMediaInterface {
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
+     * @throws SnapExecutionException 
      */
-    public void uploadMediaVideo(String oAuthAccessToken, String mediaId, File fileVideo)
+    void uploadMediaVideo(String oAuthAccessToken, String mediaId, File fileVideo)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException;
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
     /**
      * 
@@ -74,10 +77,11 @@ public interface SnapMediaInterface {
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
+     * @throws SnapExecutionException 
      */
-    public void uploadMediaImage(String oAuthAccessToken, String mediaId,  File fileImage, MediaTypeImageEnum typeImage)
+    void uploadMediaImage(String oAuthAccessToken, String mediaId, File fileImage, MediaTypeImageEnum typeImage)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException;
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
     /**
      * @see
@@ -92,9 +96,10 @@ public interface SnapMediaInterface {
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
      * @return
+     * @throws SnapExecutionException 
      */
-    public Optional<String> uploadLargeMedia(String oAuthAccessToken, String mediaId, String filename, List<File> chunks) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-    JsonProcessingException, UnsupportedEncodingException;
+    Optional<String> uploadLargeMedia(String oAuthAccessToken, String mediaId, String filename, List<File> chunks) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
     /**
      * @see
@@ -104,9 +109,10 @@ public interface SnapMediaInterface {
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
+     * @throws SnapExecutionException 
      */
-    public List<CreativeMedia> getAllMedia(String oAuthAccessToken, String adAccountId)
-	      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
+    List<CreativeMedia> getAllMedia(String oAuthAccessToken, String adAccountId)
+	      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
     /**
      * 
@@ -117,8 +123,9 @@ public interface SnapMediaInterface {
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
+     * @throws SnapExecutionException 
      */
-    public Optional<CreativeMedia> getSpecificMedia(String oAuthAccessToken, String mediaId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
+    Optional<CreativeMedia> getSpecificMedia(String oAuthAccessToken, String mediaId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
     /**
      * 
@@ -129,8 +136,9 @@ public interface SnapMediaInterface {
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
+     * @throws SnapExecutionException 
      */
-    public Map<String, Object> getPreviewOfSpecificMedia(String oAuthAccessToken, String mediaId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
+    Map<String, Object> getPreviewOfSpecificMedia(String oAuthAccessToken, String mediaId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
     
     /**
      * 
@@ -141,7 +149,8 @@ public interface SnapMediaInterface {
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
+     * @throws SnapExecutionException 
      */
-    public Map<String, Object> getThumbnailOfSpecificMedia(String oAuthAccessToken, String mediaId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
+    Map<String, Object> getThumbnailOfSpecificMedia(String oAuthAccessToken, String mediaId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
 }// SnapMediaInterface()

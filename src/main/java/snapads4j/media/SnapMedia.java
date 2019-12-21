@@ -45,6 +45,7 @@ import snapads4j.enums.MediaTypeEnum;
 import snapads4j.enums.MediaTypeImageEnum;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.media.CreativeMedia;
@@ -124,7 +125,7 @@ public class SnapMedia implements SnapMediaInterface {
     @Override
     public Optional<CreativeMedia> createMedia(String oAuthAccessToken, CreativeMedia media)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -152,6 +153,7 @@ public class SnapMedia implements SnapMediaInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to create creative media, ad_account_id = {}", media.getAdAccountId(), e);
+	    throw new SnapExecutionException("Impossible to create creative media", e);
 	}
 	return result;
     }// createMedia()
@@ -159,7 +161,7 @@ public class SnapMedia implements SnapMediaInterface {
     @Override
     public void uploadMediaVideo(String oAuthAccessToken, String mediaId, File fileVideo)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -177,13 +179,14 @@ public class SnapMedia implements SnapMediaInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to upload media video, mediaId = {}", mediaId, e);
+	    throw new SnapExecutionException("Impossible to upload media video", e);
 	}
     }// uploadMediaVideo()
 
     @Override
     public void uploadMediaImage(String oAuthAccessToken, String mediaId, File fileImage, MediaTypeImageEnum typeImage)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -201,13 +204,14 @@ public class SnapMedia implements SnapMediaInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to upload media image, mediaId = {}", mediaId, e);
+	    throw new SnapExecutionException("Impossible to upload media image", e);
 	}
     }// uploadMediaImage()
 
     @Override
     public Optional<String> uploadLargeMedia(String oAuthAccessToken, String mediaId, String filename,
 	    List<File> chunks) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	Optional<String> result = Optional.empty();
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
@@ -245,12 +249,13 @@ public class SnapMedia implements SnapMediaInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to upload large media, mediaId = {}", mediaId, e);
+	    throw new SnapExecutionException("Impossible to upload large media", e);
 	}
 	return result;
     }// uploadLargeMedia()
 
     public Optional<String> _uploadLargeMediaUpdateChunks(String oAuthAccessToken, String mediaId, List<File> chunks,
-	    SnapHttpResponseUploadMedia responseFromJson) throws SnapResponseErrorException {
+	    SnapHttpResponseUploadMedia responseFromJson) throws SnapResponseErrorException, SnapExecutionException {
 	Optional<String> result = Optional.empty();
 	if (responseFromJson != null) {
 	    for (File chunk : chunks) {
@@ -270,6 +275,7 @@ public class SnapMedia implements SnapMediaInterface {
 		    }
 		} catch (IOException e) {
 		    LOGGER.error("Impossible to upload large media, mediaId = {}", mediaId, e);
+		    throw new SnapExecutionException("Impossible to upload large media", e);
 		}
 		++part;
 	    }
@@ -296,6 +302,7 @@ public class SnapMedia implements SnapMediaInterface {
 		}
 	    } catch (IOException e) {
 		LOGGER.error("Impossible to upload large media, mediaId = {}", mediaId, e);
+		throw new SnapExecutionException("Impossible to upload large media", e);
 	    }
 	}
 	return result;
@@ -311,7 +318,7 @@ public class SnapMedia implements SnapMediaInterface {
 
     @Override
     public List<CreativeMedia> getAllMedia(String oAuthAccessToken, String adAccountId)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -338,14 +345,15 @@ public class SnapMedia implements SnapMediaInterface {
 		}
 	    }
 	} catch (IOException e) {
-	    LOGGER.error("Impossible to get all ads, adAccountId = {}", adAccountId, e);
+	    LOGGER.error("Impossible to get all medias, adAccountId = {}", adAccountId, e);
+	    throw new SnapExecutionException("Impossible to get all medias", e);
 	}
 	return results;
     }// getAllMedia()
 
     @Override
     public Optional<CreativeMedia> getSpecificMedia(String oAuthAccessToken, String mediaId)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -373,13 +381,14 @@ public class SnapMedia implements SnapMediaInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get specific media, mediaId = {}", mediaId, e);
+	    throw new SnapExecutionException("Impossible to get specific media", e);
 	}
 	return result;
     }// getSpecificMedia()
 
     @Override
     public Map<String, Object> getPreviewOfSpecificMedia(String oAuthAccessToken, String mediaId)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -408,13 +417,14 @@ public class SnapMedia implements SnapMediaInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get preview of media, mediaId = {}", mediaId, e);
+	    throw new SnapExecutionException("Impossible to get preview of media", e);
 	}
 	return result;
     }// getPreviewOfSpecificMedia()
 
     @Override
     public Map<String, Object> getThumbnailOfSpecificMedia(String oAuthAccessToken, String mediaId)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -443,6 +453,7 @@ public class SnapMedia implements SnapMediaInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get thumbnail of media, mediaId = {}", mediaId, e);
+	    throw new SnapExecutionException("Impossible to get thumbnail of media", e);
 	}
 	return result;
     }// getThumbnailOfSpecificMedia()

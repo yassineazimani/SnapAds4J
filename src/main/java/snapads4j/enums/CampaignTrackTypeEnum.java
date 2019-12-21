@@ -27,5 +27,5 @@ public enum CampaignTrackTypeEnum {
   @JsonProperty("LENS_APP_INSTALL")
   LENS_APP_INSTALL,
   @JsonProperty("LENS_DEEP_LINK")
-  LENS_DEEP_LINK;
+  LENS_DEEP_LINK
 } // MeasurementSpecEnum

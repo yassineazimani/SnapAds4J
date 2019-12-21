@@ -41,6 +41,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import snapads4j.enums.OptimizationGoalEnum;
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.bid.BidEstimate;
@@ -92,7 +93,7 @@ public class SnapBidEstimateTest {
     
     @Test
     public void test_get_bid_estimate_by_squad_id_should_success() throws IOException, InterruptedException,
-	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException {
+	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
@@ -125,11 +126,12 @@ public class SnapBidEstimateTest {
     } // test_get_bid_estimate_by_squad_id_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
-    public void test_get_bid_estimate_by_squad_id_should_throw_IOException() throws ClientProtocolException,
+    public void test_get_bid_estimate_by_squad_id_should_throw_SnapExecutionException() throws ClientProtocolException,
 	    IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-	snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, this.adSquadId);
-    }// test_get_bid_estimate_by_squad_id_should_throw_IOException()
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(oAuthAccessToken, this.adSquadId))
+	.isInstanceOf(SnapExecutionException.class);
+    }// test_get_bid_estimate_by_squad_id_should_throw_SnapExecutionException()
 
     @Test
     public void test_get_bid_estimate_by_squad_id_should_throw_throw_SnapArgumentException_when_id_is_null() {
@@ -267,7 +269,7 @@ public class SnapBidEstimateTest {
     
     @Test
     public void test_get_bid_estimate_by_squad_spec_should_success() throws IOException, InterruptedException,
-	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException {
+	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
@@ -322,11 +324,12 @@ public class SnapBidEstimateTest {
     } // test_get_bid_estimate_by_squad_spec_should_throw_SnapArgumentException_when_targetingSpecBidEstimate_is_null()
     
     @Test
-    public void test_get_bid_estimate_by_squad_spec_should_throw_IOException() throws ClientProtocolException,
+    public void test_get_bid_estimate_by_squad_spec_should_throw_SnapExecutionException() throws ClientProtocolException,
 	    IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
-	snapBidEstimate.getBidEstimateBySquadSpec(this.oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate);
-    }// test_get_bid_estimate_by_squad_spec_should_throw_IOException()
+	assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(this.oAuthAccessToken, this.adAccountId, targetingSpecBidEstimate))
+	.isInstanceOf(SnapExecutionException.class);
+    }// test_get_bid_estimate_by_squad_spec_should_throw_SnapExecutionException()
     
     @Test
     public void should_throw_exception_400_get_bid_estimate_by_squad_spec() throws IOException, InterruptedException,

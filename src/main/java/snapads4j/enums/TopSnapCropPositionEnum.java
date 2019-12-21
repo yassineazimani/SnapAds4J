@@ -42,5 +42,5 @@ public enum TopSnapCropPositionEnum {
      * BOTTOM
      */
     @JsonProperty("BOTTOM")
-    BOTTOM;
+    BOTTOM
 }// TopSnapCropPositionEnum

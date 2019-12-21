@@ -42,6 +42,7 @@ import lombok.Setter;
 import snapads4j.enums.CheckCampaignEnum;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExceptionsUtils;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.campaigns.Campaign;
@@ -103,11 +104,12 @@ public class SnapCampaigns implements SnapCampaignsInterface {
      * @throws UnsupportedEncodingException
      * 
      * @return Campaign created
+     * @throws SnapExecutionException 
      */
     @Override
     public Optional<Campaign> createCampaign(String oAuthAccessToken, Campaign campaign)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -135,6 +137,7 @@ public class SnapCampaigns implements SnapCampaignsInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to create campaign, ad_account_id = {}", campaign.getAdAccountId(), e);
+	    throw new SnapExecutionException("Impossible to create campaign", e);
 	}
 	return result;
     }
@@ -142,7 +145,7 @@ public class SnapCampaigns implements SnapCampaignsInterface {
     @Override
     public Optional<Campaign> updateCampaign(String oAuthAccessToken, Campaign campaign)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException {
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
@@ -170,18 +173,19 @@ public class SnapCampaigns implements SnapCampaignsInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to update campaign, id = {}", campaign.getId(), e);
+	    throw new SnapExecutionException("Impossible to update campaign", e);
 	}
 	return result;
     } // updateCampaign()
 
     @Override
     public List<Campaign> getAllCampaigns(String oAuthAccessToken, String adAccountId)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	if (StringUtils.isEmpty(adAccountId)) {
-	    throw new SnapArgumentException("The Ad Account ID is mandatory");
+	    throw new SnapArgumentException("The Ad Account ID is required");
 	}
 	List<Campaign> campaigns = new ArrayList<>();
 	final String url = this.endpointAllCampaigns.replace("{ad_account_id}", adAccountId);
@@ -205,18 +209,19 @@ public class SnapCampaigns implements SnapCampaignsInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get all campaigns, adAccountId = {}", adAccountId, e);
+	    throw new SnapExecutionException("Impossible to get all campaigns", e);
 	}
 	return campaigns;
     } // getAllCampaigns()
 
     @Override
     public Optional<Campaign> getSpecificCampaign(String oAuthAccessToken, String id)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	if (StringUtils.isEmpty(id)) {
-	    throw new SnapArgumentException("The campaign ID is mandatory");
+	    throw new SnapArgumentException("The campaign ID is required");
 	}
 	Optional<Campaign> result = Optional.empty();
 	final String url = this.endpointSpecificCampaign + id;
@@ -239,18 +244,19 @@ public class SnapCampaigns implements SnapCampaignsInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to get specific campaign, id = {}", id, e);
+	    throw new SnapExecutionException("Impossible to get specific campaign", e);
 	}
 	return result;
     } // getSpecificCampaign()
 
     @Override
     public void deleteCampaign(String oAuthAccessToken, String id)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
 	if (StringUtils.isEmpty(oAuthAccessToken)) {
 	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
 	}
 	if (StringUtils.isEmpty(id)) {
-	    throw new SnapArgumentException("The campaign ID is mandatory");
+	    throw new SnapArgumentException("The campaign ID is required");
 	}
 	final String url = this.endpointDeleteCampaign + id;
 	HttpDelete request = HttpUtils.prepareDeleteRequest(url, oAuthAccessToken);
@@ -262,6 +268,7 @@ public class SnapCampaigns implements SnapCampaignsInterface {
 	    }
 	} catch (IOException e) {
 	    LOGGER.error("Impossible to delete specific campaign, id = {}", id, e);
+	    throw new SnapExecutionException("Impossible to get specific campaign", e);
 	}
     } // deleteCampaign()
 

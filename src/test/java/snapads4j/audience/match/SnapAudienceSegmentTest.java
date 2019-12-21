@@ -56,6 +56,7 @@ import snapads4j.enums.TargetableStatusEnum;
 import snapads4j.enums.TypeCreationSpecDetails;
 import snapads4j.enums.UploadStatusEnum;
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapNormalizeArgumentException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
@@ -124,7 +125,7 @@ public class SnapAudienceSegmentTest {
 
     @Test
     public void test_create_audience_segment_should_success() throws IOException, InterruptedException,
-	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException {
+	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
@@ -163,11 +164,12 @@ public class SnapAudienceSegmentTest {
     } // test_create_audience_segment_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
-    public void test_create_audience_segment_should_throw_IOException() throws ClientProtocolException, IOException,
+    public void test_create_audience_segment_should_throw_SnapExecutionException() throws ClientProtocolException, IOException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
-	snapAudienceSegment.createAudienceSegment(oAuthAccessToken, this.segment);
-    }// test_create_audience_segment_should_throw_IOException()
+	assertThatThrownBy(() -> snapAudienceSegment.createAudienceSegment(oAuthAccessToken, this.segment))
+	.isInstanceOf(SnapExecutionException.class);
+    }// test_create_audience_segment_should_throw_SnapExecutionException()
 
     @Test
     public void test_create_audience_segment_should_throw_throw_SnapArgumentException_when_segment_is_null() {
@@ -342,7 +344,7 @@ public class SnapAudienceSegmentTest {
 
     @Test
     public void test_get_all_audiences_segments_should_success() throws IOException, InterruptedException,
-	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException {
+	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
@@ -389,11 +391,12 @@ public class SnapAudienceSegmentTest {
     } // test_get_all_audiences_segments_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
-    public void test_get_all_audiences_segments_should_throw_IOException() throws ClientProtocolException, IOException,
+    public void test_get_all_audiences_segments_should_throw_SnapExecutionException() throws ClientProtocolException, IOException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-	snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId);
-    }// test_get_all_audiences_segments_should_throw_IOException()
+	assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId))
+	.isInstanceOf(SnapExecutionException.class);
+    }// test_get_all_audiences_segments_should_throw_SnapExecutionException()
 
     @Test
     public void test_get_all_audiences_segments_should_throw_throw_SnapArgumentException_when_adAccountId_is_null() {
@@ -531,7 +534,7 @@ public class SnapAudienceSegmentTest {
 
     @Test
     public void test_get_specific_audience_segment_should_success() throws IOException, InterruptedException,
-	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException {
+	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
@@ -576,11 +579,12 @@ public class SnapAudienceSegmentTest {
     } // test_get_specific_audience_segment_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
-    public void test_get_specific_audience_segment_should_throw_IOException() throws ClientProtocolException,
+    public void test_get_specific_audience_segment_should_throw_SnapExecutionException() throws ClientProtocolException,
 	    IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-	snapAudienceSegment.getSpecificAudienceSegment(oAuthAccessToken, specificId);
-    }// test_get_specific_audience_segment_should_throw_IOException()
+	assertThatThrownBy(() -> snapAudienceSegment.getSpecificAudienceSegment(oAuthAccessToken, specificId))
+	.isInstanceOf(SnapExecutionException.class);
+    }// test_get_specific_audience_segment_should_throw_SnapExecutionException()
 
     @Test
     public void test_get_specific_audience_segment_should_throw_throw_SnapArgumentException_when_id_is_null() {
@@ -718,7 +722,7 @@ public class SnapAudienceSegmentTest {
 
     @Test
     public void test_update_audience_segment_should_success() throws IOException, InterruptedException,
-	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException {
+	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPut.class))).thenReturn(httpResponse);
@@ -761,11 +765,12 @@ public class SnapAudienceSegmentTest {
     } // test_update_audience_segment_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
-    public void test_update_audience_segment_should_throw_IOException() throws ClientProtocolException, IOException,
+    public void test_update_audience_segment_should_throw_SnapExecutionException() throws ClientProtocolException, IOException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpPut.class)))).thenThrow(IOException.class);
-	snapAudienceSegment.updateAudienceSegment(oAuthAccessToken, this.segment);
-    }// test_update_audience_segment_should_throw_IOException()
+	assertThatThrownBy(() -> snapAudienceSegment.updateAudienceSegment(oAuthAccessToken, this.segment))
+	.isInstanceOf(SnapExecutionException.class);
+    }// test_update_audience_segment_should_throw_SnapExecutionException()
 
     @Test
     public void test_update_audience_segment_should_throw_throw_SnapArgumentException_when_segment_is_null() {
@@ -934,7 +939,7 @@ public class SnapAudienceSegmentTest {
     @Test
     public void add_user_from_segment_should_success_when_data_added()
 	    throws SnapOAuthAccessTokenException, SnapResponseErrorException, ClientProtocolException, IOException,
-	    SnapArgumentException, SnapNormalizeArgumentException {
+	    SnapArgumentException, SnapNormalizeArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
@@ -949,7 +954,7 @@ public class SnapAudienceSegmentTest {
     @Test
     public void add_user_from_segment_should_success_when_zero_data_added()
 	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
-	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException {
+	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException, SnapExecutionException {
 	assertThat(snapAudienceSegment.addUserToSegment(oAuthAccessToken, form)).isEqualTo(0);
     }// add_user_from_segment_should_success_when_zero_data_added()
 
@@ -1168,18 +1173,19 @@ public class SnapAudienceSegmentTest {
     } // should_throw_exception_1337_add_user_from_segment()
 
     @Test
-    public void add_user_from_segment_should_throw_IOException()
+    public void add_user_from_segment_should_throw_SnapExecutionException()
 	    throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException,
 	    SnapArgumentException, SnapNormalizeArgumentException {
 	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
 	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
-	snapAudienceSegment.addUserToSegment(oAuthAccessToken, form);
-    }// add_user_from_segment_should_throw_IOException()
+	assertThatThrownBy(() -> snapAudienceSegment.addUserToSegment(oAuthAccessToken, form))
+	.isInstanceOf(SnapExecutionException.class);
+    }// add_user_from_segment_should_throw_SnapExecutionException()
 
     @Test
     public void delete_user_from_segment_should_success_when_data_add()
 	    throws SnapOAuthAccessTokenException, SnapResponseErrorException, ClientProtocolException, IOException,
-	    SnapArgumentException, SnapNormalizeArgumentException {
+	    SnapArgumentException, SnapNormalizeArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpDeleteWithBody.class))).thenReturn(httpResponse);
@@ -1194,7 +1200,7 @@ public class SnapAudienceSegmentTest {
     @Test
     public void delete_user_from_segment_should_success_when_zero_data_add()
 	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
-	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException {
+	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException, SnapExecutionException {
 	assertThat(snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form)).isEqualTo(0);
     }// delete_user_from_segment_should_success_when_zero_data_deleteed()
 
@@ -1413,17 +1419,18 @@ public class SnapAudienceSegmentTest {
     } // should_throw_exception_1337_delete_user_from_segment()
 
     @Test
-    public void delete_user_from_segment_should_throw_IOException()
+    public void delete_user_from_segment_should_throw_SnapExecutionException()
 	    throws ClientProtocolException, IOException, SnapResponseErrorException, SnapOAuthAccessTokenException,
 	    SnapArgumentException, SnapNormalizeArgumentException {
 	form.setData(Stream.of("toto@toto.com").collect(Collectors.toList()));
 	Mockito.when(httpClient.execute((Mockito.any(HttpDeleteWithBody.class)))).thenThrow(IOException.class);
-	snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form);
-    }// delete_user_from_segment_should_throw_IOException()
+	assertThatThrownBy(() -> snapAudienceSegment.deleteUserFromSegment(oAuthAccessToken, form))
+	.isInstanceOf(SnapExecutionException.class);
+    }// delete_user_from_segment_should_throw_SnapExecutionException()
 
     @Test
     public void test_delete_all_users_from_segment_should_success() throws SnapResponseErrorException,
-	    SnapOAuthAccessTokenException, SnapArgumentException, IOException, InterruptedException {
+	    SnapOAuthAccessTokenException, SnapArgumentException, IOException, InterruptedException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
@@ -1462,11 +1469,12 @@ public class SnapAudienceSegmentTest {
     } // test_delete_all_users_from_segment_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
-    public void test_delete_all_users_from_segment_should_throw_IOException() throws ClientProtocolException,
+    public void test_delete_all_users_from_segment_should_throw_SnapExecutionException() throws ClientProtocolException,
 	    IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpDelete.class)))).thenThrow(IOException.class);
-	snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, specificId);
-    }// test_delete_all_users_from_segment_should_throw_IOException()
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAllUsersFromSegment(oAuthAccessToken, specificId))
+		.isInstanceOf(SnapExecutionException.class);
+    }// test_delete_all_users_from_segment_should_throw_SnapExecutionException()
 
     @Test
     public void test_delete_all_users_from_segment_should_throw_SnapArgumentException_1() {
@@ -1618,11 +1626,12 @@ public class SnapAudienceSegmentTest {
     } // test_delete_audience_segment_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
-    public void test_delete_audience_segment_should_throw_IOException() throws ClientProtocolException, IOException,
+    public void test_delete_audience_segment_should_throw_SnapExecutionException() throws ClientProtocolException, IOException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpDelete.class)))).thenThrow(IOException.class);
-	snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, specificId);
-    }// test_delete_audience_segment_should_throw_IOException()
+	assertThatThrownBy(() -> snapAudienceSegment.deleteAudienceSegment(oAuthAccessToken, specificId))
+	.isInstanceOf(SnapExecutionException.class);
+    }// test_delete_audience_segment_should_throw_SnapExecutionException()
 
     @Test
     public void test_delete_audience_segment_should_throw_SnapArgumentException_1() {
@@ -1750,7 +1759,7 @@ public class SnapAudienceSegmentTest {
     
     @Test
     public void test_create_sam_look_a_likes_should_success() throws IOException, InterruptedException,
-	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException {
+	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
@@ -1795,11 +1804,12 @@ public class SnapAudienceSegmentTest {
     } // test_create_sam_look_a_likes_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
-    public void test_create_sam_look_a_likes_should_throw_IOException() throws ClientProtocolException, IOException,
+    public void test_create_sam_look_a_likes_should_throw_SnapExecutionException() throws ClientProtocolException, IOException,
 	    SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
-	snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam);
-    }// test_create_sam_look_a_likes_should_throw_IOException()
+	assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, this.sam))
+	.isInstanceOf(SnapExecutionException.class);
+    }// test_create_sam_look_a_likes_should_throw_SnapExecutionException()
 
     @Test
     public void test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_sam_is_null() {

@@ -32,5 +32,5 @@ public enum InteractionTypeEnum {
      * DEEP_LINK
      */
     @JsonProperty("DEEP_LINK")
-    DEEP_LINK;
+    DEEP_LINK
 }// InteractionTypeEnum

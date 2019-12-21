@@ -38,6 +38,7 @@ import snapads4j.config.SnapConfiguration;
 import snapads4j.config.SnapConfigurationBuilder;
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapAuthorizationException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.auth.TokenResponse;
@@ -70,7 +71,7 @@ public class SnapAuthorizationTest {
     configBuilder.setRedirectUri("fake_redirect_uri");
     configBuilder.setClientSecret("fake_client_secret");
     SnapConfiguration config = configBuilder.build();
-    MockitoAnnotations.initMocks(this.auth);
+    MockitoAnnotations.initMocks(this);
     this.auth.setConfiguration(config);
     this.auth.setHttpClient(httpClient);
     this.auth.setEntityUtilsWrapper(entityUtilsWrapper);
@@ -127,7 +128,7 @@ public class SnapAuthorizationTest {
   @Test
   public void test_getOAuthAccessToken_should_success()
       throws SnapAuthorizationException, SnapResponseErrorException, IOException,
-          InterruptedException {
+          InterruptedException, SnapExecutionException {
     String oauthCode = "code_from_redirect_uri";
     Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
@@ -358,7 +359,7 @@ public class SnapAuthorizationTest {
   @Test
   public void test_refreshToken_should_success()
       throws SnapAuthorizationException, SnapResponseErrorException, IOException,
-          InterruptedException {
+          InterruptedException, SnapExecutionException {
       Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);

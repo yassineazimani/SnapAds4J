@@ -41,5 +41,5 @@ public enum CurrencyEnum {
 
   /** Canadian dollars */
   @JsonProperty("CAD")
-  CAD;
+  CAD
 } // CurrencyEnum

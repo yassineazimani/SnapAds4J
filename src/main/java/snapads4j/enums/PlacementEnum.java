@@ -25,5 +25,5 @@ public enum PlacementEnum {
   @JsonProperty("USER_STORIES")
   USER_STORIES,
   @JsonProperty("DISCOVER_FEED")
-  DISCOVER_FEED;
+  DISCOVER_FEED
 } // PlacementEnum

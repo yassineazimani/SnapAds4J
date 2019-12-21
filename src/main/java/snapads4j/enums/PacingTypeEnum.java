@@ -26,5 +26,5 @@ public enum PacingTypeEnum {
   @JsonProperty("STANDARD")
   STANDARD,
   @JsonProperty("ACCELERATED")
-  ACCELERATED;
+  ACCELERATED
 } // PacingTypeEnum

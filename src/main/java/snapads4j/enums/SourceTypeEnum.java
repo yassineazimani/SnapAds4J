@@ -32,5 +32,5 @@ public enum SourceTypeEnum {
   @JsonProperty("LOOKALIKE")
   LOOKALIKE,
   @JsonProperty("FOOT_TRAFFIC_INSIGHTS")
-  FOOT_TRAFFIC_INSIGHTS;
+  FOOT_TRAFFIC_INSIGHTS
 } // SourceTypeEnum

@@ -12,10 +12,10 @@ public enum PlaybackTypeEnum {
      * AUTO_ADVANCING 
      */
     @JsonProperty("AUTO_ADVANCING ")
-    AUTO_ADVANCING , 
+    AUTO_ADVANCING, 
     /**
      * SIX_SECONDS
      */
     @JsonProperty("LOOPING")
-    LOOPING, 
+    LOOPING 
 }// PlaybackTypeEnum

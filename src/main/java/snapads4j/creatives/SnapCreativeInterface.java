@@ -23,6 +23,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.creatives.Creative;
@@ -40,10 +41,11 @@ public interface SnapCreativeInterface {
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
+     * @throws SnapExecutionException 
      */
-    public Optional<Creative> createCreative(String oAuthAccessToken, Creative creative)
+    Optional<Creative> createCreative(String oAuthAccessToken, Creative creative)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException;
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
     /**
      * This function will update the specified Creative.
@@ -58,10 +60,11 @@ public interface SnapCreativeInterface {
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
+     * @throws SnapExecutionException 
      */
-    public Optional<Creative> updateCreative(String oAuthAccessToken, Creative creative)
+    Optional<Creative> updateCreative(String oAuthAccessToken, Creative creative)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException;
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
     /**
      * 
@@ -73,10 +76,11 @@ public interface SnapCreativeInterface {
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
+     * @throws SnapExecutionException 
      */
-    public Optional<Creative> getSpecificCreative(String oAuthAccessToken, String id)
+    Optional<Creative> getSpecificCreative(String oAuthAccessToken, String id)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException;
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
     /**
      * 
@@ -88,10 +92,11 @@ public interface SnapCreativeInterface {
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
+     * @throws SnapExecutionException 
      */
-    public List<Creative> getAllCreative(String oAuthAccessToken, String adAccountId)
+    List<Creative> getAllCreative(String oAuthAccessToken, String adAccountId)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException;
+	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
     /**
      * 
@@ -101,6 +106,7 @@ public interface SnapCreativeInterface {
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
+     * @throws SnapExecutionException 
      */
-    public Map<String, Object> getPreviewCreative(String oAuthAccessToken, String creativeID) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
+    Map<String, Object> getPreviewCreative(String oAuthAccessToken, String creativeID) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 }// SnapCreativeInterface

@@ -45,6 +45,7 @@ import snapads4j.enums.OptimizationGoalEnum;
 import snapads4j.enums.PlacementEnum;
 import snapads4j.enums.StatusEnum;
 import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.adsquads.AdSquad;
@@ -96,7 +97,7 @@ public class SnapAudienceSizeTest {
 
     @Test
     public void test_get_audience_size_by_squad_id_should_success() throws IOException, InterruptedException,
-	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException {
+	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
@@ -128,11 +129,12 @@ public class SnapAudienceSizeTest {
     } // test_get_audience_size_by_squad_id_should_throw_SnapOAuthAccessTokenException_2()
 
     @Test
-    public void test_get_audience_size_by_squad_id_should_throw_IOException() throws ClientProtocolException,
+    public void test_get_audience_size_by_squad_id_should_throw_SnapExecutionException() throws ClientProtocolException,
 	    IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-	snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, this.adSquadId);
-    }// test_get_audience_size_by_squad_id_should_throw_IOException()
+	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(oAuthAccessToken, this.adSquadId))
+		.isInstanceOf(SnapExecutionException.class);
+    }// test_get_audience_size_by_squad_id_should_throw_SnapExecutionException()
 
     @Test
     public void test_get_audience_size_by_squad_id_should_throw_throw_SnapArgumentException_when_id_is_null() {
@@ -270,7 +272,7 @@ public class SnapAudienceSizeTest {
     
     @Test
     public void test_get_audience_size_by_squad_spec_should_success() throws IOException, InterruptedException,
-	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException {
+	    SnapOAuthAccessTokenException, SnapResponseErrorException, SnapArgumentException, SnapExecutionException {
 	Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
 	Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 	Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
@@ -305,11 +307,12 @@ public class SnapAudienceSizeTest {
     } // test_get_audience_size_by_squad_spec_should_throw_SnapArgumentException_when_adsquad_is_null()
     
     @Test
-    public void test_get_audience_size_by_squad_spec_should_throw_IOException() throws ClientProtocolException,
+    public void test_get_audience_size_by_squad_spec_should_throw_SnapExecutionException() throws ClientProtocolException,
 	    IOException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
 	Mockito.when(httpClient.execute((Mockito.any(HttpPost.class)))).thenThrow(IOException.class);
-	snapAudienceSize.getAudienceSizeByTargetingSpec(this.oAuthAccessToken, this.adAccountId, adSquad);
-    }// test_get_audience_size_by_squad_spec_should_throw_IOException()
+	assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec(this.oAuthAccessToken, this.adAccountId, adSquad))
+	.isInstanceOf(SnapExecutionException.class);
+    }// test_get_audience_size_by_squad_spec_should_throw_SnapExecutionException()
     
     @Test
     public void should_throw_exception_400_get_audience_size_by_squad_spec() throws IOException, InterruptedException,

@@ -26,5 +26,5 @@ public enum OperationEnum {
   @JsonProperty("INCLUDE")
   INCLUDE,
   @JsonProperty("EXCLUDE")
-  EXCLUDE;
+  EXCLUDE
 } // OperationEnum

@@ -37,5 +37,5 @@ public enum ForcedViewEligibilityEnum {
      * NONE
      */
     @JsonProperty("NONE")
-    NONE;
+    NONE
 }// ForcedViewEligibilityEnum
