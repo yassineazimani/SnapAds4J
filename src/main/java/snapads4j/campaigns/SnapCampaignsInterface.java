@@ -41,7 +41,7 @@ public interface SnapCampaignsInterface {
      *      "https://developers.snapchat.com/api/docs/#create-a-campaign">Create
      *      campaign</a>
      * @param oAuthAccessToken oAuthAccessToken
-     * @param campaign         Campaign to create {@link #Campaign}
+     * @param campaign         Campaign to create {@link Campaign}
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
@@ -50,7 +50,7 @@ public interface SnapCampaignsInterface {
      * @return Campaign created
      * @throws SnapExecutionException 
      */
-    public Optional<Campaign> createCampaign(String oAuthAccessToken, Campaign campaign)
+    Optional<Campaign> createCampaign(String oAuthAccessToken, Campaign campaign)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 
@@ -61,7 +61,7 @@ public interface SnapCampaignsInterface {
      *      "https://developers.snapchat.com/api/docs/#update-a-campaign">Update
      *      campaign</a>
      * @param oAuthAccessToken oAuthAccessToken
-     * @param campaign         Campaign to update {@link #Campaign}
+     * @param campaign         Campaign to update {@link Campaign}
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
@@ -70,7 +70,7 @@ public interface SnapCampaignsInterface {
      * @return Campaign updated
      * @throws SnapExecutionException 
      */
-    public Optional<Campaign> updateCampaign(String oAuthAccessToken, Campaign campaign)
+    Optional<Campaign> updateCampaign(String oAuthAccessToken, Campaign campaign)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 
@@ -85,10 +85,10 @@ public interface SnapCampaignsInterface {
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
-     * @return all campaigns {@link #Campaign}
+     * @return all campaigns {@link Campaign}
      * @throws SnapExecutionException 
      */
-    public List<Campaign> getAllCampaigns(String oAuthAccessToken, String adAccountId)
+    List<Campaign> getAllCampaigns(String oAuthAccessToken, String adAccountId)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
     /**
@@ -102,10 +102,10 @@ public interface SnapCampaignsInterface {
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
-     * @return campaign {@link #Campaign}
+     * @return campaign {@link Campaign}
      * @throws SnapExecutionException 
      */
-    public Optional<Campaign> getSpecificCampaign(String oAuthAccessToken, String id)
+    Optional<Campaign> getSpecificCampaign(String oAuthAccessToken, String id)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
     /**
@@ -121,6 +121,6 @@ public interface SnapCampaignsInterface {
      * @throws SnapArgumentException
      * @throws SnapExecutionException 
      */
-    public void deleteCampaign(String oAuthAccessToken, String id)
+    void deleteCampaign(String oAuthAccessToken, String id)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 } // SnapCampaignsInterface

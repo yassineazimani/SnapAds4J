@@ -16,6 +16,7 @@
 package snapads4j.model.stats;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -27,5 +28,11 @@ public class SnapHttpResponseTotalStat extends SnapHttpResponse  {
 
     @JsonProperty("total_stats")
     private List<SnapInnerTotalStats> totalStats;
-    
+
+    public Optional<TimeSerieStat> getStats(){
+        SnapInnerTotalStats totalStat = totalStats.get(0);
+        return totalStat != null && totalStat.getTotalStat() != null ?
+                Optional.of(totalStat.getTotalStat()) : Optional.empty();
+    }// getStats()
+
 }// SnapHttpResponseTotalStat

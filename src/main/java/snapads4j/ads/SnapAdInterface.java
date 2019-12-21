@@ -47,7 +47,7 @@ public interface SnapAdInterface {
      * @throws UnsupportedEncodingException
      * @throws SnapExecutionException 
      */
-    public Optional<Ad> createAd(String oAuthAccessToken, Ad ad) throws SnapOAuthAccessTokenException,
+    Optional<Ad> createAd(String oAuthAccessToken, Ad ad) throws SnapOAuthAccessTokenException,
 	    JsonProcessingException, SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException, SnapExecutionException;
 
     /**
@@ -63,7 +63,7 @@ public interface SnapAdInterface {
      * @throws UnsupportedEncodingException
      * @throws SnapExecutionException 
      */
-    public Optional<Ad> updateAd(String oAuthAccessToken, Ad ad) throws SnapOAuthAccessTokenException,
+    Optional<Ad> updateAd(String oAuthAccessToken, Ad ad) throws SnapOAuthAccessTokenException,
 	    JsonProcessingException, SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException, SnapExecutionException;
 
     /**
@@ -76,7 +76,7 @@ public interface SnapAdInterface {
      * @throws SnapResponseErrorException
      * @throws SnapExecutionException 
      */
-    public List<Ad> getAllAdsFromAdSquad(String oAuthAccessToken, String adSquadId)
+    List<Ad> getAllAdsFromAdSquad(String oAuthAccessToken, String adSquadId)
 	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
 
     /**
@@ -89,7 +89,7 @@ public interface SnapAdInterface {
      * @throws SnapResponseErrorException
      * @throws SnapExecutionException 
      */
-    public List<Ad> getAllAdsFromAdAccount(String oAuthAccessToken, String adAccountId)
+    List<Ad> getAllAdsFromAdAccount(String oAuthAccessToken, String adAccountId)
 	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
 
     /**
@@ -102,7 +102,7 @@ public interface SnapAdInterface {
      * @throws SnapResponseErrorException
      * @throws SnapExecutionException 
      */
-    public Optional<Ad> getSpecificAd(String oAuthAccessToken, String id)
+    Optional<Ad> getSpecificAd(String oAuthAccessToken, String id)
 	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
 
     /**
@@ -115,6 +115,6 @@ public interface SnapAdInterface {
      * @throws SnapArgumentException
      * @throws SnapExecutionException 
      */
-    public void deleteAd(String oAuthAccessToken, String id)
+    void deleteAd(String oAuthAccessToken, String id)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 }// SnapAdInterface

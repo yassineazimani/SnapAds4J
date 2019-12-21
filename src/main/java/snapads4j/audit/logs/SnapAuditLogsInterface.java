@@ -28,16 +28,16 @@ import snapads4j.model.audit.logs.AuditLog;
 
 public interface SnapAuditLogsInterface {
 
-    public List<AuditLog> fetchChangeLogsForCampaign(String oAuthAccessToken, String campaignId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    List<AuditLog> fetchChangeLogsForCampaign(String oAuthAccessToken, String campaignId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
     JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
-    public List<AuditLog> fetchChangeLogsForAdSquad(String oAuthAccessToken, String adSquadId)throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    List<AuditLog> fetchChangeLogsForAdSquad(String oAuthAccessToken, String adSquadId)throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
     JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
-    public List<AuditLog> fetchChangeLogsForAd(String oAuthAccessToken, String adId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    List<AuditLog> fetchChangeLogsForAd(String oAuthAccessToken, String adId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
     JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
-    public List<AuditLog> fetchChangeLogsForCreative(String oAuthAccessToken, String creativeId)throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    List<AuditLog> fetchChangeLogsForCreative(String oAuthAccessToken, String creativeId)throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
     JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 
 }// SnapAuditLogsInterface

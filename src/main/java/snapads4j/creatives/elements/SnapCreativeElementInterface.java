@@ -42,7 +42,7 @@ public interface SnapCreativeElementInterface {
      * @throws UnsupportedEncodingException
      * @throws SnapExecutionException 
      */
-    public Optional<CreativeElement> createCreativeElement(String oAuthAccessToken, CreativeElement creative)
+    Optional<CreativeElement> createCreativeElement(String oAuthAccessToken, CreativeElement creative)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
@@ -58,14 +58,14 @@ public interface SnapCreativeElementInterface {
      * @throws UnsupportedEncodingException
      * @throws SnapExecutionException 
      */
-    public List<CreativeElement> createCreativeElements(String oAuthAccessToken, List<CreativeElement> creatives)
+    List<CreativeElement> createCreativeElements(String oAuthAccessToken, List<CreativeElement> creatives)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
     /**
      * 
      * @param oAuthAccessToken
-     * @param creative
+     * @param interactionZone
      * @return
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
@@ -74,7 +74,7 @@ public interface SnapCreativeElementInterface {
      * @throws UnsupportedEncodingException
      * @throws SnapExecutionException 
      */
-    public Optional<InteractionZone> createInteractionZone(String oAuthAccessToken, InteractionZone interactionZone)
+    Optional<InteractionZone> createInteractionZone(String oAuthAccessToken, InteractionZone interactionZone)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     

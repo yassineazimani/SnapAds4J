@@ -37,12 +37,12 @@ public interface SnapOrganizationInterface {
    *
    * @see <a href="https://developers.snapchat.com/api/docs/#organizations">All organizations</a>
    * @param oAuthAccessToken oAuthAccessToken
-   * @return All organizations {@link #Organization}
+   * @return All organizations {@link Organization}
    * @throws SnapResponseErrorException
    * @throws SnapOAuthAccessTokenException
  * @throws SnapExecutionException 
    */
-  public List<Organization> getAllOrganizations(String oAuthAccessToken)
+  List<Organization> getAllOrganizations(String oAuthAccessToken)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapExecutionException;
 
   /**
@@ -52,12 +52,12 @@ public interface SnapOrganizationInterface {
    *     organization</a>
    * @param oAuthAccessToken oAuthAccessToken
    * @param id Organization ID
-   * @return specific organization {@link #Organization}
+   * @return specific organization {@link Organization}
    * @throws SnapResponseErrorException
    * @throws SnapOAuthAccessTokenException
  * @throws SnapExecutionException 
    */
-  public Optional<Organization> getSpecificOrganization(String oAuthAccessToken, String id)
+  Optional<Organization> getSpecificOrganization(String oAuthAccessToken, String id)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
   /**
@@ -66,11 +66,11 @@ public interface SnapOrganizationInterface {
    * @see <a href="https://developers.snapchat.com/api/docs/#organizations">All organizations with
    *     ad accounts</a>
    * @param oAuthAccessToken oAuthAccessToken
-   * @return All organizations {@link #Organization}
+   * @return All organizations {@link Organization}
    * @throws SnapResponseErrorException
    * @throws SnapOAuthAccessTokenException
  * @throws SnapExecutionException 
    */
-  public List<OrganizationWithAdAccount> getAllOrganizationsWithAdAccounts(String oAuthAccessToken)
+  List<OrganizationWithAdAccount> getAllOrganizationsWithAdAccounts(String oAuthAccessToken)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapExecutionException;
 } // SnapOrganizationInterface

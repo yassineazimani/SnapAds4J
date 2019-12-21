@@ -14,10 +14,10 @@ import snapads4j.model.bid.TargetingSpecBidEstimate;
 
 public interface SnapBidEstimateInterface {
 
-    public Optional<BidEstimate> getBidEstimateBySquadSpec(String oAuthAccessToken, String adAccountID, TargetingSpecBidEstimate targetingSpecBidEstimate) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    Optional<BidEstimate> getBidEstimateBySquadSpec(String oAuthAccessToken, String adAccountID, TargetingSpecBidEstimate targetingSpecBidEstimate) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
     JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
-    public Optional<BidEstimate> getBidEstimateByAdSquadId(String oAuthAccessToken, String adSquadID)throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    Optional<BidEstimate> getBidEstimateByAdSquadId(String oAuthAccessToken, String adSquadID)throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
     JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
     
 }// SnapBidEstimateInterface

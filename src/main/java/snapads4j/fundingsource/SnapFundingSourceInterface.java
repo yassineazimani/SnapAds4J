@@ -31,35 +31,35 @@ import snapads4j.model.fundingsource.FundingSource;
  */
 public interface SnapFundingSourceInterface {
 
-  /**
-   * Get all funding sources for the specified Organization.
-   *
-   * @see <a href="https://developers.snapchat.com/api/docs/#get-all-funding-sources">All funding
-   *     source</a>
-   * @param oAuthAccessToken oAuthAccessToken
-   * @param organizationID Organization ID
-   * @throws SnapResponseErrorException
-   * @throws SnapOAuthAccessTokenException
-   * @throws SnapArgumentException
-   * @return funding sources
- * @throws SnapExecutionException 
-   */
-  public List<FundingSource> getAllFundingSource(String oAuthAccessToken, String organizationID)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
+    /**
+     * Get all funding sources for the specified Organization.
+     *
+     * @param oAuthAccessToken oAuthAccessToken
+     * @param organizationID   Organization ID
+     * @return funding sources
+     * @throws SnapResponseErrorException
+     * @throws SnapOAuthAccessTokenException
+     * @throws SnapArgumentException
+     * @throws SnapExecutionException
+     * @see <a href="https://developers.snapchat.com/api/docs/#get-all-funding-sources">All funding
+     * source</a>
+     */
+    List<FundingSource> getAllFundingSource(String oAuthAccessToken, String organizationID)
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
-  /**
-   * Get a specific funding source.
-   *
-   * @see <a href="https://developers.snapchat.com/api/docs/#get-a-specific-funding-source">Specific
-   *     funding source</a>
-   * @param oAuthAccessToken oAuthAccessToken
-   * @param id FundingSource ID
-   * @throws SnapResponseErrorException
-   * @throws SnapOAuthAccessTokenException
-   * @throws SnapArgumentException
-   * @return funding source
- * @throws SnapExecutionException 
-   */
-  public Optional<FundingSource> getSpecificFundingSource(String oAuthAccessToken, String id)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
+    /**
+     * Get a specific funding source.
+     *
+     * @param oAuthAccessToken oAuthAccessToken
+     * @param id               FundingSource ID
+     * @return funding source
+     * @throws SnapResponseErrorException
+     * @throws SnapOAuthAccessTokenException
+     * @throws SnapArgumentException
+     * @throws SnapExecutionException
+     * @see <a href="https://developers.snapchat.com/api/docs/#get-a-specific-funding-source">Specific
+     * funding source</a>
+     */
+    Optional<FundingSource> getSpecificFundingSource(String oAuthAccessToken, String id)
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 } // SnapFundingSourceInterface

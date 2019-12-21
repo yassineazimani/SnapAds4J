@@ -28,17 +28,15 @@ import snapads4j.model.pixel.Pixel;
 
 public interface SnapPixelInterface {
 
-    public Optional<Pixel> getSpecificPixelAssociatedByAdAccount(String oAuthAccessToken, String adAccountId)
+    Optional<Pixel> getSpecificPixelAssociatedByAdAccount(String oAuthAccessToken, String adAccountId)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    SnapExecutionException;
 
-    public Optional<Pixel> getSpecificPixel(String oAuthAccessToken, String pixelId) throws SnapResponseErrorException,
+    Optional<Pixel> getSpecificPixel(String oAuthAccessToken, String pixelId) throws SnapResponseErrorException,
 	    SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
-    public Optional<Pixel> updatePixel(String oAuthAccessToken, Pixel pixel)
+    Optional<Pixel> updatePixel(String oAuthAccessToken, Pixel pixel)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
-    
-    
 
 }// SnapPixelInterface

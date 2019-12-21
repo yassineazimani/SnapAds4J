@@ -29,19 +29,19 @@ import snapads4j.model.adsquads.AdSquad;
 
 public interface SnapAdSquadsInterface {
 
-  public Optional<AdSquad> createAdSquad(String oAuthAccessToken, AdSquad adSquad)
+  Optional<AdSquad> createAdSquad(String oAuthAccessToken, AdSquad adSquad)
       throws SnapOAuthAccessTokenException, JsonProcessingException, SnapResponseErrorException,
           SnapArgumentException, UnsupportedEncodingException, SnapExecutionException;
 
-  public Optional<AdSquad> updateAdSquad(String oAuthAccessToken, AdSquad adSquad)
+  Optional<AdSquad> updateAdSquad(String oAuthAccessToken, AdSquad adSquad)
       throws SnapOAuthAccessTokenException, JsonProcessingException, SnapResponseErrorException,
           SnapArgumentException, UnsupportedEncodingException, SnapExecutionException;
 
-  public List<AdSquad> getAllAdSquadsFromCampaign(String oAuthAccessToken, String campaignId) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
+  List<AdSquad> getAllAdSquadsFromCampaign(String oAuthAccessToken, String campaignId) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
 
-  public List<AdSquad> getAllAdSquadsFromAdAccount(String oAuthAccessToken, String adAccountId) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
+  List<AdSquad> getAllAdSquadsFromAdAccount(String oAuthAccessToken, String adAccountId) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
 
-  public Optional<AdSquad> getSpecificAdSquad(String oAuthAccessToken, String id) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
+  Optional<AdSquad> getSpecificAdSquad(String oAuthAccessToken, String id) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
 
   /**
    * Deletes a specific ad squad.
@@ -53,6 +53,6 @@ public interface SnapAdSquadsInterface {
    * @throws SnapArgumentException
  * @throws SnapExecutionException 
    */
-  public void deleteAdSquad(String oAuthAccessToken, String id)
+  void deleteAdSquad(String oAuthAccessToken, String id)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 } // SnapAdSquadsInterface

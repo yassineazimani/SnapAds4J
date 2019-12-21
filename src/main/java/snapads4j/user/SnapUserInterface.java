@@ -34,11 +34,11 @@ public interface SnapUserInterface {
    *
    * @see <a href="https://developers.snapchat.com/api/docs/#user">User</a>
    * @param oAuthAccessToken oAuthAccessToken
-   * @return AuthenticatedUser {@link #AuthenticatedUser}
+   * @return AuthenticatedUser {@link AuthenticatedUser}
    * @throws SnapOAuthAccessTokenException
    * @throws SnapResponseErrorException
  * @throws SnapExecutionException 
    */
-  public Optional<AuthenticatedUser> aboutMe(String oAuthAccessToken)
+  Optional<AuthenticatedUser> aboutMe(String oAuthAccessToken)
       throws SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
 } // SnapUserInterface

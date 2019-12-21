@@ -32,35 +32,35 @@ import snapads4j.model.audience.match.SamLookalikes;
 
 public interface SnapAudienceSegmentInterface {
 
-    public Optional<AudienceSegment> createAudienceSegment(String oAuthAccessToken, AudienceSegment segment)
+    Optional<AudienceSegment> createAudienceSegment(String oAuthAccessToken, AudienceSegment segment)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 
-    public Optional<AudienceSegment> updateAudienceSegment(String oAuthAccessToken, AudienceSegment segment)
+    Optional<AudienceSegment> updateAudienceSegment(String oAuthAccessToken, AudienceSegment segment)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 
-    public List<AudienceSegment> getAllAudienceSegments(String oAuthAccessToken, String adAccountID)
+    List<AudienceSegment> getAllAudienceSegments(String oAuthAccessToken, String adAccountID)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 
-    public Optional<AudienceSegment> getSpecificAudienceSegment(String oAuthAccessToken, String segmentID)
+    Optional<AudienceSegment> getSpecificAudienceSegment(String oAuthAccessToken, String segmentID)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 
-    public int addUserToSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment)
+    int addUserToSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment)
 	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
 	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException, SnapExecutionException;
 
-    public int deleteUserFromSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment)
+    int deleteUserFromSegment(String oAuthAccessToken, FormUserForAudienceSegment formUserForAudienceSegment)
 	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
 	    SnapResponseErrorException, SnapArgumentException, SnapNormalizeArgumentException, SnapExecutionException;
 
-    public Optional<AudienceSegment> deleteAllUsersFromSegment(String oAuthAccessToken, String segmentID)
+    Optional<AudienceSegment> deleteAllUsersFromSegment(String oAuthAccessToken, String segmentID)
 	    throws SnapOAuthAccessTokenException, JsonProcessingException, UnsupportedEncodingException,
 	    SnapResponseErrorException, SnapArgumentException, SnapExecutionException;
 
-    public Optional<AudienceSegment> createSamLookalikes(String oAuthAccessToken, SamLookalikes sam)
+    Optional<AudienceSegment> createSamLookalikes(String oAuthAccessToken, SamLookalikes sam)
 	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
 	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 

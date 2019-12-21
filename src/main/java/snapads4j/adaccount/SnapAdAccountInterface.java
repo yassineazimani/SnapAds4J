@@ -42,7 +42,7 @@ public interface SnapAdAccountInterface {
    * @throws SnapArgumentException
  * @throws SnapExecutionException 
    */
-  public List<AdAccount> getAllAdAccounts(String oAuthAccessToken, String organizationID)
+  List<AdAccount> getAllAdAccounts(String oAuthAccessToken, String organizationID)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
   /**
@@ -57,7 +57,7 @@ public interface SnapAdAccountInterface {
    * @throws SnapOAuthAccessTokenException
  * @throws SnapExecutionException 
    */
-  public Optional<AdAccount> getSpecificAdAccount(String oAuthAccessToken, String id)
+  Optional<AdAccount> getSpecificAdAccount(String oAuthAccessToken, String id)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
   /**
@@ -78,7 +78,7 @@ public interface SnapAdAccountInterface {
    * @return AdAccount updated
  * @throws SnapExecutionException 
    */
-  public Optional<AdAccount> updateAdAccount(String oAuthAccessToken, AdAccount adAccount)
+  Optional<AdAccount> updateAdAccount(String oAuthAccessToken, AdAccount adAccount)
       throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
           JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 } // SnapAdAccountInterface
