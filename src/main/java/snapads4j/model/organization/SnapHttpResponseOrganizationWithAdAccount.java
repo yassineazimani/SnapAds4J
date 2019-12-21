@@ -15,11 +15,11 @@
  */
 package snapads4j.model.organization;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import lombok.Setter;
 import snapads4j.model.SnapHttpResponse;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * SnapHttpResponseOrganizationWithAdAccount
@@ -29,9 +29,9 @@ import snapads4j.model.SnapHttpResponse;
 @Setter
 public class SnapHttpResponseOrganizationWithAdAccount extends SnapHttpResponse {
 
-  private List<SnapInnerOrganizationsWithAdAccount> organizations;
+    private List<SnapInnerOrganizationsWithAdAccount> organizations;
 
-  public List<OrganizationWithAdAccount> getAllOrganizations() {
-    return organizations.stream().map(org -> org.getOrganization()).collect(Collectors.toList());
-  } // getAllOrganizations()
+    public List<OrganizationWithAdAccount> getAllOrganizations() {
+        return organizations.stream().map(SnapInnerOrganizationsWithAdAccount::getOrganization).collect(Collectors.toList());
+    } // getAllOrganizations()
 } // SnapHttpResponseOrganization

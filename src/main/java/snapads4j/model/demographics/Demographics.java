@@ -15,16 +15,15 @@
  */
 package snapads4j.model.demographics;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import snapads4j.enums.GenderEnum;
+
+import java.util.List;
 
 /**
  * Demographics
@@ -37,28 +36,42 @@ import snapads4j.enums.GenderEnum;
 @JsonInclude(Include.NON_EMPTY)
 public class Demographics {
 
-  /** Identifiant */
-  private Long id;
+    /**
+     * Identifiant
+     */
+    private Long id;
 
-  /** Age groups */
-  @JsonProperty("age_groups")
-  private List<String> ageGroups;
+    /**
+     * Age groups
+     */
+    @JsonProperty("age_groups")
+    private List<String> ageGroups;
 
-  /** Min age */
-  @JsonProperty("min_age")
-  private Double minAge;
+    /**
+     * Min age
+     */
+    @JsonProperty("min_age")
+    private Double minAge;
 
-  /** Max age */
-  @JsonProperty("max_age")
-  private Double maxAge;
+    /**
+     * Max age
+     */
+    @JsonProperty("max_age")
+    private Double maxAge;
 
-  /** Gender */
-  private GenderEnum gender;
+    /**
+     * Gender
+     */
+    private GenderEnum gender;
 
-  /** Languages */
-  private List<String> languages;
+    /**
+     * Languages
+     */
+    private List<String> languages;
 
-  /** Advanced demographics */
-  @JsonProperty("advanced_demographics")
-  private List<String> advancedDemographics;
+    /**
+     * Advanced demographics
+     */
+    @JsonProperty("advanced_demographics")
+    private List<String> advancedDemographics;
 } // DemographicsRequest

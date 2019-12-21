@@ -17,7 +17,6 @@ package snapads4j.model.creatives.elements;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,5 +34,5 @@ public class SnapInnerInteractionZone {
 
     @JsonProperty("interaction_zone")
     private InteractionZone interactionZone;
-    
+
 }// SnapInnerInteractionZone

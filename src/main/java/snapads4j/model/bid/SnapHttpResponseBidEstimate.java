@@ -15,10 +15,7 @@
  */
 package snapads4j.model.bid;
 
-import java.util.Optional;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,9 +24,9 @@ import snapads4j.model.SnapHttpResponse;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SnapHttpResponseBidEstimate extends SnapHttpResponse{
+public class SnapHttpResponseBidEstimate extends SnapHttpResponse {
 
     @JsonProperty("bid_estimate")
-    private Optional<BidEstimate> bidEstimate;
-    
+    private BidEstimate bidEstimate;
+
 }// SnapHttpResponseBidEstimate

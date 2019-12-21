@@ -15,11 +15,7 @@
  */
 package snapads4j.audience.size;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Optional;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
@@ -27,12 +23,15 @@ import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.adsquads.AdSquad;
 import snapads4j.model.audience.size.AudienceSize;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Optional;
+
 public interface SnapAudienceSizeInterface {
 
     Optional<AudienceSize> getAudienceSizeByTargetingSpec(String oAuthAccessToken, String adAccountID, AdSquad adSquad) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
-    
-    Optional<AudienceSize> getAudienceSizeByAdSquadId(String oAuthAccessToken, String adSquadID)throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
-    
+            JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
+
+    Optional<AudienceSize> getAudienceSizeByAdSquadId(String oAuthAccessToken, String adSquadID) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+            SnapExecutionException;
+
 }// SnapAudienceSizeInterface

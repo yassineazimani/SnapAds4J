@@ -28,22 +28,22 @@ public class CollectionPropertiesBuilderTest {
 
     @Before
     public void init() {
-	builder = new CollectionPropertiesBuilder();
+        builder = new CollectionPropertiesBuilder();
     }// init()
-    
+
     @Test
     public void test_builder() {
-	builder.setDefaultFallbackInteractionType("defaultFallbackInteractionType");
-	builder.setInteractionZoneId("interactionZoneId");
-	builder.setDeepLinkProperties(new DeepLinkProperties());
-	builder.setWebViewProperties(new WebViewProperties());
-	CollectionProperties properties = builder.build();
-	Assertions.assertThat(properties).isNotNull();
-	Assertions.assertThat(properties.toString()).isNotEmpty();
-	Assertions.assertThat(properties.getDefaultFallbackInteractionType()).isEqualTo("defaultFallbackInteractionType");
-	Assertions.assertThat(properties.getDeepLinkProperties()).isNotNull();
-	Assertions.assertThat(properties.getInteractionZoneId()).isEqualTo("interactionZoneId");
-	Assertions.assertThat(properties.getWebViewProperties()).isNotNull();
+        builder.setDefaultFallbackInteractionType("defaultFallbackInteractionType");
+        builder.setInteractionZoneId("interactionZoneId");
+        builder.setDeepLinkProperties(new DeepLinkProperties());
+        builder.setWebViewProperties(new WebViewProperties());
+        CollectionProperties properties = builder.build();
+        Assertions.assertThat(properties).isNotNull();
+        Assertions.assertThat(properties.toString()).isNotEmpty();
+        Assertions.assertThat(properties.getDefaultFallbackInteractionType()).isEqualTo("defaultFallbackInteractionType");
+        Assertions.assertThat(properties.getDeepLinkProperties()).isNotNull();
+        Assertions.assertThat(properties.getInteractionZoneId()).isEqualTo("interactionZoneId");
+        Assertions.assertThat(properties.getWebViewProperties()).isNotNull();
     }// test_builder()
-    
+
 }// CollectionPropertiesBuilderTest

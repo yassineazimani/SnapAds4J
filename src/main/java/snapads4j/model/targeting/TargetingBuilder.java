@@ -15,14 +15,14 @@
  */
 package snapads4j.model.targeting;
 
-import java.util.List;
-import java.util.Map;
-
 import snapads4j.model.demographics.Demographics;
 import snapads4j.model.device.Device;
 import snapads4j.model.geolocation.GeoLocation;
 import snapads4j.model.interest.Interest;
 import snapads4j.model.segment.SegmentRequestTargeting;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Used to build Targeting instance (${@link Targeting})
@@ -31,48 +31,48 @@ import snapads4j.model.segment.SegmentRequestTargeting;
  */
 public class TargetingBuilder {
 
-    private Targeting targetingInstance;
+    private final Targeting targetingInstance;
 
     public TargetingBuilder() {
-	this.targetingInstance = new Targeting();
+        this.targetingInstance = new Targeting();
     } // TargetingBuilder()
 
     public TargetingBuilder setDemographics(List<Demographics> demographics) {
-	this.targetingInstance.setDemographics(demographics);
-	return this;
+        this.targetingInstance.setDemographics(demographics);
+        return this;
     } // setDemographics()
 
     public TargetingBuilder setDevices(List<Device> devices) {
-	this.targetingInstance.setDevices(devices);
-	return this;
+        this.targetingInstance.setDevices(devices);
+        return this;
     } // setDevices()
 
     public TargetingBuilder setGeolocation(List<GeoLocation> geos) {
-	this.targetingInstance.setGeos(geos);
-	return this;
+        this.targetingInstance.setGeos(geos);
+        return this;
     } // setGeolocation()
 
     public TargetingBuilder setInterests(List<Interest> interests) {
-	this.targetingInstance.setInterests(interests);
-	return this;
+        this.targetingInstance.setInterests(interests);
+        return this;
     } // setDevices()
 
     public TargetingBuilder setRegulatedContent(boolean regulatedContent) {
-	this.targetingInstance.setRegulatedContent(regulatedContent);
-	return this;
+        this.targetingInstance.setRegulatedContent(regulatedContent);
+        return this;
     } // setRegulatedContent()
 
     public TargetingBuilder setSegments(List<SegmentRequestTargeting> segments) {
-	this.targetingInstance.setSegments(segments);
-	return this;
+        this.targetingInstance.setSegments(segments);
+        return this;
     } // setSegments
 
     public TargetingBuilder setLocations(List<Map<String, Object>> locations) {
-	this.targetingInstance.setLocations(locations);
-	return this;
+        this.targetingInstance.setLocations(locations);
+        return this;
     } // setLocations
 
     public Targeting build() {
-	return this.targetingInstance;
+        return this.targetingInstance;
     } // build()
 } // TargetingBuilder

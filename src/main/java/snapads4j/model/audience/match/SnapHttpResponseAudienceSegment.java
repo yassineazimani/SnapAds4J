@@ -15,30 +15,29 @@
  */
 package snapads4j.model.audience.match;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
+import snapads4j.model.SnapHttpResponse;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
-
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import snapads4j.model.SnapHttpResponse;
-
 @Setter
 @NoArgsConstructor
-public class SnapHttpResponseAudienceSegment extends SnapHttpResponse{
+public class SnapHttpResponseAudienceSegment extends SnapHttpResponse {
 
     private List<SnapInnerAudienceSegment> segments;
 
     public Optional<AudienceSegment> getSpecificAudienceSegment() {
-      return (CollectionUtils.isNotEmpty(segments) && segments.get(0) != null)
-          ? Optional.of(segments.get(0).getSegment())
-          : Optional.empty();
+        return (CollectionUtils.isNotEmpty(segments) && segments.get(0) != null)
+                ? Optional.of(segments.get(0).getSegment())
+                : Optional.empty();
     } // getSpecificAudienceSegment()
 
     public List<AudienceSegment> getAllAudienceSegment() {
-      return segments.stream().map(org -> org.getSegment()).collect(Collectors.toList());
+        return segments.stream().map(SnapInnerAudienceSegment::getSegment).collect(Collectors.toList());
     } // getAllAudienceSegment()
-    
+
 }// SnapHttpResponseAudienceSegment

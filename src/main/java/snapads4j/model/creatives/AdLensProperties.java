@@ -25,5 +25,5 @@ import lombok.ToString;
 public class AdLensProperties {
 
     private String lensMediaId;
-    
+
 }// AdLensProperties

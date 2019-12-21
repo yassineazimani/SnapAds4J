@@ -27,12 +27,18 @@ import lombok.Setter;
 @Setter
 public class SnapConfiguration {
 
-  /** Client ID */
-  private String clientId;
+    /**
+     * Client ID
+     */
+    private String clientId;
 
-  /** Client Secret */
-  private String clientSecret;
+    /**
+     * Client Secret
+     */
+    private String clientSecret;
 
-  /** URLEncoded Redirect URI */
-  private String redirectUri;
+    /**
+     * URLEncoded Redirect URI
+     */
+    private String redirectUri;
 } // SnapConfiguration

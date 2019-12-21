@@ -24,12 +24,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Yassine
  */
 public enum ProximityUnitEnum {
-  @JsonProperty("METERS")
-  METERS,
-  @JsonProperty("MILES")
-  MILES,
-  @JsonProperty("FEET")
-  FEET,
-  @JsonProperty("KILOMETERS")
-  KILOMETERS
+    @JsonProperty("METERS")
+    METERS,
+    @JsonProperty("MILES")
+    MILES,
+    @JsonProperty("FEET")
+    FEET,
+    @JsonProperty("KILOMETERS")
+    KILOMETERS
 } // ProximityUnitEnum

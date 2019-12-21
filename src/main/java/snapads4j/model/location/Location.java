@@ -15,17 +15,16 @@
  */
 package snapads4j.model.location;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import snapads4j.enums.OperationEnum;
 import snapads4j.enums.ProximityUnitEnum;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,15 +32,15 @@ import snapads4j.enums.ProximityUnitEnum;
 @JsonInclude(Include.NON_EMPTY)
 public class Location {
 
-  @JsonProperty("location_type")
-  private List<String> locationTypes;
+    @JsonProperty("location_type")
+    private List<String> locationTypes;
 
-  private List<Circle> circles;
+    private List<Circle> circles;
 
-  private OperationEnum operation;
+    private OperationEnum operation;
 
-  @JsonProperty("proximity_unit")
-  private ProximityUnitEnum proximityUnit;
+    @JsonProperty("proximity_unit")
+    private ProximityUnitEnum proximityUnit;
 
-  private Integer proximity;
+    private Integer proximity;
 } // Location

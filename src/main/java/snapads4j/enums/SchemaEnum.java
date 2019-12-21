@@ -19,8 +19,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Schema Enum
- * @author yassine
  *
+ * @author yassine
  */
 public enum SchemaEnum {
     @JsonProperty("EMAIL_SHA256")

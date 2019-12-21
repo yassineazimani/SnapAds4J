@@ -18,7 +18,6 @@ package snapads4j.model.audience.match;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -29,14 +28,14 @@ import snapads4j.enums.TypeCreationSpecDetails;
 @JsonInclude(Include.NON_EMPTY)
 @ToString
 /**
- * 
+ *
  * @author yassine
  *
  */
 public class CreationSpec {
-    
+
     public CreationSpec() {
-	this.type = TypeCreationSpecDetails.BALANCE;
+        this.type = TypeCreationSpecDetails.BALANCE;
     }// CreationSpec()
 
     /**
@@ -44,15 +43,15 @@ public class CreationSpec {
      */
     @JsonProperty("seed_segment_id")
     private String seedSegmentId;
-    
+
     /**
      * ISO-2 Country Code
      */
     private String country;
-    
+
     /**
      * The type of Lookalike to be created
      */
     private TypeCreationSpecDetails type;
-    
+
 }// CreationSpec

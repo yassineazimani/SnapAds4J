@@ -17,29 +17,29 @@ package snapads4j.model.creatives;
 
 public class WebViewPropertiesBuilder {
 
-    private WebViewProperties instance;
+    private final WebViewProperties instance;
 
     public WebViewPropertiesBuilder() {
-	this.instance = new WebViewProperties();
+        this.instance = new WebViewProperties();
     }// WebViewPropertiesBuilder()
 
     public WebViewPropertiesBuilder setUrl(String url) {
-	this.instance.setUrl(url);
-	return this;
+        this.instance.setUrl(url);
+        return this;
     }// setUrl()
 
     public WebViewPropertiesBuilder setAllowSnapJavascriptSdk(boolean allowSnapJavascriptSdk) {
-	this.instance.setAllowSnapJavascriptSdk(allowSnapJavascriptSdk);
-	return this;
+        this.instance.setAllowSnapJavascriptSdk(allowSnapJavascriptSdk);
+        return this;
     }// setAllowSnapJavascriptSdk()
 
     public WebViewPropertiesBuilder setBlockPreload(boolean blockPreload) {
-	this.instance.setBlockPreload(blockPreload);
-	return this;
+        this.instance.setBlockPreload(blockPreload);
+        return this;
     }// setBlockPreload()
 
     public WebViewProperties build() {
-	return this.instance;
+        return this.instance;
     }// build()
 
 }// WebViewPropertiesBuilder

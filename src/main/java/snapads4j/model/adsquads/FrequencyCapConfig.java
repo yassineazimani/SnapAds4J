@@ -16,7 +16,6 @@
 package snapads4j.model.adsquads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -35,22 +34,28 @@ import snapads4j.enums.FrequencyCapTypeEnum;
  * @author Yassine
  */
 public class FrequencyCapConfig {
-  /** Number of times an ad is shown to the user in the interval */
-  @JsonProperty("frequency_cap_count")
-  private Integer frequencyCapCount;
+    /**
+     * Number of times an ad is shown to the user in the interval
+     */
+    @JsonProperty("frequency_cap_count")
+    private Integer frequencyCapCount;
 
-  /** Event to be frequency capped */
-  @JsonProperty("frequency_cap_type")
-  private FrequencyCapTypeEnum frequencyCapType;
+    /**
+     * Event to be frequency capped
+     */
+    @JsonProperty("frequency_cap_type")
+    private FrequencyCapTypeEnum frequencyCapType;
 
-  /**
-   * Interval during which the frequency cap rule is applied. frequency_cap_count is reset at the
-   * end of the interval. (Max 30 days or 720 hours)
-   */
-  @JsonProperty("time_interval")
-  private Integer timeInterval;
+    /**
+     * Interval during which the frequency cap rule is applied. frequency_cap_count is reset at the
+     * end of the interval. (Max 30 days or 720 hours)
+     */
+    @JsonProperty("time_interval")
+    private Integer timeInterval;
 
-  /** Unit for time_interval */
-  @JsonProperty("frequency_cap_interval")
-  private FrequencyCapIntervalEnum frequencyCapInterval;
+    /**
+     * Unit for time_interval
+     */
+    @JsonProperty("frequency_cap_interval")
+    private FrequencyCapIntervalEnum frequencyCapInterval;
 } // FrequencyCapConfig

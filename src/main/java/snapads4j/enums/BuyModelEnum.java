@@ -23,10 +23,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Yassine
  */
 public enum BuyModelEnum {
-  /** AUCTION */
-  @JsonProperty("AUCTION")
-  AUCTION,
-  /** RESERVED */
-  @JsonProperty("RESERVED")
-  RESERVED
+    /**
+     * AUCTION
+     */
+    @JsonProperty("AUCTION")
+    AUCTION,
+    /**
+     * RESERVED
+     */
+    @JsonProperty("RESERVED")
+    RESERVED
 } // BuyModelEnum

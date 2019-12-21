@@ -16,7 +16,6 @@
 package snapads4j.model.organization;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,5 +31,5 @@ import lombok.Setter;
 @JsonIgnoreProperties(value = {"sub_request_status"})
 public class SnapInnerOrganizations {
 
-  private Organization organization;
+    private Organization organization;
 } // SnapInnerOrganizations

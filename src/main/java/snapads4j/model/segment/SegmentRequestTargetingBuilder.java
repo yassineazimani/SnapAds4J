@@ -15,9 +15,9 @@
  */
 package snapads4j.model.segment;
 
-import java.util.List;
-
 import snapads4j.enums.OperationEnum;
+
+import java.util.List;
 
 /**
  * Used to build SegmentRequestTargeting instance (${@link SegmentRequestTargeting})
@@ -26,28 +26,28 @@ import snapads4j.enums.OperationEnum;
  */
 public class SegmentRequestTargetingBuilder {
 
-  private SegmentRequestTargeting segmentInstance;
+    private final SegmentRequestTargeting segmentInstance;
 
-  public SegmentRequestTargetingBuilder() {
-    this.segmentInstance = new SegmentRequestTargeting();
-  }
+    public SegmentRequestTargetingBuilder() {
+        this.segmentInstance = new SegmentRequestTargeting();
+    }
 
-  public SegmentRequestTargetingBuilder setId(Long id) {
-    this.segmentInstance.setId(id);
-    return this;
-  } // setId()
+    public SegmentRequestTargetingBuilder setId(Long id) {
+        this.segmentInstance.setId(id);
+        return this;
+    } // setId()
 
-  public SegmentRequestTargetingBuilder setSegmentIds(List<String> segmentIds) {
-    this.segmentInstance.setSegmentIds(segmentIds);
-    return this;
-  } // setSegmentIds()
+    public SegmentRequestTargetingBuilder setSegmentIds(List<String> segmentIds) {
+        this.segmentInstance.setSegmentIds(segmentIds);
+        return this;
+    } // setSegmentIds()
 
-  public SegmentRequestTargetingBuilder setOperation(OperationEnum op) {
-    this.segmentInstance.setOperation(op);
-    return this;
-  } // setOperation()
+    public SegmentRequestTargetingBuilder setOperation(OperationEnum op) {
+        this.segmentInstance.setOperation(op);
+        return this;
+    } // setOperation()
 
-  public SegmentRequestTargeting build() {
-    return this.segmentInstance;
-  } // build()
+    public SegmentRequestTargeting build() {
+        return this.segmentInstance;
+    } // build()
 } // SegmentRequestTargetingBuilder

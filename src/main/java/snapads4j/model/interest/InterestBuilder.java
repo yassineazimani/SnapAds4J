@@ -24,29 +24,29 @@ import java.util.List;
  */
 public class InterestBuilder {
 
-  private Interest interestInstance;
+    private final Interest interestInstance;
 
-  public InterestBuilder() {
-    this.interestInstance = new Interest();
-  }
+    public InterestBuilder() {
+        this.interestInstance = new Interest();
+    }
 
-  public InterestBuilder setId(Integer id) {
-    this.interestInstance.setId(id);
-    return this;
-  }
+    public InterestBuilder setId(Integer id) {
+        this.interestInstance.setId(id);
+        return this;
+    }
 
-  /**
-   * Example : "SLC_36", "DLXS_1"
-   *
-   * @param categoryIds
-   * @return
-   */
-  public InterestBuilder setCategoryIds(List<String> categoryIds) {
-    this.interestInstance.setCategoryIds(categoryIds);
-    return this;
-  } // setCategoryIds()
+    /**
+     * Example : "SLC_36", "DLXS_1"
+     *
+     * @param categoryIds
+     * @return
+     */
+    public InterestBuilder setCategoryIds(List<String> categoryIds) {
+        this.interestInstance.setCategoryIds(categoryIds);
+        return this;
+    } // setCategoryIds()
 
-  public Interest build() {
-    return this.interestInstance;
-  } // build()
+    public Interest build() {
+        return this.interestInstance;
+    } // build()
 } // InterestBuilder

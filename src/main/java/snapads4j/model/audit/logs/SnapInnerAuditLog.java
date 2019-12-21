@@ -16,7 +16,6 @@
 package snapads4j.model.audit.logs;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,7 +28,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@JsonIgnoreProperties(value = { "sub_request_status" })
+@JsonIgnoreProperties(value = {"sub_request_status"})
 public class SnapInnerAuditLog {
 
     private AuditLog changelog;

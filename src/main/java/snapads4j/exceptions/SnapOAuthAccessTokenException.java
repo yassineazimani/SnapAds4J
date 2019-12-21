@@ -22,14 +22,14 @@ package snapads4j.exceptions;
  */
 public class SnapOAuthAccessTokenException extends Exception {
 
-  private static final long serialVersionUID = -4988614181588855181L;
+    private static final long serialVersionUID = -4988614181588855181L;
 
-  /**
-   * Constructor
-   *
-   * @param message Message exception
-   */
-  public SnapOAuthAccessTokenException(String message) {
-    super(message);
-  } // SnapOAuthAccessTokenException()
+    /**
+     * Constructor
+     *
+     * @param message Message exception
+     */
+    public SnapOAuthAccessTokenException(String message) {
+        super(message);
+    } // SnapOAuthAccessTokenException()
 } // SnapOAuthAccessTokenException

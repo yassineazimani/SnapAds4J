@@ -19,9 +19,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Type Audit logs
- * 
- * @author yassine
  *
+ * @author yassine
  */
 public enum TypeAuditLogEnum {
     @JsonProperty("AD")

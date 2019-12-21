@@ -15,14 +15,13 @@
  */
 package snapads4j.model.organization;
 
+import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
+import snapads4j.model.SnapHttpResponse;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-
-import lombok.Setter;
-import snapads4j.model.SnapHttpResponse;
 
 /**
  * SnapHttpResponseOrganization
@@ -32,15 +31,15 @@ import snapads4j.model.SnapHttpResponse;
 @Setter
 public class SnapHttpResponseOrganization extends SnapHttpResponse {
 
-  private List<SnapInnerOrganizations> organizations;
+    private List<SnapInnerOrganizations> organizations;
 
-  public Optional<Organization> getOrganization() {
-    return CollectionUtils.isNotEmpty(organizations) && organizations.get(0) != null
-        ? Optional.of(organizations.get(0).getOrganization())
-        : Optional.empty();
-  } // getOrganization()
+    public Optional<Organization> getOrganization() {
+        return CollectionUtils.isNotEmpty(organizations) && organizations.get(0) != null
+                ? Optional.of(organizations.get(0).getOrganization())
+                : Optional.empty();
+    } // getOrganization()
 
-  public List<Organization> getAllOrganizations() {
-    return organizations.stream().map(org -> org.getOrganization()).collect(Collectors.toList());
-  } // getAllOrganizations()
+    public List<Organization> getAllOrganizations() {
+        return organizations.stream().map(SnapInnerOrganizations::getOrganization).collect(Collectors.toList());
+    } // getAllOrganizations()
 } // SnapHttpResponseOrganization

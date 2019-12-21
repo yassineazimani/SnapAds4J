@@ -19,8 +19,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * ReviewStatusEnum
- * @author yassine
  *
+ * @author yassine
  */
 public enum ReviewStatusEnum {
     /**

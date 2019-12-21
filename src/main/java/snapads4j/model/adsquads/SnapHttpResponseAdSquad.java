@@ -15,14 +15,13 @@
  */
 package snapads4j.model.adsquads;
 
+import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
+import snapads4j.model.SnapHttpResponse;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-
-import lombok.Setter;
-import snapads4j.model.SnapHttpResponse;
 
 /**
  * SnapHttpResponseAdSquad
@@ -35,13 +34,13 @@ public class SnapHttpResponseAdSquad extends SnapHttpResponse {
     private List<SnapInnerAdSquad> adsquads;
 
     public Optional<AdSquad> getSpecificAdSquad() {
-	return (CollectionUtils.isNotEmpty(adsquads) && adsquads.get(0) != null)
-		? Optional.of(adsquads.get(0).getAdsquad())
-		: Optional.empty();
+        return (CollectionUtils.isNotEmpty(adsquads) && adsquads.get(0) != null)
+                ? Optional.of(adsquads.get(0).getAdsquad())
+                : Optional.empty();
     } // getSpecificAdSquad()
 
     public List<AdSquad> getAllAdSquads() {
-	return adsquads.stream().map(org -> org.getAdsquad()).collect(Collectors.toList());
+        return adsquads.stream().map(SnapInnerAdSquad::getAdsquad).collect(Collectors.toList());
     } // getAllAdSquads()
 
 }// SnapHttpResponseAdSquad

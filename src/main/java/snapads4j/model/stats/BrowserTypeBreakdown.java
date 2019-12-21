@@ -18,7 +18,6 @@ package snapads4j.model.stats;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -30,23 +29,23 @@ import lombok.ToString;
 public class BrowserTypeBreakdown {
 
     @JsonProperty("BROWSER_TYPE_OTHER")
-    private String browserTypeOther;
-    
+    private Integer browserTypeOther;
+
     @JsonProperty("SAFARI")
     private Integer safari;
-    
+
     @JsonProperty("CHROME")
-    private String chrome;
-    
+    private Integer chrome;
+
     @JsonProperty("FIREFOX")
     private Integer firefox;
-    
+
     @JsonProperty("INTERNET_EXPLORER")
-    private String internetExplorer;
-    
+    private Integer internetExplorer;
+
     @JsonProperty("OPERA")
     private Integer opera;
-    
+
     @JsonProperty("EDGE")
     private Integer edge;
 

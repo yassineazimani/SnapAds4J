@@ -15,28 +15,20 @@
  */
 package snapads4j.model.creatives;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import snapads4j.enums.AdTypeEnum;
-import snapads4j.enums.CallToActionEnum;
-import snapads4j.enums.CreativeTypeEnum;
-import snapads4j.enums.ForcedViewEligibilityEnum;
-import snapads4j.enums.PackagingStatusEnum;
-import snapads4j.enums.PlaybackTypeEnum;
-import snapads4j.enums.ReviewStatusEnum;
-import snapads4j.enums.TopSnapCropPositionEnum;
+import snapads4j.enums.*;
+
+import java.util.Date;
 
 /**
  * CreativeMedia
- * 
+ * <p>
  * A Creative is the combination of one or more pieces of media.
  *
  * @author Yassine
@@ -46,117 +38,127 @@ import snapads4j.enums.TopSnapCropPositionEnum;
 @ToString
 @JsonInclude(Include.NON_EMPTY)
 public class Creative {
-    
-    /** ID */
+
+    /**
+     * ID
+     */
     @JsonProperty("id")
     private String id;
-    
-    /** Last date update of Creative */
+
+    /**
+     * Last date update of Creative
+     */
     @JsonProperty("updated_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date updatedAt;
 
-    /** Date creation of Creative */
+    /**
+     * Date creation of Creative
+     */
     @JsonProperty("created_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date createdAt;
-    
-    /** Ad Account ID **/
+
+    /**
+     * Ad Account ID
+     **/
     @JsonProperty("ad_account_id")
     private String adAccountId;
-    
-    /** Brand name of Creative */
+
+    /**
+     * Brand name of Creative
+     */
     @JsonProperty("brand_name")
     private String brandName;
-    
+
     @JsonProperty("call_to_action")
     private CallToActionEnum callToAction;
-    
+
     private String headline;
-    
+
     /**
      * Allow Users to Share with Friends.
      */
     private boolean shareable;
-    
+
     /**
      * Creative name.
      */
     private String name;
-    
+
     /**
      * Top Snap Media ID
      */
     @JsonProperty("top_snap_media_id")
     private String topSnapMediaId;
-    
+
     /**
      * Top Snap Crop Position
      */
     @JsonProperty("top_snap_crop_position")
     private TopSnapCropPositionEnum topSnapCropPosition;
-    
+
     /**
      * Creative type.
      */
     private CreativeTypeEnum type;
-    
+
     @JsonProperty("forced_view_eligibility")
     private ForcedViewEligibilityEnum forcedViewEligibility;
-    
+
     @JsonProperty("preview_creative_id")
     private String previewCreativeId;
-    
+
     /**
      * Specifies whether the creatives within the composite auto-advance or loop.
      */
     @JsonProperty("playback_type")
     private PlaybackTypeEnum playbackType;
-    
+
     /**
      * Type of Ad Product.
      */
     @JsonProperty("ad_product")
     private AdTypeEnum adProduct;
-    
+
     /**
      * Packaging Status
      */
     @JsonProperty("packaging_status")
     private PackagingStatusEnum packagingStatus;
-    
+
     /**
      * Review Status
      */
     @JsonProperty("review_status")
     private ReviewStatusEnum reviewStatus;
-    
+
     @JsonProperty("longform_video_properties")
     private LongformVideoProperties longformVideoProperties;
-    
+
     @JsonProperty("app_install_properties")
     private AppInstallProperties appInstallProperties;
-    
+
     @JsonProperty("web_view_properties")
     private WebViewProperties webViewProperties;
-    
+
     @JsonProperty("deep_link_properties")
     private DeepLinkProperties deepLinkProperties;
-    
+
     @JsonProperty("preview_properties")
     private PreviewProperties previewProperties;
-    
+
     @JsonProperty("collection_properties")
     private CollectionProperties collectionProperties;
-    
+
     @JsonProperty("ad_to_lens_properties")
     private AdLensProperties adLensProperties;
-    
+
     @JsonProperty("composite_properties")
     private CompositeProperties compositeProperties;
-    
+
     public Creative() {
-	this.shareable = true;
+        this.shareable = true;
     }// Creative()
 
 }// Creative

@@ -18,7 +18,6 @@ package snapads4j.model.stats;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -30,18 +29,18 @@ import lombok.ToString;
 public class OsTypeBreakdown {
 
     @JsonProperty("IOS")
-    private String ios;
-    
+    private Integer ios;
+
     @JsonProperty("ANDROID")
     private Integer android;
-    
+
     @JsonProperty("MAC_OS_X")
-    private String macOsX;
-    
+    private Integer macOsX;
+
     @JsonProperty("LINUX")
     private Integer linux;
-    
+
     @JsonProperty("WINDOW")
-    private String window;
+    private Integer windows;
 
 }// OsTypeBreakdown

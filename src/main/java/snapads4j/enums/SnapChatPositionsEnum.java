@@ -17,21 +17,33 @@ package snapads4j.enums;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** @author Yassine */
+/**
+ * @author Yassine
+ */
 public enum SnapChatPositionsEnum {
-  /** INTERSTITIAL_USER */
-  @JsonProperty("INTERSTITIAL_USER")
-  INTERSTITIAL_USER,
-  /** INTERSTITIAL_CONTENT */
-  @JsonProperty("INTERSTITIAL_CONTENT")
-  INTERSTITIAL_CONTENT,
-  /** INSTREAM */
-  @JsonProperty("INSTREAM")
-  INSTREAM,
-  /** FEED */
-  @JsonProperty("FEED")
-  FEED,
-  /** CAMERA */
-  @JsonProperty("CAMERA")
-  CAMERA
+    /**
+     * INTERSTITIAL_USER
+     */
+    @JsonProperty("INTERSTITIAL_USER")
+    INTERSTITIAL_USER,
+    /**
+     * INTERSTITIAL_CONTENT
+     */
+    @JsonProperty("INTERSTITIAL_CONTENT")
+    INTERSTITIAL_CONTENT,
+    /**
+     * INSTREAM
+     */
+    @JsonProperty("INSTREAM")
+    INSTREAM,
+    /**
+     * FEED
+     */
+    @JsonProperty("FEED")
+    FEED,
+    /**
+     * CAMERA
+     */
+    @JsonProperty("CAMERA")
+    CAMERA
 } // SnapChatPositionsEnum

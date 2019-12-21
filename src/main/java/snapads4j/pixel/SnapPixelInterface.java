@@ -15,28 +15,27 @@
  */
 package snapads4j.pixel;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Optional;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.pixel.Pixel;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Optional;
+
 public interface SnapPixelInterface {
 
     Optional<Pixel> getSpecificPixelAssociatedByAdAccount(String oAuthAccessToken, String adAccountId)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    SnapExecutionException;
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+            SnapExecutionException;
 
     Optional<Pixel> getSpecificPixel(String oAuthAccessToken, String pixelId) throws SnapResponseErrorException,
-	    SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
+            SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
     Optional<Pixel> updatePixel(String oAuthAccessToken, Pixel pixel)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+            JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 
 }// SnapPixelInterface

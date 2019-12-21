@@ -16,7 +16,6 @@
 package snapads4j.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,9 +30,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SnapHttpResponse {
 
-  @JsonProperty("request_status")
-  private String requestStatus;
+    @JsonProperty("request_status")
+    private String requestStatus;
 
-  @JsonProperty("request_id")
-  private String requestId;
+    @JsonProperty("request_id")
+    private String requestId;
 } // SnapHttpResponse

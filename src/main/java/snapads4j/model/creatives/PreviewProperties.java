@@ -16,7 +16,6 @@
 package snapads4j.model.creatives;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,11 +27,11 @@ public class PreviewProperties {
 
     @JsonProperty("preview_media_id")
     private String previewMediaId;
-    
+
     @JsonProperty("logo_media_id")
     private String logoMediaId;
-    
+
     @JsonProperty("preview_headline")
     private String previewHeadline;
-    
+
 }// PreviewProperties

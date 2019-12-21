@@ -25,10 +25,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Yassine
  */
 public enum FrequencyCapIntervalEnum {
-  /** Hours */
-  @JsonProperty("HOURS")
-  HOURS,
-  /** Days */
-  @JsonProperty("DAYS")
-  DAYS
+    /**
+     * Hours
+     */
+    @JsonProperty("HOURS")
+    HOURS,
+    /**
+     * Days
+     */
+    @JsonProperty("DAYS")
+    DAYS
 } // FrequencyCapIntervalEnum

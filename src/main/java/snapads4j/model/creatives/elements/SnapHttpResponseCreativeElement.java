@@ -15,17 +15,15 @@
  */
 package snapads4j.model.creatives.elements;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
+import snapads4j.model.SnapHttpResponse;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import snapads4j.model.SnapHttpResponse;
 
 /**
  * SnapHttpResponseCreative
@@ -35,18 +33,18 @@ import snapads4j.model.SnapHttpResponse;
 @Setter
 @NoArgsConstructor
 public class SnapHttpResponseCreativeElement extends SnapHttpResponse {
-    
+
     @JsonProperty("creative_elements")
     private List<SnapInnerCreativeElement> creatives;
 
     public Optional<CreativeElement> getSpecificCreative() {
-      return (CollectionUtils.isNotEmpty(creatives) && creatives.get(0) != null)
-          ? Optional.of(creatives.get(0).getCreative())
-          : Optional.empty();
+        return (CollectionUtils.isNotEmpty(creatives) && creatives.get(0) != null)
+                ? Optional.of(creatives.get(0).getCreative())
+                : Optional.empty();
     } // getSpecificCreative()
 
     public List<CreativeElement> getAllCreatives() {
-      return creatives.stream().map(org -> org.getCreative()).collect(Collectors.toList());
+        return creatives.stream().map(SnapInnerCreativeElement::getCreative).collect(Collectors.toList());
     } // getAllCreatives()
-    
+
 }// SnapHttpResponseCreativeElement

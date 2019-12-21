@@ -28,5 +28,5 @@ import snapads4j.model.SnapHttpResponse;
 @Setter
 public class SnapHttpResponseUser extends SnapHttpResponse {
 
-  private AuthenticatedUser me;
+    private AuthenticatedUser me;
 } // SnapHttpResponseUser

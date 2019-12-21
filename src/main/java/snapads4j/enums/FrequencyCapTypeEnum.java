@@ -25,6 +25,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Yassine
  */
 public enum FrequencyCapTypeEnum {
-  @JsonProperty("IMPRESSIONS")
-  IMPRESSIONS
+    @JsonProperty("IMPRESSIONS")
+    IMPRESSIONS
 } // FrequencyCapTypeEnum

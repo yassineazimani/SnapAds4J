@@ -23,8 +23,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Yassine
  */
 public enum PacingTypeEnum {
-  @JsonProperty("STANDARD")
-  STANDARD,
-  @JsonProperty("ACCELERATED")
-  ACCELERATED
+    @JsonProperty("STANDARD")
+    STANDARD,
+    @JsonProperty("ACCELERATED")
+    ACCELERATED
 } // PacingTypeEnum

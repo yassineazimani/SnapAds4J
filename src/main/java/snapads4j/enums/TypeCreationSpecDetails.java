@@ -19,9 +19,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public enum TypeCreationSpecDetails {
     @JsonProperty("BALANCE")
-    BALANCE, 
+    BALANCE,
     @JsonProperty("SIMILARITY")
-    SIMILARITY, 
+    SIMILARITY,
     @JsonProperty("REACH")
     REACH
 }// TypeCreationSpecDetails

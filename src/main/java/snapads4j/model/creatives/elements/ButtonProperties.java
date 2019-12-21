@@ -16,7 +16,6 @@
 package snapads4j.model.creatives.elements;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -31,5 +30,5 @@ public class ButtonProperties {
      */
     @JsonProperty("button_overlay_media_id")
     private String buttonOverlayMediaId;
-    
+
 }// ButtonProperties

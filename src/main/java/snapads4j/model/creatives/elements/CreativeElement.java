@@ -15,11 +15,8 @@
  */
 package snapads4j.model.creatives.elements;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,42 +25,44 @@ import snapads4j.enums.InteractionTypeEnum;
 import snapads4j.model.creatives.DeepLinkProperties;
 import snapads4j.model.creatives.WebViewProperties;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @ToString
 public class CreativeElement {
-    
+
     private String id;
-    
+
     @JsonProperty("created_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date createdAt;
 
     @JsonProperty("updated_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date updatedAt;
 
     @JsonProperty("ad_account_id")
     private String adAccountId;
-    
+
     private String name;
-    
+
     private CreativeTypeEnum type;
-    
+
     @JsonProperty("interaction_type")
     private InteractionTypeEnum interactionType;
-    
+
     private String description;
-    
+
     private String title;
-    
+
     @JsonProperty("button_properties")
     private ButtonProperties buttonProperties;
-    
+
     @JsonProperty("web_view_properties")
     private WebViewProperties webViewProperties;
-    
+
     @JsonProperty("deep_link_properties")
     private DeepLinkProperties deepLinkProperties;
-    
+
 }// CreativeElement

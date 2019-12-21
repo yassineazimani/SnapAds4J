@@ -15,20 +15,19 @@
  */
 package snapads4j.model.organization;
 
-import java.util.Date;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import snapads4j.enums.CurrencyEnum;
 import snapads4j.enums.StatusEnum;
 import snapads4j.enums.TypeOrganizationEnum;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Ad Accounts handle Ads, billing information, and allows you to manage your Campaigns.
@@ -41,39 +40,55 @@ import snapads4j.enums.TypeOrganizationEnum;
 @JsonInclude(Include.NON_EMPTY)
 public class AdAccount {
 
-  /** Ad account ID */
-  private String id;
+    /**
+     * Ad account ID
+     */
+    private String id;
 
-  /** Last date update of Ad account */
-  @JsonProperty("updated_at")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date updatedAt;
+    /**
+     * Last date update of Ad account
+     */
+    @JsonProperty("updated_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    private Date updatedAt;
 
-  /** Date creation of Ad account */
-  @JsonProperty("created_at")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date createdAt;
+    /**
+     * Date creation of Ad account
+     */
+    @JsonProperty("created_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    private Date createdAt;
 
-  /** Ad account name */
-  private String name;
+    /**
+     * Ad account name
+     */
+    private String name;
 
-  /** Type organization */
-  private TypeOrganizationEnum type;
+    /**
+     * Type organization
+     */
+    private TypeOrganizationEnum type;
 
-  /** Status */
-  private StatusEnum status;
+    /**
+     * Status
+     */
+    private StatusEnum status;
 
-  /** Currency used */
-  private CurrencyEnum currency;
+    /**
+     * Currency used
+     */
+    private CurrencyEnum currency;
 
-  /** Timezone */
-  private String timezone;
+    /**
+     * Timezone
+     */
+    private String timezone;
 
-  /**
-   * Ad account roles
-   *
-   * @see <a href="https://businesshelp.snapchat.com/en-US/a/roles-permissions">Roles
-   *     permissions</a>
-   */
-  private List<String> roles;
+    /**
+     * Ad account roles
+     *
+     * @see <a href="https://businesshelp.snapchat.com/en-US/a/roles-permissions">Roles
+     * permissions</a>
+     */
+    private List<String> roles;
 } // AdAccount

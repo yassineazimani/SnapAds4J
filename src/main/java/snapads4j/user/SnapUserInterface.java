@@ -15,12 +15,12 @@
  */
 package snapads4j.user;
 
-import java.util.Optional;
-
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.user.AuthenticatedUser;
+
+import java.util.Optional;
 
 /**
  * SnapUserInterface
@@ -29,16 +29,16 @@ import snapads4j.model.user.AuthenticatedUser;
  */
 public interface SnapUserInterface {
 
-  /**
-   * Get informations about the authenticated user.
-   *
-   * @see <a href="https://developers.snapchat.com/api/docs/#user">User</a>
-   * @param oAuthAccessToken oAuthAccessToken
-   * @return AuthenticatedUser {@link AuthenticatedUser}
-   * @throws SnapOAuthAccessTokenException
-   * @throws SnapResponseErrorException
- * @throws SnapExecutionException 
-   */
-  Optional<AuthenticatedUser> aboutMe(String oAuthAccessToken)
-      throws SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
+    /**
+     * Get informations about the authenticated user.
+     *
+     * @param oAuthAccessToken oAuthAccessToken
+     * @return AuthenticatedUser {@link AuthenticatedUser}
+     * @throws SnapOAuthAccessTokenException
+     * @throws SnapResponseErrorException
+     * @throws SnapExecutionException
+     * @see <a href="https://developers.snapchat.com/api/docs/#user">User</a>
+     */
+    Optional<AuthenticatedUser> aboutMe(String oAuthAccessToken)
+            throws SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
 } // SnapUserInterface

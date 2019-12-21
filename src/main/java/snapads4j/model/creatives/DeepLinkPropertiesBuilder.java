@@ -17,48 +17,48 @@ package snapads4j.model.creatives;
 
 public class DeepLinkPropertiesBuilder {
 
-    private DeepLinkProperties instance;
+    private final DeepLinkProperties instance;
 
     public DeepLinkPropertiesBuilder() {
-	this.instance = new DeepLinkProperties();
+        this.instance = new DeepLinkProperties();
     }// DeepLinkPropertiesBuilder()
 
     public DeepLinkPropertiesBuilder setDeepLinkUri(String deepLinkUri) {
-	this.instance.setDeepLinkUri(deepLinkUri);
-	return this;
+        this.instance.setDeepLinkUri(deepLinkUri);
+        return this;
     }// setDeepLinkUri()
 
     public DeepLinkPropertiesBuilder setAppName(String appName) {
-	this.instance.setAppName(appName);
-	return this;
+        this.instance.setAppName(appName);
+        return this;
     }// setAppName()
 
     public DeepLinkPropertiesBuilder setIosAppId(String iosAppId) {
-	this.instance.setIosAppId(iosAppId);
-	return this;
+        this.instance.setIosAppId(iosAppId);
+        return this;
     }// setIosAppId()
 
     public DeepLinkPropertiesBuilder setAndroidAppUrl(String androidAppUrl) {
-	this.instance.setAndroidAppUrl(androidAppUrl);
-	return this;
+        this.instance.setAndroidAppUrl(androidAppUrl);
+        return this;
     }// setAndroidAppUrl()
 
     public DeepLinkPropertiesBuilder setIconMediaId(String iconMediaId) {
-	this.instance.setIconMediaId(iconMediaId);
-	return this;
+        this.instance.setIconMediaId(iconMediaId);
+        return this;
     }// setIconMediaId()
 
     public DeepLinkPropertiesBuilder setFallbackType(String fallbackType) {
-	this.instance.setFallbackType(fallbackType);
-	return this;
+        this.instance.setFallbackType(fallbackType);
+        return this;
     }// setFallbackType()
 
     public DeepLinkPropertiesBuilder setWebViewFallbackUrl(String webViewFallbackUrl) {
-	this.instance.setWebViewFallbackUrl(webViewFallbackUrl);
-	return this;
+        this.instance.setWebViewFallbackUrl(webViewFallbackUrl);
+        return this;
     }// setWebViewFallbackUrl()
 
     public DeepLinkProperties build() {
-	return this.instance;
+        return this.instance;
     }// build()
 }// DeepLinkPropertiesBuilder

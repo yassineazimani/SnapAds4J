@@ -20,6 +20,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PaidImpressionTrackingUrl extends TrackingUrl{
-    	
+public class PaidImpressionTrackingUrl extends TrackingUrl {
+
 }// PaidImpressionTrackingUrl

@@ -15,27 +15,26 @@
  */
 package snapads4j.model.audit.logs;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import snapads4j.model.SnapHttpResponse;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * SnapHttpAuditLogAd
- * 
- * @author yassine
  *
+ * @author yassine
  */
 @Setter
 @NoArgsConstructor
-public class SnapHttpResponseAuditLog extends SnapHttpResponse{
+public class SnapHttpResponseAuditLog extends SnapHttpResponse {
 
     private List<SnapInnerAuditLog> changelogs;
 
     public List<AuditLog> getAllAuditLogs() {
-	return changelogs.stream().map(org -> org.getChangelog()).collect(Collectors.toList());
+        return changelogs.stream().map(SnapInnerAuditLog::getChangelog).collect(Collectors.toList());
     }// getAllAuditLogs()
-    
+
 }// SnapHttpAuditLogAd

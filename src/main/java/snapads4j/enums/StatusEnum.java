@@ -23,28 +23,44 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Yassine
  */
 public enum StatusEnum {
-  /** Status actived */
-  @JsonProperty("ACTIVE")
-  ACTIVE,
-  /** Status paused */
-  @JsonProperty("PAUSED")
-  PAUSED,
-  /** Status redemmed */
-  @JsonProperty("REDEEMED")
-  REDEEMED,
-  /** Status spent */
-  @JsonProperty("SPENT")
-  SPENT,
-  /** Status expired */
-  @JsonProperty("EXPIRED")
-  EXPIRED,
-  /** Status pending */
-  @JsonProperty("PENDING")
-  PENDING,
-  /** Success */
-  @JsonProperty("SUCCESS")
-  SUCCESS,
-  /** Status deleted */
-  @JsonProperty("DELETED")
-  DELETED
+    /**
+     * Status actived
+     */
+    @JsonProperty("ACTIVE")
+    ACTIVE,
+    /**
+     * Status paused
+     */
+    @JsonProperty("PAUSED")
+    PAUSED,
+    /**
+     * Status redemmed
+     */
+    @JsonProperty("REDEEMED")
+    REDEEMED,
+    /**
+     * Status spent
+     */
+    @JsonProperty("SPENT")
+    SPENT,
+    /**
+     * Status expired
+     */
+    @JsonProperty("EXPIRED")
+    EXPIRED,
+    /**
+     * Status pending
+     */
+    @JsonProperty("PENDING")
+    PENDING,
+    /**
+     * Success
+     */
+    @JsonProperty("SUCCESS")
+    SUCCESS,
+    /**
+     * Status deleted
+     */
+    @JsonProperty("DELETED")
+    DELETED
 } // StatusEnum

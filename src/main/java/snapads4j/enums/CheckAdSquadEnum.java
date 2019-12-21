@@ -21,8 +21,12 @@ package snapads4j.enums;
  * @author Yassine
  */
 public enum CheckAdSquadEnum {
-  /** For creation Ad Squad */
-  CREATION,
-  /** For update Ad Squad */
-  UPDATE
+    /**
+     * For creation Ad Squad
+     */
+    CREATION,
+    /**
+     * For update Ad Squad
+     */
+    UPDATE
 } // CheckAdSquadEnum

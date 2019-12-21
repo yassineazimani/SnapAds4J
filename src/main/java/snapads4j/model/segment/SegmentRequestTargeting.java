@@ -15,17 +15,16 @@
  */
 package snapads4j.model.segment;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import snapads4j.enums.OperationEnum;
 import snapads4j.model.targeting.Targeting;
+
+import java.util.List;
 
 /**
  * Segment used to build {@link Targeting} instance.
@@ -38,10 +37,10 @@ import snapads4j.model.targeting.Targeting;
 @JsonInclude(Include.NON_EMPTY)
 public class SegmentRequestTargeting {
 
-  private Long id;
+    private Long id;
 
-  @JsonProperty("segment_id")
-  private List<String> segmentIds;
+    @JsonProperty("segment_id")
+    private List<String> segmentIds;
 
-  private OperationEnum operation;
+    private OperationEnum operation;
 } // SegmentRequestTargeting

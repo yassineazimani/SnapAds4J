@@ -15,11 +15,10 @@
  */
 package snapads4j.model.adsquads;
 
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import snapads4j.enums.DayEnum;
+
+import java.util.Map;
 
 /**
  * AdSchedulingConfig
@@ -28,6 +27,6 @@ import snapads4j.enums.DayEnum;
  */
 public class AdSchedulingConfig {
 
-  @JsonProperty("ad_scheduling_config")
-  private Map<DayEnum, HourOfDay> ad_scheduling_config;
+    @JsonProperty("ad_scheduling_config")
+    private Map<DayEnum, HourOfDay> ad_scheduling_config;
 } // AdSchedulingConfig

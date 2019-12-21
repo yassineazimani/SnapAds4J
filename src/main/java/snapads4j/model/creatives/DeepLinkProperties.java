@@ -16,7 +16,6 @@
 package snapads4j.model.creatives;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,22 +27,22 @@ public class DeepLinkProperties {
 
     @JsonProperty("deep_link_uri")
     private String deepLinkUri;
-    
+
     @JsonProperty("app_name")
     private String appName;
-    
+
     @JsonProperty("ios_app_id")
     private String iosAppId;
-	    
+
     @JsonProperty("android_app_url")
     private String androidAppUrl;
-		    
+
     @JsonProperty("icon_media_id")
     private String iconMediaId;
-    
+
     @JsonProperty("fallback_type")
     private String fallbackType;
-    
+
     @JsonProperty("web_view_fallback_url")
     private String webViewFallbackUrl;
 }// DeepLinkProperties

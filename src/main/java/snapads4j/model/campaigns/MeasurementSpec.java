@@ -16,12 +16,7 @@
 package snapads4j.model.campaigns;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
@@ -30,9 +25,9 @@ import lombok.ToString;
 @ToString
 public class MeasurementSpec {
 
-  @JsonProperty("ios_app_id")
-  private String iosAppId;
+    @JsonProperty("ios_app_id")
+    private String iosAppId;
 
-  @JsonProperty("android_app_url")
-  private String androidAppUrl;
+    @JsonProperty("android_app_url")
+    private String androidAppUrl;
 } // MeasurementSpec

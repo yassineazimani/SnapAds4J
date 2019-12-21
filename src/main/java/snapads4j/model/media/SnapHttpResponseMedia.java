@@ -15,26 +15,25 @@
  */
 package snapads4j.model.media;
 
+import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
+import snapads4j.model.SnapHttpResponse;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
-
-import lombok.Setter;
-import snapads4j.model.SnapHttpResponse;
-
 @Setter
-public class SnapHttpResponseMedia extends SnapHttpResponse{
+public class SnapHttpResponseMedia extends SnapHttpResponse {
 
     private List<SnapInnerMedia> media;
 
     public Optional<CreativeMedia> getSpecificMedia() {
-	return (CollectionUtils.isNotEmpty(media) && media.get(0) != null) ? Optional.of(media.get(0).getMedia())
-		: Optional.empty();
+        return (CollectionUtils.isNotEmpty(media) && media.get(0) != null) ? Optional.of(media.get(0).getMedia())
+                : Optional.empty();
     }// getSpecificMedia()
 
     public List<CreativeMedia> getAllMedia() {
-	return media.stream().map(org -> org.getMedia()).collect(Collectors.toList());
+        return media.stream().map(SnapInnerMedia::getMedia).collect(Collectors.toList());
     }// getAllMedia()
 }// SnapHttpResponseMedia

@@ -27,17 +27,17 @@ import snapads4j.enums.ProximityUnitEnum;
 @AllArgsConstructor
 public class Circle {
 
-  private double latitude;
+    private double latitude;
 
-  private double longitude;
+    private double longitude;
 
-  private int radius;
+    private int radius;
 
-  private ProximityUnitEnum unit;
+    private ProximityUnitEnum unit;
 
-  public Circle(double latitude, double longitude, int radius) {
-    this.latitude = latitude;
-    this.longitude = longitude;
-    this.radius = radius;
-  } // Circle()
+    public Circle(double latitude, double longitude, int radius) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.radius = radius;
+    } // Circle()
 } // Circle

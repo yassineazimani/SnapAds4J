@@ -15,9 +15,9 @@
  */
 package snapads4j.user;
 
-import java.io.IOException;
-import java.util.Optional;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -26,11 +26,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.Getter;
-import lombok.Setter;
 import snapads4j.exceptions.SnapExceptionsUtils;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
@@ -40,6 +35,9 @@ import snapads4j.model.user.SnapHttpResponseUser;
 import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.FileProperties;
 import snapads4j.utils.HttpUtils;
+
+import java.io.IOException;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -52,57 +50,58 @@ public class SnapUser implements SnapUserInterface {
     private String endpointMe;
 
     private CloseableHttpClient httpClient;
-    
+
     private EntityUtilsWrapper entityUtilsWrapper;
 
     private static final Logger LOGGER = LogManager.getLogger(SnapUser.class);
 
-    /** Constructor */
+    /**
+     * Constructor
+     */
     public SnapUser() {
-	this.fp = new FileProperties();
-	this.apiUrl = (String) fp.getProperties().get("api.url");
-	this.endpointMe = this.apiUrl + (String) fp.getProperties().get("api.url.user.me");
-	this.httpClient = HttpClients.createDefault();
-	this.entityUtilsWrapper = new EntityUtilsWrapper();
+        this.fp = new FileProperties();
+        this.apiUrl = (String) fp.getProperties().get("api.url");
+        this.endpointMe = this.apiUrl + fp.getProperties().get("api.url.user.me");
+        this.httpClient = HttpClients.createDefault();
+        this.entityUtilsWrapper = new EntityUtilsWrapper();
     } // SnapUser()
 
     /**
      * Get informations about the authenticated user.
      *
-     * @see <a href="https://developers.snapchat.com/api/docs/#user">User</a>
      * @param oAuthAccessToken oAuthAccessToken
      * @return AuthenticatedUser {@link #AuthenticatedUser}
      * @throws SnapOAuthAccessTokenException
      * @throws SnapResponseErrorException
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
+     * @see <a href="https://developers.snapchat.com/api/docs/#user">User</a>
      */
     @Override
     public Optional<AuthenticatedUser> aboutMe(String oAuthAccessToken)
-	    throws SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException {
-	if (StringUtils.isEmpty(oAuthAccessToken)) {
-	    throw new SnapOAuthAccessTokenException("The OAuthAccessToken must to be given");
-	}
-	Optional<AuthenticatedUser> result = Optional.empty();
-	HttpGet request = HttpUtils.prepareGetRequest(this.endpointMe, oAuthAccessToken);
-	try (CloseableHttpResponse response = httpClient.execute(request)) {
-	    int statusCode = response.getStatusLine().getStatusCode();
-	    HttpEntity entity = response.getEntity();
-	    if (entity != null) {
-		String body = entityUtilsWrapper.toString(entity);
-		if (statusCode >= 300) {
-		    SnapResponseErrorException ex = SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
-		    throw ex;
-		}
-		ObjectMapper mapper = new ObjectMapper();
-		SnapHttpResponseUser responseFromJson = mapper.readValue(body, SnapHttpResponseUser.class);
-		if (responseFromJson != null) {
-		    result = Optional.ofNullable(responseFromJson.getMe());
-		}
-	    }
-	} catch (IOException e) {
-	    LOGGER.error("Impossible to get informations about me", e);
-	    throw new SnapExecutionException("Impossible to get informations about me", e);
-	}
-	return result;
+            throws SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException {
+        if (StringUtils.isEmpty(oAuthAccessToken)) {
+            throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
+        }
+        Optional<AuthenticatedUser> result = Optional.empty();
+        HttpGet request = HttpUtils.prepareGetRequest(this.endpointMe, oAuthAccessToken);
+        try (CloseableHttpResponse response = httpClient.execute(request)) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                String body = entityUtilsWrapper.toString(entity);
+                if (statusCode >= 300) {
+                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+                }
+                ObjectMapper mapper = new ObjectMapper();
+                SnapHttpResponseUser responseFromJson = mapper.readValue(body, SnapHttpResponseUser.class);
+                if (responseFromJson != null) {
+                    result = Optional.ofNullable(responseFromJson.getMe());
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.error("Impossible to get informations about me", e);
+            throw new SnapExecutionException("Impossible to get informations about me", e);
+        }
+        return result;
     } // aboutMe()
 } // SnapUser

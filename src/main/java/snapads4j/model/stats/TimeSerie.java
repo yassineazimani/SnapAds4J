@@ -15,43 +15,42 @@
  */
 package snapads4j.model.stats;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.Date;
 
 @Getter
 @Setter
 @ToString
 @JsonInclude(Include.NON_EMPTY)
 public class TimeSerie {
-    
+
     @JsonProperty("start_time")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date startTime;
-    
+
     @JsonProperty("end_time")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date endTime;
-    
+
     private Stat stats;
-    
+
     @JsonProperty("total_events")
     private Integer totalEvents;
 
     @JsonProperty("event_type_breakdown")
     private EventTypeBreakdown eventTypeBreakdown;
-    
+
     @JsonProperty("os_type_breakdown")
     private OsTypeBreakdown osTypeBreakdown;
-    
+
     @JsonProperty("browser_type_breakdown")
     private BrowserTypeBreakdown browserTypeBreakdown;
-    
+
 }// TimeSerieStat

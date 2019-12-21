@@ -17,33 +17,33 @@ package snapads4j.model.creatives;
 
 public class CollectionPropertiesBuilder {
 
-    private CollectionProperties instance;
+    private final CollectionProperties instance;
 
     public CollectionPropertiesBuilder() {
-	this.instance = new CollectionProperties();
+        this.instance = new CollectionProperties();
     }// DeepLinkPropertiesBuilder()
 
     public CollectionPropertiesBuilder setDeepLinkProperties(DeepLinkProperties deepLinkProperties) {
-	this.instance.setDeepLinkProperties(deepLinkProperties);
-	return this;
+        this.instance.setDeepLinkProperties(deepLinkProperties);
+        return this;
     }// setDeepLinkProperties()
 
     public CollectionPropertiesBuilder setDefaultFallbackInteractionType(String defaultFallbackInteractionType) {
-	this.instance.setDefaultFallbackInteractionType(defaultFallbackInteractionType);
-	return this;
+        this.instance.setDefaultFallbackInteractionType(defaultFallbackInteractionType);
+        return this;
     }// setDefaultFallbackInteractionType()
 
     public CollectionPropertiesBuilder setInteractionZoneId(String interactionZoneId) {
-	this.instance.setInteractionZoneId(interactionZoneId);
-	return this;
+        this.instance.setInteractionZoneId(interactionZoneId);
+        return this;
     }// setInteractionZoneId()
 
     public CollectionPropertiesBuilder setWebViewProperties(WebViewProperties webViewProperties) {
-	this.instance.setWebViewProperties(webViewProperties);
-	return this;
+        this.instance.setWebViewProperties(webViewProperties);
+        return this;
     }// setWebViewProperties()
-    
+
     public CollectionProperties build() {
-	return this.instance;
+        return this.instance;
     }// build()
 }// CollectionPropertiesBuilder

@@ -15,15 +15,14 @@
  */
 package snapads4j.model.adaccount;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
+import snapads4j.model.SnapHttpResponse;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import snapads4j.model.SnapHttpResponse;
 
 /**
  * SnapHttpResponseAdAccount
@@ -34,15 +33,15 @@ import snapads4j.model.SnapHttpResponse;
 @NoArgsConstructor
 public class SnapHttpResponseAdAccount extends SnapHttpResponse {
 
-  private List<SnapInnerAdAccount> adaccounts;
+    private List<SnapInnerAdAccount> adaccounts;
 
-  public Optional<AdAccount> getSpecificAdAccount() {
-    return (CollectionUtils.isNotEmpty(adaccounts) && adaccounts.get(0) != null)
-        ? Optional.of(adaccounts.get(0).getAdaccount())
-        : Optional.empty();
-  } // getSpecificAdAccount()
+    public Optional<AdAccount> getSpecificAdAccount() {
+        return (CollectionUtils.isNotEmpty(adaccounts) && adaccounts.get(0) != null)
+                ? Optional.of(adaccounts.get(0).getAdaccount())
+                : Optional.empty();
+    } // getSpecificAdAccount()
 
-  public List<AdAccount> getAllAdAccounts() {
-    return adaccounts.stream().map(org -> org.getAdaccount()).collect(Collectors.toList());
-  } // getAllAdAccounts()
+    public List<AdAccount> getAllAdAccounts() {
+        return adaccounts.stream().map(SnapInnerAdAccount::getAdaccount).collect(Collectors.toList());
+    } // getAllAdAccounts()
 } // SnapHttpResponseAdAccount

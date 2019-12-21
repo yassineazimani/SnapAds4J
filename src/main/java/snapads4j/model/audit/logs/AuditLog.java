@@ -15,17 +15,16 @@
  */
 package snapads4j.model.audit.logs;
 
-import java.util.Date;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import snapads4j.enums.TypeAuditLogEnum;
+
+import java.util.Date;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -33,41 +32,41 @@ import snapads4j.enums.TypeAuditLogEnum;
 public class AuditLog {
 
     private String id;
-    
+
     private String name;
-    
+
     @JsonProperty("created_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date createdAt;
 
     @JsonProperty("updated_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date updatedAt;
-    
+
     private String action;
-    
+
     @JsonProperty("user_id")
     private String userId;
-    
+
     private String email;
-    
+
     @JsonProperty("event_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date eventAt;
-    
+
     @JsonProperty("app_id")
     private String appId;
-    
+
     @JsonProperty("app_name")
     private String appName;
-    
+
     @JsonProperty("entity_id")
     private String entityId;
-    
+
     @JsonProperty("entity_type")
     private TypeAuditLogEnum entityType;
-    
+
     @JsonProperty("update_value_records")
     private Map<String, Map<String, String>> updateValueRecords;
-    
+
 }// UpdateValueRecords

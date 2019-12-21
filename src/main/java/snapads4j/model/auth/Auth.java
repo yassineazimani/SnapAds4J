@@ -21,11 +21,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Auth {
-    
+
     private String grantType;
 
     private String redirectUri;
-    
+
     private String code;
 
     private String clientId;

@@ -15,12 +15,7 @@
  */
 package snapads4j.creatives.elements;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.Optional;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
@@ -28,10 +23,13 @@ import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.creatives.elements.CreativeElement;
 import snapads4j.model.creatives.elements.InteractionZone;
 
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Optional;
+
 public interface SnapCreativeElementInterface {
 
     /**
-     * 
      * @param oAuthAccessToken
      * @param creative
      * @return
@@ -40,14 +38,13 @@ public interface SnapCreativeElementInterface {
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
      */
     Optional<CreativeElement> createCreativeElement(String oAuthAccessToken, CreativeElement creative)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
-    
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+            JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
+
     /**
-     * 
      * @param oAuthAccessToken
      * @param creatives
      * @return
@@ -56,14 +53,13 @@ public interface SnapCreativeElementInterface {
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
      */
     List<CreativeElement> createCreativeElements(String oAuthAccessToken, List<CreativeElement> creatives)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
-    
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+            JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
+
     /**
-     * 
      * @param oAuthAccessToken
      * @param interactionZone
      * @return
@@ -72,10 +68,10 @@ public interface SnapCreativeElementInterface {
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
      */
     Optional<InteractionZone> createInteractionZone(String oAuthAccessToken, InteractionZone interactionZone)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
-    
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+            JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
+
 }// SnapCreativeElementInterface

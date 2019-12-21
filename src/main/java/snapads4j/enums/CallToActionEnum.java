@@ -19,8 +19,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * CallToActionEnum
- * @author yassine
  *
+ * @author yassine
  */
 public enum CallToActionEnum {
     /**

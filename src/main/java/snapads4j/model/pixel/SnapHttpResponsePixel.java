@@ -15,14 +15,13 @@
  */
 package snapads4j.model.pixel;
 
+import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
+import snapads4j.model.SnapHttpResponse;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-
-import lombok.Setter;
-import snapads4j.model.SnapHttpResponse;
 
 @Setter
 public class SnapHttpResponsePixel extends SnapHttpResponse {
@@ -30,12 +29,12 @@ public class SnapHttpResponsePixel extends SnapHttpResponse {
     private List<SnapInnerPixel> pixels;
 
     public List<Pixel> getAllPixels() {
-	return pixels.stream().map(org -> org.getPixel()).collect(Collectors.toList());
+        return pixels.stream().map(SnapInnerPixel::getPixel).collect(Collectors.toList());
     } // getAllPixels()
 
     public Optional<Pixel> getPixel() {
-	return CollectionUtils.isNotEmpty(pixels) && pixels.get(0) != null ? Optional.of(pixels.get(0).getPixel())
-		: Optional.empty();
+        return CollectionUtils.isNotEmpty(pixels) && pixels.get(0) != null ? Optional.of(pixels.get(0).getPixel())
+                : Optional.empty();
     } // getPixel()
 
 }// SnapHttpResponsePixel

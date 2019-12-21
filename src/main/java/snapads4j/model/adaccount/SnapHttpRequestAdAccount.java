@@ -15,21 +15,21 @@
  */
 package snapads4j.model.adaccount;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import lombok.Getter;
 
 @Getter
 public class SnapHttpRequestAdAccount {
 
-  private List<AdAccount> adaccounts;
+    private List<AdAccount> adaccounts;
 
-  public SnapHttpRequestAdAccount() {
-    this.adaccounts = new ArrayList<>();
-  } // SnapHttpRequestAdAccount()
+    public SnapHttpRequestAdAccount() {
+        this.adaccounts = new ArrayList<>();
+    } // SnapHttpRequestAdAccount()
 
-  public void addAdAccount(AdAccount adAccount) {
-    this.adaccounts.add(adAccount);
-  } // addAdAccount()
+    public void addAdAccount(AdAccount adAccount) {
+        this.adaccounts.add(adAccount);
+    } // addAdAccount()
 } // SnapHttpRequestAdAccount

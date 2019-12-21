@@ -15,28 +15,25 @@
  */
 package snapads4j.ads;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.Optional;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.ads.Ad;
 
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Optional;
+
 /**
- * 
  * @author yassine
- *
  */
 public interface SnapAdInterface {
 
     /**
      * Create an Ad
-     * 
+     *
      * @param oAuthAccessToken oAuthAccessToken
      * @param ad               Ad model
      * @return Ad created
@@ -45,14 +42,14 @@ public interface SnapAdInterface {
      * @throws SnapResponseErrorException
      * @throws SnapArgumentException
      * @throws UnsupportedEncodingException
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
      */
     Optional<Ad> createAd(String oAuthAccessToken, Ad ad) throws SnapOAuthAccessTokenException,
-	    JsonProcessingException, SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException, SnapExecutionException;
+            JsonProcessingException, SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException, SnapExecutionException;
 
     /**
      * Update an Ad
-     * 
+     *
      * @param oAuthAccessToken oAuthAccessToken
      * @param ad               Ad model
      * @return Ad updated
@@ -61,49 +58,46 @@ public interface SnapAdInterface {
      * @throws SnapResponseErrorException
      * @throws SnapArgumentException
      * @throws UnsupportedEncodingException
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
      */
     Optional<Ad> updateAd(String oAuthAccessToken, Ad ad) throws SnapOAuthAccessTokenException,
-	    JsonProcessingException, SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException, SnapExecutionException;
+            JsonProcessingException, SnapResponseErrorException, SnapArgumentException, UnsupportedEncodingException, SnapExecutionException;
 
     /**
-     * 
      * @param oAuthAccessToken oAuthAccessToken
      * @param adSquadId        AdSquadID
      * @return List of {@link Ad}
      * @throws SnapArgumentException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapResponseErrorException
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
      */
     List<Ad> getAllAdsFromAdSquad(String oAuthAccessToken, String adSquadId)
-	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
+            throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
 
     /**
-     * 
      * @param oAuthAccessToken oAuthAccessToken
      * @param adAccountId      AdAccountID
      * @return List of {@link Ad}
      * @throws SnapArgumentException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapResponseErrorException
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
      */
     List<Ad> getAllAdsFromAdAccount(String oAuthAccessToken, String adAccountId)
-	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
+            throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
 
     /**
-     * 
      * @param oAuthAccessToken oAuthAccessToken
      * @param id               Ad ID
      * @return Optional of {@link Ad}
      * @throws SnapArgumentException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapResponseErrorException
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
      */
     Optional<Ad> getSpecificAd(String oAuthAccessToken, String id)
-	    throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
+            throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
 
     /**
      * Deletes a specific ad.
@@ -113,8 +107,8 @@ public interface SnapAdInterface {
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
      */
     void deleteAd(String oAuthAccessToken, String id)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 }// SnapAdInterface

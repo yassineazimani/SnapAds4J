@@ -15,18 +15,17 @@
  */
 package snapads4j.model.media;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import snapads4j.enums.MediaStatusTypeEnum;
 import snapads4j.enums.MediaTypeEnum;
+
+import java.util.Date;
 
 /**
  * CreativeMedia
@@ -38,37 +37,43 @@ import snapads4j.enums.MediaTypeEnum;
 @ToString
 @JsonInclude(Include.NON_EMPTY)
 public class CreativeMedia {
-    
-    /** ID */
+
+    /**
+     * ID
+     */
     @JsonProperty("id")
     private String id;
-    
-    /** Last date update of Creative Media */
+
+    /**
+     * Last date update of Creative Media
+     */
     @JsonProperty("updated_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date updatedAt;
 
-    /** Date creation of Creative Media */
+    /**
+     * Date creation of Creative Media
+     */
     @JsonProperty("created_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date createdAt;
-    
+
     @JsonProperty("ad_account_id")
     private String adAccountId;
-    
+
     @JsonProperty("download_link")
     private String downloadLink;
-    
+
     @JsonProperty("media_status")
     private MediaStatusTypeEnum mediaStatus;
-    
+
     private String name;
-    
+
     private MediaTypeEnum type;
-    
+
     @JsonProperty("file_name")
     private String fileName;
-    
+
     /**
      * Doesn't know contents, it doesn't exist in the documentation API.
      */

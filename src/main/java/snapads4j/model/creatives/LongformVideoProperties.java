@@ -16,7 +16,6 @@
 package snapads4j.model.creatives;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,5 +27,5 @@ public class LongformVideoProperties {
 
     @JsonProperty("video_media_id")
     private String videoMediaId;
-    
+
 }// LongformVideoProperties

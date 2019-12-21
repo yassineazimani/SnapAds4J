@@ -23,6 +23,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Yassine
  */
 public enum DeliveryConstraintEnum {
-  @JsonProperty("REACH_AND_FREQUENCY")
-  REACH_AND_FREQUENCY
+    @JsonProperty("REACH_AND_FREQUENCY")
+    REACH_AND_FREQUENCY
 } // DeliveryConstraintEnum

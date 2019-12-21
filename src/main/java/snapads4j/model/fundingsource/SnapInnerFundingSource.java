@@ -16,7 +16,6 @@
 package snapads4j.model.fundingsource;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,5 +31,5 @@ import lombok.Setter;
 @JsonIgnoreProperties(value = {"sub_request_status"})
 public class SnapInnerFundingSource {
 
-  private FundingSource fundingsource;
+    private FundingSource fundingsource;
 } // SnapInnerFundingSource

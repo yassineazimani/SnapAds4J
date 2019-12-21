@@ -15,17 +15,16 @@
  */
 package snapads4j.model.organization;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import snapads4j.enums.TypeOrganizationEnum;
+
+import java.util.Date;
 
 /**
  * Organization
@@ -38,40 +37,60 @@ import snapads4j.enums.TypeOrganizationEnum;
 @JsonInclude(Include.NON_EMPTY)
 public class Organization {
 
-  /** Organization ID */
-  private String id;
+    /**
+     * Organization ID
+     */
+    private String id;
 
-  /** Last date update of organization */
-  @JsonProperty("updated_at")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date updatedAt;
+    /**
+     * Last date update of organization
+     */
+    @JsonProperty("updated_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    private Date updatedAt;
 
-  /** Date creation of organization */
-  @JsonProperty("created_at")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date createdAt;
+    /**
+     * Date creation of organization
+     */
+    @JsonProperty("created_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    private Date createdAt;
 
-  /** Organization's name */
-  private String name;
+    /**
+     * Organization's name
+     */
+    private String name;
 
-  /** Organization's address */
-  @JsonProperty("address_line_1")
-  private String addressLine1;
+    /**
+     * Organization's address
+     */
+    @JsonProperty("address_line_1")
+    private String addressLine1;
 
-  /** Organization locality */
-  private String locality;
+    /**
+     * Organization locality
+     */
+    private String locality;
 
-  /** Administrative district */
-  @JsonProperty("administrative_district_level_1")
-  private String administrativeDistrictLevel1;
+    /**
+     * Administrative district
+     */
+    @JsonProperty("administrative_district_level_1")
+    private String administrativeDistrictLevel1;
 
-  /** Organization country */
-  private String country;
+    /**
+     * Organization country
+     */
+    private String country;
 
-  /** Organization postal code */
-  @JsonProperty("postal_code")
-  private String postalCode;
+    /**
+     * Organization postal code
+     */
+    @JsonProperty("postal_code")
+    private String postalCode;
 
-  /** Type organization */
-  private TypeOrganizationEnum type;
+    /**
+     * Type organization
+     */
+    private TypeOrganizationEnum type;
 } // Organization

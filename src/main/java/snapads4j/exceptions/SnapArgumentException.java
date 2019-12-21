@@ -22,14 +22,14 @@ package snapads4j.exceptions;
  */
 public class SnapArgumentException extends Exception {
 
-  private static final long serialVersionUID = 574050857351824817L;
+    private static final long serialVersionUID = 574050857351824817L;
 
-  /**
-   * Constructor
-   *
-   * @param message Message exception
-   */
-  public SnapArgumentException(String message) {
-    super(message);
-  } // SnapArgumentException()
+    /**
+     * Constructor
+     *
+     * @param message Message exception
+     */
+    public SnapArgumentException(String message) {
+        super(message);
+    } // SnapArgumentException()
 } // SnapArgumentException()

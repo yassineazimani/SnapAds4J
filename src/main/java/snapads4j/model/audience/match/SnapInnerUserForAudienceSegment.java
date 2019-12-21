@@ -16,7 +16,6 @@
 package snapads4j.model.audience.match;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,5 +25,5 @@ import lombok.Setter;
 public class SnapInnerUserForAudienceSegment {
 
     private UserForAudienceSegment user;
-    
+
 }// SnapInnerUserForAudienceSegment

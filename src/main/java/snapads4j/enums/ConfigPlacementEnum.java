@@ -23,10 +23,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Yassine
  */
 public enum ConfigPlacementEnum {
-  /** AUTOMATIC */
-  @JsonProperty("AUTOMATIC")
-  AUTOMATIC,
-  /** CUSTOM */
-  @JsonProperty("CUSTOM")
-  CUSTOM
+    /**
+     * AUTOMATIC
+     */
+    @JsonProperty("AUTOMATIC")
+    AUTOMATIC,
+    /**
+     * CUSTOM
+     */
+    @JsonProperty("CUSTOM")
+    CUSTOM
 } // ConfigPlacementEnum

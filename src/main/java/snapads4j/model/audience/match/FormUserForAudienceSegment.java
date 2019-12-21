@@ -15,48 +15,48 @@
  */
 package snapads4j.model.audience.match;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import snapads4j.enums.SchemaEnum;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
 public class FormUserForAudienceSegment {
-    
+
     /**
      * Segment ID
      */
     @Getter
     @Setter
     private String id;
-    
+
     /**
      * List of one type of Schema
      */
     @Getter
     private List<SchemaEnum> schema;
-    
+
     /**
      * List of hashed identifiers
      */
     @Getter
     @Setter
     private List<String> data;
-    
+
     public FormUserForAudienceSegment() {
-	this.schema = new ArrayList<>();
+        this.schema = new ArrayList<>();
     }// FormUserForAudienceSegment()
 
     public void setSchema(SchemaEnum schema) {
-	if(schema != null) {
-	    this.schema.clear();
-	    this.schema.add(schema);
-	}
+        if (schema != null) {
+            this.schema.clear();
+            this.schema.add(schema);
+        }
     }// setSchema()
 
 }// FormUserForAudienceSegment()

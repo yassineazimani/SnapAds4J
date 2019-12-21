@@ -15,10 +15,10 @@
  */
 package snapads4j.model.audience.match;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import lombok.Getter;
 
 @Getter
 public class SnapHttpRequestUserForAudienceSegment {
@@ -26,11 +26,11 @@ public class SnapHttpRequestUserForAudienceSegment {
     private List<FormUserForAudienceSegment> users;
 
     public SnapHttpRequestUserForAudienceSegment() {
-      this.users = new ArrayList<>();
+        this.users = new ArrayList<>();
     } // SnapHttpRequestUserForAudienceSegment()
 
     public void addUserForAudienceSegment(FormUserForAudienceSegment a) {
-      this.users.add(a);
+        this.users.add(a);
     } // addUserForAudienceSegment()
-    
+
 }// SnapHttpRequestUserForAudienceSegment
