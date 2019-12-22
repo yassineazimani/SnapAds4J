@@ -15,10 +15,15 @@
  */
 package snapads4j.model.creatives;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import snapads4j.model.Paging;
 import snapads4j.model.SnapHttpResponse;
+import snapads4j.model.SnapHttpResponsePaging;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,8 +35,12 @@ import java.util.stream.Collectors;
  * @author Yassine
  */
 @Setter
-@NoArgsConstructor
-public class SnapHttpResponseCreative extends SnapHttpResponse {
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public class SnapHttpResponseCreative extends SnapHttpResponse implements SnapHttpResponsePaging {
+
+    @Getter
+    private Paging paging;
+
     private List<SnapInnerCreative> creatives;
 
     public Optional<Creative> getSpecificCreative() {
@@ -43,4 +52,9 @@ public class SnapHttpResponseCreative extends SnapHttpResponse {
     public List<Creative> getAllCreatives() {
         return creatives.stream().map(SnapInnerCreative::getCreative).collect(Collectors.toList());
     } // getAllCreatives()
+
+    @Override
+    public boolean hasPaging() {
+        return paging != null && StringUtils.isNotEmpty(paging.getNextLink());
+    }// hasPaging()
 }// SnapHttpResponseCreative

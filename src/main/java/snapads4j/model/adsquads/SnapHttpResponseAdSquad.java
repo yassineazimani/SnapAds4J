@@ -15,9 +15,14 @@
  */
 package snapads4j.model.adsquads;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import snapads4j.model.Paging;
 import snapads4j.model.SnapHttpResponse;
+import snapads4j.model.SnapHttpResponsePaging;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +34,11 @@ import java.util.stream.Collectors;
  * @author Yassine
  */
 @Setter
-public class SnapHttpResponseAdSquad extends SnapHttpResponse {
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public class SnapHttpResponseAdSquad extends SnapHttpResponse implements SnapHttpResponsePaging {
+
+    @Getter
+    private Paging paging;
 
     private List<SnapInnerAdSquad> adsquads;
 
@@ -43,4 +52,8 @@ public class SnapHttpResponseAdSquad extends SnapHttpResponse {
         return adsquads.stream().map(SnapInnerAdSquad::getAdsquad).collect(Collectors.toList());
     } // getAllAdSquads()
 
+    @Override
+    public boolean hasPaging() {
+        return paging != null && StringUtils.isNotEmpty(paging.getNextLink());
+    }
 }// SnapHttpResponseAdSquad

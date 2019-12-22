@@ -30,6 +30,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import snapads4j.exceptions.*;
+import snapads4j.model.Pagination;
 import snapads4j.model.adaccount.AdAccount;
 import snapads4j.model.adaccount.SnapHttpRequestAdAccount;
 import snapads4j.model.adaccount.SnapHttpResponseAdAccount;
@@ -68,6 +69,10 @@ public class SnapAdAccount implements SnapAdAccountInterface {
 
     private String endpointUpdateAdAccount;
 
+    private int minLimitPagination;
+
+    private int maxLimitPagination;
+
     private CloseableHttpClient httpClient;
 
     private EntityUtilsWrapper entityUtilsWrapper;
@@ -83,6 +88,8 @@ public class SnapAdAccount implements SnapAdAccountInterface {
         this.endpointAllAdAccounts = this.apiUrl + fp.getProperties().get("api.url.adaccount.all");
         this.endpointSpecificAdAccount = this.apiUrl + fp.getProperties().get("api.url.adaccount.one");
         this.endpointUpdateAdAccount = this.apiUrl + fp.getProperties().get("api.url.adaccount.update");
+        this.minLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.pagination.limit.min"));
+        this.maxLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.pagination.limit.max"));
         this.httpClient = HttpClients.createDefault();
         this.entityUtilsWrapper = new EntityUtilsWrapper();
     } // SnapAdAccount()
@@ -102,7 +109,7 @@ public class SnapAdAccount implements SnapAdAccountInterface {
      * Accounts</a>
      */
     @Override
-    public List<AdAccount> getAllAdAccounts(String oAuthAccessToken, String organizationID)
+    public List<Pagination<AdAccount>> getAllAdAccounts(String oAuthAccessToken, String organizationID, int limit)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
         if (StringUtils.isEmpty(oAuthAccessToken)) {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
@@ -110,26 +117,42 @@ public class SnapAdAccount implements SnapAdAccountInterface {
         if (StringUtils.isEmpty(organizationID)) {
             throw new SnapArgumentException("The organization ID is required");
         }
-        List<AdAccount> adAccounts = new ArrayList<>();
-        final String url = this.endpointAllAdAccounts.replace("{organization-id}", organizationID);
-        HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String body = entityUtilsWrapper.toString(entity);
-                if (statusCode >= 300) {
-                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+        if(limit < minLimitPagination){
+            throw new SnapArgumentException("Minimum limit is " + minLimitPagination);
+        }
+        if(limit > maxLimitPagination){
+            throw new SnapArgumentException("Maximum limit is " + maxLimitPagination);
+        }
+        List<Pagination<AdAccount>> adAccounts = new ArrayList<>();
+        String url = this.endpointAllAdAccounts.replace("{organization-id}", organizationID);
+        url += "?limit=" + limit;
+        boolean hasNextPage = true;
+        int numberPage = 1;
+        while(hasNextPage) {
+            HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String body = entityUtilsWrapper.toString(entity);
+                    if (statusCode >= 300) {
+                        throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+                    }
+                    ObjectMapper mapper = JsonUtils.initMapper();
+                    SnapHttpResponseAdAccount responseFromJson = mapper.readValue(body, SnapHttpResponseAdAccount.class);
+                    if (responseFromJson != null) {
+                        adAccounts.add(new Pagination<>(numberPage++, responseFromJson.getAllAdAccounts()));
+                        hasNextPage = responseFromJson.hasPaging();
+                        if(hasNextPage){
+                            url = responseFromJson.getPaging().getNextLink();
+                            LOGGER.info("Next url page pagination is {}", url);
+                        }
+                    }
                 }
-                ObjectMapper mapper = JsonUtils.initMapper();
-                SnapHttpResponseAdAccount responseFromJson = mapper.readValue(body, SnapHttpResponseAdAccount.class);
-                if (responseFromJson != null) {
-                    adAccounts = responseFromJson.getAllAdAccounts();
-                }
+            } catch (IOException e) {
+                LOGGER.error("Impossible to get all ad accounts, organizationID = {}", organizationID, e);
+                throw new SnapExecutionException("Impossible to get all ad accounts", e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get all ad accounts, organizationID = {}", organizationID, e);
-            throw new SnapExecutionException("Impossible to get all ad accounts", e);
         }
         return adAccounts;
     } // getAllAdAccounts()

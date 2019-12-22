@@ -15,18 +15,26 @@
  */
 package snapads4j.model.audience.match;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import snapads4j.model.Paging;
 import snapads4j.model.SnapHttpResponse;
+import snapads4j.model.SnapHttpResponsePaging;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Setter
-@NoArgsConstructor
-public class SnapHttpResponseAudienceSegment extends SnapHttpResponse {
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public class SnapHttpResponseAudienceSegment extends SnapHttpResponse implements SnapHttpResponsePaging {
+
+    @Getter
+    private Paging paging;
 
     private List<SnapInnerAudienceSegment> segments;
 
@@ -39,5 +47,10 @@ public class SnapHttpResponseAudienceSegment extends SnapHttpResponse {
     public List<AudienceSegment> getAllAudienceSegment() {
         return segments.stream().map(SnapInnerAudienceSegment::getSegment).collect(Collectors.toList());
     } // getAllAudienceSegment()
+
+    @Override
+    public boolean hasPaging() {
+        return paging != null && StringUtils.isNotEmpty(paging.getNextLink());
+    }// hasPaging()
 
 }// SnapHttpResponseAudienceSegment

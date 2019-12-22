@@ -31,6 +31,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import snapads4j.enums.*;
 import snapads4j.exceptions.*;
+import snapads4j.model.Pagination;
 import snapads4j.model.audience.match.AudienceSegment;
 import snapads4j.model.audience.match.CreationSpec;
 import snapads4j.model.audience.match.FormUserForAudienceSegment;
@@ -322,10 +323,18 @@ public class SnapAudienceSegmentTest {
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(entityUtilsWrapper.toString(httpEntity))
                 .thenReturn(SnapResponseUtils.getSnapAudienceSegmentsCreated());
-        Assertions.assertThatCode(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId))
+        Assertions.assertThatCode(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId, 50))
                 .doesNotThrowAnyException();
-        List<AudienceSegment> segmentsReturned = snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken,
-                this.adAccountId);
+        List<Pagination<AudienceSegment>> pages = snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken,
+                this.adAccountId, 50);
+
+        assertThat(pages).isNotEmpty();
+        assertThat(pages).hasSize(1);
+        assertThat(pages.get(0).getNumberPage()).isEqualTo(1);
+        assertThat(pages.get(0).getResults()).isNotEmpty();
+
+        List<AudienceSegment> segmentsReturned = pages.get(0).getResults();
+
         assertThat(segmentsReturned).isNotNull();
         assertThat(segmentsReturned).isNotEmpty();
         assertThat(segmentsReturned).hasSize(2);
@@ -351,41 +360,53 @@ public class SnapAudienceSegmentTest {
 
     @Test
     public void test_get_all_audiences_segments_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(null, this.adAccountId))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(null, this.adAccountId, 50))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
     } // test_get_all_audiences_segments_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
     public void test_get_all_audiences_segments_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments("", this.adAccountId))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments("", this.adAccountId, 50))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
     } // test_get_all_audiences_segments_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
     public void test_get_all_audiences_segments_should_throw_SnapExecutionException() throws IOException {
         Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId, 50))
                 .isInstanceOf(SnapExecutionException.class);
     }// test_get_all_audiences_segments_should_throw_SnapExecutionException()
 
     @Test
     public void test_get_all_audiences_segments_should_throw_throw_SnapArgumentException_when_adAccountId_is_null() {
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, null))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, null, 50))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
     } // test_get_all_audiences_segments_should_throw_throw_SnapArgumentException_when_adAccountId_is_null()
 
     @Test
     public void test_get_all_audiences_segments_should_throw_throw_SnapArgumentException_when_adAccountId_is_empty() {
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, ""))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, "", 50))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
     } // test_get_all_audiences_segments_should_throw_throw_SnapArgumentException_when_adAccountId_is_empty()
+
+    @Test
+    public void test_get_all_audiences_segments_should_throw_SnapArgumentException_when_min_limit_is_wrong() {
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, adAccountId, 10))
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Minimum limit is 50");
+    }// test_get_all_audiences_segments_should_throw_SnapArgumentException_when_min_limit_is_wrong()
+
+    @Test
+    public void test_get_all_audiences_segments_should_throw_SnapArgumentException_when_max_limit_is_wrong() {
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, adAccountId, 1500))
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Maximum limit is 1000");
+    }// test_get_all_audiences_segments_should_throw_SnapArgumentException_when_max_limit_is_wrong()
 
     @Test
     public void should_throw_exception_400_get_all_audiences_segment() throws IOException {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(400);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
     } // should_throw_exception_400_get_all_audiences_segment()
 
@@ -394,7 +415,7 @@ public class SnapAudienceSegmentTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(401);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
     } // should_throw_exception_401_get_all_audiences_segment()
 
@@ -404,7 +425,7 @@ public class SnapAudienceSegmentTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(403);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
     } // should_throw_exception_403_get_all_audiences_segment()
 
@@ -414,7 +435,7 @@ public class SnapAudienceSegmentTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(404);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
     } // should_throw_exception_404_get_all_audiences_segment()
 
@@ -423,7 +444,7 @@ public class SnapAudienceSegmentTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(405);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
     } // should_throw_exception_405_get_all_audiences_segment()
 
@@ -432,7 +453,7 @@ public class SnapAudienceSegmentTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(406);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
     } // should_throw_exception_406_get_all_audiences_segment()
 
@@ -441,7 +462,7 @@ public class SnapAudienceSegmentTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(410);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
     } // should_throw_exception_410_get_all_audiences_segment()
 
@@ -450,7 +471,7 @@ public class SnapAudienceSegmentTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(418);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
     } // should_throw_exception_418_get_all_audiences_segment()
 
@@ -459,7 +480,7 @@ public class SnapAudienceSegmentTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(429);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
     } // should_throw_exception_429_get_all_audiences_segment()
 
@@ -468,7 +489,7 @@ public class SnapAudienceSegmentTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(500);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
     } // should_throw_exception_500_get_all_audiences_segment()
 
@@ -477,7 +498,7 @@ public class SnapAudienceSegmentTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(503);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
     } // should_throw_exception_503_get_all_audiences_segment()
 
@@ -486,7 +507,7 @@ public class SnapAudienceSegmentTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
-        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId))
+        assertThatThrownBy(() -> snapAudienceSegment.getAllAudienceSegments(oAuthAccessToken, this.adAccountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     } // should_throw_exception_1337_get_all_audiences_segment()
 

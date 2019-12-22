@@ -28,6 +28,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import snapads4j.enums.CheckAdSquadEnum;
 import snapads4j.exceptions.*;
+import snapads4j.model.Pagination;
 import snapads4j.model.adsquads.AdSquad;
 import snapads4j.model.adsquads.SnapHttpRequestAdSquad;
 import snapads4j.model.adsquads.SnapHttpResponseAdSquad;
@@ -72,6 +73,10 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
 
     private String endpointDeleteAdSquad;
 
+    private int minLimitPagination;
+
+    private int maxLimitPagination;
+
     private CloseableHttpClient httpClient;
 
     private EntityUtilsWrapper entityUtilsWrapper;
@@ -90,6 +95,8 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
         this.endpointCreationAdSquad = this.apiUrl + fp.getProperties().get("api.url.adsquads.create");
         this.endpointUpdateAdSquad = this.apiUrl + fp.getProperties().get("api.url.adsquads.update");
         this.endpointDeleteAdSquad = this.apiUrl + fp.getProperties().get("api.url.adsquads.delete");
+        this.minLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.pagination.limit.min"));
+        this.maxLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.pagination.limit.max"));
         this.httpClient = HttpClients.createDefault();
         this.entityUtilsWrapper = new EntityUtilsWrapper();
     } // SnapAdSquads()
@@ -195,7 +202,7 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
     } // getAllAdSquadsFromCampaign()
 
     @Override
-    public List<AdSquad> getAllAdSquadsFromAdAccount(String oAuthAccessToken, String adAccountId)
+    public List<Pagination<AdSquad>> getAllAdSquadsFromAdAccount(String oAuthAccessToken, String adAccountId, int limit)
             throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException {
         if (StringUtils.isEmpty(oAuthAccessToken)) {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
@@ -203,26 +210,42 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
         if (StringUtils.isEmpty(adAccountId)) {
             throw new SnapArgumentException("The AdAccount ID is required");
         }
-        List<AdSquad> results = new ArrayList<>();
-        final String url = this.endpointAllAdSquadsAdAccount.replace("{ad_account_id}", adAccountId);
-        HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String body = entityUtilsWrapper.toString(entity);
-                if (statusCode >= 300) {
-                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+        if(limit < minLimitPagination){
+            throw new SnapArgumentException("Minimum limit is " + minLimitPagination);
+        }
+        if(limit > maxLimitPagination){
+            throw new SnapArgumentException("Maximum limit is " + maxLimitPagination);
+        }
+        List<Pagination<AdSquad>> results = new ArrayList<>();
+        String url = this.endpointAllAdSquadsAdAccount.replace("{ad_account_id}", adAccountId);
+        url += "?limit=" + limit;
+        boolean hasNextPage = true;
+        int numberPage = 1;
+        while(hasNextPage) {
+            HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String body = entityUtilsWrapper.toString(entity);
+                    if (statusCode >= 300) {
+                        throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+                    }
+                    ObjectMapper mapper = JsonUtils.initMapper();
+                    SnapHttpResponseAdSquad responseFromJson = mapper.readValue(body, SnapHttpResponseAdSquad.class);
+                    if (responseFromJson != null) {
+                        results.add(new Pagination<>(numberPage++, responseFromJson.getAllAdSquads()));
+                        hasNextPage = responseFromJson.hasPaging();
+                        if(hasNextPage){
+                            url = responseFromJson.getPaging().getNextLink();
+                            LOGGER.info("Next url page pagination is {}", url);
+                        }
+                    }
                 }
-                ObjectMapper mapper = JsonUtils.initMapper();
-                SnapHttpResponseAdSquad responseFromJson = mapper.readValue(body, SnapHttpResponseAdSquad.class);
-                if (responseFromJson != null) {
-                    results = responseFromJson.getAllAdSquads();
-                }
+            } catch (IOException e) {
+                LOGGER.error("Impossible to get all adsquads, adAccountId = {}", adAccountId, e);
+                throw new SnapExecutionException("Impossible to get all adsquads", e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get all adsquads, adAccountId = {}", adAccountId, e);
-            throw new SnapExecutionException("Impossible to get all adsquads", e);
         }
         return results;
     } // getAllAdSquadsFromAdAccount()

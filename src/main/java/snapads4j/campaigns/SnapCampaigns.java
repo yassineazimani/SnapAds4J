@@ -28,6 +28,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import snapads4j.enums.CheckCampaignEnum;
 import snapads4j.exceptions.*;
+import snapads4j.model.Pagination;
 import snapads4j.model.campaigns.Campaign;
 import snapads4j.model.campaigns.SnapHttpRequestCampaign;
 import snapads4j.model.campaigns.SnapHttpResponseCampaign;
@@ -65,6 +66,10 @@ public class SnapCampaigns implements SnapCampaignsInterface {
 
     private String endpointDeleteCampaign;
 
+    private int minLimitPagination;
+
+    private int maxLimitPagination;
+
     private CloseableHttpClient httpClient;
 
     private EntityUtilsWrapper entityUtilsWrapper;
@@ -82,6 +87,8 @@ public class SnapCampaigns implements SnapCampaignsInterface {
         this.endpointCreationCampaign = this.apiUrl + fp.getProperties().get("api.url.campaigns.create");
         this.endpointUpdateCampaign = this.apiUrl + fp.getProperties().get("api.url.campaigns.update");
         this.endpointDeleteCampaign = this.apiUrl + fp.getProperties().get("api.url.campaigns.delete");
+        this.minLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.pagination.limit.min"));
+        this.maxLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.pagination.limit.max"));
         this.httpClient = HttpClients.createDefault();
         this.entityUtilsWrapper = new EntityUtilsWrapper();
     } // SnapCampaigns()
@@ -171,7 +178,7 @@ public class SnapCampaigns implements SnapCampaignsInterface {
     } // updateCampaign()
 
     @Override
-    public List<Campaign> getAllCampaigns(String oAuthAccessToken, String adAccountId)
+    public List<Pagination<Campaign>> getAllCampaigns(String oAuthAccessToken, String adAccountId, int limit)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
         if (StringUtils.isEmpty(oAuthAccessToken)) {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
@@ -179,27 +186,43 @@ public class SnapCampaigns implements SnapCampaignsInterface {
         if (StringUtils.isEmpty(adAccountId)) {
             throw new SnapArgumentException("The Ad Account ID is required");
         }
-        List<Campaign> campaigns = new ArrayList<>();
-        final String url = this.endpointAllCampaigns.replace("{ad_account_id}", adAccountId);
-        HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
+        if(limit < minLimitPagination){
+            throw new SnapArgumentException("Minimum limit is " + minLimitPagination);
+        }
+        if(limit > maxLimitPagination){
+            throw new SnapArgumentException("Maximum limit is " + maxLimitPagination);
+        }
+        List<Pagination<Campaign>> campaigns = new ArrayList<>();
+        String url = this.endpointAllCampaigns.replace("{ad_account_id}", adAccountId);
+        url += "?limit=" + limit;
+        boolean hasNextPage = true;
+        int numberPage = 1;
+        while(hasNextPage) {
+            HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
 
-            int statusCode = response.getStatusLine().getStatusCode();
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String body = entityUtilsWrapper.toString(entity);
-                if (statusCode >= 300) {
-                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+                int statusCode = response.getStatusLine().getStatusCode();
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String body = entityUtilsWrapper.toString(entity);
+                    if (statusCode >= 300) {
+                        throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+                    }
+                    ObjectMapper mapper = JsonUtils.initMapper();
+                    SnapHttpResponseCampaign responseFromJson = mapper.readValue(body, SnapHttpResponseCampaign.class);
+                    if (responseFromJson != null) {
+                        campaigns.add(new Pagination<>(numberPage++,responseFromJson.getAllCampaigns()));
+                        hasNextPage = responseFromJson.hasPaging();
+                        if(hasNextPage){
+                            url = responseFromJson.getPaging().getNextLink();
+                            LOGGER.info("Next url page pagination is {}", url);
+                        }
+                    }
                 }
-                ObjectMapper mapper = JsonUtils.initMapper();
-                SnapHttpResponseCampaign responseFromJson = mapper.readValue(body, SnapHttpResponseCampaign.class);
-                if (responseFromJson != null) {
-                    campaigns = responseFromJson.getAllCampaigns();
-                }
+            } catch (IOException e) {
+                LOGGER.error("Impossible to get all campaigns, adAccountId = {}", adAccountId, e);
+                throw new SnapExecutionException("Impossible to get all campaigns", e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get all campaigns, adAccountId = {}", adAccountId, e);
-            throw new SnapExecutionException("Impossible to get all campaigns", e);
         }
         return campaigns;
     } // getAllCampaigns()

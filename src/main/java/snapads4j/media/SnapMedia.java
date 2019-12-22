@@ -33,6 +33,7 @@ import org.apache.logging.log4j.Logger;
 import snapads4j.enums.MediaTypeEnum;
 import snapads4j.enums.MediaTypeImageEnum;
 import snapads4j.exceptions.*;
+import snapads4j.model.Pagination;
 import snapads4j.model.media.*;
 import snapads4j.utils.*;
 
@@ -87,6 +88,10 @@ public class SnapMedia implements SnapMediaInterface {
 
     private int minHeightTopSnapImage;
 
+    private int minLimitPagination;
+
+    private int maxLimitPagination;
+
     public SnapMedia() {
         this.fp = new FileProperties();
         this.apiUrl = (String) fp.getProperties().get("api.url");
@@ -106,6 +111,8 @@ public class SnapMedia implements SnapMediaInterface {
         this.minHeightTopSnapImage = Integer.parseInt((String) fp.getProperties().get("api.top.image.min.height"));
         this.maxLengthVideo = Long.parseLong((String) fp.getProperties().get("api.video.max.size"));
         this.maxLengthTopSnapImage = Long.parseLong((String) fp.getProperties().get("api.top.image.min.size"));
+        this.minLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.pagination.limit.min"));
+        this.maxLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.pagination.limit.max"));
     }// SnapMedia()
 
     @Override
@@ -295,7 +302,7 @@ public class SnapMedia implements SnapMediaInterface {
     }// _uploadLargeMediaUpdateResponse()
 
     @Override
-    public List<CreativeMedia> getAllMedia(String oAuthAccessToken, String adAccountId)
+    public List<Pagination<CreativeMedia>> getAllMedia(String oAuthAccessToken, String adAccountId, int limit)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
         if (StringUtils.isEmpty(oAuthAccessToken)) {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
@@ -303,26 +310,42 @@ public class SnapMedia implements SnapMediaInterface {
         if (StringUtils.isEmpty(adAccountId)) {
             throw new SnapArgumentException("The Ad Account ID is required");
         }
-        List<CreativeMedia> results = new ArrayList<>();
-        final String url = this.endpointAllMedias.replace("{ad_account_id}", adAccountId);
-        HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String body = entityUtilsWrapper.toString(entity);
-                if (statusCode >= 300) {
-                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+        if(limit < minLimitPagination){
+            throw new SnapArgumentException("Minimum limit is " + minLimitPagination);
+        }
+        if(limit > maxLimitPagination){
+            throw new SnapArgumentException("Maximum limit is " + maxLimitPagination);
+        }
+        List<Pagination<CreativeMedia>> results = new ArrayList<>();
+        String url = this.endpointAllMedias.replace("{ad_account_id}", adAccountId);
+        url += "?limit=" + limit;
+        boolean hasNextPage = true;
+        int numberPage = 1;
+        while(hasNextPage) {
+            HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String body = entityUtilsWrapper.toString(entity);
+                    if (statusCode >= 300) {
+                        throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+                    }
+                    ObjectMapper mapper = JsonUtils.initMapper();
+                    SnapHttpResponseMedia responseFromJson = mapper.readValue(body, SnapHttpResponseMedia.class);
+                    if (responseFromJson != null) {
+                        results.add(new Pagination<>(numberPage++,responseFromJson.getAllMedia()));
+                        hasNextPage = responseFromJson.hasPaging();
+                        if(hasNextPage){
+                            url = responseFromJson.getPaging().getNextLink();
+                            LOGGER.info("Next url page pagination is {}", url);
+                        }
+                    }
                 }
-                ObjectMapper mapper = JsonUtils.initMapper();
-                SnapHttpResponseMedia responseFromJson = mapper.readValue(body, SnapHttpResponseMedia.class);
-                if (responseFromJson != null) {
-                    results = responseFromJson.getAllMedia();
-                }
+            } catch (IOException e) {
+                LOGGER.error("Impossible to get all medias, adAccountId = {}", adAccountId, e);
+                throw new SnapExecutionException("Impossible to get all medias", e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get all medias, adAccountId = {}", adAccountId, e);
-            throw new SnapExecutionException("Impossible to get all medias", e);
         }
         return results;
     }// getAllMedia()

@@ -20,6 +20,7 @@ import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
+import snapads4j.model.Pagination;
 import snapads4j.model.adaccount.AdAccount;
 
 import java.io.UnsupportedEncodingException;
@@ -33,6 +34,7 @@ public interface SnapAdAccountInterface {
      *
      * @param oAuthAccessToken oAuthAccessToken
      * @param organizationID   Organization ID
+     * @param limit
      * @return All ad accounts
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
@@ -41,7 +43,7 @@ public interface SnapAdAccountInterface {
      * @see <a href="https://developers.snapchat.com/api/docs/#get-all-ad-accounts">All Ad
      * Accounts</a>
      */
-    List<AdAccount> getAllAdAccounts(String oAuthAccessToken, String organizationID)
+    List<Pagination<AdAccount>> getAllAdAccounts(String oAuthAccessToken, String organizationID, int limit)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
     /**

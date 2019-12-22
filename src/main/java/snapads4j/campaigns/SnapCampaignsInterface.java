@@ -20,6 +20,7 @@ import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
+import snapads4j.model.Pagination;
 import snapads4j.model.campaigns.Campaign;
 
 import java.io.UnsupportedEncodingException;
@@ -87,7 +88,7 @@ public interface SnapCampaignsInterface {
      * "https://developers.snapchat.com/api/docs/#get-all-campaigns">Get all
      * campaigns</a>
      */
-    List<Campaign> getAllCampaigns(String oAuthAccessToken, String adAccountId)
+    List<Pagination<Campaign>> getAllCampaigns(String oAuthAccessToken, String adAccountId, int limit)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
     /**

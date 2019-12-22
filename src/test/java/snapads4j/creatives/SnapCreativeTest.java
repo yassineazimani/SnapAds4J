@@ -37,6 +37,7 @@ import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
+import snapads4j.model.Pagination;
 import snapads4j.model.creatives.*;
 import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.FileProperties;
@@ -48,6 +49,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.TimeZone;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -573,8 +575,16 @@ public class SnapCreativeTest {
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapAllCreatives());
-        Assertions.assertThatCode(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID)).doesNotThrowAnyException();
-        List<Creative> creatives = snapCreative.getAllCreative(oAuthAccessToken, adAccountID);
+        Assertions.assertThatCode(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 50)).doesNotThrowAnyException();
+        List<Pagination<Creative>> pages = snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 50);
+
+        assertThat(pages).isNotEmpty();
+        assertThat(pages).hasSize(1);
+        assertThat(pages.get(0).getNumberPage()).isEqualTo(1);
+        assertThat(pages.get(0).getResults()).isNotEmpty();
+
+        List<Creative> creatives = pages.get(0).getResults();
+
         Assertions.assertThat(creatives).isNotNull();
         Assertions.assertThat(creatives).isNotEmpty();
         Assertions.assertThat(creatives).hasSize(5);
@@ -660,32 +670,44 @@ public class SnapCreativeTest {
 
     @Test
     public void test_get_all_creatives_should_throw_SnapOAuthAccessTokenException_token_is_empty() {
-        assertThatThrownBy(() -> snapCreative.getAllCreative("", adAccountID))
+        assertThatThrownBy(() -> snapCreative.getAllCreative("", adAccountID, 50))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
     }// test_get_all_creatives_should_throw_SnapOAuthAccessTokenException_token_is_empty()
 
     @Test
     public void test_get_all_creatives_should_throw_SnapOAuthAccessTokenException_token_is_null() {
-        assertThatThrownBy(() -> snapCreative.getAllCreative(null, adAccountID))
+        assertThatThrownBy(() -> snapCreative.getAllCreative(null, adAccountID, 50))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
     }// test_get_all_creatives_should_throw_SnapOAuthAccessTokenException_token_is_null()
 
     @Test
     public void test_get_all_creatives_should_throw_SnapArgumentException_when_ad_account_id_is_null() {
-        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, null))
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, null, 50))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The AdAccount ID is required");
     }// test_get_all_creatives_should_throw_SnapArgumentException_when_ad_account_id_is_null()
 
     @Test
     public void test_get_all_creatives_should_throw_SnapArgumentException_when_ad_account_id_is_empty() {
-        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, ""))
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, "", 50))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The AdAccount ID is required");
     }// test_get_all_creatives_should_throw_SnapArgumentException_when_ad_account_id_is_empty()
 
     @Test
+    public void test_get_all_creatives_should_throw_SnapArgumentException_when_min_limit_is_wrong() {
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 10))
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Minimum limit is 50");
+    }// test_get_all_creatives_should_throw_SnapArgumentException_when_min_limit_is_wrong()
+
+    @Test
+    public void test_get_all_creatives_should_throw_SnapArgumentException_when_max_limit_is_wrong() {
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 1500))
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Maximum limit is 1000");
+    }// test_get_all_creatives_should_throw_SnapArgumentException_when_max_limit_is_wrong()
+
+    @Test
     public void test_get_all_creatives_should_throw_SnapExecutionException() throws IOException {
         Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID))
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 50))
                 .isInstanceOf(SnapExecutionException.class);
     }// test_get_all_creatives_should_throw_SnapExecutionException()
 
@@ -695,7 +717,7 @@ public class SnapCreativeTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(400);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID))
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
     }// should_throw_exception_400_get_all_creatives()
 
@@ -705,7 +727,7 @@ public class SnapCreativeTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(401);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID))
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
     }// should_throw_exception_401_get_all_creatives()
 
@@ -716,7 +738,7 @@ public class SnapCreativeTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(403);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID))
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
     }// should_throw_exception_403_get_all_creatives()
 
@@ -727,7 +749,7 @@ public class SnapCreativeTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(404);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID))
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
     }// should_throw_exception_404_get_all_creatives()
 
@@ -737,7 +759,7 @@ public class SnapCreativeTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(405);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID))
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
     }// should_throw_exception_405_get_all_creatives()
 
@@ -747,7 +769,7 @@ public class SnapCreativeTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(406);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID))
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
     }// should_throw_exception_406_get_all_creatives()
 
@@ -757,7 +779,7 @@ public class SnapCreativeTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(410);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID))
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
     }// should_throw_exception_410_get_all_creatives()
 
@@ -767,7 +789,7 @@ public class SnapCreativeTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(418);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID))
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
     }// should_throw_exception_418_get_all_creatives()
 
@@ -777,7 +799,7 @@ public class SnapCreativeTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(429);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID))
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
     }// should_throw_exception_429_get_all_creatives()
 
@@ -787,7 +809,7 @@ public class SnapCreativeTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(500);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID))
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
     }// should_throw_exception_500_get_all_creatives()
 
@@ -797,7 +819,7 @@ public class SnapCreativeTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(503);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID))
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
     }// should_throw_exception_503_get_all_creatives()
 
@@ -807,7 +829,7 @@ public class SnapCreativeTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID))
+        assertThatThrownBy(() -> snapCreative.getAllCreative(oAuthAccessToken, adAccountID, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     }// should_throw_exception_1337_get_all_creatives()
 
