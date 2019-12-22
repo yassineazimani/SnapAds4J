@@ -594,6 +594,13 @@ public class SnapCampaignsTest {
     }// test_getAllCampaigns_should_throw_SnapArgumentException_when_max_limit_is_wrong()
 
     @Test
+    public void test_getAllCampaigns_should_throw_SnapExecutionException() throws IOException {
+        Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
+        assertThatThrownBy(() -> sCampaigns.getAllCampaigns(oAuthAccessToken, accountId, 1000))
+                .isInstanceOf(SnapExecutionException.class);
+    }// test_getAllCampaigns_should_throw_SnapExecutionException()
+
+    @Test
     public void should_throw_exception_400_getAllCampaigns() throws IOException {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(400);

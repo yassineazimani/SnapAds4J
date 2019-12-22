@@ -113,6 +113,24 @@ public class SnapUserTest {
     } // test_aboutMe_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
+    public void test_aboutMe_should_throw_SnapExecutionException() throws IOException {
+        Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
+        assertThatThrownBy(() -> snapUser.aboutMe(oAuthAccessToken))
+                .isInstanceOf(SnapExecutionException.class);
+    }// test_aboutMe_should_throw_SnapExecutionException()
+
+    @Test
+    public void should_throw_exception_400_aboutMe() throws IOException {
+        Mockito.when(statusLine.getStatusCode()).thenReturn(400);
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+        Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+        Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+        assertThatThrownBy(() -> snapUser.aboutMe(oAuthAccessToken)).isInstanceOf(SnapResponseErrorException.class)
+                .hasMessage("Bad Request");
+    } // should_throw_exception_400_aboutMe()
+
+    @Test
     public void should_throw_exception_401_aboutMe() throws IOException {
         Mockito.when(statusLine.getStatusCode()).thenReturn(401);
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
