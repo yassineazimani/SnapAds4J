@@ -37,9 +37,14 @@ import snapads4j.utils.FileProperties;
 import snapads4j.utils.HttpUtils;
 import snapads4j.utils.JsonUtils;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -175,17 +180,17 @@ public class SnapPixel implements SnapPixelInterface {
     private void checkPixel(Pixel pixel) throws SnapArgumentException {
         StringBuilder sb = new StringBuilder();
         if (pixel != null) {
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<Pixel>> violations = validator.validate(pixel);
+            for (ConstraintViolation<Pixel> violation : violations) {
+                sb.append(violation.getMessage()).append(",");
+            }
             if (StringUtils.isEmpty(pixel.getId())) {
                 sb.append("Pixel ID parameter is required,");
             }
-            if (StringUtils.isEmpty(pixel.getName())) {
-                sb.append("Pixel name parameter is required,");
-            }
-            if (StringUtils.isEmpty(pixel.getAdAccountId())) {
-                sb.append("Ad Account ID parameter is required,");
-            }
         } else {
-            sb.append("Pixel parameter is not given,");
+            sb.append("Pixel parameter is required,");
         }
         String finalErrors = sb.toString();
         if (!StringUtils.isEmpty(finalErrors)) {

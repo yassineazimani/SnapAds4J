@@ -38,6 +38,10 @@ import snapads4j.utils.FileProperties;
 import snapads4j.utils.HttpUtils;
 import snapads4j.utils.JsonUtils;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
@@ -227,7 +231,7 @@ public class SnapCreative implements SnapCreativeInterface {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
         }
         if (StringUtils.isEmpty(creativeID)) {
-            throw new SnapArgumentException("The creative ID is missing");
+            throw new SnapArgumentException("The creative ID is required");
         }
         Map<String, Object> result = new HashMap<>();
         final String url = this.endpointPreviewCreative.replace("{creative_id}", creativeID);
@@ -286,29 +290,17 @@ public class SnapCreative implements SnapCreativeInterface {
                     }
                 }
             }
-            if (StringUtils.isEmpty(creative.getAdAccountId())) {
-                sb.append("The Ad Account ID is required,");
-            }
-            if (StringUtils.isEmpty(creative.getBrandName())) {
-                sb.append("The brand name is required,");
-            }
             if (StringUtils.isNotEmpty(creative.getBrandName()) && creative.getBrandName().length() > this.maxCharactersBrandname) {
                 sb.append("The brand name max length is ").append(this.maxCharactersBrandname).append(" characters,");
-            }
-            if (StringUtils.isEmpty(creative.getHeadline())) {
-                sb.append("The headline is required,");
             }
             if (StringUtils.isNotEmpty(creative.getHeadline()) && creative.getHeadline().length() > this.maxCharactersHeadline) {
                 sb.append("The headline max length is ").append(this.maxCharactersHeadline).append(" characters,");
             }
-            if (StringUtils.isEmpty(creative.getName())) {
-                sb.append("The creative's name is required,");
-            }
-            if (StringUtils.isEmpty(creative.getTopSnapMediaId())) {
-                sb.append("The top snap media ID is required,");
-            }
-            if (creative.getType() == null) {
-                sb.append("The creative's type is required,");
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<Creative>> violations = validator.validate(creative);
+            for (ConstraintViolation<Creative> violation : violations) {
+                sb.append(violation.getMessage()).append(",");
             }
             if (creative.getLongformVideoProperties() != null
                     && StringUtils.isEmpty(creative.getLongformVideoProperties().getVideoMediaId())) {
@@ -334,7 +326,7 @@ public class SnapCreative implements SnapCreativeInterface {
             checkPreviewProperties(creative, previewProperties, sb);
             checkCollectionProperties(collectionProperties, sb);
         } else {
-            sb.append("Creative parameter is not given,");
+            sb.append("Creative parameter is required,");
         }
         String finalErrors = sb.toString();
         if (!StringUtils.isEmpty(finalErrors)) {
@@ -345,31 +337,22 @@ public class SnapCreative implements SnapCreativeInterface {
 
     private void checkAppProperties(AppInstallProperties appProperties, StringBuilder sb) {
         if (appProperties != null) {
-            if (StringUtils.isEmpty(appProperties.getAndroidAppUrl())) {
-                sb.append("Android App URL (App Install Properties) is required,");
-            }
-            if (StringUtils.isEmpty(appProperties.getAppName())) {
-                sb.append("App name (App Install Properties) is required,");
-            }
-            if (StringUtils.isEmpty(appProperties.getIconMediaId())) {
-                sb.append("Icon Media ID (App Install Properties) is required,");
-            }
-            if (StringUtils.isEmpty(appProperties.getIosAppId())) {
-                sb.append("IOS App ID (App Install Properties) is required,");
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<AppInstallProperties>> violations = validator.validate(appProperties);
+            for (ConstraintViolation<AppInstallProperties> violation : violations) {
+                sb.append(violation.getMessage()).append(",");
             }
         }
     }// checkAppProperties()
 
     private void checkDeepLinkProperties(DeepLinkProperties deepLinkProperties, StringBuilder sb) {
         if (deepLinkProperties != null) {
-            if (StringUtils.isEmpty(deepLinkProperties.getDeepLinkUri())) {
-                sb.append("Deep Link URI (Deep Link Properties) is required,");
-            }
-            if (StringUtils.isEmpty(deepLinkProperties.getAppName())) {
-                sb.append("App name (Deep Link Properties) is required,");
-            }
-            if (StringUtils.isEmpty(deepLinkProperties.getIconMediaId())) {
-                sb.append("Icon Media ID (Deep Link Properties) is required,");
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<DeepLinkProperties>> violations = validator.validate(deepLinkProperties);
+            for (ConstraintViolation<DeepLinkProperties> violation : violations) {
+                sb.append(violation.getMessage()).append(",");
             }
         }
     }// checkDeepLinkProperties()
@@ -379,25 +362,22 @@ public class SnapCreative implements SnapCreativeInterface {
             if (StringUtils.isEmpty(creative.getPreviewCreativeId())) {
                 sb.append("Preview Creative ID is required,");
             }
-            if (StringUtils.isEmpty(previewProperties.getLogoMediaId())) {
-                sb.append("Logo Media ID (Preview Properties) is required,");
-            }
-            if (StringUtils.isEmpty(previewProperties.getPreviewHeadline())) {
-                sb.append("Preview Headline (Preview Properties) is required,");
-            }
-            if (StringUtils.isEmpty(previewProperties.getPreviewMediaId())) {
-                sb.append("Preview Media ID (Preview Properties) is required,");
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<PreviewProperties>> violations = validator.validate(previewProperties);
+            for (ConstraintViolation<PreviewProperties> violation : violations) {
+                sb.append(violation.getMessage()).append(",");
             }
         }
-    }// checkDeepLinkProperties()
+    }// checkPreviewProperties()
 
     private void checkCollectionProperties(CollectionProperties collectionProperties, StringBuilder sb) {
         if (collectionProperties != null) {
-            if (StringUtils.isEmpty(collectionProperties.getInteractionZoneId())) {
-                sb.append("Interaction Zone ID (Collection Properties) is required,");
-            }
-            if (StringUtils.isEmpty(collectionProperties.getDefaultFallbackInteractionType())) {
-                sb.append("Default Fallback Interaction Type (Collection Properties) is required,");
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<CollectionProperties>> violations = validator.validate(collectionProperties);
+            for (ConstraintViolation<CollectionProperties> violation : violations) {
+                sb.append(violation.getMessage()).append(",");
             }
             if (StringUtils.isNotEmpty(collectionProperties.getDefaultFallbackInteractionType())
                     && collectionProperties.getWebViewProperties() == null

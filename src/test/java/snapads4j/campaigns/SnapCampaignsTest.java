@@ -125,15 +125,22 @@ public class SnapCampaignsTest {
     @Test
     public void test_create_campaign_should_throw_SnapArgumentException_0() {
         assertThatThrownBy(() -> sCampaigns.createCampaign(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Campaign parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Campaign parameter is required");
     } // test_create_campaign_should_throw_SnapArgumentException_0()
 
     @Test
     public void test_create_campaign_should_throw_SnapArgumentException_when_no_parameters_filled() {
         Campaign c = new Campaign();
         assertThatThrownBy(() -> sCampaigns.createCampaign(oAuthAccessToken, c))
-                .isInstanceOf(SnapArgumentException.class).hasMessage(
-                "The start time is required,The campaign name is required,The campaign status is required,The Ad Account ID is required");
+                .isInstanceOf(SnapArgumentException.class)
+                .hasMessageContaining(
+                        "The Ad Account ID is required")
+                .hasMessageContaining(
+                        "The campaign status is required")
+                .hasMessageContaining(
+                        "The campaign name is required")
+                .hasMessageContaining(
+                        "The start time is required");
     } // test_create_campaign_should_throw_SnapArgumentException_when_no_parameters_filled()
 
     @Test
@@ -145,7 +152,9 @@ public class SnapCampaignsTest {
         c.setStartTime(null);
         assertThatThrownBy(() -> sCampaigns.createCampaign(oAuthAccessToken, c))
                 .isInstanceOf(SnapArgumentException.class)
-                .hasMessage("The start time is required,The campaign status is required,The Ad Account ID is required");
+                .hasMessageContaining("The start time is required")
+                .hasMessageContaining("The campaign status is required")
+                .hasMessageContaining("The Ad Account ID is required");
     } // test_create_campaign_should_throw_SnapArgumentException_when_no_parameters_filled_except_name()
 
     @Test
@@ -320,15 +329,22 @@ public class SnapCampaignsTest {
     @Test
     public void test_update_campaign_should_throw_SnapArgumentException_0() {
         assertThatThrownBy(() -> sCampaigns.updateCampaign(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Campaign parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Campaign parameter is required");
     } // test_update_campaign_should_throw_SnapArgumentException_0()
 
     @Test
     public void test_update_campaign_should_throw_SnapArgumentException_when_parameters_are_not_filled() {
         Campaign c = new Campaign();
         assertThatThrownBy(() -> sCampaigns.updateCampaign(oAuthAccessToken, c))
-                .isInstanceOf(SnapArgumentException.class).hasMessage(
-                "The campaign ID is required,The campaign name is required,The campaign status is required,The Ad Account ID is required");
+                .isInstanceOf(SnapArgumentException.class)
+                .hasMessageContaining(
+                        "The campaign ID is required")
+                .hasMessageContaining(
+                        "The campaign name is required")
+                .hasMessageContaining(
+                        "The campaign status is required")
+                .hasMessageContaining(
+                        "The Ad Account ID is required");
     } // test_update_campaign_should_throw_SnapArgumentException_when_parameters_are_not_filled()
 
     @Test
@@ -339,8 +355,13 @@ public class SnapCampaignsTest {
         c.setStatus(null);
         c.setStartTime(null);
         assertThatThrownBy(() -> sCampaigns.updateCampaign(oAuthAccessToken, c))
-                .isInstanceOf(SnapArgumentException.class).hasMessage(
-                "The campaign ID is required,The campaign status is required,The Ad Account ID is required");
+                .isInstanceOf(SnapArgumentException.class)
+                .hasMessageContaining(
+                        "The campaign ID is required")
+                .hasMessageContaining(
+                        "The campaign status is required")
+                .hasMessageContaining(
+                        "The Ad Account ID is required");
     } // test_update_campaign_should_throw_SnapArgumentException_when_parameters_are_not_filled_except_name()
 
     @Test

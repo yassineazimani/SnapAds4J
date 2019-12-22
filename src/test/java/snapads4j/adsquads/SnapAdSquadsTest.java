@@ -165,7 +165,7 @@ public class SnapAdSquadsTest {
     @Test
     public void test_create_ad_squad_should_throw_SnapArgumentException_when_ad_squad_is_null() {
         assertThatThrownBy(() -> sAdSquads.createAdSquad(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad squad parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad squad parameter is required");
     } // test_create_ad_squad_should_throw_SnapArgumentException_when_ad_squad_is_null()
 
     @Test
@@ -407,7 +407,7 @@ public class SnapAdSquadsTest {
     @Test
     public void test_update_ad_squad_should_throw_SnapArgumentException_when_ad_squad_is_null() {
         assertThatThrownBy(() -> sAdSquads.updateAdSquad(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad squad parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad squad parameter is required");
     } // test_update_ad_squad_should_throw_SnapArgumentException_when_ad_squad_is_null()
 
     @Test

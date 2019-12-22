@@ -15,7 +15,6 @@
  */
 package snapads4j.model.ads;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,20 +26,24 @@ import snapads4j.model.AbstractSnapModel;
 import snapads4j.model.thirdparty.PaidImpressionTrackingUrl;
 import snapads4j.model.thirdparty.SwipeTrackingUrl;
 
-import java.util.Date;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 @JsonInclude(Include.NON_EMPTY)
 public class Ad extends AbstractSnapModel {
 
+    @NotEmpty(message = "Ad's name parameter is required")
     private String name;
 
+    @NotNull(message = "Ad's status parameter is required")
     private StatusEnum status;
 
     private AdTypeEnum type;
 
     @JsonProperty("ad_squad_id")
+    @NotEmpty(message = "Ad Squad ID parameter is required")
     private String adSquadId;
 
     @JsonProperty("creative_id")

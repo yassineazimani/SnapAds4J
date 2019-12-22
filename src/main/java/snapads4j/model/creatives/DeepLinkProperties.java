@@ -20,15 +20,19 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotEmpty;
+
 @Getter
 @Setter
 @ToString
 public class DeepLinkProperties {
 
     @JsonProperty("deep_link_uri")
+    @NotEmpty(message = "Deep Link URI (Deep Link Properties) is required")
     private String deepLinkUri;
 
     @JsonProperty("app_name")
+    @NotEmpty(message = "App name (Deep Link Properties) is required")
     private String appName;
 
     @JsonProperty("ios_app_id")
@@ -38,6 +42,7 @@ public class DeepLinkProperties {
     private String androidAppUrl;
 
     @JsonProperty("icon_media_id")
+    @NotEmpty(message = "Icon Media ID (Deep Link Properties) is required")
     private String iconMediaId;
 
     @JsonProperty("fallback_type")

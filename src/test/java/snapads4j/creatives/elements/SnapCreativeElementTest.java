@@ -129,7 +129,7 @@ public class SnapCreativeElementTest {
     @Test
     public void test_create_creative_should_throw_SnapArgumentException_when_creative_parameter_is_null() {
         assertThatThrownBy(() -> snapCreative.createCreativeElement(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Creative parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Creative parameter is required");
     }// test_create_creative_should_throw_SnapArgumentException_when_creative_parameter_is_null()
 
     @Test
@@ -327,7 +327,7 @@ public class SnapCreativeElementTest {
     @Test
     public void test_create_creatives_should_throw_SnapArgumentException_when_creative_element_parameter_is_null() {
         assertThatThrownBy(() -> snapCreative.createCreativeElements(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Creative elements parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Creative elements parameter is required");
     }// test_create_creatives_should_throw_SnapArgumentException_when_creative_element_parameter_is_null()
 
     @Test
@@ -529,15 +529,18 @@ public class SnapCreativeElementTest {
     @Test
     public void test_create_interaction_zone_should_throw_SnapArgumentException_when_interaction_zone_is_null() {
         assertThatThrownBy(() -> snapCreative.createInteractionZone(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Interaction Zone parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Interaction Zone parameter is required");
     }// test_create_interaction_zone_should_throw_SnapArgumentException_when_interaction_zone_is_null()
 
     @Test
     public void test_create_interaction_zone_should_throw_SnapArgumentException_when_no_parameters_filled() {
         InteractionZone badZone = new InteractionZone();
         assertThatThrownBy(() -> snapCreative.createInteractionZone(oAuthAccessToken, badZone))
-                .isInstanceOf(SnapArgumentException.class).hasMessage(
-                "The interaction zone's ad account id is required,The interaction zone's headline is required,The interaction zone's name is required,The interaction zone's creative elements is required");
+                .isInstanceOf(SnapArgumentException.class)
+                .hasMessageContaining("The interaction zone's ad account id is required")
+                .hasMessageContaining("The interaction zone's headline is required")
+                .hasMessageContaining("The interaction zone's name is required")
+                .hasMessageContaining("The interaction zone's creative elements is required");
     }// test_create_interaction_zone_should_throw_SnapArgumentException_when_no_parameters_filled()
 
     @Test

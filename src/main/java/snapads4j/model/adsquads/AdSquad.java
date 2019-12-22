@@ -26,6 +26,9 @@ import snapads4j.enums.*;
 import snapads4j.model.AbstractSnapModel;
 import snapads4j.model.targeting.Targeting;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -43,12 +46,14 @@ public class AdSquad extends AbstractSnapModel {
      * Campaign ID
      */
     @JsonProperty("campaign_id")
+    @NotEmpty(message = "The Campaign ID is required")
     private String campaignId;
 
     /**
      * Max Bid (micro-currency)
      */
     @JsonProperty("bid_micro")
+    @NotNull(message = "The bid micro is required")
     private Double bidMicro;
 
     /**
@@ -61,12 +66,15 @@ public class AdSquad extends AbstractSnapModel {
      * Daily Budget (micro-currency)
      */
     @JsonProperty("daily_budget_micro")
+    @NotNull(message = "The daily budget micro is required")
+    @Min(value = 20000000, message = "The daily budget micro minimum value is 20000000")
     private Double dailyBudgetMicro;
 
     /**
      * Lifetime budget (micro-currency)
      */
     @JsonProperty("lifetime_budget_micro")
+    @NotNull(message = "The lifetime budget micro is required")
     private Double lifetimeBudgetMicro;
 
     /**
@@ -79,6 +87,7 @@ public class AdSquad extends AbstractSnapModel {
     /**
      * Ad Squad name
      */
+    @NotEmpty(message = "The Ad Squad name is required")
     private String name;
 
     /**
@@ -102,11 +111,13 @@ public class AdSquad extends AbstractSnapModel {
     /**
      * Ad Squad status
      */
+    @NotNull(message = "The status is required")
     private StatusEnum status;
 
     /**
      * Targeting spec
      */
+    @NotNull(message = "The targeting is required")
     private Targeting targeting;
 
     /**

@@ -15,7 +15,6 @@
  */
 package snapads4j.model.creatives;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,7 +24,8 @@ import lombok.ToString;
 import snapads4j.enums.*;
 import snapads4j.model.AbstractSnapModel;
 
-import java.util.Date;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * CreativeMedia
@@ -44,17 +44,20 @@ public class Creative extends AbstractSnapModel {
      * Ad Account ID
      **/
     @JsonProperty("ad_account_id")
+    @NotEmpty(message = "The Ad Account ID is required")
     private String adAccountId;
 
     /**
      * Brand name of Creative
      */
     @JsonProperty("brand_name")
+    @NotEmpty(message = "The brand name is required")
     private String brandName;
 
     @JsonProperty("call_to_action")
     private CallToActionEnum callToAction;
 
+    @NotEmpty(message = "The headline is required")
     private String headline;
 
     /**
@@ -65,12 +68,14 @@ public class Creative extends AbstractSnapModel {
     /**
      * Creative name.
      */
+    @NotEmpty(message = "The creative's name is required")
     private String name;
 
     /**
      * Top Snap Media ID
      */
     @JsonProperty("top_snap_media_id")
+    @NotEmpty(message = "The top snap media ID is required")
     private String topSnapMediaId;
 
     /**
@@ -82,6 +87,7 @@ public class Creative extends AbstractSnapModel {
     /**
      * Creative type.
      */
+    @NotNull(message = "The creative's type is required")
     private CreativeTypeEnum type;
 
     @JsonProperty("forced_view_eligibility")

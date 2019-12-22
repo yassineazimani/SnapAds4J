@@ -491,7 +491,7 @@ public class SnapPixelTest {
     public void test_update_ad_should_throw_SnapArgumentException_when_pixel_is_null() {
         assertThatThrownBy(() -> snapPixel.updatePixel(oAuthAccessToken, null))
                 .isInstanceOf(SnapArgumentException.class)
-                .hasMessage("Pixel parameter is not given");
+                .hasMessage("Pixel parameter is required");
     }// test_update_ad_should_throw_SnapArgumentException_when_pixel_is_null()
 
     @Test

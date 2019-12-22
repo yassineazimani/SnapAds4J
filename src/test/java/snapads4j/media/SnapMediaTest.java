@@ -165,7 +165,7 @@ public class SnapMediaTest {
     @Test
     public void test_create_media_should_throw_SnapArgumentException_when_media_parameter_is_null() {
         assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Media parameter is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Media parameter is required");
     }// test_create_media_should_throw_SnapArgumentException_when_media_parameter_is_null()
 
     @Test
@@ -366,7 +366,7 @@ public class SnapMediaTest {
     @Test
     public void test_upload_media_video_should_throw_SnapArgumentException_when_media_parameter_is_null() {
         assertThatThrownBy(() -> snapMedia.uploadMediaVideo(oAuthAccessToken, mediaID, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Media parameter is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Media parameter is required");
     }// test_upload_media_video_should_throw_SnapArgumentException_when_media_parameter_is_null()
 
     @Test
@@ -381,13 +381,13 @@ public class SnapMediaTest {
     @Test
     public void test_upload_media_video_should_throw_SnapArgumentException_when_media_id_is_empty() {
         assertThatThrownBy(() -> snapMedia.uploadMediaVideo(oAuthAccessToken, "", null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Media ID is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Media ID is required");
     }// test_upload_media_video_should_throw_SnapArgumentException_when_media_id_is_empty()
 
     @Test
     public void test_upload_media_video_should_throw_SnapArgumentException_when_media_id_is_null() {
         assertThatThrownBy(() -> snapMedia.uploadMediaVideo(oAuthAccessToken, null, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Media ID is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Media ID is required");
     }// test_upload_media_video_should_throw_SnapArgumentException_when_media_id_is_null()
 
     @Test
@@ -502,14 +502,14 @@ public class SnapMediaTest {
     public void test_upload_media_image_should_throw_SnapArgumentException_when_media_parameter_is_null() {
         assertThatThrownBy(
                 () -> snapMedia.uploadMediaImage(oAuthAccessToken, mediaID, null, MediaTypeImageEnum.TOP_SNAP))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Media parameter is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Media parameter is required");
     }// test_upload_media_image_should_throw_SnapArgumentException_when_media_parameter_is_null()
 
     @Test
     public void test_upload_media_image_should_throw_SnapArgumentException_when_media_parameter_is_null_app_icon() {
         assertThatThrownBy(
                 () -> snapMedia.uploadMediaImage(oAuthAccessToken, mediaID, null, MediaTypeImageEnum.APP_ICON))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Media parameter is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Media parameter is required");
     }// test_upload_media_image_should_throw_SnapArgumentException_when_media_parameter_is_null_app_icon()
 
     @Test
@@ -526,7 +526,7 @@ public class SnapMediaTest {
         Optional<File> optFile = new FileUtils().getFileFromResources("images/bitmap3.bmp", "bitmap3.bmp");
         optFile.ifPresent((mediaFile) -> assertThatThrownBy(
                 () -> snapMedia.uploadMediaImage(oAuthAccessToken, "", mediaFile, MediaTypeImageEnum.APP_ICON))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Media ID is missing"));
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Media ID is required"));
         FileUtils.deleteFile("bitmap3.bmp");
     }// test_upload_media_image_should_throw_SnapArgumentException_when_media_id_is_empty()
 
@@ -535,7 +535,7 @@ public class SnapMediaTest {
         Optional<File> optFile = new FileUtils().getFileFromResources("images/bitmap3.bmp", "bitmap3.bmp");
         optFile.ifPresent((mediaFile) -> assertThatThrownBy(
                 () -> snapMedia.uploadMediaImage(oAuthAccessToken, null, mediaFile, MediaTypeImageEnum.APP_ICON))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Media ID is missing"));
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Media ID is required"));
         FileUtils.deleteFile("bitmap3.bmp");
     }// test_upload_media_image_should_throw_SnapArgumentException_when_media_id_is_null()
 
@@ -946,28 +946,28 @@ public class SnapMediaTest {
     public void test_upload_large_media_should_throw_SnapArgumentException_when_media_id_is_null() {
         List<File> chunks = Stream.of(new File[]{new File("")}).collect(Collectors.toList());
         assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, null, "final.mov", chunks))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Media ID is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Media ID is required");
     }// test_upload_large_media_should_throw_SnapArgumentException_when_media_id_is_null()
 
     @Test
     public void test_upload_large_media_should_throw_SnapArgumentException_when_media_id_is_empty() {
         List<File> chunks = Stream.of(new File[]{new File("")}).collect(Collectors.toList());
         assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, "", "final.mov", chunks))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Media ID is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Media ID is required");
     }// test_upload_large_media_should_throw_SnapArgumentException_when_media_id_is_empty()
 
     @Test
     public void test_upload_large_media_should_throw_SnapArgumentException_when_filename_is_empty() {
         List<File> chunks = Stream.of(new File[]{new File("")}).collect(Collectors.toList());
         assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, "", chunks))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Media's filename is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Media's filename is required");
     }// test_upload_large_media_should_throw_SnapArgumentException_when_filename_is_empty()
 
     @Test
     public void test_upload_large_media_should_throw_SnapArgumentException_when_filename_is_null() {
         List<File> chunks = Stream.of(new File[]{new File("")}).collect(Collectors.toList());
         assertThatThrownBy(() -> snapMedia.uploadLargeMedia(oAuthAccessToken, mediaID, null, chunks))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Media's filename is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Media's filename is required");
     }// test_upload_large_media_should_throw_SnapArgumentException_when_filename_is_null()
 
     @Test
@@ -1513,13 +1513,13 @@ public class SnapMediaTest {
     @Test
     public void test_get_all_media_should_throw_SnapArgumentException_when_ad_account_id_is_null() {
         assertThatThrownBy(() -> snapMedia.getAllMedia(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
     }// test_get_all_media_should_throw_SnapArgumentException_when_ad_account_id_is_null()
 
     @Test
     public void test_get_all_media_should_throw_SnapArgumentException_when_ad_account_id_is_empty() {
         assertThatThrownBy(() -> snapMedia.getAllMedia(oAuthAccessToken, "")).isInstanceOf(SnapArgumentException.class)
-                .hasMessage("The Ad Account ID is missing");
+                .hasMessage("The Ad Account ID is required");
     }// test_get_all_media_should_throw_SnapArgumentException_when_ad_account_id_is_empty()
 
     @Test
@@ -1690,13 +1690,13 @@ public class SnapMediaTest {
     @Test
     public void test_get_specific_media_should_throw_SnapArgumentException_when_media_id_is_null() {
         assertThatThrownBy(() -> snapMedia.getSpecificMedia(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is required");
     }// test_get_specific_media_should_throw_SnapArgumentException_when_media_id_is_null()
 
     @Test
     public void test_get_specific_media_should_throw_SnapArgumentException_2() {
         assertThatThrownBy(() -> snapMedia.getSpecificMedia(oAuthAccessToken, ""))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is required");
     }// test_get_specific_media_should_throw_SnapArgumentException_2()
 
     @Test
@@ -1863,13 +1863,13 @@ public class SnapMediaTest {
     @Test
     public void test_get_preview_media_should_throw_SnapArgumentException_when_media_id_is_null() {
         assertThatThrownBy(() -> snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is required");
     }// test_get_preview_media_should_throw_SnapArgumentException_when_media_id_is_null()
 
     @Test
     public void test_get_preview_media_should_throw_SnapArgumentException_when_media_id_is_empty() {
         assertThatThrownBy(() -> snapMedia.getPreviewOfSpecificMedia(oAuthAccessToken, ""))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is required");
     }// test_get_preview_media_should_throw_SnapArgumentException_when_media_id_is_empty()
 
     @Test
@@ -2036,13 +2036,13 @@ public class SnapMediaTest {
     @Test
     public void test_get_thumbnail_media_should_throw_SnapArgumentException_when_media_id_is_null() {
         assertThatThrownBy(() -> snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is required");
     }// test_get_thumbnail_media_should_throw_SnapArgumentException_when_media_id_is_null()
 
     @Test
     public void test_get_thumbnail_media_should_throw_SnapArgumentException_when_media_id_is_empty() {
         assertThatThrownBy(() -> snapMedia.getThumbnailOfSpecificMedia(oAuthAccessToken, ""))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("The media ID is required");
     }// test_get_thumbnail_media_should_throw_SnapArgumentException_when_media_id_is_empty()
 
     @Test

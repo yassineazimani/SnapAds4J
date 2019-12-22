@@ -37,11 +37,16 @@ import snapads4j.utils.FileProperties;
 import snapads4j.utils.HttpUtils;
 import snapads4j.utils.JsonUtils;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -228,7 +233,7 @@ public class SnapCreativeElement implements SnapCreativeElementInterface {
         if (creative != null) {
             checkCommonCreativeElement(creative, sb, null);
         } else {
-            sb.append("Creative parameter is not given,");
+            sb.append("Creative parameter is required,");
         }
         String finalErrors = sb.toString();
         if (!StringUtils.isEmpty(finalErrors)) {
@@ -245,7 +250,7 @@ public class SnapCreativeElement implements SnapCreativeElementInterface {
                 checkCommonCreativeElement(c, sb, i);
             }
         } else {
-            sb.append("Creative elements parameter is not given,");
+            sb.append("Creative elements parameter is required,");
         }
         String finalErrors = sb.toString();
         if (!StringUtils.isEmpty(finalErrors)) {
@@ -257,20 +262,14 @@ public class SnapCreativeElement implements SnapCreativeElementInterface {
     private void checkInteractionZone(InteractionZone interactionZone) throws SnapArgumentException {
         StringBuilder sb = new StringBuilder();
         if (interactionZone != null) {
-            if (StringUtils.isEmpty(interactionZone.getAdAccountId())) {
-                sb.append("The interaction zone's ad account id is required,");
-            }
-            if (StringUtils.isEmpty(interactionZone.getHeadline())) {
-                sb.append("The interaction zone's headline is required,");
-            }
-            if (StringUtils.isEmpty(interactionZone.getName())) {
-                sb.append("The interaction zone's name is required,");
-            }
-            if (CollectionUtils.isEmpty(interactionZone.getCreativeElements())) {
-                sb.append("The interaction zone's creative elements is required,");
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<InteractionZone>> violations = validator.validate(interactionZone);
+            for (ConstraintViolation<InteractionZone> violation : violations) {
+                sb.append(violation.getMessage()).append(",");
             }
         } else {
-            sb.append("Interaction Zone parameter is not given,");
+            sb.append("Interaction Zone parameter is required,");
         }
         String finalErrors = sb.toString();
         if (!StringUtils.isEmpty(finalErrors)) {

@@ -144,14 +144,14 @@ public class SnapAdTest {
     @Test
     public void test_create_ad_should_throw_SnapArgumentException_ad_is_null() {
         assertThatThrownBy(() -> ad.createAd(oAuthAccessToken, null)).isInstanceOf(SnapArgumentException.class)
-                .hasMessage("Ad parameter is not given");
+                .hasMessage("Ad parameter is required");
     }// test_create_ad_should_throw_SnapArgumentException_ad_is_null()
 
     @Test
     public void test_create_ad_should_throw_SnapArgumentException_ad_squad_id_is_null() {
         adModelCreateFailure.setAdSquadId(null);
         assertThatThrownBy(() -> ad.createAd(oAuthAccessToken, adModelCreateFailure))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad Squad ID parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad Squad ID parameter is required");
     }// test_create_ad_should_throw_SnapArgumentException_ad_squad_id_is_null()
 
     @Test
@@ -164,21 +164,21 @@ public class SnapAdTest {
     public void test_create_ad_should_throw_SnapArgumentException_when_name_is_null() {
         adModelCreateFailure.setName(null);
         assertThatThrownBy(() -> ad.createAd(oAuthAccessToken, adModelCreateFailure))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad's name parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad's name parameter is required");
     }// test_create_ad_should_throw_SnapArgumentException_when_name_is_null()
 
     @Test
     public void test_create_ad_should_throw_SnapArgumentException_when_name_is_empty() {
         adModelCreateFailure.setName("");
         assertThatThrownBy(() -> ad.createAd(oAuthAccessToken, adModelCreateFailure))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad's name parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad's name parameter is required");
     }// test_create_ad_should_throw_SnapArgumentException_when_name_is_empty()
 
     @Test
     public void test_create_ad_should_throw_SnapArgumentException_when_status_is_null() {
         adModelCreateFailure.setStatus(null);
         assertThatThrownBy(() -> ad.createAd(oAuthAccessToken, adModelCreateFailure))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad's status parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad's status parameter is required");
     }// test_create_ad_should_throw_SnapArgumentException_when_status_is_null()
 
     @Test
@@ -337,28 +337,28 @@ public class SnapAdTest {
     @Test
     public void test_update_ad_should_throw_SnapArgumentException_when_ad_parameter_is_null() {
         assertThatThrownBy(() -> ad.updateAd(oAuthAccessToken, null)).isInstanceOf(SnapArgumentException.class)
-                .hasMessage("Ad parameter is not given");
+                .hasMessage("Ad parameter is required");
     }// test_update_ad_should_throw_SnapArgumentException_when_ad_parameter_is_null()
 
     @Test
     public void test_update_ad_should_throw_SnapArgumentException_when_ad_squad_id_is_null() {
         adModelUpdateFailure.setAdSquadId(null);
         assertThatThrownBy(() -> ad.updateAd(oAuthAccessToken, adModelUpdateFailure))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad Squad ID parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad Squad ID parameter is required");
     }// test_update_ad_should_throw_SnapArgumentException_when_ad_squad_id_is_null()
 
     @Test
     public void test_update_ad_should_throw_SnapArgumentException_when_name_is_null() {
         adModelUpdateFailure.setName(null);
         assertThatThrownBy(() -> ad.updateAd(oAuthAccessToken, adModelUpdateFailure))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad's name parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad's name parameter is required");
     }// test_update_ad_should_throw_SnapArgumentException_when_name_is_null()
 
     @Test
     public void test_update_ad_should_throw_SnapArgumentException_when_name_is_empty() {
         adModelUpdateFailure.setName("");
         assertThatThrownBy(() -> ad.updateAd(oAuthAccessToken, adModelUpdateFailure))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad's name parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad's name parameter is required");
     }// test_update_ad_should_throw_SnapArgumentException_when_name_is_empty()
 
     @Test
@@ -366,7 +366,7 @@ public class SnapAdTest {
         adModelUpdateFailure.setAdSquadId(squadId);
         adModelUpdateFailure.setStatus(null);
         assertThatThrownBy(() -> ad.updateAd(oAuthAccessToken, adModelUpdateFailure))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad's status parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Ad's status parameter is required");
     }// test_update_ad_should_throw_SnapArgumentException_when_status_is_null()
 
     @Test

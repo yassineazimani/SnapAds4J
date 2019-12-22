@@ -36,11 +36,16 @@ import snapads4j.utils.FileProperties;
 import snapads4j.utils.HttpUtils;
 import snapads4j.utils.JsonUtils;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * SnapAdSquads
@@ -312,32 +317,14 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
                     sb.append("The type is required,");
                 }
             }
-            if (StringUtils.isEmpty(adSquad.getCampaignId())) {
-                sb.append("The Campaign ID is required,");
-            }
-            if (adSquad.getBidMicro() == null) {
-                sb.append("The bid micro is required,");
-            }
-            if (adSquad.getDailyBudgetMicro() == null) {
-                sb.append("The daily budget micro is required,");
-            }
-            if (adSquad.getDailyBudgetMicro() != null && adSquad.getDailyBudgetMicro() < 20000000) {
-                sb.append("The daily budget micro minimum value is 20000000,");
-            }
-            if (adSquad.getLifetimeBudgetMicro() == null) {
-                sb.append("The lifetime budget micro is required,");
-            }
-            if (StringUtils.isEmpty(adSquad.getName())) {
-                sb.append("The Ad Squad name is required,");
-            }
-            if (adSquad.getStatus() == null) {
-                sb.append("The status is required,");
-            }
-            if (adSquad.getTargeting() == null) {
-                sb.append("The targeting is required,");
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<AdSquad>> violations = validator.validate(adSquad);
+            for (ConstraintViolation<AdSquad> violation : violations) {
+                sb.append(violation.getMessage()).append(",");
             }
         } else {
-            sb.append("Ad squad parameter is not given,");
+            sb.append("Ad squad parameter is required,");
         }
         String finalErrors = sb.toString();
         if (!StringUtils.isEmpty(finalErrors)) {

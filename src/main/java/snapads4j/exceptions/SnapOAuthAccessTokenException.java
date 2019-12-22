@@ -16,7 +16,7 @@
 package snapads4j.exceptions;
 
 /**
- * Exception thrown when the OAuthAccessToken is missing when an endpoint is calling.
+ * Exception thrown when the OAuthAccessToken is required when an endpoint is calling.
  *
  * @author Yassine
  */

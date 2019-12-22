@@ -361,14 +361,18 @@ public class SnapStats implements SnapStatsInterface {
             throw new SnapArgumentException("StartTime and EndTime are required");
         }
         Calendar cal = Calendar.getInstance();
-        cal.setTime(startTime);
+        if(startTime != null) {
+            cal.setTime(startTime);
+        }
         if(cal.get(Calendar.MINUTE) != 0){
             throw new SnapArgumentException("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)");
         }
         if(cal.get(Calendar.SECOND) != 0){
             throw new SnapArgumentException("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)");
         }
-        cal.setTime(endTime);
+        if(endTime != null) {
+            cal.setTime(endTime);
+        }
         if(cal.get(Calendar.MINUTE) != 0){
             throw new SnapArgumentException("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)");
         }

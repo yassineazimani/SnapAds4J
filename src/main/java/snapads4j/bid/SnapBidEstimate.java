@@ -37,9 +37,14 @@ import snapads4j.utils.FileProperties;
 import snapads4j.utils.HttpUtils;
 import snapads4j.utils.JsonUtils;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
+import java.util.Set;
 
 @Setter
 public class SnapBidEstimate implements SnapBidEstimateInterface {
@@ -147,11 +152,11 @@ public class SnapBidEstimate implements SnapBidEstimateInterface {
             throw new SnapArgumentException("TargetingSpecBidEstimate instance is required");
         }
         StringBuilder sb = new StringBuilder();
-        if (targetingSpecBidEstimate.getOptimizationGoal() == null) {
-            sb.append("Optimization goal is required,");
-        }
-        if (targetingSpecBidEstimate.getTargeting() == null) {
-            sb.append("Targeting is required,");
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<TargetingSpecBidEstimate>> violations = validator.validate(targetingSpecBidEstimate);
+        for (ConstraintViolation<TargetingSpecBidEstimate> violation : violations) {
+            sb.append(violation.getMessage()).append(",");
         }
         String finalErrors = sb.toString();
         if (!StringUtils.isEmpty(finalErrors)) {

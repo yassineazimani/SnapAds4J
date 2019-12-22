@@ -20,21 +20,27 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotEmpty;
+
 @Getter
 @Setter
 @ToString
 public class AppInstallProperties {
 
     @JsonProperty("app_name")
+    @NotEmpty(message = "App name (App Install Properties) is required")
     private String appName;
 
     @JsonProperty("ios_app_id")
+    @NotEmpty(message = "IOS App ID (App Install Properties) is required")
     private String iosAppId;
 
     @JsonProperty("android_app_url")
+    @NotEmpty(message = "Android App URL (App Install Properties) is required")
     private String androidAppUrl;
 
     @JsonProperty("icon_media_id")
+    @NotEmpty(message = "Icon Media ID (App Install Properties) is required")
     private String iconMediaId;
 
 }// AppInstallProperties

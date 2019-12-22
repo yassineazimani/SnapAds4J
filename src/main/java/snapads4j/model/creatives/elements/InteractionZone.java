@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 import java.util.List;
 
@@ -40,13 +41,17 @@ public class InteractionZone {
     private Date updatedAt;
 
     @JsonProperty("ad_account_id")
+    @NotEmpty(message = "The interaction zone's ad account id is required")
     private String adAccountId;
 
+    @NotEmpty(message = "The interaction zone's name is required")
     private String name;
 
+    @NotEmpty(message = "The interaction zone's headline is required")
     private String headline;
 
     @JsonProperty("creative_element_ids")
+    @NotEmpty(message = "The interaction zone's creative elements is required")
     private List<String> creativeElements;
 
 }// InteractionZone

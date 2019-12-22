@@ -15,10 +15,8 @@
  */
 package snapads4j.model.organization;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,7 +25,6 @@ import snapads4j.enums.StatusEnum;
 import snapads4j.enums.TypeOrganizationEnum;
 import snapads4j.model.AbstractSnapModel;
 
-import java.util.Date;
 import java.util.List;
 
 /**

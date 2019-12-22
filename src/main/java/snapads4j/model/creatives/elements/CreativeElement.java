@@ -15,7 +15,6 @@
  */
 package snapads4j.model.creatives.elements;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,8 +24,6 @@ import snapads4j.enums.InteractionTypeEnum;
 import snapads4j.model.AbstractSnapModel;
 import snapads4j.model.creatives.DeepLinkProperties;
 import snapads4j.model.creatives.WebViewProperties;
-
-import java.util.Date;
 
 @Getter
 @Setter

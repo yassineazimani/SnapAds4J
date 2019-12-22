@@ -36,11 +36,16 @@ import snapads4j.utils.FileProperties;
 import snapads4j.utils.HttpUtils;
 import snapads4j.utils.JsonUtils;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -289,17 +294,14 @@ public class SnapCampaigns implements SnapCampaignsInterface {
                     sb.append("The start time is required,");
                 }
             }
-            if (StringUtils.isEmpty(campaign.getName())) {
-                sb.append("The campaign name is required,");
-            }
-            if (campaign.getStatus() == null) {
-                sb.append("The campaign status is required,");
-            }
-            if (StringUtils.isEmpty(campaign.getAdAccountId())) {
-                sb.append("The Ad Account ID is required,");
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<Campaign>> violations = validator.validate(campaign);
+            for (ConstraintViolation<Campaign> violation : violations) {
+                sb.append(violation.getMessage()).append(",");
             }
         } else {
-            sb.append("Campaign parameter is not given,");
+            sb.append("Campaign parameter is required,");
         }
         String finalErrors = sb.toString();
         if (!StringUtils.isEmpty(finalErrors)) {

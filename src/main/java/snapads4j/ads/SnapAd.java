@@ -37,11 +37,16 @@ import snapads4j.utils.FileProperties;
 import snapads4j.utils.HttpUtils;
 import snapads4j.utils.JsonUtils;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author yassine
@@ -289,21 +294,18 @@ public class SnapAd implements SnapAdInterface {
         }
         StringBuilder sb = new StringBuilder();
         if (ad == null) {
-            sb.append("Ad parameter is not given,");
+            sb.append("Ad parameter is required,");
         } else {
             if (check == CheckAdEnum.UPDATE) {
                 if (StringUtils.isEmpty(ad.getId())) {
                     sb.append("The Ad ID is required,");
                 }
             }
-            if (StringUtils.isEmpty(ad.getAdSquadId())) {
-                sb.append("Ad Squad ID parameter is not given,");
-            }
-            if (StringUtils.isEmpty(ad.getName())) {
-                sb.append("Ad's name parameter is not given,");
-            }
-            if (ad.getStatus() == null) {
-                sb.append("Ad's status parameter is not given,");
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<Ad>> violations = validator.validate(ad);
+            for (ConstraintViolation<Ad> violation : violations) {
+                sb.append(violation.getMessage()).append(",");
             }
         }
         String finalErrors = sb.toString();

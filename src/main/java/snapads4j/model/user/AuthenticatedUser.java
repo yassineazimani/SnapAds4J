@@ -15,14 +15,11 @@
  */
 package snapads4j.model.user;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import snapads4j.model.AbstractSnapModel;
-
-import java.util.Date;
 
 /**
  * Authenticated user informations

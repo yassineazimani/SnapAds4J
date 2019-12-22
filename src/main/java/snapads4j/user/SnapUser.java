@@ -70,7 +70,7 @@ public class SnapUser implements SnapUserInterface {
      * Get informations about the authenticated user.
      *
      * @param oAuthAccessToken oAuthAccessToken
-     * @return AuthenticatedUser {@link #AuthenticatedUser}
+     * @return AuthenticatedUser {@link AuthenticatedUser}
      * @throws SnapOAuthAccessTokenException
      * @throws SnapResponseErrorException
      * @throws SnapExecutionException

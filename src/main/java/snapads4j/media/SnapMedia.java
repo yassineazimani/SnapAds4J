@@ -36,6 +36,10 @@ import snapads4j.exceptions.*;
 import snapads4j.model.media.*;
 import snapads4j.utils.*;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -146,7 +150,7 @@ public class SnapMedia implements SnapMediaInterface {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
         }
         if (StringUtils.isEmpty(mediaId)) {
-            throw new SnapArgumentException("Media ID is missing");
+            throw new SnapArgumentException("Media ID is required");
         }
         checkUploadMedia(fileVideo, MediaTypeEnum.VIDEO, null);
         final String url = this.endpointUploadVideo.replace("{media_id}", mediaId);
@@ -170,7 +174,7 @@ public class SnapMedia implements SnapMediaInterface {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
         }
         if (StringUtils.isEmpty(mediaId)) {
-            throw new SnapArgumentException("Media ID is missing");
+            throw new SnapArgumentException("Media ID is required");
         }
         checkUploadMedia(fileImage, MediaTypeEnum.IMAGE, typeImage);
         final String url = this.endpointUploadImage.replace("{media_id}", mediaId);
@@ -195,10 +199,10 @@ public class SnapMedia implements SnapMediaInterface {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
         }
         if (StringUtils.isEmpty(mediaId)) {
-            throw new SnapArgumentException("Media ID is missing");
+            throw new SnapArgumentException("Media ID is required");
         }
         if (StringUtils.isEmpty(filename)) {
-            throw new SnapArgumentException("Media's filename is missing");
+            throw new SnapArgumentException("Media's filename is required");
         }
         if (CollectionUtils.isEmpty(chunks)) {
             throw new SnapArgumentException("Chunks file not providen");
@@ -297,7 +301,7 @@ public class SnapMedia implements SnapMediaInterface {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
         }
         if (StringUtils.isEmpty(adAccountId)) {
-            throw new SnapArgumentException("The Ad Account ID is missing");
+            throw new SnapArgumentException("The Ad Account ID is required");
         }
         List<CreativeMedia> results = new ArrayList<>();
         final String url = this.endpointAllMedias.replace("{ad_account_id}", adAccountId);
@@ -330,7 +334,7 @@ public class SnapMedia implements SnapMediaInterface {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
         }
         if (StringUtils.isEmpty(mediaId)) {
-            throw new SnapArgumentException("The media ID is missing");
+            throw new SnapArgumentException("The media ID is required");
         }
         Optional<CreativeMedia> result = Optional.empty();
         final String url = this.endpointSpecificMedia.replace("{media_id}", mediaId);
@@ -363,7 +367,7 @@ public class SnapMedia implements SnapMediaInterface {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
         }
         if (StringUtils.isEmpty(mediaId)) {
-            throw new SnapArgumentException("The media ID is missing");
+            throw new SnapArgumentException("The media ID is required");
         }
         Map<String, Object> result = new HashMap<>();
         final String url = this.endpointPreviewMedia.replace("{media_id}", mediaId);
@@ -397,7 +401,7 @@ public class SnapMedia implements SnapMediaInterface {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
         }
         if (StringUtils.isEmpty(mediaId)) {
-            throw new SnapArgumentException("The media ID is missing");
+            throw new SnapArgumentException("The media ID is required");
         }
         Map<String, Object> result = new HashMap<>();
         final String url = this.endpointThumbnailMedia.replace("{media_id}", mediaId);
@@ -433,17 +437,14 @@ public class SnapMedia implements SnapMediaInterface {
     public void checkCreativeMedia(CreativeMedia media) throws SnapArgumentException {
         StringBuilder sb = new StringBuilder();
         if (media != null) {
-            if (StringUtils.isEmpty(media.getAdAccountId())) {
-                sb.append("The Ad Account ID is required,");
-            }
-            if (StringUtils.isEmpty(media.getName())) {
-                sb.append("The media's name is required,");
-            }
-            if (media.getType() == null) {
-                sb.append("The media's type is required,");
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<CreativeMedia>> violations = validator.validate(media);
+            for (ConstraintViolation<CreativeMedia> violation : violations) {
+                sb.append(violation.getMessage()).append(",");
             }
         } else {
-            sb.append("Media parameter is missing,");
+            sb.append("Media parameter is required,");
         }
         String finalErrors = sb.toString();
         if (!StringUtils.isEmpty(finalErrors)) {
@@ -522,7 +523,7 @@ public class SnapMedia implements SnapMediaInterface {
                 checkUploadMediaImageTopSnap(mediaFile, sb);
             }
         } else {
-            sb.append("Media parameter is missing,");
+            sb.append("Media parameter is required,");
         }
         return sb.toString();
     }// checkUploadMediaImage()
@@ -540,7 +541,7 @@ public class SnapMedia implements SnapMediaInterface {
                 sb.append("The media's max length mustn't exceed 31.8 MB,");
             }
         } else {
-            sb.append("Media parameter is missing,");
+            sb.append("Media parameter is required,");
         }
         return sb.toString();
     }// checkUploadMediaVideo()

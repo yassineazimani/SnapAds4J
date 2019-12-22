@@ -15,7 +15,6 @@
  */
 package snapads4j.model.adaccount;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,7 +26,8 @@ import snapads4j.enums.CurrencyEnum;
 import snapads4j.enums.StatusEnum;
 import snapads4j.model.AbstractSnapModel;
 
-import java.util.Date;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -49,29 +49,35 @@ public class AdAccount extends AbstractSnapModel {
     /**
      * Name of the Advertiser
      */
+    @NotEmpty(message = "The name of advertiser is required")
     private String advertiser;
 
     /**
      * Account currency
      */
+    @NotNull(message = "The currency is required")
     private CurrencyEnum currency;
 
     /**
      * Account name
      */
+    @NotEmpty(message = "The name is required")
     private String name;
 
     /**
      * Organization ID
      */
     @JsonProperty("organization_id")
+    @NotEmpty(message = "The organization ID is required")
     private String organizationId;
 
     /**
      * Timezone
      */
+    @NotEmpty(message = "The time zone is required")
     private String timezone;
 
+    @NotNull(message = "The ad account type is required")
     private AdAccountTypeEnum type;
 
     /**
@@ -90,6 +96,7 @@ public class AdAccount extends AbstractSnapModel {
      * List of Funding Source IDs
      */
     @JsonProperty("funding_source_ids")
+    @NotEmpty(message = "The funding source ids are required")
     private List<String> fundingSourceIds;
 
     /**

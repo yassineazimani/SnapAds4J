@@ -150,14 +150,20 @@ public class SnapCreativeTest {
     @Test
     public void test_create_creative_should_throw_SnapArgumentException_when_creative_parameter_is_null() {
         assertThatThrownBy(() -> snapCreative.createCreative(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Creative parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Creative parameter is required");
     }// test_create_creative_should_throw_SnapArgumentException_when_creative_parameter_is_null()
 
     @Test
     public void test_create_creative_should_throw_SnapArgumentException_when_no_required_parameters() {
         Creative badCreative = new Creative();
         assertThatThrownBy(() -> snapCreative.createCreative(oAuthAccessToken, badCreative))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required,The brand name is required,The headline is required,The creative's name is required,The top snap media ID is required,The creative's type is required");
+                .isInstanceOf(SnapArgumentException.class)
+                .hasMessageContaining("The Ad Account ID is required")
+                .hasMessageContaining("The brand name is required")
+                .hasMessageContaining("The headline is required")
+                .hasMessageContaining("The creative's name is required")
+                .hasMessageContaining("The top snap media ID is required")
+                .hasMessageContaining("The creative's type is required");
     }// test_create_creative_should_throw_SnapArgumentException_when_no_required_parameters()
 
     @Test
@@ -192,21 +198,31 @@ public class SnapCreativeTest {
     public void test_create_creative_should_throw_SnapArgumentException_when_no_app_install_properties_filled() {
         creativeForCreation.setAppInstallProperties(new AppInstallProperties());
         assertThatThrownBy(() -> snapCreative.createCreative(oAuthAccessToken, creativeForCreation))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Android App URL (App Install Properties) is required,App name (App Install Properties) is required,Icon Media ID (App Install Properties) is required,IOS App ID (App Install Properties) is required");
+                .isInstanceOf(SnapArgumentException.class)
+                .hasMessageContaining("Android App URL (App Install Properties) is required")
+                .hasMessageContaining("App name (App Install Properties) is required")
+                .hasMessageContaining("Icon Media ID (App Install Properties) is required")
+                .hasMessageContaining("IOS App ID (App Install Properties) is required");
     }// test_create_creative_should_throw_SnapArgumentException_when_no_app_install_properties_filled()
 
     @Test
     public void test_create_creative_should_throw_SnapArgumentException_when_no_preview_properties_filled() {
         creativeForCreation.setPreviewProperties(new PreviewProperties());
         assertThatThrownBy(() -> snapCreative.createCreative(oAuthAccessToken, creativeForCreation))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Preview Creative ID is required,Logo Media ID (Preview Properties) is required,Preview Headline (Preview Properties) is required,Preview Media ID (Preview Properties) is required");
+                .isInstanceOf(SnapArgumentException.class)
+                .hasMessageContaining("Preview Creative ID is required")
+                .hasMessageContaining("Logo Media ID (Preview Properties) is required")
+                .hasMessageContaining("Preview Headline (Preview Properties) is required")
+                .hasMessageContaining("Preview Media ID (Preview Properties) is required");
     }// test_create_creative_should_throw_SnapArgumentException_when_no_preview_properties_filled()
 
     @Test
     public void test_create_creative_should_throw_SnapArgumentException_no_collection_properties_filled() {
         creativeForCreation.setCollectionProperties(new CollectionProperties());
         assertThatThrownBy(() -> snapCreative.createCreative(oAuthAccessToken, creativeForCreation))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Interaction Zone ID (Collection Properties) is required,Default Fallback Interaction Type (Collection Properties) is required");
+                .isInstanceOf(SnapArgumentException.class)
+                .hasMessageContaining("Interaction Zone ID (Collection Properties) is required")
+                .hasMessageContaining("Default Fallback Interaction Type (Collection Properties) is required");
     }// test_create_creative_should_throw_SnapArgumentException_no_collection_properties_filled()
 
     @Test
@@ -408,7 +424,7 @@ public class SnapCreativeTest {
     @Test
     public void test_update_creative_should_throw_SnapArgumentException_when_creative_parameter_is_null() {
         assertThatThrownBy(() -> snapCreative.updateCreative(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Creative parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Creative parameter is required");
     }// test_update_creative_should_throw_SnapArgumentException_when_creative_parameter_is_null()
 
     @Test
@@ -423,7 +439,14 @@ public class SnapCreativeTest {
         DeepLinkProperties deepLinkProperties = new DeepLinkProperties();
         creative.setDeepLinkProperties(deepLinkProperties);
         assertThatThrownBy(() -> snapCreative.updateCreative(oAuthAccessToken, creative))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("IOS App ID (Deep Link Properties) is required,Android App URL (Deep Link Properties) is required,Fallback Type (Deep Link Properties) is required,WebView Fallback Type URL (Deep Link Properties) is required,Deep Link URI (Deep Link Properties) is required,App name (Deep Link Properties) is required,Icon Media ID (Deep Link Properties) is required");
+                .isInstanceOf(SnapArgumentException.class)
+                .hasMessageContaining("IOS App ID (Deep Link Properties) is required")
+                .hasMessageContaining("Android App URL (Deep Link Properties) is required")
+                .hasMessageContaining("Fallback Type (Deep Link Properties) is required")
+                .hasMessageContaining("WebView Fallback Type URL (Deep Link Properties) is required")
+                .hasMessageContaining("Deep Link URI (Deep Link Properties) is required")
+                .hasMessageContaining("App name (Deep Link Properties) is required")
+                .hasMessageContaining("Icon Media ID (Deep Link Properties) is required");
     }// test_update_creative_should_throw_SnapArgumentException_3()
 
     @Test
@@ -1000,13 +1023,13 @@ public class SnapCreativeTest {
     @Test
     public void test_get_preview_creative_should_throw_SnapArgumentException_when_creative_id_is_null() {
         assertThatThrownBy(() -> snapCreative.getPreviewCreative(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("The creative ID is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("The creative ID is required");
     }// test_get_preview_creative_should_throw_SnapArgumentException_when_creative_id_is_null()
 
     @Test
     public void test_get_preview_creative_should_throw_SnapArgumentException_when_creative_id_is_empty() {
         assertThatThrownBy(() -> snapCreative.getPreviewCreative(oAuthAccessToken, ""))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("The creative ID is missing");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("The creative ID is required");
     }// test_get_preview_creative_should_throw_SnapArgumentException_when_creative_id_is_empty()
 
     @Test

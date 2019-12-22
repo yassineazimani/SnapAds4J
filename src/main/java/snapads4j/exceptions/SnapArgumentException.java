@@ -16,7 +16,7 @@
 package snapads4j.exceptions;
 
 /**
- * Exception thrown when an argument is missing.
+ * Exception thrown when an argument is required.
  *
  * @author Yassine
  */

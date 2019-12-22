@@ -20,15 +20,19 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotEmpty;
+
 @Getter
 @Setter
 @ToString
 public class CollectionProperties {
 
     @JsonProperty("interaction_zone_id")
+    @NotEmpty(message = "Interaction Zone ID (Collection Properties) is required")
     private String interactionZoneId;
 
     @JsonProperty("default_fallback_interaction_type")
+    @NotEmpty(message = "Default Fallback Interaction Type (Collection Properties) is required")
     private String defaultFallbackInteractionType;
 
     @JsonProperty("web_view_properties")

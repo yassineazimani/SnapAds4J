@@ -16,7 +16,7 @@
 package snapads4j.exceptions;
 
 /**
- * Exception thrown when an argument bound to the authorization is missing.
+ * Exception thrown when an argument bound to the authorization is required.
  *
  * @author Yassine
  */
@@ -27,7 +27,7 @@ public class SnapAuthorizationException extends Exception {
     /**
      * Constructor
      *
-     * @param message Message exception
+     * @param msg Message exception
      */
     public SnapAuthorizationException(String msg) {
         super(msg);

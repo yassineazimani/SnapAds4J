@@ -20,7 +20,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -39,11 +38,16 @@ import snapads4j.utils.FileProperties;
 import snapads4j.utils.HttpUtils;
 import snapads4j.utils.JsonUtils;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * SnapAdAccount
@@ -237,32 +241,17 @@ public class SnapAdAccount implements SnapAdAccountInterface {
     private void checkAdAccount(AdAccount adAccount) throws SnapArgumentException {
         StringBuilder sb = new StringBuilder();
         if (adAccount != null) {
-            if (StringUtils.isEmpty(adAccount.getAdvertiser())) {
-                sb.append("The name of advertiser is required,");
-            }
-            if (adAccount.getCurrency() == null) {
-                sb.append("The currency is required,");
-            }
-            if (CollectionUtils.isEmpty(adAccount.getFundingSourceIds())) {
-                sb.append("The funding source ids are required,");
-            }
             if (StringUtils.isEmpty(adAccount.getId())) {
                 sb.append("The ad account ID is required,");
             }
-            if (StringUtils.isEmpty(adAccount.getName())) {
-                sb.append("The name is required,");
-            }
-            if (StringUtils.isEmpty(adAccount.getOrganizationId())) {
-                sb.append("The organization ID is required,");
-            }
-            if (StringUtils.isEmpty(adAccount.getTimezone())) {
-                sb.append("The time zone is required,");
-            }
-            if (adAccount.getType() == null) {
-                sb.append("The ad account type is required,");
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<AdAccount>> violations = validator.validate(adAccount);
+            for (ConstraintViolation<AdAccount> violation : violations) {
+                sb.append(violation.getMessage()).append(",");
             }
         } else {
-            sb.append("Ad account parameter is not given,");
+            sb.append("Ad account parameter is required,");
         }
         String finalErrors = sb.toString();
         if (!StringUtils.isEmpty(finalErrors)) {

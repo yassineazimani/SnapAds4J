@@ -24,7 +24,8 @@ import lombok.ToString;
 import snapads4j.enums.SourceTypeEnum;
 import snapads4j.model.AbstractSnapModel;
 
-import java.util.Date;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter
@@ -33,13 +34,16 @@ import java.util.Date;
 public class SamLookalikes extends AbstractSnapModel {
 
     @JsonProperty("ad_account_id")
+    @NotEmpty(message = "The Ad Account ID is required")
     protected String adAccountId;
 
     protected String description;
 
+    @NotEmpty(message = "The name is required")
     protected String name;
 
     @JsonProperty("retention_in_days")
+    @Min(value = 0, message = "The retention must be equal or greater than zero days")
     protected int retentionInDays;
 
     @JsonProperty("source_type")

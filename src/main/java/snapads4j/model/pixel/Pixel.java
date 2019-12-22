@@ -15,7 +15,6 @@
  */
 package snapads4j.model.pixel;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,7 +24,7 @@ import lombok.ToString;
 import snapads4j.enums.StatusEnum;
 import snapads4j.model.AbstractSnapModel;
 
-import java.util.Date;
+import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter
@@ -36,9 +35,11 @@ public class Pixel extends AbstractSnapModel {
     @JsonProperty("effective_status")
     private String effectiveStatus;
 
+    @NotEmpty(message = "Pixel name parameter is required")
     private String name;
 
     @JsonProperty("ad_account_id")
+    @NotEmpty(message = "Ad Account ID parameter is required")
     private String adAccountId;
 
     private StatusEnum status;

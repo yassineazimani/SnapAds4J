@@ -15,7 +15,6 @@
  */
 package snapads4j.model.media;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,7 +25,8 @@ import snapads4j.enums.MediaStatusTypeEnum;
 import snapads4j.enums.MediaTypeEnum;
 import snapads4j.model.AbstractSnapModel;
 
-import java.util.Date;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * CreativeMedia
@@ -40,6 +40,7 @@ import java.util.Date;
 public class CreativeMedia extends AbstractSnapModel {
 
     @JsonProperty("ad_account_id")
+    @NotEmpty(message = "The Ad Account ID is required")
     private String adAccountId;
 
     @JsonProperty("download_link")
@@ -48,8 +49,10 @@ public class CreativeMedia extends AbstractSnapModel {
     @JsonProperty("media_status")
     private MediaStatusTypeEnum mediaStatus;
 
+    @NotEmpty(message = "The media's name is required")
     private String name;
 
+    @NotNull(message = "The media's type is required")
     private MediaTypeEnum type;
 
     @JsonProperty("file_name")

@@ -38,11 +38,16 @@ import snapads4j.utils.FileProperties;
 import snapads4j.utils.HttpUtils;
 import snapads4j.utils.JsonUtils;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -455,7 +460,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
                 sb.append("Segment ID is required,");
             }
         } else {
-            sb.append("FormUserForAudienceSegment parameter is not given,");
+            sb.append("FormUserForAudienceSegment parameter is required,");
         }
         String finalErrors = sb.toString();
         if (!StringUtils.isEmpty(finalErrors)) {
@@ -499,22 +504,19 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
     private void checkAudienceSegment(AudienceSegment segment, boolean isForCreation) throws SnapArgumentException {
         StringBuilder sb = new StringBuilder();
         if (segment != null) {
-            if (StringUtils.isEmpty(segment.getAdAccountId())) {
-                sb.append("The Ad Account ID is required,");
-            }
-            if (StringUtils.isEmpty(segment.getName())) {
-                sb.append("The name is required,");
-            }
-            if (segment.getRetentionInDays() < 0) {
-                sb.append("The retention must be equal or greater than zero days,");
-            }
             if (isForCreation) {
                 if (segment.getSourceType() == null) {
                     sb.append("The source type is required,");
                 }
             }
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<AudienceSegment>> violations = validator.validate(segment);
+            for (ConstraintViolation<AudienceSegment> violation : violations) {
+                sb.append(violation.getMessage()).append(",");
+            }
         } else {
-            sb.append("Segment parameter is not given,");
+            sb.append("Segment parameter is required,");
         }
         String finalErrors = sb.toString();
         if (!StringUtils.isEmpty(finalErrors)) {
@@ -526,15 +528,6 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
     private void checkSamLookalikes(SamLookalikes sam) throws SnapArgumentException {
         StringBuilder sb = new StringBuilder();
         if (sam != null) {
-            if (StringUtils.isEmpty(sam.getAdAccountId())) {
-                sb.append("The Ad Account ID is required,");
-            }
-            if (StringUtils.isEmpty(sam.getName())) {
-                sb.append("The name is required,");
-            }
-            if (sam.getRetentionInDays() < 0) {
-                sb.append("The retention must be equal or greater than zero days,");
-            }
             if (sam.getRetentionInDays() > 180) {
                 sb.append("The retention must be equal or less than 180 days,");
             }
@@ -558,8 +551,14 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
                     sb.append("Lookalike creation spec type is required,");
                 }
             }
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<SamLookalikes>> violations = validator.validate(sam);
+            for (ConstraintViolation<SamLookalikes> violation : violations) {
+                sb.append(violation.getMessage()).append(",");
+            }
         } else {
-            sb.append("Sam Lookalikes parameter is not given,");
+            sb.append("Sam Lookalikes parameter is required,");
         }
         String finalErrors = sb.toString();
         if (!StringUtils.isEmpty(finalErrors)) {

@@ -27,6 +27,8 @@ import snapads4j.enums.ObjectiveCampaignEnum;
 import snapads4j.enums.StatusEnum;
 import snapads4j.model.AbstractSnapModel;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -40,12 +42,14 @@ import java.util.Date;
 @JsonInclude(Include.NON_EMPTY)
 public class Campaign extends AbstractSnapModel {
 
+    @NotNull(message = "The campaign status is required")
     private StatusEnum status;
 
     /**
      * Ad Account ID
      */
     @JsonProperty("ad_account_id")
+    @NotEmpty(message = "The Ad Account ID is required")
     private String adAccountId;
 
     /**
@@ -71,6 +75,7 @@ public class Campaign extends AbstractSnapModel {
     /**
      * Campaign name
      */
+    @NotEmpty(message = "The campaign name is required")
     private String name;
 
     /**

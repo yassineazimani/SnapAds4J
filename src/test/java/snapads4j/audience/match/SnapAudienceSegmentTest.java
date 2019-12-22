@@ -157,7 +157,7 @@ public class SnapAudienceSegmentTest {
     @Test
     public void test_create_audience_segment_should_throw_throw_SnapArgumentException_when_segment_is_null() {
         assertThatThrownBy(() -> snapAudienceSegment.createAudienceSegment(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Segment parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Segment parameter is required");
     } // test_create_audience_segment_should_throw_throw_SnapArgumentException_when_segment_is_null()
 
     @Test
@@ -720,7 +720,7 @@ public class SnapAudienceSegmentTest {
     @Test
     public void test_update_audience_segment_should_throw_throw_SnapArgumentException_when_segment_is_null() {
         assertThatThrownBy(() -> snapAudienceSegment.updateAudienceSegment(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Segment parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Segment parameter is required");
     } // test_update_audience_segment_should_throw_throw_SnapArgumentException_when_segment_is_null()
 
     @Test
@@ -1697,7 +1697,7 @@ public class SnapAudienceSegmentTest {
     @Test
     public void test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_sam_is_null() {
         assertThatThrownBy(() -> snapAudienceSegment.createSamLookalikes(oAuthAccessToken, null))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("Sam Lookalikes parameter is not given");
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Sam Lookalikes parameter is required");
     } // test_create_sam_look_a_likes_should_throw_throw_SnapArgumentException_when_sam_is_null()
 
     @Test
