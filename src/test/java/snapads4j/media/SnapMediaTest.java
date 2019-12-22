@@ -169,39 +169,39 @@ public class SnapMediaTest {
     }// test_create_media_should_throw_SnapArgumentException_when_media_parameter_is_null()
 
     @Test
-    public void test_create_media_should_throw_SnapArgumentException_2() {
+    public void test_create_media_should_throw_SnapArgumentException_when_media_name_is_null() {
         mediaFail.setName(null);
         assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, mediaFail))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The media's name is required");
-    }// test_create_media_should_throw_SnapArgumentException_2()
+    }// test_create_media_should_throw_SnapArgumentException_when_media_name_is_null()
 
     @Test
-    public void test_create_media_should_throw_SnapArgumentException_3() {
+    public void test_create_media_should_throw_SnapArgumentException_when_name_is_empty() {
         mediaFail.setName("");
         assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, mediaFail))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The media's name is required");
-    }// test_create_media_should_throw_SnapOAuthAccessTokenException_3()
+    }// test_create_media_should_throw_SnapArgumentException_when_name_is_empty()
 
     @Test
-    public void test_create_media_should_throw_SnapArgumentException_4() {
+    public void test_create_media_should_throw_SnapArgumentException_when_no_media_type() {
         mediaFail.setType(null);
         assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, mediaFail))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The media's type is required");
-    }// test_create_media_should_throw_SnapOAuthAccessTokenException_4()
+    }// test_create_media_should_throw_SnapArgumentException_when_no_media_type()
 
     @Test
-    public void test_create_media_should_throw_SnapArgumentException_5() {
+    public void test_create_media_should_throw_SnapArgumentException_when_ad_account_id_is_null() {
         mediaFail.setAdAccountId(null);
         assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, mediaFail))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
-    }// test_create_media_should_throw_SnapOAuthAccessTokenException_5()
+    }// test_create_media_should_throw_SnapArgumentException_when_ad_account_id_is_null()
 
     @Test
-    public void test_create_media_should_throw_SnapArgumentException_6() {
+    public void test_create_media_should_throw_SnapArgumentException_when_ad_account_id_is_empty() {
         mediaFail.setAdAccountId("");
         assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, mediaFail))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
-    }// test_create_media_should_throw_SnapOAuthAccessTokenException_6()
+    }// test_create_media_should_throw_SnapArgumentException_when_ad_account_id_is_empty()
 
     @Test
     public void test_create_media_should_throw_SnapExecutionException() throws IOException {
@@ -209,6 +209,15 @@ public class SnapMediaTest {
         assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, media))
                 .isInstanceOf(SnapExecutionException.class);
     }// test_create_media_should_throw_SnapExecutionException()
+
+    @Test
+    public void should_throw_exception_400_create_media() throws IOException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+        Mockito.when(statusLine.getStatusCode()).thenReturn(400);
+        Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+        assertThatThrownBy(() -> snapMedia.createMedia(oAuthAccessToken, media))
+                .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
+    } // should_throw_exception_400_create_media()
 
     @Test
     public void should_throw_exception_401_create_media() throws IOException {

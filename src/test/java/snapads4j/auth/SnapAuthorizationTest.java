@@ -146,20 +146,20 @@ public class SnapAuthorizationTest {
     } // test_getOAuthAccessToken_should_success()
 
     @Test
-    public void test_getOAuthAccessToken_should_fail_noAuthCode() {
+    public void test_getOAuthAccessToken_should_fail_authCode_is_empty() {
         assertThatThrownBy(
                 () -> this.auth.getOAuthAccessToken(""))
                 .isInstanceOf(SnapAuthorizationException.class)
                 .hasMessageContaining("Missing oAuthCode");
-    } // test_getOAuthAccessToken_should_fail_noAuthCode()
+    } // test_getOAuthAccessToken_should_fail_authCode_is_empty()
 
     @Test
-    public void test_getOAuthAccessToken_should_fail_noAuthCode_2() {
+    public void test_getOAuthAccessToken_should_fail_authCode_is_null() {
         assertThatThrownBy(
                 () -> this.auth.getOAuthAccessToken(null))
                 .isInstanceOf(SnapAuthorizationException.class)
                 .hasMessageContaining("Missing oAuthCode");
-    } // test_getOAuthAccessToken_should_fail_noAuthCode_2()
+    } // test_getOAuthAccessToken_should_fail_authCode_is_null()
 
     @Test
     public void test_getOAuthAccessToken_should_fail_noConfiguration() {
@@ -354,20 +354,20 @@ public class SnapAuthorizationTest {
     } // test_refreshToken_should_success()
 
     @Test
-    public void test_refreshToken_should_fail_noRefreshToken() {
+    public void test_refreshToken_should_fail_refreshToken_is_empty() {
         assertThatThrownBy(
                 () -> this.auth.refreshToken(""))
                 .isInstanceOf(SnapAuthorizationException.class)
                 .hasMessageContaining("Missing refreshToken");
-    } // test_refreshToken_should_fail_noRefreshToken()
+    } // test_refreshToken_should_fail_refreshToken_is_empty()
 
     @Test
-    public void test_refreshToken_should_fail_noRefreshToken_2() {
+    public void test_refreshToken_should_fail_refreshToken_is_null() {
         assertThatThrownBy(
                 () -> this.auth.refreshToken(null))
                 .isInstanceOf(SnapAuthorizationException.class)
                 .hasMessageContaining("Missing refreshToken");
-    } // test_refreshToken_should_fail_noRefreshToken_2()
+    } // test_refreshToken_should_fail_refreshToken_is_null()
 
     @Test
     public void test_refreshToken_should_fail_noConfiguration() {
