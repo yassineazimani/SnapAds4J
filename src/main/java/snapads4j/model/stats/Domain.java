@@ -18,7 +18,6 @@ package snapads4j.model.stats;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -31,7 +30,7 @@ public class Domain {
 
     @JsonProperty("domain_name")
     private String domainName;
-    
+
     @JsonProperty("total_events")
     private Integer totalEvents;
 

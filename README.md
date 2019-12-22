@@ -26,7 +26,7 @@ URL Marketing API SnapChat : https://developers.snapchat.com/ads/
 * Bid Estimate
 * Audit Logs
 * Snap Pixel
-* Measurements (in progress)
+* Measurements
 
 ## Requirements
 

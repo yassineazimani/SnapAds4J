@@ -15,23 +15,23 @@
  */
 package snapads4j.model.campaigns;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.Getter;
 import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @ToString
 public class SnapHttpRequestCampaign {
 
-  private List<Campaign> campaigns;
+    private List<Campaign> campaigns;
 
-  public SnapHttpRequestCampaign() {
-    this.campaigns = new ArrayList<>();
-  } // SnapHttpRequestCampaign()
+    public SnapHttpRequestCampaign() {
+        this.campaigns = new ArrayList<>();
+    } // SnapHttpRequestCampaign()
 
-  public void addCampaign(Campaign campaign) {
-    this.campaigns.add(campaign);
-  } // addCampaign()
+    public void addCampaign(Campaign campaign) {
+        this.campaigns.add(campaign);
+    } // addCampaign()
 } // SnapHttpRequestAdAccount

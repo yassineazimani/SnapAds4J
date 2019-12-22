@@ -15,10 +15,7 @@
  */
 package snapads4j.model.stats;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,5 +25,5 @@ public class SnapInnerTotalStats {
 
     @JsonProperty("total_stat")
     private TimeSerieStat totalStat;
-    
+
 }// SnapInnerTimeSeriesStats

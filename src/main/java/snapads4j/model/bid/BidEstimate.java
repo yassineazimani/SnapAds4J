@@ -17,7 +17,6 @@ package snapads4j.model.bid;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import snapads4j.enums.OptimizationGoalEnum;
@@ -29,14 +28,14 @@ public class BidEstimate {
 
     @JsonProperty("ad_squad_id")
     private String adSquadId;
-    
+
     @JsonProperty("optimization_goal")
     private OptimizationGoalEnum optimizationGoal;
-    
+
     @JsonProperty("bid_estimate_minimum")
     private long bidEstimateMinimum;
-    
+
     @JsonProperty("bid_estimate_maximum")
     private long bidEstimateMaximum;
-    
+
 }// BidEstimate

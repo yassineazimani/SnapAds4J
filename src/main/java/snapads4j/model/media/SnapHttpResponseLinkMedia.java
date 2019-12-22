@@ -15,30 +15,29 @@
  */
 package snapads4j.model.media;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import snapads4j.model.SnapHttpResponse;
 
+import java.util.Date;
+
 @Getter
 @Setter
-public class SnapHttpResponseLinkMedia extends SnapHttpResponse{
+public class SnapHttpResponseLinkMedia extends SnapHttpResponse {
 
     @JsonProperty("request_status")
     private String requestStatus;
-    
+
     @JsonProperty("request_id")
     private String requestId;
-    
+
     @JsonProperty("expires_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date expiresAt;
-    
-    
+
+
     private String link;
 
 }// SnapHttpResponseLinkMedia

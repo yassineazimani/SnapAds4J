@@ -15,14 +15,13 @@
  */
 package snapads4j.model.fundingsource;
 
+import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
+import snapads4j.model.SnapHttpResponse;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-
-import lombok.Setter;
-import snapads4j.model.SnapHttpResponse;
 
 /**
  * SnapHttpResponseFundingSource
@@ -30,17 +29,17 @@ import snapads4j.model.SnapHttpResponse;
  * @author Yassine
  */
 @Setter
-public class SnapHttpResponseFundingSource extends SnapHttpResponse{
+public class SnapHttpResponseFundingSource extends SnapHttpResponse {
 
-  private List<SnapInnerFundingSource> fundingsources;
+    private List<SnapInnerFundingSource> fundingsources;
 
-  public Optional<FundingSource> getSpecificFundingSource() {
-    return (CollectionUtils.isNotEmpty(fundingsources) && fundingsources.get(0) != null)
-        ? Optional.of(fundingsources.get(0).getFundingsource())
-        : Optional.empty();
-  } // getSpecificFundingSource()
+    public Optional<FundingSource> getSpecificFundingSource() {
+        return (CollectionUtils.isNotEmpty(fundingsources) && fundingsources.get(0) != null)
+                ? Optional.of(fundingsources.get(0).getFundingsource())
+                : Optional.empty();
+    } // getSpecificFundingSource()
 
-  public List<FundingSource> getAllFundingSource() {
-    return fundingsources.stream().map(org -> org.getFundingsource()).collect(Collectors.toList());
-  } // getAllFundingSource()
+    public List<FundingSource> getAllFundingSource() {
+        return fundingsources.stream().map(SnapInnerFundingSource::getFundingsource).collect(Collectors.toList());
+    } // getAllFundingSource()
 } // SnapHttpResponseFundingSource

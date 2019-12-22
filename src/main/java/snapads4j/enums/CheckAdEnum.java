@@ -21,8 +21,12 @@ package snapads4j.enums;
  * @author Yassine
  */
 public enum CheckAdEnum {
-  /** For creation Ad */
-  CREATION,
-  /** For update Ad */
-  UPDATE
+    /**
+     * For creation Ad
+     */
+    CREATION,
+    /**
+     * For update Ad
+     */
+    UPDATE
 } // CheckAdEnum

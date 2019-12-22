@@ -15,44 +15,43 @@
  */
 package snapads4j.adsquads;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.Optional;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.adsquads.AdSquad;
 
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Optional;
+
 public interface SnapAdSquadsInterface {
 
-  Optional<AdSquad> createAdSquad(String oAuthAccessToken, AdSquad adSquad)
-      throws SnapOAuthAccessTokenException, JsonProcessingException, SnapResponseErrorException,
-          SnapArgumentException, UnsupportedEncodingException, SnapExecutionException;
+    Optional<AdSquad> createAdSquad(String oAuthAccessToken, AdSquad adSquad)
+            throws SnapOAuthAccessTokenException, JsonProcessingException, SnapResponseErrorException,
+            SnapArgumentException, UnsupportedEncodingException, SnapExecutionException;
 
-  Optional<AdSquad> updateAdSquad(String oAuthAccessToken, AdSquad adSquad)
-      throws SnapOAuthAccessTokenException, JsonProcessingException, SnapResponseErrorException,
-          SnapArgumentException, UnsupportedEncodingException, SnapExecutionException;
+    Optional<AdSquad> updateAdSquad(String oAuthAccessToken, AdSquad adSquad)
+            throws SnapOAuthAccessTokenException, JsonProcessingException, SnapResponseErrorException,
+            SnapArgumentException, UnsupportedEncodingException, SnapExecutionException;
 
-  List<AdSquad> getAllAdSquadsFromCampaign(String oAuthAccessToken, String campaignId) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
+    List<AdSquad> getAllAdSquadsFromCampaign(String oAuthAccessToken, String campaignId) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
 
-  List<AdSquad> getAllAdSquadsFromAdAccount(String oAuthAccessToken, String adAccountId) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
+    List<AdSquad> getAllAdSquadsFromAdAccount(String oAuthAccessToken, String adAccountId) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
 
-  Optional<AdSquad> getSpecificAdSquad(String oAuthAccessToken, String id) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
+    Optional<AdSquad> getSpecificAdSquad(String oAuthAccessToken, String id) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
 
-  /**
-   * Deletes a specific ad squad.
-   *
-   * @param oAuthAccessToken oAuthAccessToken
-   * @param id Ad Squad ID
-   * @throws SnapResponseErrorException
-   * @throws SnapOAuthAccessTokenException
-   * @throws SnapArgumentException
- * @throws SnapExecutionException 
-   */
-  void deleteAdSquad(String oAuthAccessToken, String id)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
+    /**
+     * Deletes a specific ad squad.
+     *
+     * @param oAuthAccessToken oAuthAccessToken
+     * @param id               Ad Squad ID
+     * @throws SnapResponseErrorException
+     * @throws SnapOAuthAccessTokenException
+     * @throws SnapArgumentException
+     * @throws SnapExecutionException
+     */
+    void deleteAdSquad(String oAuthAccessToken, String id)
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 } // SnapAdSquadsInterface

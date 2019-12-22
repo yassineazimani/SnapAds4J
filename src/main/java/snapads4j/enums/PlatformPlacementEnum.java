@@ -18,6 +18,6 @@ package snapads4j.enums;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public enum PlatformPlacementEnum {
-  @JsonProperty("SNAPCHAT")
-  SNAPCHAT
+    @JsonProperty("SNAPCHAT")
+    SNAPCHAT
 } // PlatformPlacementEnum

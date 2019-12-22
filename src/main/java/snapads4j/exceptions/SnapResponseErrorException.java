@@ -25,19 +25,21 @@ import lombok.Getter;
 @Getter
 public class SnapResponseErrorException extends Exception {
 
-  private static final long serialVersionUID = 8501189439029665947L;
+    private static final long serialVersionUID = 8501189439029665947L;
 
-  /** Status code HTTP */
-  private int statusCode;
+    /**
+     * Status code HTTP
+     */
+    private int statusCode;
 
-  /**
-   * Constructor
-   *
-   * @param message Message exception
-   * @param statusCode status code HTTP
-   */
-  public SnapResponseErrorException(String message, int statusCode) {
-    super(message);
-    this.statusCode = statusCode;
-  } // SnapResponseErrorException()
+    /**
+     * Constructor
+     *
+     * @param message    Message exception
+     * @param statusCode status code HTTP
+     */
+    public SnapResponseErrorException(String message, int statusCode) {
+        super(message);
+        this.statusCode = statusCode;
+    } // SnapResponseErrorException()
 } // SnapResponseErrorException

@@ -19,20 +19,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * ForcedViewEligibilityEnum
- * @author yassine
  *
+ * @author yassine
  */
 public enum ForcedViewEligibilityEnum {
     /**
      * FULL_DURATION
      */
     @JsonProperty("FULL_DURATION")
-    FULL_DURATION, 
+    FULL_DURATION,
     /**
      * SIX_SECONDS
      */
     @JsonProperty("SIX_SECONDS")
-    SIX_SECONDS, 
+    SIX_SECONDS,
     /**
      * NONE
      */

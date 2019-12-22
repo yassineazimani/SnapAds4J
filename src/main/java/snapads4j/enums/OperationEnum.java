@@ -23,8 +23,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Yassine
  */
 public enum OperationEnum {
-  @JsonProperty("INCLUDE")
-  INCLUDE,
-  @JsonProperty("EXCLUDE")
-  EXCLUDE
+    @JsonProperty("INCLUDE")
+    INCLUDE,
+    @JsonProperty("EXCLUDE")
+    EXCLUDE
 } // OperationEnum

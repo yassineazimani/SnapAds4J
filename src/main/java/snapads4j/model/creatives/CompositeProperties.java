@@ -15,13 +15,12 @@
  */
 package snapads4j.model.creatives;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,5 +29,5 @@ public class CompositeProperties {
 
     @JsonProperty("creative_ids")
     private List<String> creativeIds;
-    
+
 }// CompositeProperties

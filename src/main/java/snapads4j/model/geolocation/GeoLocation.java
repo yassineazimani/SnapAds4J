@@ -15,16 +15,15 @@
  */
 package snapads4j.model.geolocation;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import snapads4j.enums.OperationEnum;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,16 +31,20 @@ import snapads4j.enums.OperationEnum;
 @JsonInclude(Include.NON_EMPTY)
 public class GeoLocation {
 
-  @JsonProperty("country_code")
-  private String countryCode;
+    @JsonProperty("country_code")
+    private String countryCode;
 
-  /** Postal code */
-  @JsonProperty("postal_code")
-  private List<Integer> postalCodes;
+    /**
+     * Postal code
+     */
+    @JsonProperty("postal_code")
+    private List<Integer> postalCodes;
 
-  /** Metropole IDS */
-  @JsonProperty("metro_id")
-  private List<Integer> metroIds;
+    /**
+     * Metropole IDS
+     */
+    @JsonProperty("metro_id")
+    private List<Integer> metroIds;
 
-  private OperationEnum operation;
+    private OperationEnum operation;
 } // GeoLocation

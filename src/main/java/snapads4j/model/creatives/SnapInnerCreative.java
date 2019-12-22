@@ -16,7 +16,6 @@
 package snapads4j.model.creatives;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,5 +32,5 @@ import lombok.Setter;
 public class SnapInnerCreative {
 
     private Creative creative;
-    
+
 }// SnapInnerCreative

@@ -15,12 +15,11 @@
  */
 package snapads4j.model.creatives.elements;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.Getter;
 
 @Getter
 public class SnapHttpRequestInteractionZone {
@@ -29,11 +28,11 @@ public class SnapHttpRequestInteractionZone {
     private List<InteractionZone> interactionZones;
 
     public SnapHttpRequestInteractionZone() {
-	this.interactionZones = new ArrayList<>();
+        this.interactionZones = new ArrayList<>();
     }// SnapHttpRequestInteractionZone()
 
     public void addInteractionZone(InteractionZone zone) {
-	this.interactionZones.add(zone);
+        this.interactionZones.add(zone);
     }// addInteractionZone()
-    
+
 }// SnapHttpRequestInteractionZone

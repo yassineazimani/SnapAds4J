@@ -15,10 +15,10 @@
  */
 package snapads4j.model.pixel;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import lombok.Getter;
 
 @Getter
 public class SnapHttpRequestPixel {
@@ -26,11 +26,11 @@ public class SnapHttpRequestPixel {
     private List<Pixel> pixels;
 
     public SnapHttpRequestPixel() {
-	this.pixels = new ArrayList<>();
+        this.pixels = new ArrayList<>();
     }// SnapHttpRequestPixel()
 
     public void addPixel(Pixel pixel) {
-	this.pixels.add(pixel);
+        this.pixels.add(pixel);
     }// addPixel()
-    
+
 }// SnapHttpRequestPixel

@@ -16,7 +16,6 @@
 package snapads4j.model.pixel;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,7 +23,7 @@ import lombok.Setter;
 @Setter
 @JsonIgnoreProperties(value = {"sub_request_status"})
 public class SnapInnerPixel {
-    
+
     private Pixel pixel;
 
 }// SnapInnerPixel

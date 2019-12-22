@@ -15,14 +15,14 @@
  */
 package snapads4j.fundingsource;
 
-import java.util.List;
-import java.util.Optional;
-
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.fundingsource.FundingSource;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * SnapFundingSourceInterface

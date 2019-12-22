@@ -15,7 +15,11 @@
  */
 package snapads4j.stats;
 
-import snapads4j.enums.GranularityEnum;
+import snapads4j.enums.*;
+import snapads4j.exceptions.SnapArgumentException;
+import snapads4j.exceptions.SnapExecutionException;
+import snapads4j.exceptions.SnapOAuthAccessTokenException;
+import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.stats.TimeSerieStat;
 
 import java.util.Date;
@@ -24,43 +28,54 @@ import java.util.Optional;
 
 public interface SnapStatsInterface {
 
-    Optional<TimeSerieStat> getCampaignStats(String oAuthAccessToken, Date startTime, Date endTime,
-                                             GranularityEnum granularity);
+    Optional<TimeSerieStat> getCampaignStats(String oAuthAccessToken, String campaignID, Date startTime, Date endTime,
+                                             GranularityEnum granularity) throws SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException, SnapResponseErrorException;
 
-    Optional<TimeSerieStat> getCampaignStats(String oAuthAccessToken, Date startTime, Date endTime,
+    Optional<TimeSerieStat> getCampaignStats(String oAuthAccessToken, String campaignID, Date startTime, Date endTime,
                                              GranularityEnum granularity, List<String> fields,
-                                             String breakdown, String test, String dimension,
-                                             String pivot, String swipeUpAttributionWindow,
-                                             String viewAttributionWindow, String positionStats,
-                                             String omitEmpty, String conversionSourceTypes);
+                                             BreakdownEnum breakdown, Boolean test, DimensionEnum dimension,
+                                             PivotEnum pivot, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
+                                             ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
+                                             Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException, SnapResponseErrorException;
 
-    Optional<TimeSerieStat> getAdAccountStats(String oAuthAccessToken, Date startTime, Date endTime,
-                                              GranularityEnum granularity);
+    Optional<TimeSerieStat> getAdAccountStats(String oAuthAccessToken, String adAccountID, Date startTime, Date endTime,
+                                              GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
 
-    Optional<TimeSerieStat> getAdAccountStats(String oAuthAccessToken, Date startTime, Date endTime,
-                                              GranularityEnum granularity, String breakdown, String test, String dimension,
-                                              String pivot, String swipeUpAttributionWindow,
-                                              String viewAttributionWindow, String positionStats,
-                                              String omitEmpty, String conversionSourceTypes);
+    Optional<TimeSerieStat> getAdAccountStats(String oAuthAccessToken, String adAccountID, Date startTime, Date endTime,
+                                              GranularityEnum granularity, BreakdownEnum breakdown, Boolean test, DimensionEnum dimension,
+                                              PivotEnum pivot, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
+                                              ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
+                                              Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapExecutionException, SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException;
 
-    Optional<TimeSerieStat> getAdSquadStats(String oAuthAccessToken, Date startTime, Date endTime,
-                                            GranularityEnum granularity);
+    Optional<TimeSerieStat> getAdSquadStats(String oAuthAccessToken, String adSquadID, Date startTime, Date endTime,
+                                            GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
 
-    Optional<TimeSerieStat> getAdSquadStats(String oAuthAccessToken, Date startTime, Date endTime,
+    Optional<TimeSerieStat> getAdSquadStats(String oAuthAccessToken, String adSquadID, Date startTime, Date endTime,
                                             GranularityEnum granularity, List<String> fields,
-                                            String breakdown, String test, String dimension,
-                                            String pivot, String swipeUpAttributionWindow,
-                                            String viewAttributionWindow, String positionStats,
-                                            String omitEmpty, String conversionSourceTypes);
+                                            BreakdownEnum breakdown, Boolean test, DimensionEnum dimension,
+                                            PivotEnum pivot, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
+                                            ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
+                                            Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapExecutionException, SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException;
 
-    Optional<TimeSerieStat> getAdStats(String oAuthAccessToken, Date startTime, Date endTime,
-                                       GranularityEnum granularity);
+    Optional<TimeSerieStat> getAdStats(String oAuthAccessToken, String adID, Date startTime, Date endTime,
+                                       GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
 
-    Optional<TimeSerieStat> getAdStats(String oAuthAccessToken, Date startTime, Date endTime,
+    Optional<TimeSerieStat> getAdStats(String oAuthAccessToken, String adID, Date startTime, Date endTime,
                                        GranularityEnum granularity, List<String> fields,
-                                       String breakdown, String test, String dimension,
-                                       String pivot, String swipeUpAttributionWindow,
-                                       String viewAttributionWindow, String positionStats,
-                                       String omitEmpty, String conversionSourceTypes);
+                                       BreakdownEnum breakdown, Boolean test, DimensionEnum dimension,
+                                       PivotEnum pivot, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
+                                       ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
+                                       Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapExecutionException, SnapResponseErrorException;
 
+    Optional<TimeSerieStat> getPixelDomainsStats(String oAuthAccessToken, String pixelID) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapExecutionException, SnapResponseErrorException
+    ;
+
+    Optional<TimeSerieStat> getPixelSpecificDomainStats(String oAuthAccessToken, String pixelID, String domain, Date startTime, Date endTime, GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException
+    ;
+
+    Optional<TimeSerieStat> getPixelSpecificDomainStats(String oAuthAccessToken, String pixelID, String domain, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, DimensionEnum dimension,
+                                                        PivotEnum pivot, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
+                                                        ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
+                                                        Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapExecutionException, SnapResponseErrorException
+    ;
 }// SnapStatsInterface

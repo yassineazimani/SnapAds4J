@@ -15,29 +15,26 @@
  */
 package snapads4j.audit.logs;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.audit.logs.AuditLog;
 
+import java.util.List;
+
 public interface SnapAuditLogsInterface {
 
     List<AuditLog> fetchChangeLogsForCampaign(String oAuthAccessToken, String campaignId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
-    
-    List<AuditLog> fetchChangeLogsForAdSquad(String oAuthAccessToken, String adSquadId)throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
-    
+            SnapExecutionException;
+
+    List<AuditLog> fetchChangeLogsForAdSquad(String oAuthAccessToken, String adSquadId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+            SnapExecutionException;
+
     List<AuditLog> fetchChangeLogsForAd(String oAuthAccessToken, String adId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
-    
-    List<AuditLog> fetchChangeLogsForCreative(String oAuthAccessToken, String creativeId)throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
+            SnapExecutionException;
+
+    List<AuditLog> fetchChangeLogsForCreative(String oAuthAccessToken, String creativeId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+            SnapExecutionException;
 
 }// SnapAuditLogsInterface

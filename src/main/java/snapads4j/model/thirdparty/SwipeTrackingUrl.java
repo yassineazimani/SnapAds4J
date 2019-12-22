@@ -20,6 +20,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SwipeTrackingUrl extends TrackingUrl{
+public class SwipeTrackingUrl extends TrackingUrl {
 
 }// SwipeTrackingUrl

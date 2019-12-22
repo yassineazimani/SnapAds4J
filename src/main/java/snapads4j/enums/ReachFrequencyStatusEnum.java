@@ -23,10 +23,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Yassine
  */
 public enum ReachFrequencyStatusEnum {
-  @JsonProperty("PENDING")
-  PENDING,
-  @JsonProperty("ACTIVE")
-  ACTIVE,
-  @JsonProperty("FAILED")
-  FAILED
+    @JsonProperty("PENDING")
+    PENDING,
+    @JsonProperty("ACTIVE")
+    ACTIVE,
+    @JsonProperty("FAILED")
+    FAILED
 } // ReachFrequencyStatusEnum

@@ -15,13 +15,10 @@
  */
 package snapads4j.model.fundingsource;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -29,6 +26,9 @@ import snapads4j.enums.CreditCardTypeEnum;
 import snapads4j.enums.CurrencyEnum;
 import snapads4j.enums.FundingSourceTypeEnum;
 import snapads4j.enums.StatusEnum;
+import snapads4j.model.AbstractSnapModel;
+
+import java.util.Date;
 
 /**
  * FundingSource
@@ -39,93 +39,118 @@ import snapads4j.enums.StatusEnum;
 @Setter
 @ToString
 @JsonInclude(Include.NON_EMPTY)
-public class FundingSource {
+public class FundingSource extends AbstractSnapModel {
 
-  /** Funding Source ID */
-  private String id;
+    /**
+     * Start date of the COUPON
+     */
+    @JsonProperty("start_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    private Date startDate;
 
-  /** Last date update of funding source */
-  @JsonProperty("updated_at")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date updatedAt;
+    /**
+     * End date of the COUPON
+     */
+    @JsonProperty("end_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    private Date endDate;
 
-  /** Creation date update of funding source */
-  @JsonProperty("created_at")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date createdAt;
+    /**
+     * Funding Source type
+     */
+    private FundingSourceTypeEnum type;
 
-  /** Start date of the COUPON */
-  @JsonProperty("start_date")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date startDate;
+    /**
+     * Funding source status
+     */
+    private StatusEnum status;
 
-  /** End date of the COUPON */
-  @JsonProperty("end_date")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date endDate;
+    /**
+     * Total Budget (micro-currency)
+     */
+    @JsonProperty("total_budget_micro")
+    private Double totalBudgetMicro;
 
-  /** Funding Source type */
-  private FundingSourceTypeEnum type;
+    /**
+     * Budget Spent (micro-currency)
+     */
+    @JsonProperty("budget_spent_micro")
+    private Double budgetSpentMicro;
 
-  /** Funding source status */
-  private StatusEnum status;
+    /**
+     * Total available credit
+     */
+    @JsonProperty("available_credit_micro")
+    private Double availableCreditMicro;
 
-  /** Total Budget (micro-currency) */
-  @JsonProperty("total_budget_micro")
-  private Double totalBudgetMicro;
+    /**
+     * Credit Card Type
+     */
+    @JsonProperty("card_type")
+    private CreditCardTypeEnum cardType;
 
-  /** Budget Spent (micro-currency) */
-  @JsonProperty("budget_spent_micro")
-  private Double budgetSpentMicro;
+    /**
+     * Last 4 digits of the Credit Card
+     */
+    @JsonProperty("last_4")
+    private Integer last4;
 
-  /** Total available credit */
-  @JsonProperty("available_credit_micro")
-  private Double availableCreditMicro;
+    /**
+     * Expiration year of the Credit Card
+     */
+    @JsonProperty("expiration_year")
+    private Integer expirationYear;
 
-  /** Credit Card Type */
-  @JsonProperty("card_type")
-  private CreditCardTypeEnum cardType;
+    /**
+     * Expiration month of the Credit Card
+     */
+    @JsonProperty("expiration_month")
+    private Integer expirationMonth;
 
-  /** Last 4 digits of the Credit Card */
-  @JsonProperty("last_4")
-  private Integer last4;
+    /**
+     * Name of the Credit Card
+     */
+    @JsonProperty("name")
+    private String nameCreditCard;
 
-  /** Expiration year of the Credit Card */
-  @JsonProperty("expiration_year")
-  private Integer expirationYear;
+    /**
+     * Organization ID
+     */
+    @JsonProperty("organization_id")
+    private String organizationId;
 
-  /** Expiration month of the Credit Card */
-  @JsonProperty("expiration_month")
-  private Integer expirationMonth;
+    /**
+     * Account currency
+     */
+    private CurrencyEnum currency;
 
-  /** Name of the Credit Card */
-  @JsonProperty("name")
-  private String nameCreditCard;
+    /**
+     * Daily spend limit for Credit Card (micro-currency)
+     */
+    @JsonProperty("daily_spend_limit_micro")
+    private Double dailySpendLimitMicro;
 
-  /** Organization ID */
-  @JsonProperty("organization_id")
-  private String organizationId;
+    /**
+     * Currency for the daily_spend_limit_micro
+     */
+    @JsonProperty("daily_spend_currency")
+    private CurrencyEnum dailySpendCurrency;
 
-  /** Account currency */
-  private CurrencyEnum currency;
+    /**
+     * Value of the COUPON (micro-currency)
+     */
+    @JsonProperty("value_micro")
+    private Double valueMicro;
 
-  /** Daily spend limit for Credit Card (micro-currency) */
-  @JsonProperty("daily_spend_limit_micro")
-  private Double dailySpendLimitMicro;
+    /**
+     * Email associated with Paypal
+     */
+    @JsonProperty("email")
+    private String emailPaypal;
 
-  /** Currency for the daily_spend_limit_micro */
-  @JsonProperty("daily_spend_currency")
-  private CurrencyEnum dailySpendCurrency;
-
-  /** Value of the COUPON (micro-currency) */
-  @JsonProperty("value_micro")
-  private Double valueMicro;
-
-  /** Email associated with Paypal */
-  @JsonProperty("email")
-  private String emailPaypal;
-
-  /** Credit Account Type */
-  @JsonProperty("credit_account_type")
-  private String creditAccountType;
+    /**
+     * Credit Account Type
+     */
+    @JsonProperty("credit_account_type")
+    private String creditAccountType;
 } // FundingSource

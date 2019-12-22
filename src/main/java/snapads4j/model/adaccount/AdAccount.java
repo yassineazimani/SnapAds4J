@@ -15,20 +15,20 @@
  */
 package snapads4j.model.adaccount;
 
-import java.util.Date;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import snapads4j.enums.AdAccountTypeEnum;
 import snapads4j.enums.CurrencyEnum;
 import snapads4j.enums.StatusEnum;
+import snapads4j.model.AbstractSnapModel;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * AdAccount
@@ -39,55 +39,62 @@ import snapads4j.enums.StatusEnum;
 @Setter
 @ToString
 @JsonInclude(Include.NON_EMPTY)
-public class AdAccount {
+public class AdAccount extends AbstractSnapModel {
 
-  /** AD Account ID */
-  private String id;
+    /**
+     * AD Account Status
+     */
+    private StatusEnum status;
 
-  /** Last date update of ad account */
-  @JsonProperty("updated_at")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date updatedAt;
+    /**
+     * Name of the Advertiser
+     */
+    private String advertiser;
 
-  /** Creation date update of ad account */
-  @JsonProperty("created_at")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date createdAt;
+    /**
+     * Account currency
+     */
+    private CurrencyEnum currency;
 
-  /** AD Account Status */
-  private StatusEnum status;
+    /**
+     * Account name
+     */
+    private String name;
 
-  /** Name of the Advertiser */
-  private String advertiser;
+    /**
+     * Organization ID
+     */
+    @JsonProperty("organization_id")
+    private String organizationId;
 
-  /** Account currency */
-  private CurrencyEnum currency;
+    /**
+     * Timezone
+     */
+    private String timezone;
 
-  /** Account name */
-  private String name;
+    private AdAccountTypeEnum type;
 
-  /** Organization ID */
-  @JsonProperty("organization_id")
-  private String organizationId;
+    /**
+     * Lifetime Spend Limit for Account (micro currency)
+     */
+    @JsonProperty("lifetime_spend_cap_micro")
+    private Double lifetimeSpendCapMicro;
 
-  /** Timezone */
-  private String timezone;
+    /**
+     * Organization ID of the Advertiser selected
+     */
+    @JsonProperty("advertiser_organization_id")
+    private String advertiserOrganizationId;
 
-  private AdAccountTypeEnum type;
+    /**
+     * List of Funding Source IDs
+     */
+    @JsonProperty("funding_source_ids")
+    private List<String> fundingSourceIds;
 
-  /** Lifetime Spend Limit for Account (micro currency) */
-  @JsonProperty("lifetime_spend_cap_micro")
-  private Double lifetimeSpendCapMicro;
-
-  /** Organization ID of the Advertiser selected */
-  @JsonProperty("advertiser_organization_id")
-  private String advertiserOrganizationId;
-
-  /** List of Funding Source IDs */
-  @JsonProperty("funding_source_ids")
-  private List<String> fundingSourceIds;
-
-  /** Brand name */
-  @JsonProperty("brand_name")
-  private String brandName;
+    /**
+     * Brand name
+     */
+    @JsonProperty("brand_name")
+    private String brandName;
 } // AdAccount

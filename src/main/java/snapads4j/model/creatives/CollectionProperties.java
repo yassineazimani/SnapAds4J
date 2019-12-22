@@ -16,7 +16,6 @@
 package snapads4j.model.creatives;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,13 +27,13 @@ public class CollectionProperties {
 
     @JsonProperty("interaction_zone_id")
     private String interactionZoneId;
-    
+
     @JsonProperty("default_fallback_interaction_type")
     private String defaultFallbackInteractionType;
-    
+
     @JsonProperty("web_view_properties")
     private WebViewProperties webViewProperties;
-    
+
     @JsonProperty("deep_link_properties")
     private DeepLinkProperties deepLinkProperties;
 }// CollectionProperties

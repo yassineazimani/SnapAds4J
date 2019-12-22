@@ -18,11 +18,15 @@ package snapads4j.enums;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public enum AdAccountTypeEnum {
-  /** Direct */
-  @JsonProperty("DIRECT")
-  DIRECT,
+    /**
+     * Direct
+     */
+    @JsonProperty("DIRECT")
+    DIRECT,
 
-  /** Partner */
-  @JsonProperty("PARTNER")
-  PARTNER
+    /**
+     * Partner
+     */
+    @JsonProperty("PARTNER")
+    PARTNER
 } // AdAccountTypeEnum

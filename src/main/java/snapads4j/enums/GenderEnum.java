@@ -23,8 +23,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Yassine
  */
 public enum GenderEnum {
-  @JsonProperty("MALE")
-  MALE,
-  @JsonProperty("FEMALE")
-  FEMALE
+    @JsonProperty("MALE")
+    MALE,
+    @JsonProperty("FEMALE")
+    FEMALE
 } // GenderEnum

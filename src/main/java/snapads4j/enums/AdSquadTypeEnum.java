@@ -23,8 +23,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Yassine
  */
 public enum AdSquadTypeEnum {
-  @JsonProperty("SNAP_ADS")
-  SNAP_ADS,
-  @JsonProperty("LENS")
-  LENS
+    @JsonProperty("SNAP_ADS")
+    SNAP_ADS,
+    @JsonProperty("LENS")
+    LENS
 }// AdSquadTypeEnum

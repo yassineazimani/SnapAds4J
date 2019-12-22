@@ -15,15 +15,15 @@
  */
 package snapads4j.organization;
 
-import java.util.List;
-import java.util.Optional;
-
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.organization.Organization;
 import snapads4j.model.organization.OrganizationWithAdAccount;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * SnapOrganizationInterface
@@ -32,45 +32,45 @@ import snapads4j.model.organization.OrganizationWithAdAccount;
  */
 public interface SnapOrganizationInterface {
 
-  /**
-   * Get all organizations
-   *
-   * @see <a href="https://developers.snapchat.com/api/docs/#organizations">All organizations</a>
-   * @param oAuthAccessToken oAuthAccessToken
-   * @return All organizations {@link Organization}
-   * @throws SnapResponseErrorException
-   * @throws SnapOAuthAccessTokenException
- * @throws SnapExecutionException 
-   */
-  List<Organization> getAllOrganizations(String oAuthAccessToken)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapExecutionException;
+    /**
+     * Get all organizations
+     *
+     * @param oAuthAccessToken oAuthAccessToken
+     * @return All organizations {@link Organization}
+     * @throws SnapResponseErrorException
+     * @throws SnapOAuthAccessTokenException
+     * @throws SnapExecutionException
+     * @see <a href="https://developers.snapchat.com/api/docs/#organizations">All organizations</a>
+     */
+    List<Organization> getAllOrganizations(String oAuthAccessToken)
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapExecutionException;
 
-  /**
-   * Get specific organization
-   *
-   * @see <a href="https://developers.snapchat.com/api/docs/#organizations">Specific
-   *     organization</a>
-   * @param oAuthAccessToken oAuthAccessToken
-   * @param id Organization ID
-   * @return specific organization {@link Organization}
-   * @throws SnapResponseErrorException
-   * @throws SnapOAuthAccessTokenException
- * @throws SnapExecutionException 
-   */
-  Optional<Organization> getSpecificOrganization(String oAuthAccessToken, String id)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
+    /**
+     * Get specific organization
+     *
+     * @param oAuthAccessToken oAuthAccessToken
+     * @param id               Organization ID
+     * @return specific organization {@link Organization}
+     * @throws SnapResponseErrorException
+     * @throws SnapOAuthAccessTokenException
+     * @throws SnapExecutionException
+     * @see <a href="https://developers.snapchat.com/api/docs/#organizations">Specific
+     * organization</a>
+     */
+    Optional<Organization> getSpecificOrganization(String oAuthAccessToken, String id)
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
-  /**
-   * Get all organizations with ad accounts
-   *
-   * @see <a href="https://developers.snapchat.com/api/docs/#organizations">All organizations with
-   *     ad accounts</a>
-   * @param oAuthAccessToken oAuthAccessToken
-   * @return All organizations {@link Organization}
-   * @throws SnapResponseErrorException
-   * @throws SnapOAuthAccessTokenException
- * @throws SnapExecutionException 
-   */
-  List<OrganizationWithAdAccount> getAllOrganizationsWithAdAccounts(String oAuthAccessToken)
-      throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapExecutionException;
+    /**
+     * Get all organizations with ad accounts
+     *
+     * @param oAuthAccessToken oAuthAccessToken
+     * @return All organizations {@link Organization}
+     * @throws SnapResponseErrorException
+     * @throws SnapOAuthAccessTokenException
+     * @throws SnapExecutionException
+     * @see <a href="https://developers.snapchat.com/api/docs/#organizations">All organizations with
+     * ad accounts</a>
+     */
+    List<OrganizationWithAdAccount> getAllOrganizationsWithAdAccounts(String oAuthAccessToken)
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapExecutionException;
 } // SnapOrganizationInterface

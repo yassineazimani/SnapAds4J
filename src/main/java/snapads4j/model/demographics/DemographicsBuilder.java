@@ -15,9 +15,9 @@
  */
 package snapads4j.model.demographics;
 
-import java.util.List;
-
 import snapads4j.enums.GenderEnum;
+
+import java.util.List;
 
 /**
  * Used to build Demographics instance (${@link Demographics})
@@ -26,90 +26,92 @@ import snapads4j.enums.GenderEnum;
  */
 public class DemographicsBuilder {
 
-  private Demographics demographicsInstance;
+    private final Demographics demographicsInstance;
 
-  /** Constructor */
-  public DemographicsBuilder() {
-    this.demographicsInstance = new Demographics();
-  } // DemographicsBuilder()
+    /**
+     * Constructor
+     */
+    public DemographicsBuilder() {
+        this.demographicsInstance = new Demographics();
+    } // DemographicsBuilder()
 
-  public DemographicsBuilder setId(Long id) {
-    this.demographicsInstance.setId(id);
-    return this;
-  } // setId()
+    public DemographicsBuilder setId(Long id) {
+        this.demographicsInstance.setId(id);
+        return this;
+    } // setId()
 
-  /**
-   * Set Age groups Example : "10-30", "35-45"
-   *
-   * @param ageGroups
-   * @return
-   */
-  public DemographicsBuilder setAgeGroups(List<String> ageGroups) {
-    this.demographicsInstance.setAgeGroups(ageGroups);
-    return this;
-  } // setAgeGroups()
+    /**
+     * Set Age groups Example : "10-30", "35-45"
+     *
+     * @param ageGroups
+     * @return
+     */
+    public DemographicsBuilder setAgeGroups(List<String> ageGroups) {
+        this.demographicsInstance.setAgeGroups(ageGroups);
+        return this;
+    } // setAgeGroups()
 
-  /**
-   * Set min age
-   *
-   * @param minAge
-   * @return
-   */
-  public DemographicsBuilder setMinAge(Double minAge) {
-    this.demographicsInstance.setMinAge(minAge);
-    return this;
-  } // setMinAge()
+    /**
+     * Set min age
+     *
+     * @param minAge
+     * @return
+     */
+    public DemographicsBuilder setMinAge(Double minAge) {
+        this.demographicsInstance.setMinAge(minAge);
+        return this;
+    } // setMinAge()
 
-  /**
-   * Set max age
-   *
-   * @param maxAge
-   * @return
-   */
-  public DemographicsBuilder setMaxAge(Double maxAge) {
-    this.demographicsInstance.setMaxAge(maxAge);
-    return this;
-  } // setMaxAge()
+    /**
+     * Set max age
+     *
+     * @param maxAge
+     * @return
+     */
+    public DemographicsBuilder setMaxAge(Double maxAge) {
+        this.demographicsInstance.setMaxAge(maxAge);
+        return this;
+    } // setMaxAge()
 
-  /**
-   * Set gender
-   *
-   * @param gender
-   * @return
-   */
-  public DemographicsBuilder setGender(GenderEnum gender) {
-    this.demographicsInstance.setGender(gender);
-    return this;
-  } // setMaxAge()
+    /**
+     * Set gender
+     *
+     * @param gender
+     * @return
+     */
+    public DemographicsBuilder setGender(GenderEnum gender) {
+        this.demographicsInstance.setGender(gender);
+        return this;
+    } // setMaxAge()
 
-  /**
-   * Set languages Example : "es", "fr"
-   *
-   * @param languages
-   * @return
-   */
-  public DemographicsBuilder setLanguages(List<String> languages) {
-    this.demographicsInstance.setLanguages(languages);
-    return this;
-  } // setLanguages()
+    /**
+     * Set languages Example : "es", "fr"
+     *
+     * @param languages
+     * @return
+     */
+    public DemographicsBuilder setLanguages(List<String> languages) {
+        this.demographicsInstance.setLanguages(languages);
+        return this;
+    } // setLanguages()
 
-  /**
-   * Set advanced demographics Example : "DLXD_100", "DLXD_300"
-   *
-   * @param advancedDemographics
-   * @return
-   */
-  public DemographicsBuilder setAdvancedDemographics(List<String> advancedDemographics) {
-    this.demographicsInstance.setAdvancedDemographics(advancedDemographics);
-    return this;
-  } // setAdvancedDemographics()
+    /**
+     * Set advanced demographics Example : "DLXD_100", "DLXD_300"
+     *
+     * @param advancedDemographics
+     * @return
+     */
+    public DemographicsBuilder setAdvancedDemographics(List<String> advancedDemographics) {
+        this.demographicsInstance.setAdvancedDemographics(advancedDemographics);
+        return this;
+    } // setAdvancedDemographics()
 
-  /**
-   * Get Demographics (Request) instance.
-   *
-   * @return ${@link Demographics}
-   */
-  public Demographics build() {
-    return this.demographicsInstance;
-  } // build()
+    /**
+     * Get Demographics (Request) instance.
+     *
+     * @return ${@link Demographics}
+     */
+    public Demographics build() {
+        return this.demographicsInstance;
+    } // build()
 } // DemographicsBuilder

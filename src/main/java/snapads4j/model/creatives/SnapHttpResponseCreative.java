@@ -15,15 +15,14 @@
  */
 package snapads4j.model.creatives;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
+import snapads4j.model.SnapHttpResponse;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import snapads4j.model.SnapHttpResponse;
 
 /**
  * SnapHttpResponseCreative
@@ -36,12 +35,12 @@ public class SnapHttpResponseCreative extends SnapHttpResponse {
     private List<SnapInnerCreative> creatives;
 
     public Optional<Creative> getSpecificCreative() {
-      return (CollectionUtils.isNotEmpty(creatives) && creatives.get(0) != null)
-          ? Optional.of(creatives.get(0).getCreative())
-          : Optional.empty();
+        return (CollectionUtils.isNotEmpty(creatives) && creatives.get(0) != null)
+                ? Optional.of(creatives.get(0).getCreative())
+                : Optional.empty();
     } // getSpecificCreative()
 
     public List<Creative> getAllCreatives() {
-      return creatives.stream().map(org -> org.getCreative()).collect(Collectors.toList());
+        return creatives.stream().map(SnapInnerCreative::getCreative).collect(Collectors.toList());
     } // getAllCreatives()
 }// SnapHttpResponseCreative

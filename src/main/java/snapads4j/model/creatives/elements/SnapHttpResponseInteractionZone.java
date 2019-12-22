@@ -15,17 +15,15 @@
  */
 package snapads4j.model.creatives.elements;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
+import snapads4j.model.SnapHttpResponse;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import snapads4j.model.SnapHttpResponse;
 
 /**
  * SnapHttpResponseCreative
@@ -35,18 +33,18 @@ import snapads4j.model.SnapHttpResponse;
 @Setter
 @NoArgsConstructor
 public class SnapHttpResponseInteractionZone extends SnapHttpResponse {
-    
+
     @JsonProperty("interaction_zones")
     private List<SnapInnerInteractionZone> interactionZones;
 
     public Optional<InteractionZone> getSpecificInteractionZone() {
-      return (CollectionUtils.isNotEmpty(interactionZones) && interactionZones.get(0) != null)
-          ? Optional.of(interactionZones.get(0).getInteractionZone())
-          : Optional.empty();
+        return (CollectionUtils.isNotEmpty(interactionZones) && interactionZones.get(0) != null)
+                ? Optional.of(interactionZones.get(0).getInteractionZone())
+                : Optional.empty();
     } // getSpecificInteractionZone()
 
     public List<InteractionZone> getInteractionZones() {
-      return interactionZones.stream().map(org -> org.getInteractionZone()).collect(Collectors.toList());
+        return interactionZones.stream().map(SnapInnerInteractionZone::getInteractionZone).collect(Collectors.toList());
     } // getInteractionZones()
-    
+
 }// SnapHttpResponseInteractionZone

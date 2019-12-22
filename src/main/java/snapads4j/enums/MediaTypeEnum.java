@@ -18,13 +18,19 @@ package snapads4j.enums;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public enum MediaTypeEnum {
-    /** Video */
+    /**
+     * Video
+     */
     @JsonProperty("VIDEO")
     VIDEO,
-    /** Image */
+    /**
+     * Image
+     */
     @JsonProperty("IMAGE")
     IMAGE,
-    /** Lens package */
+    /**
+     * Lens package
+     */
     @JsonProperty("LENS_PACKAGE")
     LENS_PACKAGE
 }// MediaTypeEnum

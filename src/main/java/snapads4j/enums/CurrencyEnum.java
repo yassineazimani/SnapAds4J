@@ -23,23 +23,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Yassine
  */
 public enum CurrencyEnum {
-  /** Dollars */
-  @JsonProperty("USD")
-  USD,
+    /**
+     * Dollars
+     */
+    @JsonProperty("USD")
+    USD,
 
-  /** Euros */
-  @JsonProperty("EUR")
-  EUR,
+    /**
+     * Euros
+     */
+    @JsonProperty("EUR")
+    EUR,
 
-  /** Great Britain pounds */
-  @JsonProperty("GBP")
-  GBP,
+    /**
+     * Great Britain pounds
+     */
+    @JsonProperty("GBP")
+    GBP,
 
-  /** Australian dollars */
-  @JsonProperty("AUD")
-  AUD,
+    /**
+     * Australian dollars
+     */
+    @JsonProperty("AUD")
+    AUD,
 
-  /** Canadian dollars */
-  @JsonProperty("CAD")
-  CAD
+    /**
+     * Canadian dollars
+     */
+    @JsonProperty("CAD")
+    CAD
 } // CurrencyEnum

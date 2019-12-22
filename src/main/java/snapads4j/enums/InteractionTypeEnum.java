@@ -18,9 +18,7 @@ package snapads4j.enums;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * 
  * @author yassine
- *
  */
 public enum InteractionTypeEnum {
     /**

@@ -15,10 +15,10 @@
  */
 package snapads4j.model.media;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import lombok.Getter;
 
 @Getter
 public class SnapHttpRequestMedia {
@@ -26,10 +26,10 @@ public class SnapHttpRequestMedia {
     private List<CreativeMedia> media;
 
     public SnapHttpRequestMedia() {
-	this.media = new ArrayList<>();
+        this.media = new ArrayList<>();
     }// SnapHttpRequestMedia()
 
     public void addMedia(CreativeMedia media) {
-	this.media.add(media);
+        this.media.add(media);
     }// addMedia()
 }// SnapHttpRequestMedia

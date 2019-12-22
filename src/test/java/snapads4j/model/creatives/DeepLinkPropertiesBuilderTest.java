@@ -28,27 +28,27 @@ public class DeepLinkPropertiesBuilderTest {
 
     @Before
     public void init() {
-	builder = new DeepLinkPropertiesBuilder();
+        builder = new DeepLinkPropertiesBuilder();
     }// init()
-    
+
     @Test
     public void test_builder() {
-	builder.setAndroidAppUrl("androidAppUrl");
-	builder.setAppName("appName");
-	builder.setDeepLinkUri("deepLinkUri");
-	builder.setFallbackType("fallbackType");
-	builder.setIconMediaId("iconMediaId");
-	builder.setIosAppId("iosAppId");
-	builder.setWebViewFallbackUrl("webViewFallbackUrl");
-	DeepLinkProperties properties = builder.build();
-	Assertions.assertThat(properties).isNotNull();
-	Assertions.assertThat(properties.toString()).isNotEmpty();
-	Assertions.assertThat(properties.getAndroidAppUrl()).isEqualTo("androidAppUrl");
-	Assertions.assertThat(properties.getAppName()).isEqualTo("appName");
-	Assertions.assertThat(properties.getDeepLinkUri()).isEqualTo("deepLinkUri");
-	Assertions.assertThat(properties.getFallbackType()).isEqualTo("fallbackType");
-	Assertions.assertThat(properties.getIconMediaId()).isEqualTo("iconMediaId");
-	Assertions.assertThat(properties.getIosAppId()).isEqualTo("iosAppId");
-	Assertions.assertThat(properties.getWebViewFallbackUrl()).isEqualTo("webViewFallbackUrl");
+        builder.setAndroidAppUrl("androidAppUrl");
+        builder.setAppName("appName");
+        builder.setDeepLinkUri("deepLinkUri");
+        builder.setFallbackType("fallbackType");
+        builder.setIconMediaId("iconMediaId");
+        builder.setIosAppId("iosAppId");
+        builder.setWebViewFallbackUrl("webViewFallbackUrl");
+        DeepLinkProperties properties = builder.build();
+        Assertions.assertThat(properties).isNotNull();
+        Assertions.assertThat(properties.toString()).isNotEmpty();
+        Assertions.assertThat(properties.getAndroidAppUrl()).isEqualTo("androidAppUrl");
+        Assertions.assertThat(properties.getAppName()).isEqualTo("appName");
+        Assertions.assertThat(properties.getDeepLinkUri()).isEqualTo("deepLinkUri");
+        Assertions.assertThat(properties.getFallbackType()).isEqualTo("fallbackType");
+        Assertions.assertThat(properties.getIconMediaId()).isEqualTo("iconMediaId");
+        Assertions.assertThat(properties.getIosAppId()).isEqualTo("iosAppId");
+        Assertions.assertThat(properties.getWebViewFallbackUrl()).isEqualTo("webViewFallbackUrl");
     }// test_builder()
 }// DeepLinkPropertiesBuilderTest

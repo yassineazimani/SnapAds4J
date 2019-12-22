@@ -15,32 +15,31 @@
  */
 package snapads4j.model.creatives;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import snapads4j.model.SnapHttpResponse;
 
+import java.util.Date;
+
 @Getter
 @Setter
-public class SnapHttpResponsePreviewCreative extends SnapHttpResponse{
+public class SnapHttpResponsePreviewCreative extends SnapHttpResponse {
 
     @JsonProperty("request_status")
     private String requestStatus;
-    
+
     @JsonProperty("request_id")
     private String requestId;
-    
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     @JsonProperty("expires_at")
     private Date expiresAt;
-    
+
     @JsonProperty("snapcode_link")
     private String snapCodeLink;
-    
+
     @JsonProperty("creative_id")
     private String creativeId;
 

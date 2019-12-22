@@ -19,8 +19,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * PackagingStatusEnum
- * @author yassine
  *
+ * @author yassine
  */
 public enum PackagingStatusEnum {
     /**

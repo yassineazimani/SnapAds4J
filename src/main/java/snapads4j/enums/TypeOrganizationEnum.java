@@ -23,11 +23,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Yassine
  */
 public enum TypeOrganizationEnum {
-  /** Enterprise */
-  @JsonProperty("ENTERPRISE")
-  ENTERPRISE,
+    /**
+     * Enterprise
+     */
+    @JsonProperty("ENTERPRISE")
+    ENTERPRISE,
 
-  /** Partner */
-  @JsonProperty("PARTNER")
-  PARTNER
+    /**
+     * Partner
+     */
+    @JsonProperty("PARTNER")
+    PARTNER
 } // TypeUserEnum

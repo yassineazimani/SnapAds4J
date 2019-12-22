@@ -15,10 +15,10 @@
  */
 package snapads4j.model.ads;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import lombok.Getter;
 
 @Getter
 public class SnapHttpRequestAd {
@@ -26,10 +26,10 @@ public class SnapHttpRequestAd {
     private List<Ad> ads;
 
     public SnapHttpRequestAd() {
-	this.ads = new ArrayList<>();
+        this.ads = new ArrayList<>();
     }// SnapHttpRequestAd()
 
     public void addAd(Ad ad) {
-	this.ads.add(ad);
+        this.ads.add(ad);
     }// addAd()
 }// SnapHttpRequestAd

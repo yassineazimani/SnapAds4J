@@ -15,11 +15,11 @@
  */
 package snapads4j.model.adsquads;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.Getter;
 import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SnapHttpRequestAdSquad
@@ -30,14 +30,16 @@ import lombok.ToString;
 @ToString
 public class SnapHttpRequestAdSquad {
 
-  private List<AdSquad> adsquads;
+    private List<AdSquad> adsquads;
 
-  /** Constructor */
-  public SnapHttpRequestAdSquad() {
-    this.adsquads = new ArrayList<>();
-  } // SnapHttpRequestAdSquad
+    /**
+     * Constructor
+     */
+    public SnapHttpRequestAdSquad() {
+        this.adsquads = new ArrayList<>();
+    } // SnapHttpRequestAdSquad
 
-  public void addAdSquad(AdSquad adSquad) {
-    this.adsquads.add(adSquad);
-  } // addAdSquad()
+    public void addAdSquad(AdSquad adSquad) {
+        this.adsquads.add(adSquad);
+    } // addAdSquad()
 } // SnapHttpRequestAdSquad

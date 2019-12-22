@@ -15,14 +15,13 @@
  */
 package snapads4j.model.campaigns;
 
+import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
+import snapads4j.model.SnapHttpResponse;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-
-import lombok.Setter;
-import snapads4j.model.SnapHttpResponse;
 
 /**
  * SnapHttpResponseCampaign
@@ -30,17 +29,17 @@ import snapads4j.model.SnapHttpResponse;
  * @author Yassine
  */
 @Setter
-public class SnapHttpResponseCampaign extends SnapHttpResponse{
+public class SnapHttpResponseCampaign extends SnapHttpResponse {
 
-  private List<SnapInnerCampaign> campaigns;
+    private List<SnapInnerCampaign> campaigns;
 
-  public Optional<Campaign> getSpecificCampaign() {
-    return (CollectionUtils.isNotEmpty(campaigns) && campaigns.get(0) != null)
-        ? Optional.of(campaigns.get(0).getCampaign())
-        : Optional.empty();
-  } // getSpecificCampaign()
+    public Optional<Campaign> getSpecificCampaign() {
+        return (CollectionUtils.isNotEmpty(campaigns) && campaigns.get(0) != null)
+                ? Optional.of(campaigns.get(0).getCampaign())
+                : Optional.empty();
+    } // getSpecificCampaign()
 
-  public List<Campaign> getAllCampaigns() {
-    return campaigns.stream().map(org -> org.getCampaign()).collect(Collectors.toList());
-  } // getAllCampaigns()
+    public List<Campaign> getAllCampaigns() {
+        return campaigns.stream().map(SnapInnerCampaign::getCampaign).collect(Collectors.toList());
+    } // getAllCampaigns()
 } // SnapHttpResponseCampaign

@@ -19,25 +19,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * TopSnapCropPositionEnum
- * @author yassine
  *
+ * @author yassine
  */
 public enum TopSnapCropPositionEnum {
     /**
      * OPTIMIZED
      */
     @JsonProperty("OPTIMIZED")
-    OPTIMIZED, 
+    OPTIMIZED,
     /**
      * MIDDLE
      */
     @JsonProperty("MIDDLE")
-    MIDDLE, 
+    MIDDLE,
     /**
      * TOP
      */
     @JsonProperty("TOP")
-    TOP, 
+    TOP,
     /**
      * BOTTOM
      */

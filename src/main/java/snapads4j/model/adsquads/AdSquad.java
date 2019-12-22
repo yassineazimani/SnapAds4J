@@ -15,26 +15,18 @@
  */
 package snapads4j.model.adsquads;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import snapads4j.enums.AdSquadTypeEnum;
-import snapads4j.enums.BillingEventEnum;
-import snapads4j.enums.ContentTypeEnum;
-import snapads4j.enums.DeliveryConstraintEnum;
-import snapads4j.enums.OptimizationGoalEnum;
-import snapads4j.enums.PacingTypeEnum;
-import snapads4j.enums.PlacementEnum;
-import snapads4j.enums.ReachFrequencyStatusEnum;
-import snapads4j.enums.StatusEnum;
+import snapads4j.enums.*;
+import snapads4j.model.AbstractSnapModel;
 import snapads4j.model.targeting.Targeting;
+
+import java.util.Date;
 
 /**
  * AdSquad
@@ -45,120 +37,159 @@ import snapads4j.model.targeting.Targeting;
 @Setter
 @ToString
 @JsonInclude(Include.NON_EMPTY)
-public class AdSquad {
+public class AdSquad extends AbstractSnapModel {
 
-  /** Ad Squad ID */
-  private String id;
-  
-  @JsonProperty("created_at")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date createdAt;
+    /**
+     * Campaign ID
+     */
+    @JsonProperty("campaign_id")
+    private String campaignId;
 
-  @JsonProperty("updated_at")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date updatedAt;
+    /**
+     * Max Bid (micro-currency)
+     */
+    @JsonProperty("bid_micro")
+    private Double bidMicro;
 
-  /** Campaign ID */
-  @JsonProperty("campaign_id")
-  private String campaignId;
+    /**
+     * Billing Event
+     */
+    @JsonProperty("billing_event")
+    private BillingEventEnum billingEvent;
 
-  /** Max Bid (micro-currency) */
-  @JsonProperty("bid_micro")
-  private Double bidMicro;
+    /**
+     * Daily Budget (micro-currency)
+     */
+    @JsonProperty("daily_budget_micro")
+    private Double dailyBudgetMicro;
 
-  /** Billing Event */
-  @JsonProperty("billing_event")
-  private BillingEventEnum billingEvent;
+    /**
+     * Lifetime budget (micro-currency)
+     */
+    @JsonProperty("lifetime_budget_micro")
+    private Double lifetimeBudgetMicro;
 
-  /** Daily Budget (micro-currency) */
-  @JsonProperty("daily_budget_micro")
-  private Double dailyBudgetMicro;
+    /**
+     * End time
+     */
+    @JsonProperty("end_time")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    private Date endTime;
 
-  /** Lifetime budget (micro-currency) */
-  @JsonProperty("lifetime_budget_micro")
-  private Double lifetimeBudgetMicro;
+    /**
+     * Ad Squad name
+     */
+    private String name;
 
-  /** End time */
-  @JsonProperty("end_time")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date endTime;
+    /**
+     * Optimization Goal
+     */
+    @JsonProperty("optimization_goal")
+    private OptimizationGoalEnum optimizationGoal;
 
-  /** Ad Squad name */
-  private String name;
+    /**
+     * Placement
+     */
+    private PlacementEnum placement;
 
-  /** Optimization Goal */
-  @JsonProperty("optimization_goal")
-  private OptimizationGoalEnum optimizationGoal;
+    /**
+     * Start time
+     */
+    @JsonProperty("start_time")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    private Date startTime;
 
-  /** Placement */
-  private PlacementEnum placement;
+    /**
+     * Ad Squad status
+     */
+    private StatusEnum status;
 
-  /** Start time */
-  @JsonProperty("start_time")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date startTime;
+    /**
+     * Targeting spec
+     */
+    private Targeting targeting;
 
-  /** Ad Squad status */
-  private StatusEnum status;
+    /**
+     * Ad Squad Type
+     */
+    private AdSquadTypeEnum type;
 
-  /** Targeting spec */
-  private Targeting targeting;
+    /**
+     * Content Type to be included
+     */
+    @JsonProperty("included_content_types")
+    private ContentTypeEnum includedContentTypes;
 
-  /** Ad Squad Type */
-  private AdSquadTypeEnum type;
+    /**
+     * Content Type to be excluded
+     */
+    @JsonProperty("excluded_content_types")
+    private ContentTypeEnum excludedContentTypes;
 
-  /** Content Type to be included */
-  @JsonProperty("included_content_types")
-  private ContentTypeEnum includedContentTypes;
+    /**
+     * The frequency cap and exclusion spec
+     */
+    @JsonProperty("cap_and_exclusion_config")
+    private CapAndExclusionConfig capAndExclusionConfig;
 
-  /** Content Type to be excluded */
-  @JsonProperty("excluded_content_types")
-  private ContentTypeEnum excludedContentTypes;
+    /**
+     * The schedule for running ads
+     */
+    @JsonProperty("ad_scheduling_config")
+    private AdSchedulingConfig adSchedulingConfig;
 
-  /** The frequency cap and exclusion spec */
-  @JsonProperty("cap_and_exclusion_config")
-  private CapAndExclusionConfig capAndExclusionConfig;
+    /**
+     * Allow Snapchat to automatically set the bid to recommended amount
+     */
+    @JsonProperty("auto_bid")
+    private boolean autoBid;
 
-  /** The schedule for running ads */
-  @JsonProperty("ad_scheduling_config")
-  private AdSchedulingConfig adSchedulingConfig;
+    /**
+     * Allows Snapchat to adjust the bid aiming to keep your average CPA at or below the amount set by
+     * the ad set end date
+     */
+    @JsonProperty("target_bid")
+    private boolean targetBid;
 
-  /** Allow Snapchat to automatically set the bid to recommended amount */
-  @JsonProperty("auto_bid")
-  private boolean autoBid;
+    /**
+     * Pixel to be associated with the Ad Squad
+     */
+    @JsonProperty("pixel_id")
+    private String pixelId;
 
-  /**
-   * Allows Snapchat to adjust the bid aiming to keep your average CPA at or below the amount set by
-   * the ad set end date
-   */
-  @JsonProperty("target_bid")
-  private boolean targetBid;
+    /**
+     * Status of the reach and frequency booking
+     */
+    @JsonProperty("reach_and_frequency_status")
+    private ReachFrequencyStatusEnum reachAndFrequencyStatus;
 
-  /** Pixel to be associated with the Ad Squad */
-  @JsonProperty("pixel_id")
-  private String pixelId;
+    /**
+     * Type of delivery
+     */
+    @JsonProperty("delivery_constraint")
+    private DeliveryConstraintEnum deliveryConstraint;
 
-  /** Status of the reach and frequency booking */
-  @JsonProperty("reach_and_frequency_status")
-  private ReachFrequencyStatusEnum reachAndFrequencyStatus;
+    /**
+     * Status of the reach and frequency booking
+     */
+    @JsonProperty("reach_goal")
+    private Double reachGoal;
 
-  /** Type of delivery */
-  @JsonProperty("delivery_constraint")
-  private DeliveryConstraintEnum deliveryConstraint;
+    /**
+     * Reach goal as specified in the Forecasting request
+     */
+    @JsonProperty("impression_goal")
+    private Double impressionGoal;
 
-  /** Status of the reach and frequency booking */
-  @JsonProperty("reach_goal")
-  private Double reachGoal;
+    /**
+     * Advanced placement options
+     */
+    @JsonProperty("placement_v2")
+    private PlacementV2 placementV2;
 
-  /** Reach goal as specified in the Forecasting request */
-  @JsonProperty("impression_goal")
-  private Double impressionGoal;
-
-  /** Advanced placement options */
-  @JsonProperty("placement_v2")
-  private PlacementV2 placementV2;
-
-  /** Type of pacing */
-  @JsonProperty("pacing_type")
-  private PacingTypeEnum pacingType;
+    /**
+     * Type of pacing
+     */
+    @JsonProperty("pacing_type")
+    private PacingTypeEnum pacingType;
 } // AdSquad

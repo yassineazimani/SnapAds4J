@@ -16,7 +16,6 @@
 package snapads4j.model.audience.match;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,7 +24,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class UserForAudienceSegment {
-    
+
     @JsonProperty("number_uploaded_users")
     private int numberUploadedUsers;
 

@@ -17,7 +17,6 @@ package snapads4j.model.audience.size;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,11 +27,11 @@ public class AudienceSize {
 
     @JsonProperty("ad_squad_id")
     private String adSquadId;
-    
+
     @JsonProperty("audience_size_minimum")
     private long audienceSizeMinimum;
-    
+
     @JsonProperty("audience_size_maximum")
     private long audienceSizeMaximum;
-    
+
 }// AudienceSize

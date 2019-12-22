@@ -15,13 +15,12 @@
  */
 package snapads4j.model.creatives;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,17 +28,17 @@ import lombok.ToString;
 public class WebViewProperties {
 
     private String url;
-    
+
     @JsonProperty("allow_snap_javascript_sdk")
     private boolean allowSnapJavascriptSdk;
-    
+
     @JsonProperty("block_preload")
     private boolean blockPreload;
-    
+
     @JsonProperty("use_immersive_mode")
     private boolean useImmersiveMode;
-    
+
     @JsonProperty("deep_link_urls")
     private List<String> deepLinkUrls;
-    
+
 }// WebViewProperties

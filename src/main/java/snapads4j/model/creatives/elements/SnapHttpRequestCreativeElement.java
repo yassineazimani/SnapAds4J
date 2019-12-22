@@ -15,10 +15,10 @@
  */
 package snapads4j.model.creatives.elements;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import lombok.Getter;
 
 @Getter
 public class SnapHttpRequestCreativeElement {
@@ -26,11 +26,11 @@ public class SnapHttpRequestCreativeElement {
     private List<CreativeElement> creatives;
 
     public SnapHttpRequestCreativeElement() {
-	this.creatives = new ArrayList<>();
+        this.creatives = new ArrayList<>();
     }// SnapHttpRequestCreativeElement()
 
     public void addCreative(CreativeElement c) {
-	this.creatives.add(c);
+        this.creatives.add(c);
     }// addCreative()
-    
+
 }// SnapHttpRequestCreativeElement

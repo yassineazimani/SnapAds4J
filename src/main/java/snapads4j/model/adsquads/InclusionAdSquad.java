@@ -15,13 +15,12 @@
  */
 package snapads4j.model.adsquads;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.List;
 
 /**
  * InclusionAdSquad
@@ -33,6 +32,6 @@ import lombok.ToString;
 @ToString
 public class InclusionAdSquad {
 
-  @JsonProperty("content_types")
-  private List<String> contentTypes;
+    @JsonProperty("content_types")
+    private List<String> contentTypes;
 } // InclusionAdSquad

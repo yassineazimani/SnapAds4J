@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * CreativeToCreateEnum
- * @author yassine
  *
+ * @author yassine
  */
 public enum CreativeToCreateEnum {
     @JsonProperty("DEFAULT")

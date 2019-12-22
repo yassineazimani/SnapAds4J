@@ -1,13 +1,12 @@
 package snapads4j.model.config;
 
-import java.net.URI;
-
+import lombok.NoArgsConstructor;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 
-import lombok.NoArgsConstructor;
+import java.net.URI;
 
 @NoArgsConstructor
-public class HttpDeleteWithBody  extends HttpEntityEnclosingRequestBase{
+public class HttpDeleteWithBody extends HttpEntityEnclosingRequestBase {
 
     public static final String METHOD_NAME = "DELETE";
 
@@ -20,5 +19,5 @@ public class HttpDeleteWithBody  extends HttpEntityEnclosingRequestBase{
         super();
         setURI(URI.create(uri));
     }// HttpDeleteWithBody()
-    
+
 }// HttpDeleteWithBody

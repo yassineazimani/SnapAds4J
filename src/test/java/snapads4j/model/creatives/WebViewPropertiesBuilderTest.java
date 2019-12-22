@@ -25,36 +25,36 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class WebViewPropertiesBuilderTest {
 
     private WebViewPropertiesBuilder builder;
-    
+
     @Before
     public void init() {
-	builder = new WebViewPropertiesBuilder();
+        builder = new WebViewPropertiesBuilder();
     }// init()
-    
+
     @Test
     public void test_web_builder_1() {
-	String url = "http://www.snapchat.com";
-	builder.setUrl(url);
-	WebViewProperties properties = builder.build();
-	Assertions.assertThat(properties).isNotNull();
-	Assertions.assertThat(properties.getUrl()).isNotNull();
-	Assertions.assertThat(properties.getUrl()).isNotEmpty();
-	Assertions.assertThat(properties.getUrl()).isEqualTo(url);
+        String url = "http://www.snapchat.com";
+        builder.setUrl(url);
+        WebViewProperties properties = builder.build();
+        Assertions.assertThat(properties).isNotNull();
+        Assertions.assertThat(properties.getUrl()).isNotNull();
+        Assertions.assertThat(properties.getUrl()).isNotEmpty();
+        Assertions.assertThat(properties.getUrl()).isEqualTo(url);
     }// test_web_builder_1()
-    
+
     @Test
     public void test_web_builder_2() {
-	builder.setAllowSnapJavascriptSdk(true);
-	WebViewProperties properties = builder.build();
-	Assertions.assertThat(properties).isNotNull();
-	Assertions.assertThat(properties.isAllowSnapJavascriptSdk()).isTrue();
+        builder.setAllowSnapJavascriptSdk(true);
+        WebViewProperties properties = builder.build();
+        Assertions.assertThat(properties).isNotNull();
+        Assertions.assertThat(properties.isAllowSnapJavascriptSdk()).isTrue();
     }// test_web_builder_2()
-    
+
     @Test
     public void test_web_builder_3() {
-	builder.setBlockPreload(false);
-	WebViewProperties properties = builder.build();
-	Assertions.assertThat(properties).isNotNull();
-	Assertions.assertThat(properties.isBlockPreload()).isFalse();
+        builder.setBlockPreload(false);
+        WebViewProperties properties = builder.build();
+        Assertions.assertThat(properties).isNotNull();
+        Assertions.assertThat(properties.isBlockPreload()).isFalse();
     }// test_web_builder_3()
 }// WebViewPropertiesBuilderTest

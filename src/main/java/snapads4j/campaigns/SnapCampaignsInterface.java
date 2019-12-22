@@ -15,17 +15,16 @@
  */
 package snapads4j.campaigns;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.Optional;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.campaigns.Campaign;
+
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * SnapCampaignsInterface
@@ -37,90 +36,90 @@ public interface SnapCampaignsInterface {
     /**
      * Create a campaign.
      *
-     * @see <a href=
-     *      "https://developers.snapchat.com/api/docs/#create-a-campaign">Create
-     *      campaign</a>
      * @param oAuthAccessToken oAuthAccessToken
      * @param campaign         Campaign to create {@link Campaign}
+     * @return Campaign created
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
-     * @return Campaign created
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
+     * @see <a href=
+     * "https://developers.snapchat.com/api/docs/#create-a-campaign">Create
+     * campaign</a>
      */
     Optional<Campaign> createCampaign(String oAuthAccessToken, Campaign campaign)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+            JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 
     /**
      * Update a campaign.
      *
-     * @see <a href=
-     *      "https://developers.snapchat.com/api/docs/#update-a-campaign">Update
-     *      campaign</a>
      * @param oAuthAccessToken oAuthAccessToken
      * @param campaign         Campaign to update {@link Campaign}
+     * @return Campaign updated
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
-     * @return Campaign updated
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
+     * @see <a href=
+     * "https://developers.snapchat.com/api/docs/#update-a-campaign">Update
+     * campaign</a>
      */
     Optional<Campaign> updateCampaign(String oAuthAccessToken, Campaign campaign)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+            JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 
     /**
      * Get all campaigns of an ad account.
      *
-     * @see <a href=
-     *      "https://developers.snapchat.com/api/docs/#get-all-campaigns">Get all
-     *      campaigns</a>
      * @param oAuthAccessToken oAuthAccessToken
      * @param adAccountId      AD Account ID
+     * @return all campaigns {@link Campaign}
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
-     * @return all campaigns {@link Campaign}
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
+     * @see <a href=
+     * "https://developers.snapchat.com/api/docs/#get-all-campaigns">Get all
+     * campaigns</a>
      */
     List<Campaign> getAllCampaigns(String oAuthAccessToken, String adAccountId)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
     /**
      * Get specific campaign.
      *
-     * @see <a href=
-     *      "https://developers.snapchat.com/api/docs/#get-a-specific-campaign">Get
-     *      specific campaign</a>
      * @param oAuthAccessToken oAuthAccessToken
      * @param id               Campaign ID to get
+     * @return campaign {@link Campaign}
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
-     * @return campaign {@link Campaign}
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
+     * @see <a href=
+     * "https://developers.snapchat.com/api/docs/#get-a-specific-campaign">Get
+     * specific campaign</a>
      */
     Optional<Campaign> getSpecificCampaign(String oAuthAccessToken, String id)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
     /**
      * Delete a specific campaign.
      *
-     * @see <a href=
-     *      "https://developers.snapchat.com/api/docs/#delete-a-specific-campaign">Delete
-     *      campaign</a>
      * @param oAuthAccessToken oAuthAccessToken
      * @param id               Campaign ID to delete
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
+     * @see <a href=
+     * "https://developers.snapchat.com/api/docs/#delete-a-specific-campaign">Delete
+     * campaign</a>
      */
     void deleteCampaign(String oAuthAccessToken, String id)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 } // SnapCampaignsInterface

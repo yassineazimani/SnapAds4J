@@ -18,10 +18,14 @@ package snapads4j.enums;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public enum MediaStatusTypeEnum {
-    /** Pending upload */
+    /**
+     * Pending upload
+     */
     @JsonProperty("PENDING_UPLOAD")
     PENDING_UPLOAD,
-    /** Ready */
+    /**
+     * Ready
+     */
     @JsonProperty("READY")
     READY
 }// MediaStatusTypeEnum

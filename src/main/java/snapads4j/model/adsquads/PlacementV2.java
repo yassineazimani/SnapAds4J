@@ -16,7 +16,6 @@
 package snapads4j.model.adsquads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -34,19 +33,29 @@ import snapads4j.enums.SnapChatPositionsEnum;
 @ToString
 public class PlacementV2 {
 
-  /** Configuration for placement */
-  private ConfigPlacementEnum config;
+    /**
+     * Configuration for placement
+     */
+    private ConfigPlacementEnum config;
 
-  /** The platform to place the ads */
-  private PlatformPlacementEnum platforms;
+    /**
+     * The platform to place the ads
+     */
+    private PlatformPlacementEnum platforms;
 
-  /** List of possible placement positions */
-  @JsonProperty("snapchat_positions")
-  private SnapChatPositionsEnum snapchatPositions;
+    /**
+     * List of possible placement positions
+     */
+    @JsonProperty("snapchat_positions")
+    private SnapChatPositionsEnum snapchatPositions;
 
-  /** Details about the content types to be included */
-  private InclusionAdSquad inclusion;
+    /**
+     * Details about the content types to be included
+     */
+    private InclusionAdSquad inclusion;
 
-  /** Details about the content types to be included */
-  private ExclusionAdSquad exclusion;
+    /**
+     * Details about the content types to be included
+     */
+    private ExclusionAdSquad exclusion;
 } // PlacementV2

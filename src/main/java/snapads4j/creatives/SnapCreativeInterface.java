@@ -15,98 +15,90 @@
  */
 package snapads4j.creatives;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.creatives.Creative;
 
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 public interface SnapCreativeInterface {
-    
+
     /**
      * This function will create a Creative.
-     * 
+     *
      * @param oAuthAccessToken
-     * @param creative Creative to create
+     * @param creative         Creative to create
      * @return creative created
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
      */
     Optional<Creative> createCreative(String oAuthAccessToken, Creative creative)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
-    
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+            JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
+
     /**
      * This function will update the specified Creative.
-     * 
+     *
      * <b>The API expects the entire object when updating any fields.</b>
-     * 
+     *
      * @param oAuthAccessToken
-     * @param creative Creative to update
+     * @param creative         Creative to update
      * @return creative updated
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
      * @throws JsonProcessingException
      * @throws UnsupportedEncodingException
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
      */
     Optional<Creative> updateCreative(String oAuthAccessToken, Creative creative)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
-    
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+            JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
+
     /**
-     * 
      * @param oAuthAccessToken
      * @param id
      * @return
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
-     * @throws JsonProcessingException
-     * @throws UnsupportedEncodingException
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
      */
     Optional<Creative> getSpecificCreative(String oAuthAccessToken, String id)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
-    
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+            SnapExecutionException;
+
     /**
-     * 
      * @param oAuthAccessToken
      * @param adAccountId
      * @return
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
-     * @throws JsonProcessingException
-     * @throws UnsupportedEncodingException
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
      */
     List<Creative> getAllCreative(String oAuthAccessToken, String adAccountId)
-	    throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
-	    JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
-    
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+            SnapExecutionException;
+
     /**
-     * 
      * @param oAuthAccessToken
      * @param creativeID
      * @return
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
-     * @throws SnapExecutionException 
+     * @throws SnapExecutionException
      */
     Map<String, Object> getPreviewCreative(String oAuthAccessToken, String creativeID) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 }// SnapCreativeInterface

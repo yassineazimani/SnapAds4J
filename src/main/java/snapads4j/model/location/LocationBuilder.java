@@ -15,10 +15,10 @@
  */
 package snapads4j.model.location;
 
-import java.util.List;
-
 import snapads4j.enums.OperationEnum;
 import snapads4j.enums.ProximityUnitEnum;
+
+import java.util.List;
 
 /**
  * Used to build Location instance ({@link Location})
@@ -27,38 +27,38 @@ import snapads4j.enums.ProximityUnitEnum;
  */
 public class LocationBuilder {
 
-  private Location locationInstance;
+    private final Location locationInstance;
 
-  public LocationBuilder() {
-    this.locationInstance = new Location();
-  } // LocationBuilder()
+    public LocationBuilder() {
+        this.locationInstance = new Location();
+    } // LocationBuilder()
 
-  public LocationBuilder setLocationTypes(List<String> locationTypes) {
-    this.locationInstance.setLocationTypes(locationTypes);
-    return this;
-  } // setLocationTypes()
+    public LocationBuilder setLocationTypes(List<String> locationTypes) {
+        this.locationInstance.setLocationTypes(locationTypes);
+        return this;
+    } // setLocationTypes()
 
-  public LocationBuilder setCircles(List<Circle> circles) {
-    this.locationInstance.setCircles(circles);
-    return this;
-  } // setCircles()
+    public LocationBuilder setCircles(List<Circle> circles) {
+        this.locationInstance.setCircles(circles);
+        return this;
+    } // setCircles()
 
-  public LocationBuilder setOperation(OperationEnum operation) {
-    this.locationInstance.setOperation(operation);
-    return this;
-  } // setOperation()
+    public LocationBuilder setOperation(OperationEnum operation) {
+        this.locationInstance.setOperation(operation);
+        return this;
+    } // setOperation()
 
-  public LocationBuilder setUnit(ProximityUnitEnum proximityUnit) {
-    this.locationInstance.setProximityUnit(proximityUnit);
-    return this;
-  } // setUnit()
+    public LocationBuilder setUnit(ProximityUnitEnum proximityUnit) {
+        this.locationInstance.setProximityUnit(proximityUnit);
+        return this;
+    } // setUnit()
 
-  public LocationBuilder setProximity(Integer proximity) {
-    this.locationInstance.setProximity(proximity);
-    return this;
-  } // setProximity()
+    public LocationBuilder setProximity(Integer proximity) {
+        this.locationInstance.setProximity(proximity);
+        return this;
+    } // setProximity()
 
-  public Location build() {
-    return this.locationInstance;
-  } // build()
+    public Location build() {
+        return this.locationInstance;
+    } // build()
 } // LocationBuilder

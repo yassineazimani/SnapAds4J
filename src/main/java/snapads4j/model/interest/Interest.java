@@ -15,15 +15,14 @@
  */
 package snapads4j.model.interest;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,8 +30,8 @@ import lombok.ToString;
 @JsonInclude(Include.NON_EMPTY)
 public class Interest {
 
-  private Integer id;
+    private Integer id;
 
-  @JsonProperty("category_id")
-  private List<String> categoryIds;
+    @JsonProperty("category_id")
+    private List<String> categoryIds;
 } // Interest

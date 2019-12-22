@@ -15,14 +15,14 @@
  */
 package snapads4j.model.user;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import snapads4j.model.AbstractSnapModel;
+
+import java.util.Date;
 
 /**
  * Authenticated user informations
@@ -32,29 +32,22 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class AuthenticatedUser {
+public class AuthenticatedUser extends AbstractSnapModel {
 
-  /** User ID */
-  private String id;
+    /**
+     * Email
+     */
+    private String email;
 
-  /** Last date update of the user */
-  @JsonProperty("updated_at")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date updatedAt;
+    /**
+     * Organization ID
+     */
+    @JsonProperty("organization_id")
+    private String organizationId;
 
-  /** Date creation of the user */
-  @JsonProperty("created_at")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  private Date createdAt;
-
-  /** Email */
-  private String email;
-
-  /** Organization ID */
-  @JsonProperty("organization_id")
-  private String organizationId;
-
-  /** Display name */
-  @JsonProperty("display_name")
-  private String displayName;
+    /**
+     * Display name
+     */
+    @JsonProperty("display_name")
+    private String displayName;
 } // AuthenticatedUser

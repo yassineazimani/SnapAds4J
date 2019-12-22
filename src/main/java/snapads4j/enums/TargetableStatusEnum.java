@@ -23,13 +23,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Yassine
  */
 public enum TargetableStatusEnum {
-  /** This segment won’t work when used in targeting */
-  @JsonProperty("NOT_READY")
-  NOT_READY,
-  /** This segment doesn’t have enough users to target */
-  @JsonProperty("TOO_FEW_USERS")
-  TOO_FEW_USERS,
-  /** Segment is ready to target */
-  @JsonProperty("READY")
-  READY
+    /**
+     * This segment won’t work when used in targeting
+     */
+    @JsonProperty("NOT_READY")
+    NOT_READY,
+    /**
+     * This segment doesn’t have enough users to target
+     */
+    @JsonProperty("TOO_FEW_USERS")
+    TOO_FEW_USERS,
+    /**
+     * Segment is ready to target
+     */
+    @JsonProperty("READY")
+    READY
 } // TargetableStatusEnum

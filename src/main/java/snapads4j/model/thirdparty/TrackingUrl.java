@@ -16,7 +16,6 @@
 package snapads4j.model.thirdparty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,11 +23,11 @@ import lombok.Setter;
 @Setter
 public class TrackingUrl {
 
-	private String trackingUrlMetadata;
-	
-	private String expandedTrackingUrl;
-	
-	@JsonProperty("tracking_url")
-	private String trackingUrl;
-	
+    private String trackingUrlMetadata;
+
+    private String expandedTrackingUrl;
+
+    @JsonProperty("tracking_url")
+    private String trackingUrl;
+
 }// TrackingUrl

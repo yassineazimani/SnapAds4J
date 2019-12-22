@@ -17,8 +17,8 @@ package snapads4j.enums;
 
 /**
  * Enum represents types images for SnapChat
- * @author yassine
  *
+ * @author yassine
  */
 public enum MediaTypeImageEnum {
     /**

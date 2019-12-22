@@ -16,7 +16,6 @@
 package snapads4j.model.adsquads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,6 +25,6 @@ import lombok.ToString;
 @ToString
 public class HourOfDay {
 
-  @JsonProperty("hour_of_day")
-  private int[] hourOfDay;
+    @JsonProperty("hour_of_day")
+    private int[] hourOfDay;
 } // HourOfDay

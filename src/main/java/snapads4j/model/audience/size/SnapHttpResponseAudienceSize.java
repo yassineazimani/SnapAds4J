@@ -15,10 +15,7 @@
  */
 package snapads4j.model.audience.size;
 
-import java.util.Optional;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,9 +24,9 @@ import snapads4j.model.SnapHttpResponse;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SnapHttpResponseAudienceSize extends SnapHttpResponse{
+public class SnapHttpResponseAudienceSize extends SnapHttpResponse {
 
     @JsonProperty("audience_size")
-    private Optional<AudienceSize> audienceSize;
-    
+    private AudienceSize audienceSize;
+
 }// SnapHttpResponseAudienceSize

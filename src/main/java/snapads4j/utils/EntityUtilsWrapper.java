@@ -15,17 +15,16 @@
  */
 package snapads4j.utils;
 
-import java.io.IOException;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
 
+import java.io.IOException;
+
 /**
  * Pour contourner Mockito (impossible d'utiliser Powermock)
- * 
- * @author yassine
  *
+ * @author yassine
  */
 public class EntityUtilsWrapper {
 
@@ -33,14 +32,12 @@ public class EntityUtilsWrapper {
     } // EntityUtilsWrapper()
 
     public String toString(HttpEntity httpEntity) {
-	try {
-	    return EntityUtils.toString(httpEntity);
-	} catch (ParseException e) {
-	    e.printStackTrace();
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-	return "";
-    }
+        try {
+            return EntityUtils.toString(httpEntity);
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }// toString()
 
 }// EntityUtilsWrapper

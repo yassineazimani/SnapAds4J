@@ -21,7 +21,7 @@ import snapads4j.model.SnapHttpResponse;
 
 @Getter
 @Setter
-public class SnapHttpResponseFinalUploadMedia extends SnapHttpResponse{
+public class SnapHttpResponseFinalUploadMedia extends SnapHttpResponse {
 
     private CreativeMedia result;
 

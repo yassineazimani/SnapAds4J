@@ -19,17 +19,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Metrics granularity
- * 
- * @author yassine
  *
+ * @author yassine
  */
 public enum GranularityEnum {
     @JsonProperty("TOTAL")
-    TOTAL, 
+    TOTAL,
     @JsonProperty("DAY")
-    DAY, 
+    DAY,
     @JsonProperty("HOUR")
-    HOUR, 
+    HOUR,
     @JsonProperty("LIFETIME")
     LIFETIME
 }// GranularityEnum

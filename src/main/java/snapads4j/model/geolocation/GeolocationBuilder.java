@@ -15,9 +15,9 @@
  */
 package snapads4j.model.geolocation;
 
-import java.util.List;
-
 import snapads4j.enums.OperationEnum;
+
+import java.util.List;
 
 /**
  * Used to build Geolocation instance ({@link GeoLocation})
@@ -26,33 +26,33 @@ import snapads4j.enums.OperationEnum;
  */
 public class GeolocationBuilder {
 
-  private GeoLocation geoLocationInstance;
+    private final GeoLocation geoLocationInstance;
 
-  public GeolocationBuilder() {
-    this.geoLocationInstance = new GeoLocation();
-  } // GeolocationBuilder()
+    public GeolocationBuilder() {
+        this.geoLocationInstance = new GeoLocation();
+    } // GeolocationBuilder()
 
-  public GeolocationBuilder setCountryCode(String countryCode) {
-    this.geoLocationInstance.setCountryCode(countryCode);
-    return this;
-  } // setCountryCode()
+    public GeolocationBuilder setCountryCode(String countryCode) {
+        this.geoLocationInstance.setCountryCode(countryCode);
+        return this;
+    } // setCountryCode()
 
-  public GeolocationBuilder setPostalCodes(List<Integer> postalCodes) {
-    this.geoLocationInstance.setPostalCodes(postalCodes);
-    return this;
-  } // setPostalCodes()
+    public GeolocationBuilder setPostalCodes(List<Integer> postalCodes) {
+        this.geoLocationInstance.setPostalCodes(postalCodes);
+        return this;
+    } // setPostalCodes()
 
-  public GeolocationBuilder setMetroIds(List<Integer> metroIds) {
-    this.geoLocationInstance.setMetroIds(metroIds);
-    return this;
-  } // setMetroIds()
+    public GeolocationBuilder setMetroIds(List<Integer> metroIds) {
+        this.geoLocationInstance.setMetroIds(metroIds);
+        return this;
+    } // setMetroIds()
 
-  public GeolocationBuilder setOperation(OperationEnum operation) {
-    this.geoLocationInstance.setOperation(operation);
-    return this;
-  } // setOperation()
+    public GeolocationBuilder setOperation(OperationEnum operation) {
+        this.geoLocationInstance.setOperation(operation);
+        return this;
+    } // setOperation()
 
-  public GeoLocation build() {
-    return this.geoLocationInstance;
-  } // build()
+    public GeoLocation build() {
+        return this.geoLocationInstance;
+    } // build()
 } // GeolocationBuilder

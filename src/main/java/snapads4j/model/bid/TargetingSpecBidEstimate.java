@@ -17,7 +17,6 @@ package snapads4j.model.bid;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import snapads4j.enums.OptimizationGoalEnum;
@@ -28,11 +27,15 @@ import snapads4j.model.targeting.Targeting;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class TargetingSpecBidEstimate {
 
-    /** Optimization Goal */
+    /**
+     * Optimization Goal
+     */
     @JsonProperty("optimization_goal")
     private OptimizationGoalEnum optimizationGoal;
-    
-    /** Targeting spec */
+
+    /**
+     * Targeting spec
+     */
     private Targeting targeting;
-    
+
 }// TargetingSpecBidEstimate()
