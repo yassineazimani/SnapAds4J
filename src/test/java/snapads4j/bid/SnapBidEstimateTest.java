@@ -112,16 +112,16 @@ public class SnapBidEstimateTest {
     }// test_get_bid_estimate_by_squad_id_should_success()
 
     @Test
-    public void test_get_bid_estimate_by_squad_id_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_get_bid_estimate_by_squad_id_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId(null, this.adSquadId))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_get_bid_estimate_by_squad_id_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_get_bid_estimate_by_squad_id_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_get_bid_estimate_by_squad_id_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_get_bid_estimate_by_squad_id_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> snapBidEstimate.getBidEstimateByAdSquadId("", this.adSquadId))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_get_bid_estimate_by_squad_id_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_get_bid_estimate_by_squad_id_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
     public void test_get_bid_estimate_by_squad_id_should_throw_SnapExecutionException() throws
@@ -272,16 +272,16 @@ public class SnapBidEstimateTest {
     }// test_get_bid_estimate_by_squad_spec_should_success()
 
     @Test
-    public void test_get_bid_estimate_by_squad_spec_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_get_bid_estimate_by_squad_spec_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec(null, this.adAccountId, targetingSpecBidEstimate))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_get_bid_estimate_by_squad_spec_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_get_bid_estimate_by_squad_spec_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_get_bid_estimate_by_squad_spec_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_get_bid_estimate_by_squad_spec_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> snapBidEstimate.getBidEstimateBySquadSpec("", this.adAccountId, targetingSpecBidEstimate))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_get_bid_estimate_by_squad_spec_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_get_bid_estimate_by_squad_spec_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
     public void test_get_bid_estimate_by_squad_spec_should_throw_SnapArgumentException_when_ad_account_id_is_null() {

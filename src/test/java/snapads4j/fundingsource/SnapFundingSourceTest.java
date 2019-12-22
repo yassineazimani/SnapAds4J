@@ -140,32 +140,44 @@ public class SnapFundingSourceTest {
     } // test_getAllFundingSource_should_success()
 
     @Test
-    public void test_getAllFundingSource_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_getAllFundingSource_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> fundingSource.getAllFundingSource(null, organizationId))
                 .isInstanceOf(SnapOAuthAccessTokenException.class)
                 .hasMessage("The OAuthAccessToken is required");
-    } // test_getAllFundingSource_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_getAllFundingSource_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_getAllFundingSource_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_getAllFundingSource_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> fundingSource.getAllFundingSource("", organizationId))
                 .isInstanceOf(SnapOAuthAccessTokenException.class)
                 .hasMessage("The OAuthAccessToken is required");
-    } // test_getAllFundingSource_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_getAllFundingSource_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
-    public void test_getAllFundingSource_should_throw_SnapArgumentException_1() {
+    public void test_getAllFundingSource_should_throw_SnapArgumentException_when_organization_id_is_null() {
         assertThatThrownBy(() -> fundingSource.getAllFundingSource(oAuthAccessToken, null))
                 .isInstanceOf(SnapArgumentException.class)
                 .hasMessage("The organization ID is required");
-    } // test_getAllFundingSource_should_throw_SnapArgumentException_1()
+    } // test_getAllFundingSource_should_throw_SnapArgumentException_when_organization_id_is_null()
 
     @Test
-    public void test_getAllFundingSource_should_throw_SnapArgumentException_2() {
+    public void test_getAllFundingSource_should_throw_SnapArgumentException_when_organization_id_is_empty() {
         assertThatThrownBy(() -> fundingSource.getAllFundingSource(oAuthAccessToken, ""))
                 .isInstanceOf(SnapArgumentException.class)
                 .hasMessage("The organization ID is required");
-    } // test_getAllFundingSource_should_throw_SnapArgumentException_2()
+    } // test_getAllFundingSource_should_throw_SnapArgumentException_when_organization_id_is_empty()
+
+    @Test
+    public void should_throw_exception_400_getAllFundingSource()
+            throws IOException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+        Mockito.when(statusLine.getStatusCode()).thenReturn(400);
+        Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+        Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+        assertThatThrownBy(() -> fundingSource.getAllFundingSource(oAuthAccessToken, organizationId))
+                .isInstanceOf(SnapResponseErrorException.class)
+                .hasMessage("Bad Request");
+    } // should_throw_exception_400_getAllFundingSource()
 
     @Test
     public void should_throw_exception_401_getAllFundingSource()
@@ -327,32 +339,32 @@ public class SnapFundingSourceTest {
     } // test_getSpecificFundingSource_should_success()
 
     @Test
-    public void test_getSpecificFundingSource_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_getSpecificFundingSource_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> fundingSource.getSpecificFundingSource(null, id))
                 .isInstanceOf(SnapOAuthAccessTokenException.class)
                 .hasMessage("The OAuthAccessToken is required");
-    } // test_getSpecificFundingSource_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_getSpecificFundingSource_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_getSpecificFundingSource_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_getSpecificFundingSource_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> fundingSource.getSpecificFundingSource("", id))
                 .isInstanceOf(SnapOAuthAccessTokenException.class)
                 .hasMessage("The OAuthAccessToken is required");
-    } // test_getSpecificFundingSource_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_getSpecificFundingSource_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
-    public void test_getSpecificFundingSource_should_throw_SnapArgumentException_1() {
+    public void test_getSpecificFundingSource_should_throw_SnapArgumentException_when_funding_source_id_is_null() {
         assertThatThrownBy(() -> fundingSource.getSpecificFundingSource(oAuthAccessToken, null))
                 .isInstanceOf(SnapArgumentException.class)
                 .hasMessage("The Funding source ID is required");
-    } // test_getSpecificFundingSource_should_throw_SnapArgumentException_1()
+    } // test_getSpecificFundingSource_should_throw_SnapArgumentException_when_funding_source_id_is_null()
 
     @Test
-    public void test_getSpecificFundingSource_should_throw_SnapArgumentException_2() {
+    public void test_getSpecificFundingSource_should_throw_SnapArgumentException_when_funding_source_id_is_empty() {
         assertThatThrownBy(() -> fundingSource.getSpecificFundingSource(oAuthAccessToken, ""))
                 .isInstanceOf(SnapArgumentException.class)
                 .hasMessage("The Funding source ID is required");
-    } // test_getSpecificFundingSource_should_throw_SnapArgumentException_2()
+    } // test_getSpecificFundingSource_should_throw_SnapArgumentException_when_funding_source_id_is_empty()
 
     @Test
     public void should_throw_exception_401_getSpecificFundingSource()

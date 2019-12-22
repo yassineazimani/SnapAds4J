@@ -101,16 +101,16 @@ public class SnapUserTest {
     } // test_aboutMe_should_success()
 
     @Test
-    public void test_aboutMe_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_aboutMe_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> snapUser.aboutMe(null)).isInstanceOf(SnapOAuthAccessTokenException.class)
                 .hasMessage("The OAuthAccessToken is required");
-    } // test_aboutMe_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_aboutMe_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_aboutMe_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_aboutMe_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> snapUser.aboutMe("")).isInstanceOf(SnapOAuthAccessTokenException.class)
                 .hasMessage("The OAuthAccessToken is required");
-    } // test_aboutMe_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_aboutMe_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
     public void should_throw_exception_401_aboutMe() throws IOException {

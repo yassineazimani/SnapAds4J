@@ -134,16 +134,16 @@ public class SnapAdAccountTest {
     } // test_getAllAdAccounts_should_success()
 
     @Test
-    public void test_getAlladAccount_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_getAlladAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> adAccount.getAllAdAccounts(null, organizationId))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_getAlladAccount_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_getAlladAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_getAlladAccount_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_getAlladAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> adAccount.getAllAdAccounts("", organizationId))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_getAlladAccount_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_getAlladAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
     public void test_getAlladAccount_ad_should_throw_SnapExecutionException() throws IOException {
@@ -153,16 +153,16 @@ public class SnapAdAccountTest {
     }// test_getAlladAccount_ad_should_throw_SnapExecutionException()
 
     @Test
-    public void test_getAlladAccount_should_throw_SnapArgumentException_1() {
+    public void test_getAlladAccount_should_throw_SnapArgumentException_when_organization_id_is_null() {
         assertThatThrownBy(() -> adAccount.getAllAdAccounts(oAuthAccessToken, null))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The organization ID is required");
-    } // test_getAlladAccount_should_throw_SnapArgumentException_1()
+    } // test_getAlladAccount_should_throw_SnapArgumentException_when_organization_id_is_null()
 
     @Test
-    public void test_getAlladAccount_should_throw_SnapArgumentException_2() {
+    public void test_getAlladAccount_should_throw_SnapArgumentException_when_organization_id_is_empty() {
         assertThatThrownBy(() -> adAccount.getAllAdAccounts(oAuthAccessToken, ""))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The organization ID is required");
-    } // test_getAlladAccount_should_throw_SnapArgumentException_2()
+    } // test_getAlladAccount_should_throw_SnapArgumentException_when_organization_id_is_empty()
 
     @Test
     public void should_throw_exception_400_getAlladAccount() throws IOException {
@@ -328,16 +328,16 @@ public class SnapAdAccountTest {
     } // test_getSpecificAdAccount_should_success()
 
     @Test
-    public void test_getSpecificAdAccount_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_getSpecificAdAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> adAccount.getSpecificAdAccount(null, id))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_getSpecificAdAccount_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_getSpecificAdAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_getSpecificAdAccount_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_getSpecificAdAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> adAccount.getSpecificAdAccount("", id))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_getSpecificAdAccount_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_getSpecificAdAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
     public void test_getSpecificAdAccount_ad_should_throw_SnapExecutionException() throws IOException {
@@ -347,16 +347,16 @@ public class SnapAdAccountTest {
     }// test_getSpecificAdAccount_ad_should_throw_SnapExecutionException()
 
     @Test
-    public void test_getSpecificAdAccount_should_throw_SnapArgumentException_1() {
+    public void test_getSpecificAdAccount_should_throw_SnapArgumentException_when_ad_account_id_is_null() {
         assertThatThrownBy(() -> adAccount.getSpecificAdAccount(oAuthAccessToken, null))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
-    } // test_getSpecificAdAccount_should_throw_SnapArgumentException_1()
+    } // test_getSpecificAdAccount_should_throw_SnapArgumentException_when_ad_account_id_is_null()
 
     @Test
-    public void test_getSpecificAdAccount_should_throw_SnapArgumentException_2() {
+    public void test_getSpecificAdAccount_should_throw_SnapArgumentException_when_ad_account_id_is_empty() {
         assertThatThrownBy(() -> adAccount.getSpecificAdAccount(oAuthAccessToken, ""))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
-    } // test_getSpecificAdAccount_should_throw_SnapArgumentException_2()
+    } // test_getSpecificAdAccount_should_throw_SnapArgumentException_when_ad_account_id_is_empty()
 
     @Test
     public void should_throw_exception_401_getSpecificAdAccount() throws IOException {
@@ -511,16 +511,16 @@ public class SnapAdAccountTest {
     } // test_updateAdAccount_should_success()
 
     @Test
-    public void test_updateAdAccount_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_updateAdAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> adAccount.updateAdAccount(null, this.initAdAccount()))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_updateAdAccount_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_updateAdAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_updateAdAccount_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_updateAdAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> adAccount.updateAdAccount("", this.initAdAccount()))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_updateAdAccount_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_updateAdAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
     public void test_updateAdAccount_ad_should_throw_SnapExecutionException() throws IOException {
@@ -530,40 +530,40 @@ public class SnapAdAccountTest {
     }// test_updateAdAccount_ad_should_throw_SnapExecutionException()
 
     @Test
-    public void test_updateAdAccount_should_throw_SnapArgumentException_1() {
+    public void test_updateAdAccount_should_throw_SnapArgumentException_when_ad_account_parameter_is_null() {
         assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, null))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("Ad account parameter is not given");
-    } // test_updateAdAccount_should_throw_SnapArgumentException_1()
+    } // test_updateAdAccount_should_throw_SnapArgumentException_when_ad_account_parameter_is_null()
 
     @Test
-    public void test_updateAdAccount_should_throw_SnapArgumentException_2() {
+    public void test_updateAdAccount_should_throw_SnapArgumentException_when_no_parameters_filled() {
         AdAccount ad = new AdAccount();
         assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, ad))
                 .isInstanceOf(SnapArgumentException.class).hasMessage(
                 "The name of advertiser is required,The currency is required,The funding source ids are required,The ad account ID is required,The name is required,The organization ID is required,The time zone is required,The ad account type is required");
-    } // test_updateAdAccount_should_throw_SnapArgumentException_2()
+    } // test_updateAdAccount_should_throw_SnapArgumentException_when_no_parameters_filled()
 
     @Test
-    public void test_updateAdAccount_should_throw_SnapArgumentException_3() {
+    public void test_updateAdAccount_should_throw_SnapArgumentException_when_no_parameters_filled_except_advertiser() {
         AdAccount ad = new AdAccount();
         ad.setAdvertiser("Advertiser");
         assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, ad))
                 .isInstanceOf(SnapArgumentException.class).hasMessage(
                 "The currency is required,The funding source ids are required,The ad account ID is required,The name is required,The organization ID is required,The time zone is required,The ad account type is required");
-    } // test_updateAdAccount_should_throw_SnapArgumentException_3()
+    } // test_updateAdAccount_should_throw_SnapArgumentException_when_no_parameters_filled_except_advertiser()
 
     @Test
-    public void test_updateAdAccount_should_throw_SnapArgumentException_4() {
+    public void test_updateAdAccount_should_throw_SnapArgumentException_when_no_parameters_filled_except_advertiser_and_currency() {
         AdAccount ad = new AdAccount();
         ad.setAdvertiser("Advertiser");
         ad.setCurrency(CurrencyEnum.USD);
         assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, ad))
                 .isInstanceOf(SnapArgumentException.class).hasMessage(
                 "The funding source ids are required,The ad account ID is required,The name is required,The organization ID is required,The time zone is required,The ad account type is required");
-    } // test_updateAdAccount_should_throw_SnapArgumentException_4()
+    } // test_updateAdAccount_should_throw_SnapArgumentException_when_no_parameters_filled_except_advertiser_and_currency()
 
     @Test
-    public void test_updateAdAccount_should_throw_SnapArgumentException_5() {
+    public void test_updateAdAccount_should_throw_SnapArgumentException_when_no_parameters_filled_except_advertiser_and_currency_and_fuding_id() {
         AdAccount ad = new AdAccount();
         ad.setAdvertiser("Advertiser");
         ad.setCurrency(CurrencyEnum.USD);
@@ -571,10 +571,10 @@ public class SnapAdAccountTest {
         assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, ad))
                 .isInstanceOf(SnapArgumentException.class).hasMessage(
                 "The ad account ID is required,The name is required,The organization ID is required,The time zone is required,The ad account type is required");
-    } // test_updateAdAccount_should_throw_SnapArgumentException_5()
+    } // test_updateAdAccount_should_throw_SnapArgumentException_when_no_parameters_filled_except_advertiser_and_currency_and_fuding_id()
 
     @Test
-    public void test_updateAdAccount_should_throw_SnapArgumentException_6() {
+    public void test_updateAdAccount_should_throw_SnapArgumentException_when_no_parameters_filled_except_advertiser_and_currency_and_fuding_id_and_id() {
         AdAccount ad = new AdAccount();
         ad.setAdvertiser("Advertiser");
         ad.setCurrency(CurrencyEnum.USD);
@@ -583,10 +583,10 @@ public class SnapAdAccountTest {
         assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, ad))
                 .isInstanceOf(SnapArgumentException.class).hasMessage(
                 "The name is required,The organization ID is required,The time zone is required,The ad account type is required");
-    } // test_updateAdAccount_should_throw_SnapArgumentException_6()
+    } // test_updateAdAccount_should_throw_SnapArgumentException_when_no_parameters_filled_except_advertiser_and_currency_and_fuding_id_and_id()
 
     @Test
-    public void test_updateAdAccount_should_throw_SnapArgumentException_7() {
+    public void test_updateAdAccount_should_throw_SnapArgumentException_when_parameters_filled_except_organization_id_and_time_zone_and_ad_account_type() {
         AdAccount ad = new AdAccount();
         ad.setAdvertiser("Advertiser");
         ad.setCurrency(CurrencyEnum.USD);
@@ -596,10 +596,10 @@ public class SnapAdAccountTest {
         assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, ad))
                 .isInstanceOf(SnapArgumentException.class).hasMessage(
                 "The organization ID is required,The time zone is required,The ad account type is required");
-    } // test_updateAdAccount_should_throw_SnapArgumentException_7()
+    } // test_updateAdAccount_should_throw_SnapArgumentException_when_parameters_filled_except_organization_id_and_time_zone_and_ad_account_type()
 
     @Test
-    public void test_updateAdAccount_should_throw_SnapArgumentException_8() {
+    public void test_updateAdAccount_should_throw_SnapArgumentException_when_parameters_filled_except_time_zone_and_ad_account_type() {
         AdAccount ad = new AdAccount();
         ad.setAdvertiser("Advertiser");
         ad.setCurrency(CurrencyEnum.USD);
@@ -610,10 +610,10 @@ public class SnapAdAccountTest {
         assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, ad))
                 .isInstanceOf(SnapArgumentException.class)
                 .hasMessage("The time zone is required,The ad account type is required");
-    } // test_updateAdAccount_should_throw_SnapArgumentException_8()
+    } // test_updateAdAccount_should_throw_SnapArgumentException_when_parameters_filled_except_time_zone_and_ad_account_type()
 
     @Test
-    public void test_updateAdAccount_should_throw_SnapArgumentException_9() {
+    public void test_updateAdAccount_should_throw_SnapArgumentException_when_ad_account_type_is_null() {
         AdAccount ad = new AdAccount();
         ad.setAdvertiser("Advertiser");
         ad.setCurrency(CurrencyEnum.USD);
@@ -624,7 +624,18 @@ public class SnapAdAccountTest {
         ad.setTimezone("America/Los_Angeles");
         assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, ad))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The ad account type is required");
-    } // test_updateAdAccount_should_throw_SnapArgumentException_9()
+    } // test_updateAdAccount_should_throw_SnapArgumentException_when_ad_account_type_is_null()
+
+    @Test
+    public void should_throw_exception_400_updateAdAccount() throws IOException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+        Mockito.when(statusLine.getStatusCode()).thenReturn(400);
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+        Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
+        Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
+                .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
+    } // should_throw_exception_400_updateAdAccount()
 
     @Test
     public void should_throw_exception_401_updateAdAccount() throws IOException {

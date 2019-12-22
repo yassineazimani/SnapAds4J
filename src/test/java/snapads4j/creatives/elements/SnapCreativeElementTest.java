@@ -115,30 +115,30 @@ public class SnapCreativeElementTest {
     }// test_create_creative_should_success()
 
     @Test
-    public void test_create_creative_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_create_creative_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> snapCreative.createCreativeElement("", creative))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    }// test_create_creative_should_throw_SnapOAuthAccessTokenException_1()
+    }// test_create_creative_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
-    public void test_create_creative_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_create_creative_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> snapCreative.createCreativeElement(null, creative))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    }// test_create_creative_should_throw_SnapOAuthAccessTokenException_2()
+    }// test_create_creative_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_create_creative_should_throw_SnapArgumentException_1() {
+    public void test_create_creative_should_throw_SnapArgumentException_when_creative_parameter_is_null() {
         assertThatThrownBy(() -> snapCreative.createCreativeElement(oAuthAccessToken, null))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("Creative parameter is not given");
-    }// test_create_creative_should_throw_SnapArgumentException_1()
+    }// test_create_creative_should_throw_SnapArgumentException_when_creative_parameter_is_null()
 
     @Test
-    public void test_create_creative_should_throw_SnapArgumentException_2() {
+    public void test_create_creative_should_throw_SnapArgumentException_no_parameters_required() {
         CreativeElement badCreative = new CreativeElement();
         assertThatThrownBy(() -> snapCreative.createCreativeElement(oAuthAccessToken, badCreative))
                 .isInstanceOf(SnapArgumentException.class).hasMessage(
                 "The Ad Account ID is required,The name is required,The creative type is required,The interaction type is required");
-    }// test_create_creative_should_throw_SnapArgumentException_2()
+    }// test_create_creative_should_throw_SnapArgumentException_no_parameters_required()
 
     @Test
     public void test_create_creative_should_throw_SnapArgumentException_3() {
@@ -313,56 +313,56 @@ public class SnapCreativeElementTest {
     }// test_create_creatives_should_success()
 
     @Test
-    public void test_create_creatives_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_create_creatives_should_throw_SnapOAuthAccessTokenException_token_is_empty() {
         assertThatThrownBy(() -> snapCreative.createCreativeElements("", initBadCreativeElements()))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    }// test_create_creatives_should_throw_SnapOAuthAccessTokenException_1()
+    }// test_create_creatives_should_throw_SnapOAuthAccessTokenException_token_is_empty()
 
     @Test
-    public void test_create_creatives_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_create_creatives_should_throw_SnapOAuthAccessTokenException_token_is_null() {
         assertThatThrownBy(() -> snapCreative.createCreativeElements(null, initBadCreativeElements()))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    }// test_create_creatives_should_throw_SnapOAuthAccessTokenException_2()
+    }// test_create_creatives_should_throw_SnapOAuthAccessTokenException_token_is_null()
 
     @Test
-    public void test_create_creatives_should_throw_SnapArgumentException_1() {
+    public void test_create_creatives_should_throw_SnapArgumentException_when_creative_element_parameter_is_null() {
         assertThatThrownBy(() -> snapCreative.createCreativeElements(oAuthAccessToken, null))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("Creative elements parameter is not given");
-    }// test_create_creatives_should_throw_SnapArgumentException_1()
+    }// test_create_creatives_should_throw_SnapArgumentException_when_creative_element_parameter_is_null()
 
     @Test
-    public void test_create_creatives_should_throw_SnapArgumentException_2() {
+    public void test_create_creatives_should_throw_SnapArgumentException_when_no_parameters_are_filled() {
         assertThatThrownBy(() -> snapCreative.createCreativeElements(oAuthAccessToken, initBadCreativeElements()))
                 .isInstanceOf(SnapArgumentException.class).hasMessage(
                 "CreativeElement index n°0 : The Ad Account ID is required,CreativeElement index n°0 : The name is required,CreativeElement index n°0 : The creative type is required,CreativeElement index n°0 : The interaction type is required");
-    }// test_create_creatives_should_throw_SnapArgumentException_2()
+    }// test_create_creatives_should_throw_SnapArgumentException_when_no_parameters_are_filled()
 
     @Test
-    public void test_create_creatives_should_throw_SnapArgumentException_3() {
+    public void test_create_creatives_should_throw_SnapArgumentException_when_no_parameters_are_filled_2() {
         List<CreativeElement> bads = initBadCreativeElements();
         bads.get(0).setInteractionType(InteractionTypeEnum.WEB_VIEW);
         assertThatThrownBy(() -> snapCreative.createCreativeElements(oAuthAccessToken, bads))
                 .isInstanceOf(SnapArgumentException.class).hasMessage(
                 "CreativeElement index n°0 : The Ad Account ID is required,CreativeElement index n°0 : The name is required,CreativeElement index n°0 : The creative type is required,CreativeElement index n°0 : Web View Properties is required");
-    }// test_create_creatives_should_throw_SnapArgumentException_3()
+    }// test_create_creatives_should_throw_SnapArgumentException_when_no_parameters_are_filled_2()
 
     @Test
-    public void test_create_creatives_should_throw_SnapArgumentException_4() {
+    public void test_create_creatives_should_throw_SnapArgumentException_when_no_parameters_are_filled_3() {
         List<CreativeElement> bads = initBadCreativeElements();
         bads.get(0).setInteractionType(InteractionTypeEnum.DEEP_LINK);
         assertThatThrownBy(() -> snapCreative.createCreativeElements(oAuthAccessToken, bads))
                 .isInstanceOf(SnapArgumentException.class).hasMessage(
                 "CreativeElement index n°0 : The Ad Account ID is required,CreativeElement index n°0 : The name is required,CreativeElement index n°0 : The creative type is required,CreativeElement index n°0 : Deep Link Properties is required");
-    }// test_create_creatives_should_throw_SnapArgumentException_4()
+    }// test_create_creatives_should_throw_SnapArgumentException_when_no_parameters_are_filled_3()
 
     @Test
-    public void test_create_creatives_should_throw_SnapArgumentException_5() {
+    public void test_create_creatives_should_throw_SnapArgumentException_when_no_parameters_are_filled_4() {
         List<CreativeElement> bads = initBadCreativeElements();
         bads.get(0).setType(CreativeTypeEnum.BUTTON);
         assertThatThrownBy(() -> snapCreative.createCreativeElements(oAuthAccessToken, bads))
                 .isInstanceOf(SnapArgumentException.class).hasMessage(
                 "CreativeElement index n°0 : The Ad Account ID is required,CreativeElement index n°0 : The name is required,CreativeElement index n°0 : The interaction type is required,CreativeElement index n°0 : Button Properties is required");
-    }// test_create_creatives_should_throw_SnapArgumentException_5()
+    }// test_create_creatives_should_throw_SnapArgumentException_when_no_parameters_are_filled_4()
 
     @Test
     public void test_create_creatives_should_throw_SnapExecutionException() throws IOException {
@@ -515,30 +515,30 @@ public class SnapCreativeElementTest {
     }// test_create_interaction_zone_should_success()
 
     @Test
-    public void test_create_interaction_zone_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_create_interaction_zone_should_throw_SnapOAuthAccessTokenException_token_is_empty() {
         assertThatThrownBy(() -> snapCreative.createInteractionZone("", interactionZone))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    }// test_create_interaction_zone_should_throw_SnapOAuthAccessTokenException_1()
+    }// test_create_interaction_zone_should_throw_SnapOAuthAccessTokenException_token_is_empty()
 
     @Test
-    public void test_create_interaction_zone_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_create_interaction_zone_should_throw_SnapOAuthAccessTokenException_token_is_null() {
         assertThatThrownBy(() -> snapCreative.createInteractionZone(null, interactionZone))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    }// test_create_interaction_zone_should_throw_SnapOAuthAccessTokenException_2()
+    }// test_create_interaction_zone_should_throw_SnapOAuthAccessTokenException_token_is_null()
 
     @Test
-    public void test_create_interaction_zone_should_throw_SnapArgumentException_1() {
+    public void test_create_interaction_zone_should_throw_SnapArgumentException_when_interaction_zone_is_null() {
         assertThatThrownBy(() -> snapCreative.createInteractionZone(oAuthAccessToken, null))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("Interaction Zone parameter is not given");
-    }// test_create_interaction_zone_should_throw_SnapArgumentException_1()
+    }// test_create_interaction_zone_should_throw_SnapArgumentException_when_interaction_zone_is_null()
 
     @Test
-    public void test_create_interaction_zone_should_throw_SnapArgumentException_2() {
+    public void test_create_interaction_zone_should_throw_SnapArgumentException_when_no_parameters_filled() {
         InteractionZone badZone = new InteractionZone();
         assertThatThrownBy(() -> snapCreative.createInteractionZone(oAuthAccessToken, badZone))
                 .isInstanceOf(SnapArgumentException.class).hasMessage(
                 "The interaction zone's ad account id is required,The interaction zone's headline is required,The interaction zone's name is required,The interaction zone's creative elements is required");
-    }// test_create_interaction_zone_should_throw_SnapArgumentException_2()
+    }// test_create_interaction_zone_should_throw_SnapArgumentException_when_no_parameters_filled()
 
     @Test
     public void test_create_interaction_zone_should_throw_SnapExecutionException() throws IOException {

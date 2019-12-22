@@ -111,16 +111,16 @@ public class SnapAudienceSizeTest {
     }// test_get_audience_size_by_squad_id_should_success()
 
     @Test
-    public void test_get_audience_size_by_squad_id_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_get_audience_size_by_squad_id_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId(null, this.adSquadId))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_get_audience_size_by_squad_id_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_get_audience_size_by_squad_id_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_get_audience_size_by_squad_id_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_get_audience_size_by_squad_id_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByAdSquadId("", this.adSquadId))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_get_audience_size_by_squad_id_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_get_audience_size_by_squad_id_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
     public void test_get_audience_size_by_squad_id_should_throw_SnapExecutionException() throws
@@ -271,16 +271,16 @@ public class SnapAudienceSizeTest {
     }// test_get_audience_size_by_squad_spec_should_success()
 
     @Test
-    public void test_get_audience_size_by_squad_spec_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_get_audience_size_by_squad_spec_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec(null, this.adAccountId, adSquad))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_get_audience_size_by_squad_spec_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_get_audience_size_by_squad_spec_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_get_audience_size_by_squad_spec_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_get_audience_size_by_squad_spec_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> snapAudienceSize.getAudienceSizeByTargetingSpec("", this.adAccountId, adSquad))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_get_audience_size_by_squad_spec_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_get_audience_size_by_squad_spec_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
     public void test_get_audience_size_by_squad_spec_should_throw_SnapArgumentException_when_adsquad_is_null() {

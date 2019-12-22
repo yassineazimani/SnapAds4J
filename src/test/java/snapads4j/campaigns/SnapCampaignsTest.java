@@ -111,16 +111,16 @@ public class SnapCampaignsTest {
     } // test_create_campaign_should_success()
 
     @Test
-    public void test_create_campaign_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_create_campaign_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> sCampaigns.createCampaign(null, this.initCampaignForCreation()))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_create_campaign_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_create_campaign_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_create_campaign_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_create_campaign_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> sCampaigns.createCampaign("", this.initCampaignForCreation()))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_create_campaign_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_create_campaign_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
     public void test_create_campaign_should_throw_SnapArgumentException_0() {
@@ -129,15 +129,15 @@ public class SnapCampaignsTest {
     } // test_create_campaign_should_throw_SnapArgumentException_0()
 
     @Test
-    public void test_create_campaign_should_throw_SnapArgumentException_1() {
+    public void test_create_campaign_should_throw_SnapArgumentException_when_no_parameters_filled() {
         Campaign c = new Campaign();
         assertThatThrownBy(() -> sCampaigns.createCampaign(oAuthAccessToken, c))
                 .isInstanceOf(SnapArgumentException.class).hasMessage(
                 "The start time is required,The campaign name is required,The campaign status is required,The Ad Account ID is required");
-    } // test_create_campaign_should_throw_SnapArgumentException_1()
+    } // test_create_campaign_should_throw_SnapArgumentException_when_no_parameters_filled()
 
     @Test
-    public void test_create_campaign_should_throw_SnapArgumentException_2() {
+    public void test_create_campaign_should_throw_SnapArgumentException_when_no_parameters_filled_except_name() {
         Campaign c = new Campaign();
         c.setName("Cool Campaign");
         c.setAdAccountId(null);
@@ -146,10 +146,10 @@ public class SnapCampaignsTest {
         assertThatThrownBy(() -> sCampaigns.createCampaign(oAuthAccessToken, c))
                 .isInstanceOf(SnapArgumentException.class)
                 .hasMessage("The start time is required,The campaign status is required,The Ad Account ID is required");
-    } // test_create_campaign_should_throw_SnapArgumentException_2()
+    } // test_create_campaign_should_throw_SnapArgumentException_when_no_parameters_filled_except_name()
 
     @Test
-    public void test_create_campaign_should_throw_SnapArgumentException_3() {
+    public void test_create_campaign_should_throw_SnapArgumentException_when_no_parameters_filled_except_name_and_status() {
         Campaign c = new Campaign();
         c.setName("Cool Campaign");
         c.setAdAccountId(null);
@@ -158,10 +158,10 @@ public class SnapCampaignsTest {
         assertThatThrownBy(() -> sCampaigns.createCampaign(oAuthAccessToken, c))
                 .isInstanceOf(SnapArgumentException.class)
                 .hasMessage("The start time is required,The Ad Account ID is required");
-    } // test_create_campaign_should_throw_SnapArgumentException_3()
+    } // test_create_campaign_should_throw_SnapArgumentException_when_no_parameters_filled_except_name_and_status()
 
     @Test
-    public void test_create_campaign_should_throw_SnapArgumentException_4() {
+    public void test_create_campaign_should_throw_SnapArgumentException_when_no_parameters_filled_except_name_and_status_and_start_time() {
         Campaign c = new Campaign();
         c.setName("Cool Campaign");
         c.setAdAccountId(null);
@@ -169,7 +169,16 @@ public class SnapCampaignsTest {
         c.setStartTime(new Date());
         assertThatThrownBy(() -> sCampaigns.createCampaign(oAuthAccessToken, c))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
-    } // test_create_campaign_should_throw_SnapArgumentException_4()
+    } // test_create_campaign_should_throw_SnapArgumentException_when_no_parameters_filled_except_name_and_status_and_start_time()
+
+    @Test
+    public void should_throw_exception_400_create_campaign() throws IOException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+        Mockito.when(statusLine.getStatusCode()).thenReturn(400);
+        Mockito.when(httpClient.execute(Mockito.any(HttpPost.class))).thenReturn(httpResponse);
+        assertThatThrownBy(() -> sCampaigns.createCampaign(oAuthAccessToken, this.initCampaignForCreation()))
+                .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
+    } // should_throw_exception_400_create_campaign()
 
     @Test
     public void should_throw_exception_401_create_campaign() throws IOException {
@@ -297,16 +306,16 @@ public class SnapCampaignsTest {
     } // test_update_campaign_should_success()
 
     @Test
-    public void test_update_campaign_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_update_campaign_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> sCampaigns.updateCampaign(null, this.initCampaignForCreation()))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_update_campaign_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_update_campaign_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_update_campaign_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_update_campaign_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> sCampaigns.updateCampaign("", this.initCampaignForCreation()))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_update_campaign_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_update_campaign_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
     public void test_update_campaign_should_throw_SnapArgumentException_0() {
@@ -315,15 +324,15 @@ public class SnapCampaignsTest {
     } // test_update_campaign_should_throw_SnapArgumentException_0()
 
     @Test
-    public void test_update_campaign_should_throw_SnapArgumentException_1() {
+    public void test_update_campaign_should_throw_SnapArgumentException_when_parameters_are_not_filled() {
         Campaign c = new Campaign();
         assertThatThrownBy(() -> sCampaigns.updateCampaign(oAuthAccessToken, c))
                 .isInstanceOf(SnapArgumentException.class).hasMessage(
                 "The campaign ID is required,The campaign name is required,The campaign status is required,The Ad Account ID is required");
-    } // test_update_campaign_should_throw_SnapArgumentException_1()
+    } // test_update_campaign_should_throw_SnapArgumentException_when_parameters_are_not_filled()
 
     @Test
-    public void test_update_campaign_should_throw_SnapArgumentException_2() {
+    public void test_update_campaign_should_throw_SnapArgumentException_when_parameters_are_not_filled_except_name() {
         Campaign c = new Campaign();
         c.setName("Cool Campaign");
         c.setAdAccountId(null);
@@ -332,10 +341,10 @@ public class SnapCampaignsTest {
         assertThatThrownBy(() -> sCampaigns.updateCampaign(oAuthAccessToken, c))
                 .isInstanceOf(SnapArgumentException.class).hasMessage(
                 "The campaign ID is required,The campaign status is required,The Ad Account ID is required");
-    } // test_update_campaign_should_throw_SnapArgumentException_2()
+    } // test_update_campaign_should_throw_SnapArgumentException_when_parameters_are_not_filled_except_name()
 
     @Test
-    public void test_update_campaign_should_throw_SnapArgumentException_3() {
+    public void test_update_campaign_should_throw_SnapArgumentException_when_parameters_are_not_filled_except_name_and_status() {
         Campaign c = new Campaign();
         c.setName("Cool Campaign");
         c.setAdAccountId(null);
@@ -344,10 +353,10 @@ public class SnapCampaignsTest {
         assertThatThrownBy(() -> sCampaigns.updateCampaign(oAuthAccessToken, c))
                 .isInstanceOf(SnapArgumentException.class)
                 .hasMessage("The campaign ID is required,The Ad Account ID is required");
-    } // test_update_campaign_should_throw_SnapArgumentException_3()
+    } // test_update_campaign_should_throw_SnapArgumentException_when_parameters_are_not_filled_except_name_and_status()
 
     @Test
-    public void test_update_campaign_should_throw_SnapArgumentException_4() {
+    public void test_update_campaign_should_throw_SnapArgumentException_when_id_is_null() {
         Campaign c = new Campaign();
         c.setName("Cool Campaign");
         c.setAdAccountId("a");
@@ -355,7 +364,16 @@ public class SnapCampaignsTest {
         c.setStartTime(new Date());
         assertThatThrownBy(() -> sCampaigns.updateCampaign(oAuthAccessToken, c))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The campaign ID is required");
-    } // test_update_campaign_should_throw_SnapArgumentException_4()
+    } // test_update_campaign_should_throw_SnapArgumentException_when_id_is_null()
+
+    @Test
+    public void should_throw_exception_400_update_campaign() throws IOException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+        Mockito.when(statusLine.getStatusCode()).thenReturn(400);
+        Mockito.when(httpClient.execute(Mockito.any(HttpPut.class))).thenReturn(httpResponse);
+        assertThatThrownBy(() -> sCampaigns.updateCampaign(oAuthAccessToken, this.initCampaignForUpdate()))
+                .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
+    } // should_throw_exception_400_update_campaign()
 
     @Test
     public void should_throw_exception_401_update_campaign() throws IOException {
@@ -510,28 +528,38 @@ public class SnapCampaignsTest {
     } // test_getAllCampaigns_should_success()
 
     @Test
-    public void test_getAllCampaigns_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_getAllCampaigns_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> sCampaigns.getAllCampaigns(null, accountId))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_getAllCampaigns_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_getAllCampaigns_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_getAllCampaigns_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_getAllCampaigns_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> sCampaigns.getAllCampaigns("", accountId))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_getAllCampaigns_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_getAllCampaigns_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
-    public void test_getAllCampaigns_should_throw_SnapArgumentException_1() {
+    public void test_getAllCampaigns_should_throw_SnapArgumentException_when_ad_account_id_is_null() {
         assertThatThrownBy(() -> sCampaigns.getAllCampaigns(oAuthAccessToken, null))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
-    } // test_getAllCampaigns_should_throw_SnapArgumentException_1()
+    } // test_getAllCampaigns_should_throw_SnapArgumentException_when_ad_account_id_is_null()
 
     @Test
-    public void test_getAllCampaigns_should_throw_SnapArgumentException_2() {
+    public void test_getAllCampaigns_should_throw_SnapArgumentException_when_ad_account_id_is_empty() {
         assertThatThrownBy(() -> sCampaigns.getAllCampaigns(oAuthAccessToken, ""))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The Ad Account ID is required");
-    } // test_getAllCampaigns_should_throw_SnapArgumentException_2()
+    } // test_getAllCampaigns_should_throw_SnapArgumentException_when_ad_account_id_is_empty()
+
+    @Test
+    public void should_throw_exception_400_getAllCampaigns() throws IOException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+        Mockito.when(statusLine.getStatusCode()).thenReturn(400);
+        Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
+        Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+        assertThatThrownBy(() -> sCampaigns.getAllCampaigns(oAuthAccessToken, accountId))
+                .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
+    } // should_throw_exception_400_getAllCampaigns()
 
     @Test
     public void should_throw_exception_401_getAllCampaigns() throws IOException {
@@ -669,28 +697,28 @@ public class SnapCampaignsTest {
     } // test_getSpecificCampaign_should_success()
 
     @Test
-    public void test_getSpecificCampaign_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_getSpecificCampaign_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> sCampaigns.getSpecificCampaign(null, id))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_getSpecificCampaign_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_getSpecificCampaign_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_getSpecificCampaign_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_getSpecificCampaign_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> sCampaigns.getSpecificCampaign("", id))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
-    } // test_getSpecificCampaign_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_getSpecificCampaign_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
-    public void test_getSpecificCampaign_should_throw_SnapArgumentException_1() {
+    public void test_getSpecificCampaign_should_throw_SnapArgumentException_when_id_is_null() {
         assertThatThrownBy(() -> sCampaigns.getSpecificCampaign(oAuthAccessToken, null))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The campaign ID is required");
-    } // test_getSpecificCampaign_should_throw_SnapArgumentException_1()
+    } // test_getSpecificCampaign_should_throw_SnapArgumentException_when_id_is_null()
 
     @Test
-    public void test_getSpecificAdAccount_should_throw_SnapArgumentException_2() {
+    public void test_getSpecificCampaign_should_throw_SnapArgumentException_when_id_is_empty() {
         assertThatThrownBy(() -> sCampaigns.getSpecificCampaign(oAuthAccessToken, ""))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The campaign ID is required");
-    } // test_getSpecificAdAccount_should_throw_SnapArgumentException_2()
+    } // test_getSpecificCampaign_should_throw_SnapArgumentException_when_id_is_empty()
 
     @Test
     public void should_throw_exception_401_getSpecificCampaign() throws IOException {
@@ -815,28 +843,28 @@ public class SnapCampaignsTest {
     } // test_delete_campaign_should_success()
 
     @Test
-    public void test_delete_campaign_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_delete_campaign_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> sCampaigns.deleteCampaign(null, id)).isInstanceOf(SnapOAuthAccessTokenException.class)
                 .hasMessage("The OAuthAccessToken is required");
-    } // test_delete_campaign_should_throw_SnapOAuthAccessTokenException_1()
+    } // test_delete_campaign_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_delete_campaign_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_delete_campaign_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> sCampaigns.deleteCampaign("", id)).isInstanceOf(SnapOAuthAccessTokenException.class)
                 .hasMessage("The OAuthAccessToken is required");
-    } // test_delete_campaign_should_throw_SnapOAuthAccessTokenException_2()
+    } // test_delete_campaign_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
-    public void test_delete_campaign_should_throw_SnapArgumentException_1() {
+    public void test_delete_campaign_should_throw_SnapArgumentException_when_id_is_null() {
         assertThatThrownBy(() -> sCampaigns.deleteCampaign(oAuthAccessToken, null))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The campaign ID is required");
-    } // test_delete_campaign_should_throw_SnapArgumentException_1()
+    } // test_delete_campaign_should_throw_SnapArgumentException_when_id_is_null()
 
     @Test
-    public void test_delete_campaign_should_throw_SnapArgumentException_2() {
+    public void test_delete_campaign_should_throw_SnapArgumentException_when_id_is_empty() {
         assertThatThrownBy(() -> sCampaigns.deleteCampaign(oAuthAccessToken, ""))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The campaign ID is required");
-    } // test_delete_campaign_should_throw_SnapArgumentException_2()
+    } // test_delete_campaign_should_throw_SnapArgumentException_when_id_is_empty()
 
     @Test
     public void should_throw_exception_401_delete_campaign() throws IOException {

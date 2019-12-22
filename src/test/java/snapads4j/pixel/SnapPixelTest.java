@@ -469,16 +469,16 @@ public class SnapPixelTest {
     }// test_update_ad_should_success()
 
     @Test
-    public void test_update_ad_should_throw_SnapOAuthAccessTokenException_1() {
+    public void test_update_ad_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
         assertThatThrownBy(() -> snapPixel.updatePixel(null, pixel)).isInstanceOf(SnapOAuthAccessTokenException.class)
                 .hasMessage("The OAuthAccessToken is required");
-    }// test_update_ad_should_throw_SnapOAuthAccessTokenException_1()
+    }// test_update_ad_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
-    public void test_update_ad_should_throw_SnapOAuthAccessTokenException_2() {
+    public void test_update_ad_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
         assertThatThrownBy(() -> snapPixel.updatePixel("", pixel)).isInstanceOf(SnapOAuthAccessTokenException.class)
                 .hasMessage("The OAuthAccessToken is required");
-    }// test_update_ad_should_throw_SnapOAuthAccessTokenException_2()
+    }// test_update_ad_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
     public void test_update_ad_should_throw_SnapExecutionException() throws IOException {
@@ -488,51 +488,51 @@ public class SnapPixelTest {
     }// test_update_ad_should_throw_SnapExecutionException()
 
     @Test
-    public void test_update_ad_should_throw_SnapArgumentException_1() {
+    public void test_update_ad_should_throw_SnapArgumentException_when_pixel_is_null() {
         assertThatThrownBy(() -> snapPixel.updatePixel(oAuthAccessToken, null))
                 .isInstanceOf(SnapArgumentException.class)
                 .hasMessage("Pixel parameter is not given");
-    }// test_update_ad_should_throw_SnapArgumentException_1()
+    }// test_update_ad_should_throw_SnapArgumentException_when_pixel_is_null()
 
     @Test
-    public void test_update_ad_should_throw_SnapArgumentException_2() {
+    public void test_update_ad_should_throw_SnapArgumentException_when_ad_account_id_is_null() {
         pixel.setAdAccountId(null);
         assertThatThrownBy(() -> snapPixel.updatePixel(oAuthAccessToken, pixel))
                 .isInstanceOf(SnapArgumentException.class)
                 .hasMessage("Ad Account ID parameter is required");
-    }// test_update_ad_should_throw_SnapArgumentException_2()
+    }// test_update_ad_should_throw_SnapArgumentException_when_ad_account_id_is_null()
 
     @Test
-    public void test_update_ad_should_throw_SnapArgumentException_3() {
+    public void test_update_ad_should_throw_SnapArgumentException_when_name_is_null() {
         pixel.setName(null);
         assertThatThrownBy(() -> snapPixel.updatePixel(oAuthAccessToken, pixel))
                 .isInstanceOf(SnapArgumentException.class)
                 .hasMessage("Pixel name parameter is required");
-    }// test_update_ad_should_throw_SnapArgumentException_3()
+    }// test_update_ad_should_throw_SnapArgumentException_when_name_is_null()
 
     @Test
-    public void test_update_ad_should_throw_SnapArgumentException_4() {
+    public void test_update_ad_should_throw_SnapArgumentException_when_name_is_empty() {
         pixel.setName("");
         assertThatThrownBy(() -> snapPixel.updatePixel(oAuthAccessToken, pixel))
                 .isInstanceOf(SnapArgumentException.class)
                 .hasMessage("Pixel name parameter is required");
-    }// test_update_ad_should_throw_SnapArgumentException_4()
+    }// test_update_ad_should_throw_SnapArgumentException_when_name_is_empty()
 
     @Test
-    public void test_update_ad_should_throw_SnapArgumentException_5() {
+    public void test_update_ad_should_throw_SnapArgumentException_when_id_is_empty() {
         pixel.setId("");
         assertThatThrownBy(() -> snapPixel.updatePixel(oAuthAccessToken, pixel))
                 .isInstanceOf(SnapArgumentException.class)
                 .hasMessage("Pixel ID parameter is required");
-    }// test_create_ad_should_throw_SnapArgumentException_5()
+    }// test_update_ad_should_throw_SnapArgumentException_when_id_is_empty()
 
     @Test
-    public void test_update_ad_should_throw_SnapArgumentException_6() {
+    public void test_update_ad_should_throw_SnapArgumentException_when_id_is_null() {
         pixel.setId(null);
         assertThatThrownBy(() -> snapPixel.updatePixel(oAuthAccessToken, pixel))
                 .isInstanceOf(SnapArgumentException.class)
                 .hasMessage("Pixel ID parameter is required");
-    }// test_create_ad_should_throw_SnapArgumentException_6()
+    }// test_update_ad_should_throw_SnapArgumentException_when_id_is_null()
 
     @Test
     public void should_throw_exception_400_update_pixel() throws IOException {
