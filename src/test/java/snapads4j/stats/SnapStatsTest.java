@@ -163,8 +163,8 @@ public class SnapStatsTest {
             TimeSerie t1 = timeseries.get(0);
             Stat statsT1 = t1.getStats();
             assertThat(t1.toString()).isNotEmpty();
-            assertThat(sdf.format(t1.getStartTime())).isEqualTo("2017-04-27T22:00:00.000Z");
-            assertThat(sdf.format(t1.getEndTime())).isEqualTo("2017-04-28T22:00:00.000Z");
+            assertThat(xdf.format(t1.getStartTime())).isEqualTo("2017-04-28T00:00:00.000");
+            assertThat(xdf.format(t1.getEndTime())).isEqualTo("2017-04-29T00:00:00.000");
             assertThat(statsT1.getImpressions()).isEqualTo(7715);
             assertThat(statsT1.getSwipes()).isEqualTo(57);
             assertThat(statsT1.getConversionPurchases()).isEqualTo(200);
@@ -182,8 +182,8 @@ public class SnapStatsTest {
             TimeSerie t2 = timeseries.get(1);
             Stat statsT2 = t2.getStats();
             assertThat(t2.toString()).isNotEmpty();
-            assertThat(sdf.format(t2.getStartTime())).isEqualTo("2017-04-28T22:00:00.000Z");
-            assertThat(sdf.format(t2.getEndTime())).isEqualTo("2017-04-29T22:00:00.000Z");
+            assertThat(xdf.format(t2.getStartTime())).isEqualTo("2017-04-29T00:00:00.000");
+            assertThat(xdf.format(t2.getEndTime())).isEqualTo("2017-04-30T00:00:00.000");
             assertThat(statsT2.getImpressions()).isEqualTo(7715);
             assertThat(statsT2.getSwipes()).isEqualTo(57);
             assertThat(statsT2.getConversionPurchases()).isEqualTo(200);
