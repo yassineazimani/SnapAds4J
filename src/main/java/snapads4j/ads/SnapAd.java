@@ -251,7 +251,7 @@ public class SnapAd implements SnapAdInterface {
     }// getSpecificAd()
 
     @Override
-    public void deleteAd(String oAuthAccessToken, String id)
+    public boolean deleteAd(String oAuthAccessToken, String id)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
         if (StringUtils.isEmpty(oAuthAccessToken)) {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
@@ -259,6 +259,7 @@ public class SnapAd implements SnapAdInterface {
         if (StringUtils.isEmpty(id)) {
             throw new SnapArgumentException("The Ad ID is required");
         }
+        boolean result = false;
         final String url = this.endpointDeleteAd + id;
         HttpDelete request = HttpUtils.prepareDeleteRequest(url, oAuthAccessToken);
         try (CloseableHttpResponse response = httpClient.execute(request)) {
@@ -266,10 +267,20 @@ public class SnapAd implements SnapAdInterface {
             if (statusCode >= 300) {
                 throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
             }
+            HttpEntity entity = response.getEntity();
+            if(entity != null) {
+                String body = entityUtilsWrapper.toString(entity);
+                ObjectMapper mapper = JsonUtils.initMapper();
+                SnapHttpResponseAd responseFromJson = mapper.readValue(body, SnapHttpResponseAd.class);
+                if (responseFromJson != null && StringUtils.isNotEmpty(responseFromJson.getRequestStatus())) {
+                    result = responseFromJson.getRequestStatus().equalsIgnoreCase("success");
+                }
+            }
         } catch (IOException e) {
             LOGGER.error("Impossible to delete specific ad, id = {}", id, e);
             throw new SnapExecutionException("Impossible to delete specific ad", e);
         }
+        return result;
     }// deleteAd()
 
     private void checkSnapAd(Ad ad, CheckAdEnum check) throws SnapArgumentException {

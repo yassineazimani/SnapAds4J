@@ -1547,7 +1547,7 @@ public class SnapResponseUtils {
                 "}";
     }// getStatsCampaignDay()
 
-    public static String getStatsCampaignDayOmittingRecords(){
+    public static String getStatsCampaignDayOmittingRecords() {
         return "{\n" +
                 "    \"request_status\": \"SUCCESS\",\n" +
                 "    \"request_id\": \"5de0f99900ff02f49ea1540d1c0001737e616473617069736300016275696c642d61663733336133322d312d3330372d300001013c\",\n" +
@@ -1619,28 +1619,28 @@ public class SnapResponseUtils {
                 "}";
     }// getStatsCampaignDayOmittingRecords()
 
-    public static String getStatsAdAccountStats(){
-       return "{\n" +
-               "  \"request_status\": \"success\",\n" +
-               "  \"request_id\": \"57b24d9c00ff0d85622341e7c60001737e616473617069736300016275676c642b34326313636139312d332d31312d390001010d\",\n" +
-               "  \"total_stats\": [\n" +
-               "    {\n" +
-               "      \"sub_request_status\": \"success\",\n" +
-               "      \"total_stat\": {\n" +
-               "        \"id\": \"22335ba6-7558-4100-9663-baca7adff5f2\",\n" +
-               "        \"type\": \"AD_ACCOUNT\",\n" +
-               "        \"granularity\": \"TOTAL\",\n" +
-               "        \"stats\": {\n" +
-               "          \"spend\": 89196290\n" +
-               "        },\n" +
-               "        \"finalized_data_end_time\": \"2019-08-29T03:00:00.000-07:00\"\n" +
-               "      }\n" +
-               "    }\n" +
-               "  ]\n" +
-               "}";
+    public static String getStatsAdAccountStats() {
+        return "{\n" +
+                "  \"request_status\": \"success\",\n" +
+                "  \"request_id\": \"57b24d9c00ff0d85622341e7c60001737e616473617069736300016275676c642b34326313636139312d332d31312d390001010d\",\n" +
+                "  \"total_stats\": [\n" +
+                "    {\n" +
+                "      \"sub_request_status\": \"success\",\n" +
+                "      \"total_stat\": {\n" +
+                "        \"id\": \"22335ba6-7558-4100-9663-baca7adff5f2\",\n" +
+                "        \"type\": \"AD_ACCOUNT\",\n" +
+                "        \"granularity\": \"TOTAL\",\n" +
+                "        \"stats\": {\n" +
+                "          \"spend\": 89196290\n" +
+                "        },\n" +
+                "        \"finalized_data_end_time\": \"2019-08-29T03:00:00.000-07:00\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
     }// getStatsAdAccountStats()
 
-    public static String getStatsAdSquadStats(){
+    public static String getStatsAdSquadStats() {
         return "{\n" +
                 "  \"request_status\": \"success\",\n" +
                 "  \"request_id\": \"57b24e5200ff0225cdf221e6c90001737e616473617069736300016275696c642d34326333636139312d312d31312d3900010106\",\n" +
@@ -1667,7 +1667,7 @@ public class SnapResponseUtils {
                 "}";
     }// getStatsAdSquadStats()
 
-    public static String getStatsAdStats(){
+    public static String getStatsAdStats() {
         return "{\n" +
                 "  \"request_status\": \"success\",\n" +
                 "  \"request_id\": \"57b24ec400ff0b0a2104182f430001737e616473617069736300016275696c642d34326333636139312d312d31312d390001010f\",\n" +
@@ -1694,7 +1694,7 @@ public class SnapResponseUtils {
                 "}";
     }// getStatsAdStats()
 
-    public static String getStatsPixelDomains(){
+    public static String getStatsPixelDomains() {
         return "{\n" +
                 "    \"request_status\": \"SUCCESS\",\n" +
                 "    \"request_id\": \"59b1e63000ff0aeee681bf3ac50001737e616473617069736300016275696c642d64333736306564362d312d39382d3100010123\",\n" +
@@ -1730,7 +1730,7 @@ public class SnapResponseUtils {
                 "}";
     }// getStatsPixelDomains()
 
-    public static String getStatsSpecificPixelDomain(){
+    public static String getStatsSpecificPixelDomain() {
         return "{\n" +
                 "    \"request_status\": \"SUCCESS\",\n" +
                 "    \"request_id\": \"59b1eac600ff088c614606e13d0001737e616473617069736300016275696c642d64333736306564362d312d39382d3100010157\",\n" +
@@ -1820,5 +1820,29 @@ public class SnapResponseUtils {
                 "    ]\n" +
                 "}";
     }// getStatsSpecificPixelDomain()
+
+    public static String getSnapDeleteAd() {
+        return "{\n" +
+                "  \"request_status\": \"success\",\n" +
+                "  \"request_id\": \"57b01b6200ff05d100ff30ca9b1d0001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010101\",\n" +
+                "  \"ads\": []\n" +
+                "}";
+    }// getSnapDeleteAd()
+
+    public static String getSnapDeleteAdSquad(){
+        return "{\n" +
+                "  \"request_status\": \"success\",\n" +
+                "  \"request_id\": \"57b00c6a00ff068aea0cfe17bd0001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010109\",\n" +
+                "  \"adsquads\": []\n" +
+                "}\n";
+    }// getSnapDeleteAdSquad()
+
+    public static String getSnapDeleteCampaign(){
+        return "{\n" +
+                "  \"request_status\": \"success\",\n" +
+                "  \"request_id\": \"57b004dc00ff0e29c26b5d51840001737e616473617069736300016275696c642d35396264653638322d312d31312d3700010106\",\n" +
+                "  \"campaigns\": []\n" +
+                "}";
+    }// getSnapDeleteCampaign()
 
 } // SnapResponseUtils

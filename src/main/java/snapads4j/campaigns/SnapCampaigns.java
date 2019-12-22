@@ -85,7 +85,7 @@ public class SnapCampaigns implements SnapCampaignsInterface {
      * Create a campaign.
      *
      * @param oAuthAccessToken oAuthAccessToken
-     * @param campaign         Campaign to create {@link #Campaign}
+     * @param campaign         Campaign to create {@link Campaign}
      * @return Campaign created
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
@@ -233,7 +233,7 @@ public class SnapCampaigns implements SnapCampaignsInterface {
     } // getSpecificCampaign()
 
     @Override
-    public void deleteCampaign(String oAuthAccessToken, String id)
+    public boolean deleteCampaign(String oAuthAccessToken, String id)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
         if (StringUtils.isEmpty(oAuthAccessToken)) {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
@@ -241,6 +241,7 @@ public class SnapCampaigns implements SnapCampaignsInterface {
         if (StringUtils.isEmpty(id)) {
             throw new SnapArgumentException("The campaign ID is required");
         }
+        boolean result = false;
         final String url = this.endpointDeleteCampaign + id;
         HttpDelete request = HttpUtils.prepareDeleteRequest(url, oAuthAccessToken);
         try (CloseableHttpResponse response = httpClient.execute(request)) {
@@ -248,10 +249,20 @@ public class SnapCampaigns implements SnapCampaignsInterface {
             if (statusCode >= 300) {
                 throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
             }
+            HttpEntity entity = response.getEntity();
+            if(entity != null) {
+                String body = entityUtilsWrapper.toString(entity);
+                ObjectMapper mapper = JsonUtils.initMapper();
+                SnapHttpResponseCampaign responseFromJson = mapper.readValue(body, SnapHttpResponseCampaign.class);
+                if (responseFromJson != null && StringUtils.isNotEmpty(responseFromJson.getRequestStatus())) {
+                    result = responseFromJson.getRequestStatus().equalsIgnoreCase("success");
+                }
+            }
         } catch (IOException e) {
             LOGGER.error("Impossible to delete specific campaign, id = {}", id, e);
             throw new SnapExecutionException("Impossible to get specific campaign", e);
         }
+        return result;
     } // deleteCampaign()
 
     /**

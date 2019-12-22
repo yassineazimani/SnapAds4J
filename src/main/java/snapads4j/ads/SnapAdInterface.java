@@ -108,7 +108,8 @@ public interface SnapAdInterface {
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
      * @throws SnapExecutionException
+     * @return
      */
-    void deleteAd(String oAuthAccessToken, String id)
+    boolean deleteAd(String oAuthAccessToken, String id)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 }// SnapAdInterface

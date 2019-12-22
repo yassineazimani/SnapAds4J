@@ -51,7 +51,8 @@ public interface SnapAdSquadsInterface {
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
      * @throws SnapExecutionException
+     * @return
      */
-    void deleteAdSquad(String oAuthAccessToken, String id)
+    boolean deleteAdSquad(String oAuthAccessToken, String id)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 } // SnapAdSquadsInterface

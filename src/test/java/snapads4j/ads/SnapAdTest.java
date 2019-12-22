@@ -368,6 +368,15 @@ public class SnapAdTest {
     }// test_create_ad_should_throw_SnapArgumentException_6()
 
     @Test
+    public void should_throw_exception_400_update_ad() throws IOException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+        Mockito.when(statusLine.getStatusCode()).thenReturn(400);
+        Mockito.when(httpClient.execute(Mockito.any(HttpPut.class))).thenReturn(httpResponse);
+        assertThatThrownBy(() -> ad.updateAd(oAuthAccessToken, adModelUpdate))
+                .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
+    }// should_throw_exception_400_update_ad()
+
+    @Test
     public void should_throw_exception_401_update_ad() throws IOException {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(401);
@@ -469,11 +478,13 @@ public class SnapAdTest {
     }// should_throw_exception_1337_update_ad()
 
     @Test
-    public void test_delete_ad_should_success() throws IOException {
+    public void test_delete_ad_should_success() throws IOException, SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(200);
         Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
-        Assertions.assertThatCode(() -> ad.deleteAd(oAuthAccessToken, idAdToDelete)).doesNotThrowAnyException();
+        Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+        Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapDeleteAd());
+        Assertions.assertThat(ad.deleteAd(oAuthAccessToken, idAdToDelete)).isTrue();
     } // test_delete_ad_should_success()
 
     @Test

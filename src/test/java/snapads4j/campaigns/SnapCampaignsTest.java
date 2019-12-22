@@ -805,11 +805,13 @@ public class SnapCampaignsTest {
     } // should_throw_exception_1337_getSpecificCampaign()
 
     @Test
-    public void test_delete_campaign_should_success() throws IOException {
+    public void test_delete_campaign_should_success() throws IOException, SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(200);
         Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
-        Assertions.assertThatCode(() -> sCampaigns.deleteCampaign(oAuthAccessToken, id)).doesNotThrowAnyException();
+        Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+        Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapDeleteCampaign());
+        Assertions.assertThat(sCampaigns.deleteCampaign(oAuthAccessToken, id)).isTrue();
     } // test_delete_campaign_should_success()
 
     @Test

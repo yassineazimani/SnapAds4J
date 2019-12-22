@@ -256,7 +256,7 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
     } // getSpecificAdSquad()
 
     @Override
-    public void deleteAdSquad(String oAuthAccessToken, String id)
+    public boolean deleteAdSquad(String oAuthAccessToken, String id)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException {
         if (StringUtils.isEmpty(oAuthAccessToken)) {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
@@ -264,6 +264,7 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
         if (StringUtils.isEmpty(id)) {
             throw new SnapArgumentException("The Ad Squad ID is required");
         }
+        boolean result = false;
         final String url = this.endpointDeleteAdSquad + id;
         HttpDelete request = HttpUtils.prepareDeleteRequest(url, oAuthAccessToken);
         try (CloseableHttpResponse response = httpClient.execute(request)) {
@@ -271,10 +272,20 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
             if (statusCode >= 300) {
                 throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
             }
+            HttpEntity entity = response.getEntity();
+            if(entity != null) {
+                String body = entityUtilsWrapper.toString(entity);
+                ObjectMapper mapper = JsonUtils.initMapper();
+                SnapHttpResponseAdSquad responseFromJson = mapper.readValue(body, SnapHttpResponseAdSquad.class);
+                if (responseFromJson != null && StringUtils.isNotEmpty(responseFromJson.getRequestStatus())) {
+                    result = responseFromJson.getRequestStatus().equalsIgnoreCase("success");
+                }
+            }
         } catch (IOException e) {
             LOGGER.error("Impossible to delete specific ad squad, id = {}", id, e);
             throw new SnapExecutionException("Impossible to delete specific ad squad", e);
         }
+        return result;
     } // deleteAdSquad()
 
     private void checkAdSquad(AdSquad adSquad, CheckAdSquadEnum check) throws SnapArgumentException {

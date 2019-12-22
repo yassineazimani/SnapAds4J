@@ -587,11 +587,13 @@ public class SnapAdSquadsTest {
 
     @Test
     public void test_delete_ad_squad_should_success() throws
-            IOException {
+            IOException, SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(statusLine.getStatusCode()).thenReturn(200);
         Mockito.when(httpClient.execute(Mockito.any(HttpDelete.class))).thenReturn(httpResponse);
-        Assertions.assertThatCode(() -> sAdSquads.deleteAdSquad(oAuthAccessToken, id)).doesNotThrowAnyException();
+        Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+        Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapDeleteAdSquad());
+        Assertions.assertThat(sAdSquads.deleteAdSquad(oAuthAccessToken, id)).isTrue();
     } // test_delete_ad_squad_should_success()
 
     @Test

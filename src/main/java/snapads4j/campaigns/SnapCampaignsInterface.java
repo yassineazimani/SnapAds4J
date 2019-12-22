@@ -119,7 +119,8 @@ public interface SnapCampaignsInterface {
      * @see <a href=
      * "https://developers.snapchat.com/api/docs/#delete-a-specific-campaign">Delete
      * campaign</a>
+     * @return
      */
-    void deleteCampaign(String oAuthAccessToken, String id)
+    boolean deleteCampaign(String oAuthAccessToken, String id)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 } // SnapCampaignsInterface
