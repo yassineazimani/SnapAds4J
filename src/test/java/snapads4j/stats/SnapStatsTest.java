@@ -1659,8 +1659,8 @@ public class SnapStatsTest {
             assertThat(t1.getBrowserTypeBreakdown().getChrome()).isEqualTo(36021);
 
             TimeSerie t2 = timeseries.get(1);
-            assertThat(t2.getStartTime()).isEqualTo("2017-09-01T09:00:00.000");
-            assertThat(t2.getEndTime()).isEqualTo("2017-09-02T09:00:00.000");
+            assertThat(sdf.format(t2.getStartTime())).isEqualTo("2017-09-01T07:00:00.000Z");
+            assertThat(sdf.format(t2.getEndTime())).isEqualTo("2017-09-02T07:00:00.000Z");
             assertThat(t2.getTotalEvents()).isEqualTo(873039);
             assertThat(t2.getEventTypeBreakdown()).isNotNull();
             assertThat(t2.getEventTypeBreakdown().getPageView()).isEqualTo(836945);
@@ -1681,8 +1681,8 @@ public class SnapStatsTest {
             assertThat(t2.getBrowserTypeBreakdown().getEdge()).isEqualTo(1);
 
             TimeSerie t3 = timeseries.get(2);
-            assertThat(t3.getStartTime()).isEqualTo("2017-09-07T09:00:00.000");
-            assertThat(t3.getEndTime()).isEqualTo("2017-09-08T09:00:00.000");
+            assertThat(sdf.format(t3.getStartTime())).isEqualTo("2017-09-07T07:00:00.000Z");
+            assertThat(sdf.format(t3.getEndTime())).isEqualTo("2017-09-08T07:00:00.000Z");
             assertThat(t3.getTotalEvents()).isEqualTo(1675610);
             assertThat(t3.getEventTypeBreakdown()).isNotNull();
             assertThat(t3.getEventTypeBreakdown().getPageView()).isEqualTo(1592779);
