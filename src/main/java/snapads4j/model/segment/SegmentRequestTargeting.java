@@ -39,8 +39,14 @@ public class SegmentRequestTargeting {
 
     private Long id;
 
+    /**
+     * Segment Ids
+     */
     @JsonProperty("segment_id")
     private List<String> segmentIds;
 
+    /**
+     * Operation
+     */
     private OperationEnum operation;
 } // SegmentRequestTargeting

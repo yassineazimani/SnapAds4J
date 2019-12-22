@@ -22,19 +22,33 @@ import lombok.ToString;
 
 import javax.validation.constraints.NotEmpty;
 
+/**
+ * PreviewProperties
+ *
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @ToString
 public class PreviewProperties {
 
+    /**
+     * Preview Media ID
+     */
     @JsonProperty("preview_media_id")
     @NotEmpty(message = "Preview Media ID (Preview Properties) is required")
     private String previewMediaId;
 
+    /**
+     * Logo Media ID
+     */
     @JsonProperty("logo_media_id")
     @NotEmpty(message = "Logo Media ID (Preview Properties) is required")
     private String logoMediaId;
 
+    /**
+     * Preview Headline
+     */
     @JsonProperty("preview_headline")
     @NotEmpty(message = "Preview Headline (Preview Properties) is required")
     private String previewHeadline;

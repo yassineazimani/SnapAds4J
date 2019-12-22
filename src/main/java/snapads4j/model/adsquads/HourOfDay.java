@@ -20,11 +20,19 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Represents hour of day
+ *
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @ToString
 public class HourOfDay {
 
+    /**
+     * Array of hours of day
+     */
     @JsonProperty("hour_of_day")
     private int[] hourOfDay;
 } // HourOfDay

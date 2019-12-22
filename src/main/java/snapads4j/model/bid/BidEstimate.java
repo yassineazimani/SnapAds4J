@@ -21,20 +21,35 @@ import lombok.Getter;
 import lombok.Setter;
 import snapads4j.enums.OptimizationGoalEnum;
 
+/**
+ * Bid estimate for {@link snapads4j.model.adsquads.AdSquad}or {@link TargetingSpecBidEstimate}
+ */
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class BidEstimate {
 
+    /**
+     * Ad Squad ID
+     */
     @JsonProperty("ad_squad_id")
     private String adSquadId;
 
+    /**
+     * Optimization Goal
+     */
     @JsonProperty("optimization_goal")
     private OptimizationGoalEnum optimizationGoal;
 
+    /**
+     * Bid estimate minimum
+     */
     @JsonProperty("bid_estimate_minimum")
     private long bidEstimateMinimum;
 
+    /**
+     * Bid estimate maximum
+     */
     @JsonProperty("bid_estimate_maximum")
     private long bidEstimateMaximum;
 

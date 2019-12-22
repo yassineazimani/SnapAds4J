@@ -24,6 +24,11 @@ import snapads4j.model.targeting.Targeting;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * TargetingSpecBidEstimate
+ *
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)

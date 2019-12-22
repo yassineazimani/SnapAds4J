@@ -42,6 +42,11 @@ import snapads4j.utils.JsonUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+/**
+ * SnapAuthorization
+ *
+ * @see {https://developers.snapchat.com/api/docs/#authentication}
+ */
 @Getter
 @Setter
 @NoArgsConstructor

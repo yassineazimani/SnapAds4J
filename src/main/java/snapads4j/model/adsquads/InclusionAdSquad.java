@@ -25,6 +25,8 @@ import java.util.List;
 /**
  * InclusionAdSquad
  *
+ * Specify more granular placement depending on the type of content.
+ *
  * @author Yassine
  */
 @Getter
@@ -32,6 +34,9 @@ import java.util.List;
 @ToString
 public class InclusionAdSquad {
 
+    /**
+     * Type of content to include
+     */
     @JsonProperty("content_types")
     private List<String> contentTypes;
 } // InclusionAdSquad

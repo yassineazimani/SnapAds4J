@@ -53,6 +53,8 @@ import java.util.Set;
 /**
  * SnapAdAccount
  *
+ * @see {https://developers.snapchat.com/api/docs/#ad-accounts}
+ *
  * @author Yassine
  */
 @Getter

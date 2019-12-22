@@ -28,7 +28,7 @@ import snapads4j.model.AbstractSnapModel;
 import java.util.List;
 
 /**
- * Ad Accounts handle Ads, billing information, and allows you to manage your Campaigns.
+ * Ad Account
  *
  * @author Yassine
  */

@@ -50,6 +50,9 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
+ * SnapAd
+ *
+ * @see {https://developers.snapchat.com/api/docs/#ads}
  * @author yassine
  */
 @Getter

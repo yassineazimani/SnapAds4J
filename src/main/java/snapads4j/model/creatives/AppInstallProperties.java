@@ -22,23 +22,40 @@ import lombok.ToString;
 
 import javax.validation.constraints.NotEmpty;
 
+/**
+ * AppInstallProperties
+ *
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @ToString
 public class AppInstallProperties {
 
+    /**
+     * App name
+     */
     @JsonProperty("app_name")
     @NotEmpty(message = "App name (App Install Properties) is required")
     private String appName;
 
+    /**
+     * IOS App ID
+     */
     @JsonProperty("ios_app_id")
     @NotEmpty(message = "IOS App ID (App Install Properties) is required")
     private String iosAppId;
 
+    /**
+     * Android App URL
+     */
     @JsonProperty("android_app_url")
     @NotEmpty(message = "Android App URL (App Install Properties) is required")
     private String androidAppUrl;
 
+    /**
+     * Icon Media ID
+     */
     @JsonProperty("icon_media_id")
     @NotEmpty(message = "Icon Media ID (App Install Properties) is required")
     private String iconMediaId;

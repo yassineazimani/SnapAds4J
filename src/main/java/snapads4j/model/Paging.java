@@ -19,6 +19,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
+/**
+ * Link next page (pagination)
+ */
 @Getter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Paging {

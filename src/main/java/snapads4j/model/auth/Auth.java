@@ -18,18 +18,38 @@ package snapads4j.model.auth;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Auth
+ *
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 public class Auth {
 
+    /**
+     * “authorization_code” if using code; “refresh_token” if using a refresh token
+     */
     private String grantType;
 
+    /**
+     * URLEncoded Redirect URI. Required when grant_type=authorization_code. Must match redirect_uri from the previous /authorize call
+     */
     private String redirectUri;
 
+    /**
+     * Code
+     */
     private String code;
 
+    /**
+     * Client ID
+     */
     private String clientId;
 
+    /**
+     * Client Secret
+     */
     private String clientSecret;
 
 }// Auth

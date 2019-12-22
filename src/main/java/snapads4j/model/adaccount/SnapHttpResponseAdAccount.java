@@ -43,12 +43,20 @@ public class SnapHttpResponseAdAccount extends SnapHttpResponse implements SnapH
 
     private List<SnapInnerAdAccount> adaccounts;
 
+    /**
+     * Get the single ad account from Array Json
+     * @return Optional of {@link AdAccount}
+     */
     public Optional<AdAccount> getSpecificAdAccount() {
         return (CollectionUtils.isNotEmpty(adaccounts) && adaccounts.get(0) != null)
                 ? Optional.of(adaccounts.get(0).getAdaccount())
                 : Optional.empty();
     } // getSpecificAdAccount()
 
+    /**
+     * Get all ad accounts from Array Json
+     * @return list of {@link AdAccount}
+     */
     public List<AdAccount> getAllAdAccounts() {
         return adaccounts.stream().map(SnapInnerAdAccount::getAdaccount).collect(Collectors.toList());
     } // getAllAdAccounts()

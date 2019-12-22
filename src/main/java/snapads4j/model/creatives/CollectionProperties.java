@@ -22,22 +22,39 @@ import lombok.ToString;
 
 import javax.validation.constraints.NotEmpty;
 
+/**
+ * Collection Properties
+ *
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @ToString
 public class CollectionProperties {
 
+    /**
+     * Interaction Zone ID
+     */
     @JsonProperty("interaction_zone_id")
     @NotEmpty(message = "Interaction Zone ID (Collection Properties) is required")
     private String interactionZoneId;
 
+    /**
+     * Default Fallback Interaction Type
+     */
     @JsonProperty("default_fallback_interaction_type")
     @NotEmpty(message = "Default Fallback Interaction Type (Collection Properties) is required")
     private String defaultFallbackInteractionType;
 
+    /**
+     * Web View Properties
+     */
     @JsonProperty("web_view_properties")
     private WebViewProperties webViewProperties;
 
+    /**
+     * Deep Link Properties
+     */
     @JsonProperty("deep_link_properties")
     private DeepLinkProperties deepLinkProperties;
 }// CollectionProperties

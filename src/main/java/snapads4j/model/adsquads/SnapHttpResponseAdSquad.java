@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import snapads4j.model.Paging;
 import snapads4j.model.SnapHttpResponse;
 import snapads4j.model.SnapHttpResponsePaging;
+import snapads4j.model.ads.Ad;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,12 +43,20 @@ public class SnapHttpResponseAdSquad extends SnapHttpResponse implements SnapHtt
 
     private List<SnapInnerAdSquad> adsquads;
 
+    /**
+     * Get the single AdSquad from Array Json
+     * @return Optional of {@link AdSquad}
+     */
     public Optional<AdSquad> getSpecificAdSquad() {
         return (CollectionUtils.isNotEmpty(adsquads) && adsquads.get(0) != null)
                 ? Optional.of(adsquads.get(0).getAdsquad())
                 : Optional.empty();
     } // getSpecificAdSquad()
 
+    /**
+     * Get all AdSquad from Array Json
+     * @return list of {@link AdSquad}
+     */
     public List<AdSquad> getAllAdSquads() {
         return adsquads.stream().map(SnapInnerAdSquad::getAdsquad).collect(Collectors.toList());
     } // getAllAdSquads()

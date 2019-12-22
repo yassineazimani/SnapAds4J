@@ -47,6 +47,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
+/**
+ * SnapCreative
+ *
+ * @see {https://developers.snapchat.com/api/docs/#creative-elements}
+ */
 @Getter
 @Setter
 public class SnapCreative implements SnapCreativeInterface {

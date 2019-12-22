@@ -48,6 +48,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Snap Campaigns
+ *
+ * @see {https://developers.snapchat.com/api/docs/#campaigns}
+ */
 @Getter
 @Setter
 public class SnapCampaigns implements SnapCampaignsInterface {

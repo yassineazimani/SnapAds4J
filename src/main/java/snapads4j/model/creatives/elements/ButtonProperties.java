@@ -20,6 +20,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * ButtonProperties
+ *
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @ToString

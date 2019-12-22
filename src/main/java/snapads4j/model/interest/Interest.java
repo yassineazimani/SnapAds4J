@@ -24,14 +24,25 @@ import lombok.ToString;
 
 import java.util.List;
 
+/**
+ * Interest
+ *
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @ToString
 @JsonInclude(Include.NON_EMPTY)
 public class Interest {
 
+    /**
+     * ID
+     */
     private Integer id;
 
+    /**
+     * Category IDs Interest
+     */
     @JsonProperty("category_id")
     private List<String> categoryIds;
 } // Interest

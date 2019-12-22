@@ -5,6 +5,12 @@ import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 
 import java.net.URI;
 
+/**
+ * Override HttpDelete because SnapChat uses a request Delete with
+ * body, in my opinion : it's a mistake design.
+ *
+ * @author Yassine AZIMANI
+ */
 @NoArgsConstructor
 public class HttpDeleteWithBody extends HttpEntityEnclosingRequestBase {
 

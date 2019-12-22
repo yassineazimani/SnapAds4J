@@ -51,6 +51,8 @@ import java.util.Set;
 /**
  * SnapAdSquads
  *
+ * @see {https://developers.snapchat.com/api/docs/#ad-squads}
+ *
  * @author Yassine
  */
 @Getter

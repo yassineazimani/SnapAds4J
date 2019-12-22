@@ -44,6 +44,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * SnapStats
+ *
+ * @see {https://developers.snapchat.com/api/docs/#measurement}
+ */
 @Getter
 @Setter
 public class SnapStats implements SnapStatsInterface {

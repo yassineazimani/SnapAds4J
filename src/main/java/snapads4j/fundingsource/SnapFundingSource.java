@@ -42,6 +42,8 @@ import java.util.Optional;
 /**
  * SnapFundingSource
  *
+ * @see {https://developers.snapchat.com/api/docs/#funding-sources}
+ *
  * @author Yassine
  */
 @Getter

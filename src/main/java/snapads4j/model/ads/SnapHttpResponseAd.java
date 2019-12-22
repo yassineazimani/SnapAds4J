@@ -24,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import snapads4j.model.Paging;
 import snapads4j.model.SnapHttpResponse;
 import snapads4j.model.SnapHttpResponsePaging;
+import snapads4j.model.adaccount.AdAccount;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,11 +39,19 @@ public class SnapHttpResponseAd extends SnapHttpResponse implements SnapHttpResp
 
     private List<SnapInnerAd> ads;
 
+    /**
+     * Get the single ad from Array Json
+     * @return Optional of {@link Ad}
+     */
     public Optional<Ad> getSpecificAd() {
         return (CollectionUtils.isNotEmpty(ads) && ads.get(0) != null) ? Optional.of(ads.get(0).getAd())
                 : Optional.empty();
     }// getSpecificAd()
 
+    /**
+     * Get all ad from Array Json
+     * @return list of {@link Ad}
+     */
     public List<Ad> getAllAd() {
         return ads.stream().map(SnapInnerAd::getAd).collect(Collectors.toList());
     }// getAllAd()

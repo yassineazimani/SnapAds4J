@@ -37,6 +37,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * SnapAuditLogs
+ *
+ * @see {https://developers.snapchat.com/api/docs/#snap-audience-match}
+ */
 @Setter
 public class SnapAuditLogs implements SnapAuditLogsInterface {
 

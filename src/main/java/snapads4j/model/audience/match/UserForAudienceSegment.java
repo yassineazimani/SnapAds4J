@@ -25,6 +25,9 @@ import lombok.ToString;
 @ToString
 public class UserForAudienceSegment {
 
+    /**
+     * Number uploaded users
+     */
     @JsonProperty("number_uploaded_users")
     private int numberUploadedUsers;
 

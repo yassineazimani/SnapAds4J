@@ -34,6 +34,7 @@ import java.util.Date;
 /**
  * Campaign
  *
+ * @see {https://developers.snapchat.com/api/docs/#campaigns}
  * @author Yassine
  */
 @Getter
@@ -42,6 +43,9 @@ import java.util.Date;
 @JsonInclude(Include.NON_EMPTY)
 public class Campaign extends AbstractSnapModel {
 
+    /**
+     * Campaign Status
+     */
     @NotNull(message = "The campaign status is required")
     private StatusEnum status;
 

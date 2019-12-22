@@ -25,7 +25,7 @@ import lombok.ToString;
 import java.util.Date;
 
 /**
- * AbstractSnapModel
+ * AbstractSnapModel contains common members variables of the entities.
  *
  * @author Yassine
  */
@@ -36,19 +36,19 @@ import java.util.Date;
 public abstract class AbstractSnapModel {
 
     /**
-     * Model ID
+     * Entity ID
      */
     protected String id;
 
     /**
-     * Date of Creation
+     * Entity date of creation
      */
     @JsonProperty("created_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     protected Date createdAt;
 
     /**
-     * Date of Update
+     * Entity date of update
      */
     @JsonProperty("updated_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")

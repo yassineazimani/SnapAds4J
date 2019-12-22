@@ -27,29 +27,52 @@ import snapads4j.enums.UploadStatusEnum;
 
 import java.util.List;
 
+/**
+ * AudienceSegment
+ *
+ * @see {https://developers.snapchat.com/api/docs/#snap-audience-match}
+ */
 @Getter
 @Setter
 @JsonInclude(Include.NON_EMPTY)
 @ToString
 public class AudienceSegment extends SamLookalikes {
 
+    /**
+     * Approximate number users of the segment
+     */
     @JsonProperty("approximate_number_users")
     private int approximateNumberUsers;
 
+    /**
+     * Segment status
+     */
     private StatusEnum status;
 
+    /**
+     * Upload status of the segment
+     */
     @JsonProperty("upload_status")
     private UploadStatusEnum uploadStatus;
 
+    /**
+     * Status of whether this segment can be targeted
+     */
     @JsonProperty("targetable_status")
     private TargetableStatusEnum targetableStatus;
 
+    /**
+     * Organization ID
+     */
     @JsonProperty("organization_id")
     private String organizationId;
 
     @JsonProperty("visible_to")
     private List<String> visibleTo;
 
+    /**
+     * Build a audience segment
+     */
     public AudienceSegment() {
         this.retentionInDays = 9999;
     }// AudienceSegment()

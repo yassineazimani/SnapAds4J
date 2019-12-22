@@ -33,6 +33,8 @@ import java.util.List;
 /**
  * AdAccount
  *
+ * @see {https://developers.snapchat.com/api/docs/#ad-accounts}
+ *
  * @author Yassine
  */
 @Getter
@@ -77,6 +79,9 @@ public class AdAccount extends AbstractSnapModel {
     @NotEmpty(message = "The time zone is required")
     private String timezone;
 
+    /**
+     * Account type
+     */
     @NotNull(message = "The ad account type is required")
     private AdAccountTypeEnum type;
 

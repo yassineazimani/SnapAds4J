@@ -28,12 +28,16 @@ import snapads4j.enums.TypeCreationSpecDetails;
 @JsonInclude(Include.NON_EMPTY)
 @ToString
 /**
+ * Creation Spec Details
  *
  * @author yassine
  *
  */
 public class CreationSpec {
 
+    /**
+     * Build creation spec details
+     */
     public CreationSpec() {
         this.type = TypeCreationSpecDetails.BALANCE;
     }// CreationSpec()

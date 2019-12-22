@@ -48,6 +48,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * SnapCreativeElement
+ *
+ * @see {https://developers.snapchat.com/api/docs/#creative-elements}
+ */
 @Getter
 @Setter
 public class SnapCreativeElement implements SnapCreativeElementInterface {

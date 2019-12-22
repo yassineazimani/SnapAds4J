@@ -27,36 +27,72 @@ import snapads4j.model.AbstractSnapModel;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * Audit Log
+ *
+ * @see {https://developers.snapchat.com/api/docs/#audit-logs}
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @JsonInclude(Include.NON_EMPTY)
 public class AuditLog extends AbstractSnapModel {
 
+    /**
+     * Name
+     */
     private String name;
 
+    /**
+     * Action
+     */
     private String action;
 
+    /**
+     * User ID
+     */
     @JsonProperty("user_id")
     private String userId;
 
+    /**
+     * Email
+     */
     private String email;
 
+    /**
+     * Event date
+     */
     @JsonProperty("event_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date eventAt;
 
+    /**
+     * App ID
+     */
     @JsonProperty("app_id")
     private String appId;
 
+    /**
+     * App name
+     */
     @JsonProperty("app_name")
     private String appName;
 
+    /**
+     * Entity ID
+     */
     @JsonProperty("entity_id")
     private String entityId;
 
+    /**
+     * Entity Type
+     */
     @JsonProperty("entity_type")
     private TypeAuditLogEnum entityType;
 
+    /**
+     * History of changes
+     */
     @JsonProperty("update_value_records")
     private Map<String, Map<String, String>> updateValueRecords;
 

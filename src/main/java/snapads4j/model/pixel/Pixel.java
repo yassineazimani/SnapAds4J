@@ -26,24 +26,45 @@ import snapads4j.model.AbstractSnapModel;
 
 import javax.validation.constraints.NotEmpty;
 
+/**
+ * Snap Pixel
+ *
+ * @see {https://developers.snapchat.com/api/docs/#snap-pixel}
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @ToString
 @JsonInclude(Include.NON_EMPTY)
 public class Pixel extends AbstractSnapModel {
 
+    /**
+     * Effective Status
+     */
     @JsonProperty("effective_status")
     private String effectiveStatus;
 
+    /**
+     * Name
+     */
     @NotEmpty(message = "Pixel name parameter is required")
     private String name;
 
+    /**
+     * Ad Account ID
+     */
     @JsonProperty("ad_account_id")
     @NotEmpty(message = "Ad Account ID parameter is required")
     private String adAccountId;
 
+    /**
+     * Pixel status
+     */
     private StatusEnum status;
 
+    /**
+     * code pixel in javascript
+     */
     @JsonProperty("pixel_javascript")
     private String pixelJavascript;
 

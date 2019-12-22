@@ -15,8 +15,18 @@
  */
 package snapads4j.model;
 
+/**
+ * SnapHttpResponse which could handle paging must to
+ * implement this interface.
+ *
+ * @author Yassine AZIMANI
+ */
 public interface SnapHttpResponsePaging {
 
+    /**
+     * Check if response returns with paging
+     * @return boolean response
+     */
     boolean hasPaging();
 
 }// SnapHttpResponsePaging

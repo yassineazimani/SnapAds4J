@@ -25,31 +25,63 @@ import snapads4j.model.AbstractSnapModel;
 import snapads4j.model.creatives.DeepLinkProperties;
 import snapads4j.model.creatives.WebViewProperties;
 
+/**
+ * Creative Element
+ *
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @ToString
 public class CreativeElement extends AbstractSnapModel {
 
+    /**
+     * Ad Account ID
+     */
     @JsonProperty("ad_account_id")
     private String adAccountId;
 
+    /**
+     * Creative Element name
+     */
     private String name;
 
+    /**
+     * Creative Element Type
+     */
     private CreativeTypeEnum type;
 
+    /**
+     * Interaction Type
+     */
     @JsonProperty("interaction_type")
     private InteractionTypeEnum interactionType;
 
+    /**
+     * Description
+     */
     private String description;
 
+    /**
+     * Title
+     */
     private String title;
 
+    /**
+     * Properties of the button like the image to be shown
+     */
     @JsonProperty("button_properties")
     private ButtonProperties buttonProperties;
 
+    /**
+     * Properties of the web view to be used
+     */
     @JsonProperty("web_view_properties")
     private WebViewProperties webViewProperties;
 
+    /**
+     * Properties of the deep link to be used
+     */
     @JsonProperty("deep_link_properties")
     private DeepLinkProperties deepLinkProperties;
 

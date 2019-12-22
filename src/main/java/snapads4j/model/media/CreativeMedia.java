@@ -39,22 +39,40 @@ import javax.validation.constraints.NotNull;
 @JsonInclude(Include.NON_EMPTY)
 public class CreativeMedia extends AbstractSnapModel {
 
+    /**
+     * Ad Account ID
+     */
     @JsonProperty("ad_account_id")
     @NotEmpty(message = "The Ad Account ID is required")
     private String adAccountId;
 
+    /**
+     * Download link of the creative media
+     */
     @JsonProperty("download_link")
     private String downloadLink;
 
+    /**
+     * Media status
+     */
     @JsonProperty("media_status")
     private MediaStatusTypeEnum mediaStatus;
 
+    /**
+     * Name
+     */
     @NotEmpty(message = "The media's name is required")
     private String name;
 
+    /**
+     * Media Type
+     */
     @NotNull(message = "The media's type is required")
     private MediaTypeEnum type;
 
+    /**
+     * filename
+     */
     @JsonProperty("file_name")
     private String fileName;
 

@@ -46,6 +46,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * SnapBidEstimate
+ *
+ * @see {https://developers.snapchat.com/api/docs/#bid-estimate}
+ */
 @Setter
 public class SnapBidEstimate implements SnapBidEstimateInterface {
 

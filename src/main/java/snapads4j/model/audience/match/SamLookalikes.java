@@ -27,28 +27,52 @@ import snapads4j.model.AbstractSnapModel;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
+/**
+ * A lookalike segment.
+ *
+ * @see {https://developers.snapchat.com/api/docs/#sam-lookalikes}
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @JsonInclude(Include.NON_EMPTY)
 @ToString
 public class SamLookalikes extends AbstractSnapModel {
 
+    /**
+     * Ad Account ID
+     */
     @JsonProperty("ad_account_id")
     @NotEmpty(message = "The Ad Account ID is required")
     protected String adAccountId;
 
+    /**
+     * Description
+     */
     protected String description;
 
+    /**
+     * Audience Segment name
+     */
     @NotEmpty(message = "The name is required")
     protected String name;
 
+    /**
+     * Number days to retain audience members
+     */
     @JsonProperty("retention_in_days")
     @Min(value = 0, message = "The retention must be equal or greater than zero days")
     protected int retentionInDays;
 
+    /**
+     * Data source type
+     */
     @JsonProperty("source_type")
     protected SourceTypeEnum sourceType;
 
+    /**
+     * Lookalike Creation Spec dictionary
+     */
     @JsonProperty("creation_spec")
     protected CreationSpec creationSpec;
 

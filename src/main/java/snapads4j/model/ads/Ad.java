@@ -29,23 +29,45 @@ import snapads4j.model.thirdparty.SwipeTrackingUrl;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Ad
+ *
+ * @see {https://developers.snapchat.com/api/docs/#ads}
+ *
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @JsonInclude(Include.NON_EMPTY)
 public class Ad extends AbstractSnapModel {
 
+    /**
+     * Ad name
+     */
     @NotEmpty(message = "Ad's name parameter is required")
     private String name;
 
+    /**
+     * Ad status
+     */
     @NotNull(message = "Ad's status parameter is required")
     private StatusEnum status;
 
+    /**
+     * Ad type
+     */
     private AdTypeEnum type;
 
+    /**
+     * Ad Squad ID
+     */
     @JsonProperty("ad_squad_id")
     @NotEmpty(message = "Ad Squad ID parameter is required")
     private String adSquadId;
 
+    /**
+     * Creative ID
+     */
     @JsonProperty("creative_id")
     private String creativeId;
 
@@ -54,5 +76,13 @@ public class Ad extends AbstractSnapModel {
 
     @JsonProperty("third_party_paid_impression_tracking_urls")
     private PaidImpressionTrackingUrl thirdPartyPaidImpressionTrackingUrls;
+
+    /**
+     * Name of the paying advertiser/political entity
+     */
+    @JsonProperty("paying_advertiser_name")
+    private String payingAdvertiserName;
+
+
 
 }// Ad

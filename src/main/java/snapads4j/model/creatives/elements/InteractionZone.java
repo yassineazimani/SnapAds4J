@@ -25,31 +25,57 @@ import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Interaction Zone
+ *
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @ToString
 public class InteractionZone {
 
+    /**
+     * Id
+     */
     private String id;
 
+    /**
+     * Date creation
+     */
     @JsonProperty("created_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date createdAt;
 
+    /**
+     * Date update
+     */
     @JsonProperty("updated_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date updatedAt;
 
+    /**
+     * Ad Account ID
+     */
     @JsonProperty("ad_account_id")
     @NotEmpty(message = "The interaction zone's ad account id is required")
     private String adAccountId;
 
+    /**
+     * Name
+     */
     @NotEmpty(message = "The interaction zone's name is required")
     private String name;
 
+    /**
+     * Headline
+     */
     @NotEmpty(message = "The interaction zone's headline is required")
     private String headline;
 
+    /**
+     * Interaction zone's creative elements
+     */
     @JsonProperty("creative_element_ids")
     @NotEmpty(message = "The interaction zone's creative elements is required")
     private List<String> creativeElements;

@@ -31,6 +31,9 @@ import lombok.Setter;
 @JsonIgnoreProperties(value = {"sub_request_status"})
 public class SnapInnerAd {
 
+    /**
+     * Ad in json file
+     */
     private Ad ad;
 
 }// SnapInnerAd

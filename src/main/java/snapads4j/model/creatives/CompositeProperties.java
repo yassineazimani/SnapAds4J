@@ -27,6 +27,9 @@ import java.util.List;
 @ToString
 public class CompositeProperties {
 
+    /**
+     * Creative IDs
+     */
     @JsonProperty("creative_ids")
     private List<String> creativeIds;
 

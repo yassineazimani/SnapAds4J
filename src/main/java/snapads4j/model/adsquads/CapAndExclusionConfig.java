@@ -20,11 +20,20 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Specify the maximum number of times a user
+ * is exposed to an ad over a period of time.
+ *
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @ToString
 public class CapAndExclusionConfig {
 
+    /**
+     * Frequency Cap configuration
+     */
     @JsonProperty("frequency_cap_config")
     private FrequencyCapConfig frequencyCapConfig;
 } // CapAndExclusionConfig

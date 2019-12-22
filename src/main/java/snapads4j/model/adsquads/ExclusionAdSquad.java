@@ -25,6 +25,8 @@ import java.util.List;
 /**
  * ExclusionAdSquad
  *
+ * Specify more granular placement depending on the type of content.
+ *
  * @author Yassine
  */
 @Getter
@@ -32,6 +34,9 @@ import java.util.List;
 @ToString
 public class ExclusionAdSquad {
 
+    /**
+     * Type of content to exclude
+     */
     @JsonProperty("content_types")
     private List<String> contentTypes;
 } // ExclusionAdSquad

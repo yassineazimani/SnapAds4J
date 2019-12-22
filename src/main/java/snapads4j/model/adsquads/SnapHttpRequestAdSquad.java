@@ -30,6 +30,9 @@ import java.util.List;
 @ToString
 public class SnapHttpRequestAdSquad {
 
+    /**
+     * Array AdSquad json
+     */
     private List<AdSquad> adsquads;
 
     /**
@@ -39,6 +42,10 @@ public class SnapHttpRequestAdSquad {
         this.adsquads = new ArrayList<>();
     } // SnapHttpRequestAdSquad
 
+    /**
+     * Add adSquad to request HTTP
+     * @param adSquad adSquad
+     */
     public void addAdSquad(AdSquad adSquad) {
         this.adsquads.add(adSquad);
     } // addAdSquad()

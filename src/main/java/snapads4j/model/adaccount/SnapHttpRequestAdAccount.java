@@ -20,15 +20,30 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * SnapHttpRequestAdAccount
+ *
+ * @author Yassine AZIMANI
+ */
 @Getter
 public class SnapHttpRequestAdAccount {
 
+    /**
+     * Array AdAccount json
+     */
     private List<AdAccount> adaccounts;
 
+    /**
+     * Build SnapHttpRequestAdAccount
+     */
     public SnapHttpRequestAdAccount() {
         this.adaccounts = new ArrayList<>();
     } // SnapHttpRequestAdAccount()
 
+    /**
+     * Add adAccount to request HTTP
+     * @param adAccount adAccount
+     */
     public void addAdAccount(AdAccount adAccount) {
         this.adaccounts.add(adAccount);
     } // addAdAccount()

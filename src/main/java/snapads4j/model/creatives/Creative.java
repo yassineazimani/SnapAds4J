@@ -28,9 +28,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
- * CreativeMedia
- * <p>
- * A Creative is the combination of one or more pieces of media.
+ * Creative
  *
  * @author Yassine
  */
@@ -120,30 +118,57 @@ public class Creative extends AbstractSnapModel {
     @JsonProperty("review_status")
     private ReviewStatusEnum reviewStatus;
 
+    /**
+     * Long Form Video Properties
+     */
     @JsonProperty("longform_video_properties")
     private LongformVideoProperties longformVideoProperties;
 
+    /**
+     * App Install Properties
+     */
     @JsonProperty("app_install_properties")
     private AppInstallProperties appInstallProperties;
 
+    /**
+     * Web View Properties
+     */
     @JsonProperty("web_view_properties")
     private WebViewProperties webViewProperties;
 
+    /**
+     * Deep Link Properties
+     */
     @JsonProperty("deep_link_properties")
     private DeepLinkProperties deepLinkProperties;
 
+    /**
+     * Preview Properties
+     */
     @JsonProperty("preview_properties")
     private PreviewProperties previewProperties;
 
+    /**
+     * Collection Properties
+     */
     @JsonProperty("collection_properties")
     private CollectionProperties collectionProperties;
 
+    /**
+     * AdLens Properties
+     */
     @JsonProperty("ad_to_lens_properties")
     private AdLensProperties adLensProperties;
 
+    /**
+     * Composite Properties
+     */
     @JsonProperty("composite_properties")
     private CompositeProperties compositeProperties;
 
+    /**
+     * Build creative instance
+     */
     public Creative() {
         this.shareable = true;
     }// Creative()

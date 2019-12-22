@@ -21,20 +21,41 @@ import lombok.Setter;
 import lombok.ToString;
 import snapads4j.enums.ProximityUnitEnum;
 
+/**
+ * Circle
+ */
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 public class Circle {
 
+    /**
+     * Latitude
+     */
     private double latitude;
 
+    /**
+     * Longitude
+     */
     private double longitude;
 
+    /**
+     * Radius
+     */
     private int radius;
 
+    /**
+     * Unit used
+     */
     private ProximityUnitEnum unit;
 
+    /**
+     * Build a circle
+     * @param latitude latitude
+     * @param longitude longitude
+     * @param radius radius
+     */
     public Circle(double latitude, double longitude, int radius) {
         this.latitude = latitude;
         this.longitude = longitude;

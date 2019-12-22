@@ -19,11 +19,19 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * AdLensProperties
+ *
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @ToString
 public class AdLensProperties {
 
+    /**
+     * Lens Media ID
+     */
     private String lensMediaId;
 
 }// AdLensProperties

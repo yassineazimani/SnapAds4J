@@ -41,6 +41,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * SnapOrganization
+ *
+ * @see {https://developers.snapchat.com/api/docs/#organizations}
+ */
 @Getter
 @Setter
 public class SnapOrganization implements SnapOrganizationInterface {

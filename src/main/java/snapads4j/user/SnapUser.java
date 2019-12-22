@@ -39,6 +39,11 @@ import snapads4j.utils.HttpUtils;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * SnapUser
+ *
+ * @see {https://developers.snapchat.com/api/docs/#user}
+ */
 @Getter
 @Setter
 public class SnapUser implements SnapUserInterface {

@@ -46,6 +46,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * SnapPixel
+ *
+ * @see {https://developers.snapchat.com/api/docs/#snap-pixel}
+ */
 @Getter
 @Setter
 public class SnapPixel implements SnapPixelInterface {

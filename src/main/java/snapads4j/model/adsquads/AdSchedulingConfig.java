@@ -21,12 +21,15 @@ import snapads4j.enums.DayEnum;
 import java.util.Map;
 
 /**
- * AdSchedulingConfig
+ * AdSchedulingConfig : The schedule for running ads
  *
  * @author Yassine
  */
 public class AdSchedulingConfig {
 
+    /**
+     * The schedule for running ads
+     */
     @JsonProperty("ad_scheduling_config")
-    private Map<DayEnum, HourOfDay> ad_scheduling_config;
+    private Map<DayEnum, HourOfDay> adSchedulingConfig;
 } // AdSchedulingConfig

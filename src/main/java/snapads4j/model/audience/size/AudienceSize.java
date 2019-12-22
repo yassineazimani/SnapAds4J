@@ -20,17 +20,32 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Audience Size
+ *
+ * @see {https://developers.snapchat.com/api/docs/#audience-size}
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AudienceSize {
 
+    /**
+     * Ad Squad ID
+     */
     @JsonProperty("ad_squad_id")
     private String adSquadId;
 
+    /**
+     * Audience size minimum
+     */
     @JsonProperty("audience_size_minimum")
     private long audienceSizeMinimum;
 
+    /**
+     * Audience size maximum
+     */
     @JsonProperty("audience_size_maximum")
     private long audienceSizeMaximum;
 

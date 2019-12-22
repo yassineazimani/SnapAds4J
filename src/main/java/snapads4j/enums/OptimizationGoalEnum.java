@@ -17,6 +17,11 @@ package snapads4j.enums;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * OptimizationGoalEnum
+ *
+ * @author Yassine AZIMANI
+ */
 public enum OptimizationGoalEnum {
     /**
      * Cost Per 1000 Impressions (CPM), bid_micro will not be exceeded

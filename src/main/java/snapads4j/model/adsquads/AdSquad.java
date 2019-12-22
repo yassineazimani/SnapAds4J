@@ -34,6 +34,7 @@ import java.util.Date;
 /**
  * AdSquad
  *
+ * @see {https://developers.snapchat.com/api/docs/#ad-squads}
  * @author Yassine
  */
 @Getter

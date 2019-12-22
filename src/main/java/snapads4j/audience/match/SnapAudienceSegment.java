@@ -52,6 +52,11 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * SnapAudienceSegment
+ *
+ * @see {https://developers.snapchat.com/api/docs/#snap-audience-match}
+ */
 @Setter
 public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 

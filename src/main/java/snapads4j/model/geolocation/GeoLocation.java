@@ -25,6 +25,9 @@ import snapads4j.enums.OperationEnum;
 
 import java.util.List;
 
+/**
+ * GeoLocation
+ */
 @Getter
 @Setter
 @ToString

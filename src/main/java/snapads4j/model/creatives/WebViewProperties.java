@@ -22,22 +22,42 @@ import lombok.ToString;
 
 import java.util.List;
 
+/**
+ * WebViewProperties
+ *
+ * @author Yassine AZIMANI
+ */
 @Getter
 @Setter
 @ToString
 public class WebViewProperties {
 
+    /**
+     * URL
+     */
     private String url;
 
+    /**
+     * Allows Snap Javascript SDK
+     */
     @JsonProperty("allow_snap_javascript_sdk")
     private boolean allowSnapJavascriptSdk;
 
+    /**
+     * Use block preload
+     */
     @JsonProperty("block_preload")
     private boolean blockPreload;
 
+    /**
+     * Use immersive mode
+     */
     @JsonProperty("use_immersive_mode")
     private boolean useImmersiveMode;
 
+    /**
+     * Deep Link Urls bind to this web view properties
+     */
     @JsonProperty("deep_link_urls")
     private List<String> deepLinkUrls;
 
