@@ -37,13 +37,99 @@ https://adoptopenjdk.net/
 
 ## Get Started
 
-Very soon...
+### Download and install SnapAds4J
+
+#### Maven integration
+
+Coming soon...
+
+#### Gradle integration
+
+Coming soon...
+
+#### Download
+
+Latest stable version : 
+
+Coming soon...
+
+Add the jar file to your application classpath.
+
+### Tutorial
+
+In first time, we have to get the access token to use SnapChat API Ads
+functionnalities, without the access token, we can't do anything. So we'll follow this Web flow :
+
+https://developers.snapchat.com/api/docs/#full-web-flow-example 
+
+Let's consider we have a controller Web (Spring/Servlet JEE...). In this controller, we'll write
+two endpoints, one to open the authorize link and another which represents a redirect url
+used by SnapChat after successful authorize link. In this redirect url, we'll take the parameter code
+given by SnapChat to get access token.   
+
+In a controller of your choice, we'll prepare the authorize link to get access token. This link
+will be opened in a browser... 
+
+```java
+    // Initialize Client ID, Redirect URI and Client Secret :
+    SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
+    configBuilder.setClientId("fake_client_id");
+    configBuilder.setRedirectUri("fake_redirect_uri");
+    configBuilder.setClientSecret("fake_client_secret");
+    SnapConfiguration config = configBuilder.build();
+
+    SnapAuthorization auth = new SnapAuthorization(config);
+
+    // 1) Get the authorize link :
+
+    String url = null;
+    try {
+        url = auth.getOAuthAuthorizationURI();
+    } catch (SnapAuthorizationException e) {
+        e.printStackTrace();
+    }
+            
+    if(url != null){
+        // Redirect the user to url given by auth.getOAuthAuthorizationURI();
+    }
+
+```
+
+Now, in the other endpoint (Our redirect url for snapchat), catch the parameter code,
+and call the function to get the access token...
+
+```java
+    String code = functionGetCodeParameter(); // Get code parameter from url
+    if(code != null) {
+        TokenResponse tokenResponse;
+        try {
+            tokenResponse = auth.getOAuthAccessToken(code);
+            System.out.println("Access Token : " + tokenResponse.getAccessToken());
+            // Let's save the access token in a cookie/session/database :
+            saveMyAccessToken(tokenResponse.getAccessToken());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }    
+```
+We have the access token, so we can call any functions of the API... If your
+access token expires, you can refresh it with refreshtoken :
+
+```java
+    try {
+        TokenResponse tokenResponse = auth.refreshToken("token");
+        String accessToken = tokenResponse.getAccessToken();
+        // Then, do what do you want with this token
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+```
 
 ## Code examples
 
 Very soon...
 
-## Wanna join the project
+## Wanna join the project ?
 
 ## License
 
