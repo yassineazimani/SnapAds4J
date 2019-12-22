@@ -23,7 +23,7 @@ import java.util.List;
 @Getter
 public class SnapHttpRequestPixel {
 
-    private List<Pixel> pixels;
+    private final List<Pixel> pixels;
 
     public SnapHttpRequestPixel() {
         this.pixels = new ArrayList<>();

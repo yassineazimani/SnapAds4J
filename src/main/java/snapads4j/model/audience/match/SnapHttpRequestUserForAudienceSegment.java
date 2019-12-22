@@ -23,7 +23,7 @@ import java.util.List;
 @Getter
 public class SnapHttpRequestUserForAudienceSegment {
 
-    private List<FormUserForAudienceSegment> users;
+    private final List<FormUserForAudienceSegment> users;
 
     public SnapHttpRequestUserForAudienceSegment() {
         this.users = new ArrayList<>();

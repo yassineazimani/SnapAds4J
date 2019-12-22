@@ -31,7 +31,7 @@ public class SnapHttpRequestAd {
     /**
      * Array Ad json
      */
-    private List<Ad> ads;
+    private final List<Ad> ads;
 
     /**
      * Build SnapHttpRequestAd

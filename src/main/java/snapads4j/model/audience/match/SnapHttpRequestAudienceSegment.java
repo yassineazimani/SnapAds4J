@@ -23,7 +23,7 @@ import java.util.List;
 @Getter
 public class SnapHttpRequestAudienceSegment {
 
-    private List<SamLookalikes> segments;
+    private final List<SamLookalikes> segments;
 
     public SnapHttpRequestAudienceSegment() {
         this.segments = new ArrayList<>();

@@ -23,7 +23,7 @@ import java.util.List;
 @Getter
 public class SnapHttpRequestMedia {
 
-    private List<CreativeMedia> media;
+    private final List<CreativeMedia> media;
 
     public SnapHttpRequestMedia() {
         this.media = new ArrayList<>();

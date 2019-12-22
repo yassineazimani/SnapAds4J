@@ -23,7 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 import snapads4j.model.Paging;
 import snapads4j.model.SnapHttpResponse;
 import snapads4j.model.SnapHttpResponsePaging;
-import snapads4j.model.ads.Ad;
 
 import java.util.List;
 import java.util.Optional;

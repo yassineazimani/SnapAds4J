@@ -25,7 +25,7 @@ import java.util.List;
 public class SnapHttpRequestInteractionZone {
 
     @JsonProperty("interaction_zones")
-    private List<InteractionZone> interactionZones;
+    private final List<InteractionZone> interactionZones;
 
     public SnapHttpRequestInteractionZone() {
         this.interactionZones = new ArrayList<>();

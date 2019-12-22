@@ -17,14 +17,12 @@ package snapads4j.model.ads;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import snapads4j.model.Paging;
 import snapads4j.model.SnapHttpResponse;
 import snapads4j.model.SnapHttpResponsePaging;
-import snapads4j.model.adaccount.AdAccount;
 
 import java.util.List;
 import java.util.Optional;

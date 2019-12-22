@@ -23,7 +23,7 @@ import java.util.List;
 @Getter
 public class SnapHttpRequestCreative {
 
-    private List<Creative> creatives;
+    private final List<Creative> creatives;
 
     public SnapHttpRequestCreative() {
         this.creatives = new ArrayList<>();

@@ -30,7 +30,7 @@ public class SnapResponseErrorException extends Exception {
     /**
      * Status code HTTP
      */
-    private int statusCode;
+    private final int statusCode;
 
     /**
      * Constructor

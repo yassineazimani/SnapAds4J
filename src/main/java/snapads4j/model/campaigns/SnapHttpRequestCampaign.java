@@ -25,7 +25,7 @@ import java.util.List;
 @ToString
 public class SnapHttpRequestCampaign {
 
-    private List<Campaign> campaigns;
+    private final List<Campaign> campaigns;
 
     public SnapHttpRequestCampaign() {
         this.campaigns = new ArrayList<>();

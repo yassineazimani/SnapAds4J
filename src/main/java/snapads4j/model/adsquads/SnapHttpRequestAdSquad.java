@@ -33,7 +33,7 @@ public class SnapHttpRequestAdSquad {
     /**
      * Array AdSquad json
      */
-    private List<AdSquad> adsquads;
+    private final List<AdSquad> adsquads;
 
     /**
      * Constructor

@@ -31,7 +31,7 @@ public class SnapHttpRequestAdAccount {
     /**
      * Array AdAccount json
      */
-    private List<AdAccount> adaccounts;
+    private final List<AdAccount> adaccounts;
 
     /**
      * Build SnapHttpRequestAdAccount

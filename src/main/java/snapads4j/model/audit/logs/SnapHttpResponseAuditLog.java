@@ -15,9 +15,13 @@
  */
 package snapads4j.model.audit.logs;
 
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+import snapads4j.model.Paging;
 import snapads4j.model.SnapHttpResponse;
+import snapads4j.model.SnapHttpResponsePaging;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,8 +32,11 @@ import java.util.stream.Collectors;
  * @author yassine
  */
 @Setter
-@NoArgsConstructor
-public class SnapHttpResponseAuditLog extends SnapHttpResponse {
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public class SnapHttpResponseAuditLog extends SnapHttpResponse implements SnapHttpResponsePaging {
+
+    @Getter
+    private Paging paging;
 
     private List<SnapInnerAuditLog> changelogs;
 
@@ -37,4 +44,8 @@ public class SnapHttpResponseAuditLog extends SnapHttpResponse {
         return changelogs.stream().map(SnapInnerAuditLog::getChangelog).collect(Collectors.toList());
     }// getAllAuditLogs()
 
+    @Override
+    public boolean hasPaging() {
+        return paging != null && StringUtils.isNotEmpty(paging.getNextLink());
+    }// hasPaging()
 }// SnapHttpAuditLogAd

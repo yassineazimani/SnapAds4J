@@ -27,12 +27,6 @@ import snapads4j.enums.TypeCreationSpecDetails;
 @Setter
 @JsonInclude(Include.NON_EMPTY)
 @ToString
-/**
- * Creation Spec Details
- *
- * @author yassine
- *
- */
 public class CreationSpec {
 
     /**

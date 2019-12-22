@@ -26,6 +26,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import snapads4j.exceptions.*;
+import snapads4j.model.Pagination;
 import snapads4j.model.audit.logs.AuditLog;
 import snapads4j.model.audit.logs.SnapHttpResponseAuditLog;
 import snapads4j.utils.EntityUtilsWrapper;
@@ -57,6 +58,10 @@ public class SnapAuditLogs implements SnapAuditLogsInterface {
 
     private String endpointFetchByCreative;
 
+    private int minLimitPagination;
+
+    private int maxLimitPagination;
+
     private CloseableHttpClient httpClient;
 
     private EntityUtilsWrapper entityUtilsWrapper;
@@ -74,12 +79,14 @@ public class SnapAuditLogs implements SnapAuditLogsInterface {
                 + fp.getProperties().get("api.url.audit.logs.by.adsquad") + "?limit=50";
         this.endpointFetchByCreative = this.apiUrl
                 + fp.getProperties().get("api.url.audit.logs.by.creative") + "?limit=50";
+        this.minLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.pagination.limit.min"));
+        this.maxLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.pagination.limit.max"));
         this.httpClient = HttpClients.createDefault();
         this.entityUtilsWrapper = new EntityUtilsWrapper();
     }// SnapAuditLogs()
 
     @Override
-    public List<AuditLog> fetchChangeLogsForCampaign(String oAuthAccessToken, String campaignId)
+    public List<Pagination<AuditLog>> fetchChangeLogsForCampaign(String oAuthAccessToken, String campaignId, int limit)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
             SnapExecutionException {
         if (StringUtils.isEmpty(oAuthAccessToken)) {
@@ -88,33 +95,49 @@ public class SnapAuditLogs implements SnapAuditLogsInterface {
         if (StringUtils.isEmpty(campaignId)) {
             throw new SnapArgumentException("Campaign ID is required");
         }
-        List<AuditLog> results = new ArrayList<>();
-        final String url = this.endpointFetchByCampaign.replace("{campaign_id}", campaignId);
-        HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode >= 300) {
-                throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
-            }
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String body = entityUtilsWrapper.toString(entity);
-                ObjectMapper mapper = JsonUtils.initMapper();
-                SnapHttpResponseAuditLog responseFromJson = mapper.readValue(body,
-                        SnapHttpResponseAuditLog.class);
-                if (responseFromJson != null) {
-                    results = responseFromJson.getAllAuditLogs();
+        if(limit < minLimitPagination){
+            throw new SnapArgumentException("Minimum limit is " + minLimitPagination);
+        }
+        if(limit > maxLimitPagination){
+            throw new SnapArgumentException("Maximum limit is " + maxLimitPagination);
+        }
+        List<Pagination<AuditLog>> results = new ArrayList<>();
+        String url = this.endpointFetchByCampaign.replace("{campaign_id}", campaignId);
+        url += "?limit=" + limit;
+        boolean hasNextPage = true;
+        int numberPage = 1;
+        while(hasNextPage) {
+            HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode >= 300) {
+                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
                 }
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String body = entityUtilsWrapper.toString(entity);
+                    ObjectMapper mapper = JsonUtils.initMapper();
+                    SnapHttpResponseAuditLog responseFromJson = mapper.readValue(body,
+                            SnapHttpResponseAuditLog.class);
+                    if (responseFromJson != null) {
+                        results.add(new Pagination<>(numberPage++,responseFromJson.getAllAuditLogs()));
+                        hasNextPage = responseFromJson.hasPaging();
+                        if(hasNextPage){
+                            url = responseFromJson.getPaging().getNextLink();
+                            LOGGER.info("Next url page pagination is {}", url);
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                LOGGER.error("Impossible to get audit logs, campaign_id = {}", campaignId, e);
+                throw new SnapExecutionException("Impossible to get audit logs", e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get audit logs, campaign_id = {}", campaignId, e);
-            throw new SnapExecutionException("Impossible to get audit logs", e);
         }
         return results;
     }// fetchChangeLogsForCampaign()
 
     @Override
-    public List<AuditLog> fetchChangeLogsForAdSquad(String oAuthAccessToken, String adSquadId)
+    public List<Pagination<AuditLog>> fetchChangeLogsForAdSquad(String oAuthAccessToken, String adSquadId, int limit)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
             SnapExecutionException {
         if (StringUtils.isEmpty(oAuthAccessToken)) {
@@ -123,33 +146,49 @@ public class SnapAuditLogs implements SnapAuditLogsInterface {
         if (StringUtils.isEmpty(adSquadId)) {
             throw new SnapArgumentException("AdSquad ID is required");
         }
-        List<AuditLog> results = new ArrayList<>();
-        final String url = this.endpointFetchByAdSquad.replace("{adsquad_id}", adSquadId);
-        HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode >= 300) {
-                throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
-            }
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String body = entityUtilsWrapper.toString(entity);
-                ObjectMapper mapper = JsonUtils.initMapper();
-                SnapHttpResponseAuditLog responseFromJson = mapper.readValue(body,
-                        SnapHttpResponseAuditLog.class);
-                if (responseFromJson != null) {
-                    results = responseFromJson.getAllAuditLogs();
+        if(limit < minLimitPagination){
+            throw new SnapArgumentException("Minimum limit is " + minLimitPagination);
+        }
+        if(limit > maxLimitPagination){
+            throw new SnapArgumentException("Maximum limit is " + maxLimitPagination);
+        }
+        List<Pagination<AuditLog>> results = new ArrayList<>();
+        String url = this.endpointFetchByAdSquad.replace("{adsquad_id}", adSquadId);
+        url += "?limit=" + limit;
+        boolean hasNextPage = true;
+        int numberPage = 1;
+        while(hasNextPage) {
+            HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode >= 300) {
+                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
                 }
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String body = entityUtilsWrapper.toString(entity);
+                    ObjectMapper mapper = JsonUtils.initMapper();
+                    SnapHttpResponseAuditLog responseFromJson = mapper.readValue(body,
+                            SnapHttpResponseAuditLog.class);
+                    if (responseFromJson != null) {
+                        results.add(new Pagination<>(numberPage++,responseFromJson.getAllAuditLogs()));
+                        hasNextPage = responseFromJson.hasPaging();
+                        if(hasNextPage){
+                            url = responseFromJson.getPaging().getNextLink();
+                            LOGGER.info("Next url page pagination is {}", url);
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                LOGGER.error("Impossible to get audit logs, ad_squad_id = {}", adSquadId, e);
+                throw new SnapExecutionException("Impossible to get audit logs", e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get audit logs, ad_squad_id = {}", adSquadId, e);
-            throw new SnapExecutionException("Impossible to get audit logs", e);
         }
         return results;
     }// fetchChangeLogsForAdSquad()
 
     @Override
-    public List<AuditLog> fetchChangeLogsForAd(String oAuthAccessToken, String adId)
+    public List<Pagination<AuditLog>> fetchChangeLogsForAd(String oAuthAccessToken, String adId, int limit)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
             SnapExecutionException {
         if (StringUtils.isEmpty(oAuthAccessToken)) {
@@ -158,33 +197,49 @@ public class SnapAuditLogs implements SnapAuditLogsInterface {
         if (StringUtils.isEmpty(adId)) {
             throw new SnapArgumentException("Ad ID is required");
         }
-        List<AuditLog> results = new ArrayList<>();
-        final String url = this.endpointFetchByAd.replace("{ad_id}", adId);
-        HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode >= 300) {
-                throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
-            }
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String body = entityUtilsWrapper.toString(entity);
-                ObjectMapper mapper = JsonUtils.initMapper();
-                SnapHttpResponseAuditLog responseFromJson = mapper.readValue(body,
-                        SnapHttpResponseAuditLog.class);
-                if (responseFromJson != null) {
-                    results = responseFromJson.getAllAuditLogs();
+        if(limit < minLimitPagination){
+            throw new SnapArgumentException("Minimum limit is " + minLimitPagination);
+        }
+        if(limit > maxLimitPagination){
+            throw new SnapArgumentException("Maximum limit is " + maxLimitPagination);
+        }
+        List<Pagination<AuditLog>> results = new ArrayList<>();
+        String url = this.endpointFetchByAd.replace("{ad_id}", adId);
+        url += "?limit=" + limit;
+        boolean hasNextPage = true;
+        int numberPage = 1;
+        while(hasNextPage) {
+            HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode >= 300) {
+                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
                 }
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String body = entityUtilsWrapper.toString(entity);
+                    ObjectMapper mapper = JsonUtils.initMapper();
+                    SnapHttpResponseAuditLog responseFromJson = mapper.readValue(body,
+                            SnapHttpResponseAuditLog.class);
+                    if (responseFromJson != null) {
+                        results.add(new Pagination<>(numberPage++,responseFromJson.getAllAuditLogs()));
+                        hasNextPage = responseFromJson.hasPaging();
+                        if(hasNextPage){
+                            url = responseFromJson.getPaging().getNextLink();
+                            LOGGER.info("Next url page pagination is {}", url);
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                LOGGER.error("Impossible to get audit logs, ad_id = {}", adId, e);
+                throw new SnapExecutionException("Impossible to get audit logs", e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get audit logs, ad_id = {}", adId, e);
-            throw new SnapExecutionException("Impossible to get audit logs", e);
         }
         return results;
     }// fetchChangeLogsForAd()
 
     @Override
-    public List<AuditLog> fetchChangeLogsForCreative(String oAuthAccessToken, String creativeId)
+    public List<Pagination<AuditLog>> fetchChangeLogsForCreative(String oAuthAccessToken, String creativeId, int limit)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
             SnapExecutionException {
         if (StringUtils.isEmpty(oAuthAccessToken)) {
@@ -193,27 +248,43 @@ public class SnapAuditLogs implements SnapAuditLogsInterface {
         if (StringUtils.isEmpty(creativeId)) {
             throw new SnapArgumentException("Creative ID is required");
         }
-        List<AuditLog> results = new ArrayList<>();
-        final String url = this.endpointFetchByCreative.replace("{creative_id}", creativeId);
-        HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode >= 300) {
-                throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
-            }
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String body = entityUtilsWrapper.toString(entity);
-                ObjectMapper mapper = JsonUtils.initMapper();
-                SnapHttpResponseAuditLog responseFromJson = mapper.readValue(body,
-                        SnapHttpResponseAuditLog.class);
-                if (responseFromJson != null) {
-                    results = responseFromJson.getAllAuditLogs();
+        if(limit < minLimitPagination){
+            throw new SnapArgumentException("Minimum limit is " + minLimitPagination);
+        }
+        if(limit > maxLimitPagination){
+            throw new SnapArgumentException("Maximum limit is " + maxLimitPagination);
+        }
+        List<Pagination<AuditLog>> results = new ArrayList<>();
+        String url = this.endpointFetchByCreative.replace("{creative_id}", creativeId);
+        url += "?limit=" + limit;
+        boolean hasNextPage = true;
+        int numberPage = 1;
+        while(hasNextPage) {
+            HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode >= 300) {
+                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
                 }
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String body = entityUtilsWrapper.toString(entity);
+                    ObjectMapper mapper = JsonUtils.initMapper();
+                    SnapHttpResponseAuditLog responseFromJson = mapper.readValue(body,
+                            SnapHttpResponseAuditLog.class);
+                    if (responseFromJson != null) {
+                        results.add(new Pagination<>(numberPage++,responseFromJson.getAllAuditLogs()));
+                        hasNextPage = responseFromJson.hasPaging();
+                        if(hasNextPage){
+                            url = responseFromJson.getPaging().getNextLink();
+                            LOGGER.info("Next url page pagination is {}", url);
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                LOGGER.error("Impossible to get audit logs, creative_id = {}", creativeId, e);
+                throw new SnapExecutionException("Impossible to get audit logs", e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get audit logs, creative_id = {}", creativeId, e);
-            throw new SnapExecutionException("Impossible to get audit logs", e);
         }
         return results;
     }// fetchChangeLogsForCreative()

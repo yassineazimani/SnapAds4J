@@ -19,22 +19,23 @@ import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
+import snapads4j.model.Pagination;
 import snapads4j.model.audit.logs.AuditLog;
 
 import java.util.List;
 
 public interface SnapAuditLogsInterface {
 
-    List<AuditLog> fetchChangeLogsForCampaign(String oAuthAccessToken, String campaignId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    List<Pagination<AuditLog>> fetchChangeLogsForCampaign(String oAuthAccessToken, String campaignId, int limit) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
             SnapExecutionException;
 
-    List<AuditLog> fetchChangeLogsForAdSquad(String oAuthAccessToken, String adSquadId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    List<Pagination<AuditLog>> fetchChangeLogsForAdSquad(String oAuthAccessToken, String adSquadId, int limit) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
             SnapExecutionException;
 
-    List<AuditLog> fetchChangeLogsForAd(String oAuthAccessToken, String adId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    List<Pagination<AuditLog>> fetchChangeLogsForAd(String oAuthAccessToken, String adId, int limit) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
             SnapExecutionException;
 
-    List<AuditLog> fetchChangeLogsForCreative(String oAuthAccessToken, String creativeId) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+    List<Pagination<AuditLog>> fetchChangeLogsForCreative(String oAuthAccessToken, String creativeId, int limit) throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
             SnapExecutionException;
 
 }// SnapAuditLogsInterface

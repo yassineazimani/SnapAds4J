@@ -25,14 +25,6 @@ import snapads4j.enums.FrequencyCapTypeEnum;
 @Getter
 @Setter
 @ToString
-/**
- * FrequencyCapConfig
- *
- * <p>Frequency cap spec cap_and_exclusion_config allows you to specify the maximum number of times
- * a user is exposed to an ad over a period of time.
- *
- * @author Yassine
- */
 public class FrequencyCapConfig {
     /**
      * Number of times an ad is shown to the user in the interval
