@@ -25,6 +25,7 @@ import lombok.ToString;
 import snapads4j.enums.BuyModelEnum;
 import snapads4j.enums.ObjectiveCampaignEnum;
 import snapads4j.enums.StatusEnum;
+import snapads4j.model.AbstractSnapModel;
 
 import java.util.Date;
 
@@ -37,26 +38,7 @@ import java.util.Date;
 @Setter
 @ToString
 @JsonInclude(Include.NON_EMPTY)
-public class Campaign {
-
-    /**
-     * Campaign ID
-     */
-    private String id;
-
-    /**
-     * Last date update of campaign
-     */
-    @JsonProperty("updated_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    private Date updatedAt;
-
-    /**
-     * Creation date of campaign
-     */
-    @JsonProperty("created_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    private Date createdAt;
+public class Campaign extends AbstractSnapModel {
 
     private StatusEnum status;
 

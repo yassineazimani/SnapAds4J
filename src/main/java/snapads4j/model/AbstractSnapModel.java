@@ -13,52 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package snapads4j.model.media;
+package snapads4j.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import snapads4j.enums.MediaStatusTypeEnum;
-import snapads4j.enums.MediaTypeEnum;
-import snapads4j.model.AbstractSnapModel;
 
 import java.util.Date;
 
 /**
- * CreativeMedia
+ * AbstractSnapModel
  *
  * @author Yassine
  */
 @Getter
 @Setter
 @ToString
-@JsonInclude(Include.NON_EMPTY)
-public class CreativeMedia extends AbstractSnapModel {
-
-    @JsonProperty("ad_account_id")
-    private String adAccountId;
-
-    @JsonProperty("download_link")
-    private String downloadLink;
-
-    @JsonProperty("media_status")
-    private MediaStatusTypeEnum mediaStatus;
-
-    private String name;
-
-    private MediaTypeEnum type;
-
-    @JsonProperty("file_name")
-    private String fileName;
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public abstract class AbstractSnapModel {
 
     /**
-     * Doesn't know contents, it doesn't exist in the documentation API.
+     * Model ID
      */
-    @JsonProperty("lens_package_metadata")
-    private String lensPackageMetadata;
+    protected String id;
 
-}// CreativeMedia
+    /**
+     * Date of Creation
+     */
+    @JsonProperty("created_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    protected Date createdAt;
+
+    /**
+     * Date of Update
+     */
+    @JsonProperty("updated_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    protected Date updatedAt;
+
+}// AbstractSnapModel

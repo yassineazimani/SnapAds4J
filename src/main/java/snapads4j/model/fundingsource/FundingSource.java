@@ -26,6 +26,7 @@ import snapads4j.enums.CreditCardTypeEnum;
 import snapads4j.enums.CurrencyEnum;
 import snapads4j.enums.FundingSourceTypeEnum;
 import snapads4j.enums.StatusEnum;
+import snapads4j.model.AbstractSnapModel;
 
 import java.util.Date;
 
@@ -38,26 +39,7 @@ import java.util.Date;
 @Setter
 @ToString
 @JsonInclude(Include.NON_EMPTY)
-public class FundingSource {
-
-    /**
-     * Funding Source ID
-     */
-    private String id;
-
-    /**
-     * Last date update of funding source
-     */
-    @JsonProperty("updated_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    private Date updatedAt;
-
-    /**
-     * Creation date update of funding source
-     */
-    @JsonProperty("created_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    private Date createdAt;
+public class FundingSource extends AbstractSnapModel {
 
     /**
      * Start date of the COUPON

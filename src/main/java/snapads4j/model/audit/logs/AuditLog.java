@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import snapads4j.enums.TypeAuditLogEnum;
+import snapads4j.model.AbstractSnapModel;
 
 import java.util.Date;
 import java.util.Map;
@@ -29,19 +30,9 @@ import java.util.Map;
 @Getter
 @Setter
 @JsonInclude(Include.NON_EMPTY)
-public class AuditLog {
-
-    private String id;
+public class AuditLog extends AbstractSnapModel {
 
     private String name;
-
-    @JsonProperty("created_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    private Date createdAt;
-
-    @JsonProperty("updated_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    private Date updatedAt;
 
     private String action;
 

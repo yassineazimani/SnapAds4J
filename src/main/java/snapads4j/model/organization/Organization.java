@@ -23,6 +23,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import snapads4j.enums.TypeOrganizationEnum;
+import snapads4j.model.AbstractSnapModel;
 
 import java.util.Date;
 
@@ -35,62 +36,43 @@ import java.util.Date;
 @Setter
 @ToString
 @JsonInclude(Include.NON_EMPTY)
-public class Organization {
-
-    /**
-     * Organization ID
-     */
-    private String id;
-
-    /**
-     * Last date update of organization
-     */
-    @JsonProperty("updated_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    private Date updatedAt;
-
-    /**
-     * Date creation of organization
-     */
-    @JsonProperty("created_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    private Date createdAt;
+public class Organization extends AbstractSnapModel {
 
     /**
      * Organization's name
      */
-    private String name;
+    protected String name;
 
     /**
      * Organization's address
      */
     @JsonProperty("address_line_1")
-    private String addressLine1;
+    protected String addressLine1;
 
     /**
      * Organization locality
      */
-    private String locality;
+    protected String locality;
 
     /**
      * Administrative district
      */
     @JsonProperty("administrative_district_level_1")
-    private String administrativeDistrictLevel1;
+    protected String administrativeDistrictLevel1;
 
     /**
      * Organization country
      */
-    private String country;
+    protected String country;
 
     /**
      * Organization postal code
      */
     @JsonProperty("postal_code")
-    private String postalCode;
+    protected String postalCode;
 
     /**
      * Type organization
      */
-    private TypeOrganizationEnum type;
+    protected TypeOrganizationEnum type;
 } // Organization

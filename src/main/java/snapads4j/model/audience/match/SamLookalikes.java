@@ -15,7 +15,6 @@
  */
 package snapads4j.model.audience.match;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,6 +22,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import snapads4j.enums.SourceTypeEnum;
+import snapads4j.model.AbstractSnapModel;
 
 import java.util.Date;
 
@@ -30,20 +30,10 @@ import java.util.Date;
 @Setter
 @JsonInclude(Include.NON_EMPTY)
 @ToString
-public class SamLookalikes {
-
-    protected String id;
+public class SamLookalikes extends AbstractSnapModel {
 
     @JsonProperty("ad_account_id")
     protected String adAccountId;
-
-    @JsonProperty("created_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    protected Date createdAt;
-
-    @JsonProperty("updated_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    protected Date updatedAt;
 
     protected String description;
 

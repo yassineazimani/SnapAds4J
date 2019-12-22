@@ -23,6 +23,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import snapads4j.enums.StatusEnum;
+import snapads4j.model.AbstractSnapModel;
 
 import java.util.Date;
 
@@ -30,26 +31,7 @@ import java.util.Date;
 @Setter
 @ToString
 @JsonInclude(Include.NON_EMPTY)
-public class Pixel {
-
-    /**
-     * Pixel ID
-     **/
-    private String id;
-
-    /**
-     * Last date update of pixel
-     */
-    @JsonProperty("updated_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    private Date updatedAt;
-
-    /**
-     * Date creation of pixel
-     */
-    @JsonProperty("created_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    private Date createdAt;
+public class Pixel extends AbstractSnapModel {
 
     @JsonProperty("effective_status")
     private String effectiveStatus;

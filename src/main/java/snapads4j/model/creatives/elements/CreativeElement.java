@@ -22,6 +22,7 @@ import lombok.Setter;
 import lombok.ToString;
 import snapads4j.enums.CreativeTypeEnum;
 import snapads4j.enums.InteractionTypeEnum;
+import snapads4j.model.AbstractSnapModel;
 import snapads4j.model.creatives.DeepLinkProperties;
 import snapads4j.model.creatives.WebViewProperties;
 
@@ -30,17 +31,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-public class CreativeElement {
-
-    private String id;
-
-    @JsonProperty("created_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    private Date createdAt;
-
-    @JsonProperty("updated_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    private Date updatedAt;
+public class CreativeElement extends AbstractSnapModel {
 
     @JsonProperty("ad_account_id")
     private String adAccountId;

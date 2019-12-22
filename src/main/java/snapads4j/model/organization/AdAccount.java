@@ -25,6 +25,7 @@ import lombok.ToString;
 import snapads4j.enums.CurrencyEnum;
 import snapads4j.enums.StatusEnum;
 import snapads4j.enums.TypeOrganizationEnum;
+import snapads4j.model.AbstractSnapModel;
 
 import java.util.Date;
 import java.util.List;
@@ -38,26 +39,7 @@ import java.util.List;
 @Setter
 @ToString
 @JsonInclude(Include.NON_EMPTY)
-public class AdAccount {
-
-    /**
-     * Ad account ID
-     */
-    private String id;
-
-    /**
-     * Last date update of Ad account
-     */
-    @JsonProperty("updated_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    private Date updatedAt;
-
-    /**
-     * Date creation of Ad account
-     */
-    @JsonProperty("created_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    private Date createdAt;
+public class AdAccount extends AbstractSnapModel {
 
     /**
      * Ad account name

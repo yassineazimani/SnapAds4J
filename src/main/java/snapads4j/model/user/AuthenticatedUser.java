@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import snapads4j.model.AbstractSnapModel;
 
 import java.util.Date;
 
@@ -31,26 +32,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-public class AuthenticatedUser {
-
-    /**
-     * User ID
-     */
-    private String id;
-
-    /**
-     * Last date update of the user
-     */
-    @JsonProperty("updated_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    private Date updatedAt;
-
-    /**
-     * Date creation of the user
-     */
-    @JsonProperty("created_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    private Date createdAt;
+public class AuthenticatedUser extends AbstractSnapModel {
 
     /**
      * Email
