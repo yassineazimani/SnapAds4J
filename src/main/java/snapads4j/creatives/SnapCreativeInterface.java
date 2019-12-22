@@ -20,6 +20,7 @@ import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
+import snapads4j.model.Pagination;
 import snapads4j.model.creatives.Creative;
 
 import java.io.UnsupportedEncodingException;
@@ -81,13 +82,14 @@ public interface SnapCreativeInterface {
     /**
      * @param oAuthAccessToken
      * @param adAccountId
+     * @param limit
      * @return
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapArgumentException
      * @throws SnapExecutionException
      */
-    List<Creative> getAllCreative(String oAuthAccessToken, String adAccountId)
+    List<Pagination<Creative>> getAllCreative(String oAuthAccessToken, String adAccountId, int limit)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
             SnapExecutionException;
 

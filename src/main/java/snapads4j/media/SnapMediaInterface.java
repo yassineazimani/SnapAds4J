@@ -21,6 +21,7 @@ import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
+import snapads4j.model.Pagination;
 import snapads4j.model.media.CreativeMedia;
 
 import java.io.File;
@@ -93,6 +94,7 @@ public interface SnapMediaInterface {
     /**
      * @param oAuthAccessToken
      * @param adAccountId
+     * @param limit
      * @return
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
@@ -100,7 +102,7 @@ public interface SnapMediaInterface {
      * @throws SnapExecutionException
      * @see
      */
-    List<CreativeMedia> getAllMedia(String oAuthAccessToken, String adAccountId)
+    List<Pagination<CreativeMedia>> getAllMedia(String oAuthAccessToken, String adAccountId, int limit)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException;
 
     /**

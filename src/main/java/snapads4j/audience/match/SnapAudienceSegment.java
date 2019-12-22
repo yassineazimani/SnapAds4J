@@ -31,6 +31,7 @@ import snapads4j.enums.SchemaEnum;
 import snapads4j.enums.SourceTypeEnum;
 import snapads4j.enums.StatusEnum;
 import snapads4j.exceptions.*;
+import snapads4j.model.Pagination;
 import snapads4j.model.audience.match.*;
 import snapads4j.model.config.HttpDeleteWithBody;
 import snapads4j.utils.EntityUtilsWrapper;
@@ -76,6 +77,10 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 
     private String endpointDeleteAudienceSegment;
 
+    private int minLimitPagination;
+
+    private int maxLimitPagination;
+
     private CloseableHttpClient httpClient;
 
     private EntityUtilsWrapper entityUtilsWrapper;
@@ -103,6 +108,8 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
                 + fp.getProperties().get("api.url.audience.match.delete.all");
         this.endpointDeleteAudienceSegment = this.apiUrl
                 + fp.getProperties().get("api.url.audience.match.delete");
+        this.minLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.pagination.limit.min"));
+        this.maxLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.pagination.limit.max"));
         this.httpClient = HttpClients.createDefault();
         this.entityUtilsWrapper = new EntityUtilsWrapper();
     }// SnapAudienceSegment()
@@ -213,7 +220,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
     }// updateAudienceSegment()
 
     @Override
-    public List<AudienceSegment> getAllAudienceSegments(String oAuthAccessToken, String adAccountID)
+    public List<Pagination<AudienceSegment>> getAllAudienceSegments(String oAuthAccessToken, String adAccountID, int limit)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
             SnapExecutionException {
         if (StringUtils.isEmpty(oAuthAccessToken)) {
@@ -222,27 +229,43 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
         if (StringUtils.isEmpty(adAccountID)) {
             throw new SnapArgumentException("The Ad Account ID is required");
         }
-        List<AudienceSegment> results = new ArrayList<>();
-        final String url = this.endpointGetAllAudienceSegments.replace("{ad_account_id}", adAccountID);
-        HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode >= 300) {
-                throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
-            }
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                ObjectMapper mapper = JsonUtils.initMapper();
-                String body = entityUtilsWrapper.toString(entity);
-                SnapHttpResponseAudienceSegment responseFromJson = mapper.readValue(body,
-                        SnapHttpResponseAudienceSegment.class);
-                if (responseFromJson != null) {
-                    results = responseFromJson.getAllAudienceSegment();
+        if (limit < minLimitPagination) {
+            throw new SnapArgumentException("Minimum limit is " + minLimitPagination);
+        }
+        if (limit > maxLimitPagination) {
+            throw new SnapArgumentException("Maximum limit is " + maxLimitPagination);
+        }
+        List<Pagination<AudienceSegment>> results = new ArrayList<>();
+        String url = this.endpointGetAllAudienceSegments.replace("{ad_account_id}", adAccountID);
+        url += "?limit=" + limit;
+        boolean hasNextPage = true;
+        int numberPage = 1;
+        while (hasNextPage) {
+            HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode >= 300) {
+                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
                 }
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    ObjectMapper mapper = JsonUtils.initMapper();
+                    String body = entityUtilsWrapper.toString(entity);
+                    SnapHttpResponseAudienceSegment responseFromJson = mapper.readValue(body,
+                            SnapHttpResponseAudienceSegment.class);
+                    if (responseFromJson != null) {
+                        results.add(new Pagination<>(numberPage++, responseFromJson.getAllAudienceSegment()));
+                        hasNextPage = responseFromJson.hasPaging();
+                        if (hasNextPage) {
+                            url = responseFromJson.getPaging().getNextLink();
+                            LOGGER.info("Next url page pagination is {}", url);
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                LOGGER.error("Impossible to get all audience segments, ad_account_id = {}", adAccountID, e);
+                throw new SnapExecutionException("Impossible to get all audience segments", e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get all audience segments, ad_account_id = {}", adAccountID, e);
-            throw new SnapExecutionException("Impossible to get all audience segments", e);
         }
         return results;
     }// getAllAudienceSegments()

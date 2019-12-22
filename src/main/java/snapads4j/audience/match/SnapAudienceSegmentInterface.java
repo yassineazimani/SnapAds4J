@@ -17,6 +17,7 @@ package snapads4j.audience.match;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import snapads4j.exceptions.*;
+import snapads4j.model.Pagination;
 import snapads4j.model.audience.match.AudienceSegment;
 import snapads4j.model.audience.match.FormUserForAudienceSegment;
 import snapads4j.model.audience.match.SamLookalikes;
@@ -35,7 +36,7 @@ public interface SnapAudienceSegmentInterface {
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
             JsonProcessingException, UnsupportedEncodingException, SnapExecutionException;
 
-    List<AudienceSegment> getAllAudienceSegments(String oAuthAccessToken, String adAccountID)
+    List<Pagination<AudienceSegment>> getAllAudienceSegments(String oAuthAccessToken, String adAccountID, int limit)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
             SnapExecutionException;
 

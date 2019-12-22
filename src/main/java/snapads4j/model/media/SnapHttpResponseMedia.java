@@ -15,16 +15,25 @@
  */
 package snapads4j.model.media;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import snapads4j.model.Paging;
 import snapads4j.model.SnapHttpResponse;
+import snapads4j.model.SnapHttpResponsePaging;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Setter
-public class SnapHttpResponseMedia extends SnapHttpResponse {
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public class SnapHttpResponseMedia extends SnapHttpResponse implements SnapHttpResponsePaging {
+
+    @Getter
+    private Paging paging;
 
     private List<SnapInnerMedia> media;
 
@@ -36,4 +45,10 @@ public class SnapHttpResponseMedia extends SnapHttpResponse {
     public List<CreativeMedia> getAllMedia() {
         return media.stream().map(SnapInnerMedia::getMedia).collect(Collectors.toList());
     }// getAllMedia()
+
+    @Override
+    public boolean hasPaging() {
+        return paging != null && StringUtils.isNotEmpty(paging.getNextLink());
+    }// hasPaging()
+
 }// SnapHttpResponseMedia

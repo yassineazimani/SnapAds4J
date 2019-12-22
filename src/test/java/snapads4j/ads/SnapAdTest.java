@@ -35,6 +35,7 @@ import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
+import snapads4j.model.Pagination;
 import snapads4j.model.ads.Ad;
 import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.SnapResponseUtils;
@@ -993,8 +994,15 @@ public class SnapAdTest {
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapAllAdForAdAccount());
-        List<Ad> ads = ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId);
-        assertThat(ads).isNotNull();
+        List<Pagination<Ad>> pages = ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId, 50);
+
+        assertThat(pages).isNotEmpty();
+        assertThat(pages).hasSize(1);
+        assertThat(pages.get(0).getNumberPage()).isEqualTo(1);
+        assertThat(pages.get(0).getResults()).isNotEmpty();
+
+        List<Ad> ads = pages.get(0).getResults();
+
         assertThat(ads).isNotEmpty();
         assertThat(ads).hasSize(2);
 
@@ -1019,34 +1027,46 @@ public class SnapAdTest {
 
     @Test
     public void test_getAllAds_AdAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
-        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(null, accountId))
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(null, accountId, 50))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
     }// test_getAllAds_AdAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
     public void test_getAllAds_AdAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
-        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount("", accountId))
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount("", accountId, 50))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
     }// test_getAllAds_AdAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
     public void test_getAllAds_should_throw_SnapExecutionException() throws IOException {
         Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId))
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId, 50))
                 .isInstanceOf(SnapExecutionException.class);
     }// test_getAllAds_should_throw_SnapExecutionException()
 
     @Test
     public void test_getAllAds_AdAccount_should_throw_SnapArgumentException_when_ad_account_id_is_empty() {
-        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, ""))
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, "", 50))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The AdAccount ID is required");
     }// test_getAllAds_AdAccount_should_throw_SnapArgumentException_when_ad_account_id_is_empty()
 
     @Test
     public void test_getAllAds_AdAccount_should_throw_SnapArgumentException_when_ad_account_id_is_null() {
-        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, null))
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, null, 50))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The AdAccount ID is required");
     }// test_getAllAds_AdAccount_should_throw_SnapArgumentException_when_ad_account_id_is_null()
+
+    @Test
+    public void test_getAllAds_AdAccount_should_throw_SnapArgumentException_when_min_limit_is_wrong() {
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId, 10))
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Minimum limit is 50");
+    }// test_getAllAds_AdAccount_should_throw_SnapArgumentException_when_min_limit_is_wrong()
+
+    @Test
+    public void test_getAllAds_AdAccount_should_throw_SnapArgumentException_when_max_limit_is_wrong() {
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId, 1500))
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Maximum limit is 1000");
+    }// test_getAllAds_AdAccount_should_throw_SnapArgumentException_when_max_limit_is_wrong()
 
     @Test
     public void should_throw_exception_401_getAllAds_AdAccount() throws IOException {
@@ -1054,7 +1074,7 @@ public class SnapAdTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(401);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId))
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
     } // should_throw_exception_401_getAllAds_AdAccount()
 
@@ -1064,7 +1084,7 @@ public class SnapAdTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(403);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId))
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
     } // should_throw_exception_403_getAllAds_AdAccount()
 
@@ -1075,7 +1095,7 @@ public class SnapAdTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(404);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId))
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
     } // should_throw_exception_404_getAllAds_AdAccount()
 
@@ -1085,7 +1105,7 @@ public class SnapAdTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(405);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId))
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
     } // should_throw_exception_405_getAllAds_AdAccount()
 
@@ -1095,7 +1115,7 @@ public class SnapAdTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(406);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId))
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
     } // should_throw_exception_406_getAllAds_AdAccount()
 
@@ -1105,7 +1125,7 @@ public class SnapAdTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(410);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId))
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
     } // should_throw_exception_410_getAllAds_AdAccount()
 
@@ -1115,7 +1135,7 @@ public class SnapAdTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(418);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId))
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
     } // should_throw_exception_418_getAllAds_AdAccount()
 
@@ -1125,7 +1145,7 @@ public class SnapAdTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(429);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId))
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
     } // should_throw_exception_429_getAllAds_AdAccount()
 
@@ -1135,7 +1155,7 @@ public class SnapAdTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(500);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId))
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
     } // should_throw_exception_500_getAllAds_AdAccount()
 
@@ -1145,7 +1165,7 @@ public class SnapAdTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(503);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId))
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
     } // should_throw_exception_503_getAllAds_AdAccount()
 
@@ -1155,7 +1175,7 @@ public class SnapAdTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId))
+        assertThatThrownBy(() -> ad.getAllAdsFromAdAccount(oAuthAccessToken, accountId, 50))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     } // should_throw_exception_1337_getAllAds_AdAccount()
 

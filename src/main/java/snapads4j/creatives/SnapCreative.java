@@ -32,6 +32,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import snapads4j.enums.CheckAdEnum;
 import snapads4j.exceptions.*;
+import snapads4j.model.Pagination;
 import snapads4j.model.creatives.*;
 import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.FileProperties;
@@ -68,6 +69,10 @@ public class SnapCreative implements SnapCreativeInterface {
 
     private int maxCharactersHeadline;
 
+    private int minLimitPagination;
+
+    private int maxLimitPagination;
+
     private CloseableHttpClient httpClient;
 
     private EntityUtilsWrapper entityUtilsWrapper;
@@ -84,6 +89,8 @@ public class SnapCreative implements SnapCreativeInterface {
         this.endpointPreviewCreative = this.apiUrl + fp.getProperties().get("api.url.creative.preview");
         this.maxCharactersBrandname = Integer.parseInt((String) fp.getProperties().get("api.brandname.max.characters"));
         this.maxCharactersHeadline = Integer.parseInt((String) fp.getProperties().get("api.headline.max.characters"));
+        this.minLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.pagination.limit.min"));
+        this.maxLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.pagination.limit.max"));
         this.httpClient = HttpClients.createDefault();
         this.entityUtilsWrapper = new EntityUtilsWrapper();
     }// SnapCreative()
@@ -191,7 +198,7 @@ public class SnapCreative implements SnapCreativeInterface {
     }// getSpecificCreative()
 
     @Override
-    public List<Creative> getAllCreative(String oAuthAccessToken, String adAccountId)
+    public List<Pagination<Creative>> getAllCreative(String oAuthAccessToken, String adAccountId, int limit)
             throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
             SnapExecutionException {
         if (StringUtils.isEmpty(oAuthAccessToken)) {
@@ -200,26 +207,42 @@ public class SnapCreative implements SnapCreativeInterface {
         if (StringUtils.isEmpty(adAccountId)) {
             throw new SnapArgumentException("The AdAccount ID is required");
         }
-        List<Creative> results = new ArrayList<>();
-        final String url = this.endpointAllCreatives.replace("{ad_account_id}", adAccountId);
-        HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String body = entityUtilsWrapper.toString(entity);
-                if (statusCode >= 300) {
-                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+        if(limit < minLimitPagination){
+            throw new SnapArgumentException("Minimum limit is " + minLimitPagination);
+        }
+        if(limit > maxLimitPagination){
+            throw new SnapArgumentException("Maximum limit is " + maxLimitPagination);
+        }
+        List<Pagination<Creative>> results = new ArrayList<>();
+        String url = this.endpointAllCreatives.replace("{ad_account_id}", adAccountId);
+        url += "?limit=" + limit;
+        boolean hasNextPage = true;
+        int numberPage = 1;
+        while(hasNextPage) {
+            HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String body = entityUtilsWrapper.toString(entity);
+                    if (statusCode >= 300) {
+                        throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+                    }
+                    ObjectMapper mapper = JsonUtils.initMapper();
+                    SnapHttpResponseCreative responseFromJson = mapper.readValue(body, SnapHttpResponseCreative.class);
+                    if (responseFromJson != null) {
+                        results.add(new Pagination<>(numberPage++, responseFromJson.getAllCreatives()));
+                        hasNextPage = responseFromJson.hasPaging();
+                        if(hasNextPage){
+                            url = responseFromJson.getPaging().getNextLink();
+                            LOGGER.info("Next url page pagination is {}", url);
+                        }
+                    }
                 }
-                ObjectMapper mapper = JsonUtils.initMapper();
-                SnapHttpResponseCreative responseFromJson = mapper.readValue(body, SnapHttpResponseCreative.class);
-                if (responseFromJson != null) {
-                    results = responseFromJson.getAllCreatives();
-                }
+            } catch (IOException e) {
+                LOGGER.error("Impossible to get all creatives, adAccountId = {}", adAccountId, e);
+                throw new SnapExecutionException("Impossible to get all creatives", e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get all creatives, adAccountId = {}", adAccountId, e);
-            throw new SnapExecutionException("Impossible to get all creatives", e);
         }
         return results;
     }// getAllCreative()

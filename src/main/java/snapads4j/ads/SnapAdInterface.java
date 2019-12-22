@@ -20,6 +20,7 @@ import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
+import snapads4j.model.Pagination;
 import snapads4j.model.ads.Ad;
 
 import java.io.UnsupportedEncodingException;
@@ -78,13 +79,14 @@ public interface SnapAdInterface {
     /**
      * @param oAuthAccessToken oAuthAccessToken
      * @param adAccountId      AdAccountID
+     * @param limit
      * @return List of {@link Ad}
      * @throws SnapArgumentException
      * @throws SnapOAuthAccessTokenException
      * @throws SnapResponseErrorException
      * @throws SnapExecutionException
      */
-    List<Ad> getAllAdsFromAdAccount(String oAuthAccessToken, String adAccountId)
+    List<Pagination<Ad>> getAllAdsFromAdAccount(String oAuthAccessToken, String adAccountId, int limit)
             throws SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException, SnapExecutionException;
 
     /**
