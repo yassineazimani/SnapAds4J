@@ -72,11 +72,11 @@ will be opened in a browser...
 
 ```java
     // Initialize Client ID, Redirect URI and Client Secret :
-    SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
-    configBuilder.setClientId("fake_client_id");
-    configBuilder.setRedirectUri("fake_redirect_uri");
-    configBuilder.setClientSecret("fake_client_secret");
-    SnapConfiguration config = configBuilder.build();
+    SnapConfiguration config = new SnapConfiguration.Builder()
+                    .setClientId("fake_client_id")
+                    .setRedirectUri("fake_redirect_uri")
+                    .setClientSecret("fake_client_secret")
+                    .build();
 
     SnapAuthorization auth = new SnapAuthorization(config);
 
@@ -93,6 +93,21 @@ will be opened in a browser...
         // Redirect the user to url given by auth.getOAuthAuthorizationURI();
     }
 
+```
+
+Note that if you have in your project, a properties file named snapads4j.properties (folder resources) with the entries client.id, client.secret, redirect.uri filled, you don't have to use SnapAuthorization with SnapConfiguration. Instead, do like this : 
+
+```java
+    // Client ID, Redirect URI and Client Secret initialized in snapads4j.properties
+    SnapAuthorization auth = new SnapAuthorization();
+```
+
+Content of snapads4j.properties : 
+
+```java
+client.id={your_client_id}
+client.secret={your_client_secret}
+redirect.uri={your_redirect_url}
 ```
 
 Now, in the other endpoint (Our redirect url for snapchat), catch the parameter code,
