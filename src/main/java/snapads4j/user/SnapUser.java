@@ -63,7 +63,7 @@ public class SnapUser implements SnapUserInterface {
     /**
      * Constructor
      */
-    public SnapUser() {
+    public SnapUser() throws IOException{
         this.fp = new FileProperties();
         this.apiUrl = (String) fp.getProperties().get("api.url");
         this.endpointMe = this.apiUrl + fp.getProperties().get("api.url.user.me");

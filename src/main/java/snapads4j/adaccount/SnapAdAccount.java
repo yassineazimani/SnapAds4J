@@ -84,7 +84,7 @@ public class SnapAdAccount implements SnapAdAccountInterface {
     /**
      * Constructor
      */
-    public SnapAdAccount() {
+    public SnapAdAccount() throws IOException{
         this.fp = new FileProperties();
         this.apiUrl = (String) fp.getProperties().get("api.url");
         this.endpointAllAdAccounts = this.apiUrl + fp.getProperties().get("api.url.adaccount.all");

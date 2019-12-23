@@ -77,7 +77,7 @@ public class SnapStats implements SnapStatsInterface {
 
     private static final Logger LOGGER = LogManager.getLogger(SnapStats.class);
 
-    public SnapStats() {
+    public SnapStats() throws IOException{
         this.fp = new FileProperties();
         this.apiUrl = (String) fp.getProperties().get("api.url");
         this.endpointCampaignStats = this.apiUrl + fp.getProperties().get("api.url.stats.campaign");

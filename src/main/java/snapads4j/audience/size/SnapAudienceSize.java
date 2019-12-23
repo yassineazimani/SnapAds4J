@@ -60,7 +60,7 @@ public class SnapAudienceSize implements SnapAudienceSizeInterface {
 
     private static final Logger LOGGER = LogManager.getLogger(SnapAudienceSize.class);
 
-    public SnapAudienceSize() {
+    public SnapAudienceSize() throws IOException{
         this.fp = new FileProperties();
         this.apiUrl = (String) fp.getProperties().get("api.url");
         this.endpointSizeByAdAccount = this.apiUrl

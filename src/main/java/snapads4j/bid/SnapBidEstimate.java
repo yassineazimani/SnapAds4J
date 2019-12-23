@@ -68,7 +68,7 @@ public class SnapBidEstimate implements SnapBidEstimateInterface {
 
     private static final Logger LOGGER = LogManager.getLogger(SnapBidEstimate.class);
 
-    public SnapBidEstimate() {
+    public SnapBidEstimate() throws IOException{
         this.fp = new FileProperties();
         this.apiUrl = (String) fp.getProperties().get("api.url");
         this.endpointSizeByAdAccount = this.apiUrl

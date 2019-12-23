@@ -97,7 +97,7 @@ public class SnapMedia implements SnapMediaInterface {
 
     private int maxLimitPagination;
 
-    public SnapMedia() {
+    public SnapMedia() throws IOException{
         this.fp = new FileProperties();
         this.apiUrl = (String) fp.getProperties().get("api.url");
         this.endpointCreation = this.apiUrl + fp.getProperties().get("api.url.media.create");

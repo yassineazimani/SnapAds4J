@@ -85,7 +85,7 @@ public class SnapAd implements SnapAdInterface {
 
     private static final Logger LOGGER = LogManager.getLogger(SnapAdSquads.class);
 
-    public SnapAd() {
+    public SnapAd() throws IOException{
         this.fp = new FileProperties();
         this.apiUrl = (String) fp.getProperties().get("api.url");
         this.endpointCreateAd = this.apiUrl + fp.getProperties().get("api.url.ad.create");

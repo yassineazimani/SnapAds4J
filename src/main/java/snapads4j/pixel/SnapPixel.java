@@ -71,7 +71,7 @@ public class SnapPixel implements SnapPixelInterface {
 
     private static final Logger LOGGER = LogManager.getLogger(SnapPixel.class);
 
-    public SnapPixel() {
+    public SnapPixel() throws IOException{
         this.fp = new FileProperties();
         this.apiUrl = (String) fp.getProperties().get("api.url");
         this.endpointPixelByAdAccount = this.apiUrl + fp.getProperties().get("api.url.pixel.one.by.adaccount");

@@ -92,7 +92,7 @@ public class SnapAudienceSegment implements SnapAudienceSegmentInterface {
 
     private static final Logger LOGGER = LogManager.getLogger(SnapAudienceSegment.class);
 
-    public SnapAudienceSegment() {
+    public SnapAudienceSegment() throws IOException{
         this.fp = new FileProperties();
         this.apiUrl = (String) fp.getProperties().get("api.url");
         this.endpointCreationAudienceSegment = this.apiUrl

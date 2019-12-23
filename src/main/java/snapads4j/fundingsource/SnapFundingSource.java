@@ -67,7 +67,7 @@ public class SnapFundingSource implements SnapFundingSourceInterface {
     /**
      * Constructor
      */
-    public SnapFundingSource() {
+    public SnapFundingSource() throws IOException{
         this.fp = new FileProperties();
         this.apiUrl = (String) fp.getProperties().get("api.url");
         this.endpointAllFundingSource =

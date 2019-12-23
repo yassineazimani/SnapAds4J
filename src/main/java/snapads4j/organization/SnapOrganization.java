@@ -64,7 +64,7 @@ public class SnapOrganization implements SnapOrganizationInterface {
 
     private static final Logger LOGGER = LogManager.getLogger(SnapOrganization.class);
 
-    public SnapOrganization() {
+    public SnapOrganization() throws IOException {
         this.fp = new FileProperties();
         this.apiUrl = (String) fp.getProperties().get("api.url");
         this.endpointAllOrganizations = (String) fp.getProperties().get("api.url.organizations.all");

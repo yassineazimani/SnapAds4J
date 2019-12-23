@@ -88,7 +88,7 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
     /**
      * Constructor
      */
-    public SnapAdSquads() {
+    public SnapAdSquads() throws IOException{
         this.fp = new FileProperties();
         this.apiUrl = (String) fp.getProperties().get("api.url");
         this.endpointAllAdSquadsCampaign = this.apiUrl + fp.getProperties().get("api.url.adsquads.all");

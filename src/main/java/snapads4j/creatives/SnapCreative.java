@@ -84,7 +84,7 @@ public class SnapCreative implements SnapCreativeInterface {
 
     private static final Logger LOGGER = LogManager.getLogger(SnapCreative.class);
 
-    public SnapCreative() {
+    public SnapCreative() throws IOException{
         this.fp = new FileProperties();
         this.apiUrl = (String) fp.getProperties().get("api.url");
         this.endpointCreateCreative = this.apiUrl + fp.getProperties().get("api.url.creative.create");

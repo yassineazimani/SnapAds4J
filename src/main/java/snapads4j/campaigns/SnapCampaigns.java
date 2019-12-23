@@ -84,7 +84,7 @@ public class SnapCampaigns implements SnapCampaignsInterface {
     /**
      * Constructor
      */
-    public SnapCampaigns() {
+    public SnapCampaigns() throws IOException{
         this.fp = new FileProperties();
         this.apiUrl = (String) fp.getProperties().get("api.url");
         this.endpointAllCampaigns = this.apiUrl + fp.getProperties().get("api.url.campaigns.all");

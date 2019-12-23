@@ -91,7 +91,7 @@ public class SnapAuthorizationTest {
     } // test_getOAuthAuthorizationURI_should_success()
 
     @Test
-    public void test_getOAuthAuthorizationURI_should_fail_noClientID() {
+    public void test_getOAuthAuthorizationURI_should_fail_noClientID() throws IOException {
         SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
         configBuilder.setRedirectUri("fake_redirect_uri");
         SnapAuthorization sp = new SnapAuthorization(configBuilder.build());
@@ -102,7 +102,7 @@ public class SnapAuthorizationTest {
     } // test_getOAuthAuthorizationURI_should_fail_noClientID()
 
     @Test
-    public void test_getOAuthAuthorizationURI_should_fail_noRedirectURI() {
+    public void test_getOAuthAuthorizationURI_should_fail_noRedirectURI() throws IOException {
         SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
         configBuilder.setClientId("fake_client_id");
         SnapAuthorization sp = new SnapAuthorization(configBuilder.build());
@@ -113,7 +113,7 @@ public class SnapAuthorizationTest {
     } // test_getOAuthAuthorizationURI_should_fail_noRedirectURI()
 
     @Test
-    public void test_getOAuthAuthorizationURI_should_fail_noConfiguration() {
+    public void test_getOAuthAuthorizationURI_should_fail_noConfiguration() throws IOException {
         SnapAuthorization sp = new SnapAuthorization(null);
         assertThatThrownBy(
                 sp::getOAuthAuthorizationURI)
@@ -162,7 +162,7 @@ public class SnapAuthorizationTest {
     } // test_getOAuthAccessToken_should_fail_authCode_is_null()
 
     @Test
-    public void test_getOAuthAccessToken_should_fail_noConfiguration() {
+    public void test_getOAuthAccessToken_should_fail_noConfiguration() throws IOException {
         SnapAuthorization sp = new SnapAuthorization(null);
         assertThatThrownBy(
                 () -> sp.getOAuthAccessToken("code"))
@@ -171,7 +171,7 @@ public class SnapAuthorizationTest {
     } // test_getOAuthAccessToken_should_fail_noConfiguration()
 
     @Test
-    public void test_getOAuthAccessToken_should_fail_noClientID() {
+    public void test_getOAuthAccessToken_should_fail_noClientID() throws IOException {
         SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
         configBuilder.setClientSecret("tata");
         configBuilder.setRedirectUri("titi");
@@ -183,7 +183,7 @@ public class SnapAuthorizationTest {
     } // test_getOAuthAccessToken_should_fail_noClientID()
 
     @Test
-    public void test_getOAuthAccessToken_should_fail_noClientSecret() {
+    public void test_getOAuthAccessToken_should_fail_noClientSecret() throws IOException {
         SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
         configBuilder.setClientId("tata");
         configBuilder.setRedirectUri("titi");
@@ -195,7 +195,7 @@ public class SnapAuthorizationTest {
     } // test_getOAuthAccessToken_should_fail_noClientSecret()
 
     @Test
-    public void test_getOAuthAccessToken_should_fail_noRedirectURI() {
+    public void test_getOAuthAccessToken_should_fail_noRedirectURI() throws IOException {
         SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
         configBuilder.setClientId("tata");
         configBuilder.setClientSecret("tata");
@@ -370,7 +370,7 @@ public class SnapAuthorizationTest {
     } // test_refreshToken_should_fail_refreshToken_is_null()
 
     @Test
-    public void test_refreshToken_should_fail_noConfiguration() {
+    public void test_refreshToken_should_fail_noConfiguration() throws IOException {
         // SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
         SnapAuthorization sp = new SnapAuthorization(null);
         assertThatThrownBy(
@@ -380,7 +380,7 @@ public class SnapAuthorizationTest {
     } // test_refreshToken_should_fail_noConfiguration()
 
     @Test
-    public void test_refreshToken_should_fail_noClientID() {
+    public void test_refreshToken_should_fail_noClientID() throws IOException {
         SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
         configBuilder.setClientSecret("tata");
         configBuilder.setRedirectUri("titi");
@@ -392,7 +392,7 @@ public class SnapAuthorizationTest {
     } // test_refreshToken_should_fail_noClientID()
 
     @Test
-    public void test_refreshToken_should_fail_noClientSecret() {
+    public void test_refreshToken_should_fail_noClientSecret() throws IOException {
         SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
         configBuilder.setClientId("tata");
         configBuilder.setRedirectUri("titi");
@@ -404,7 +404,7 @@ public class SnapAuthorizationTest {
     } // test_refreshToken_should_fail_noClientSecret()
 
     @Test
-    public void test_refreshToken_should_fail_noRedirectURI() {
+    public void test_refreshToken_should_fail_noRedirectURI() throws IOException {
         SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
         configBuilder.setClientId("tata");
         configBuilder.setClientSecret("tata");

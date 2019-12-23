@@ -92,7 +92,7 @@ public class SnapCreativeTest {
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
     @BeforeClass
-    public static void initMaxCharacters() {
+    public static void initMaxCharacters() throws IOException {
         FileProperties fp = new FileProperties();
         maxCharactersBrandname = Integer.parseInt((String) fp.getProperties().get("api.brandname.max.characters"));
         maxCharactersHeadline = Integer.parseInt((String) fp.getProperties().get("api.headline.max.characters"));

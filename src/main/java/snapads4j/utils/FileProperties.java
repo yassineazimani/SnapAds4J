@@ -15,6 +15,7 @@
  */
 package snapads4j.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,19 +33,33 @@ public class FileProperties {
     private static final Logger LOGGER = LogManager.getLogger(FileProperties.class);
 
     /**
+     * Get properties from file properties
+     *
+     * @param propertiesFilePath Name of properties file
+     * @return properties
+     * @throws IOException
+     */
+    public Properties getProperties(String propertiesFilePath) throws IOException{
+        Properties properties = new Properties();
+        String PROPERTIES_FILE_PATH = StringUtils.isEmpty(propertiesFilePath) ? "application.properties" : propertiesFilePath;
+        try (InputStream inputStream =
+                     getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE_PATH)) {
+            if(inputStream != null)
+                properties.load(inputStream);
+        } catch (IOException e) {
+            LOGGER.error("Impossible to get {}", propertiesFilePath, e);
+            throw e;
+        }
+        return properties;
+    } // getProperties()
+
+    /**
      * Get properties from application.properties
      *
      * @return properties
      */
-    public Properties getProperties() {
-        Properties properties = new Properties();
-        String PROPERTIES_FILE_PATH = "application.properties";
-        try (InputStream inputStream =
-                     getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE_PATH)) {
-            properties.load(inputStream);
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get properties", e);
-        }
-        return properties;
-    } // getProperties()
+    public Properties getProperties() throws IOException{
+        return getProperties(null);
+    }// getProperties()
+
 } // FileProperties

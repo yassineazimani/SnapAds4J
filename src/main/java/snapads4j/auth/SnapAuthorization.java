@@ -28,6 +28,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import snapads4j.config.SnapConfiguration;
+import snapads4j.config.SnapConfigurationBuilder;
 import snapads4j.exceptions.SnapAuthorizationException;
 import snapads4j.exceptions.SnapExceptionsUtils;
 import snapads4j.exceptions.SnapExecutionException;
@@ -45,11 +46,10 @@ import java.io.UnsupportedEncodingException;
 /**
  * SnapAuthorization
  *
- * @see {https://developers.snapchat.com/api/docs/#authentication}
+ * @link https://developers.snapchat.com/api/docs/#authentication
  */
 @Getter
 @Setter
-@NoArgsConstructor
 public class SnapAuthorization {
 
     private SnapConfiguration configuration;
@@ -64,12 +64,29 @@ public class SnapAuthorization {
 
     private static final Logger LOGGER = LogManager.getLogger(SnapAuthorization.class);
 
-    public SnapAuthorization(SnapConfiguration configuration) {
-        this.configuration = configuration;
+    public SnapAuthorization() throws IOException {
         this.fp = new FileProperties();
-        this.apiUrl = (String) fp.getProperties().get("api.url.auth");
+        this.apiUrl = (String) fp.getProperties()
+                .get("api.url.auth");
         this.httpClient = HttpClients.createDefault();
         this.entityUtilsWrapper = new EntityUtilsWrapper();
+        try{
+            String clientID = (String) fp.getProperties("snapads4j.properties").get("client.id");
+            String redirectUri = (String) fp.getProperties("snapads4j.properties").get("redirect.uri");
+            String clientSecret = (String) fp.getProperties("snapads4j.properties").get("client.secret");
+            SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
+            configBuilder.setClientId(clientID);
+            configBuilder.setRedirectUri(redirectUri);
+            configBuilder.setClientSecret(clientSecret);
+            this.configuration = configBuilder.build();
+        }catch(IOException ie){
+            LOGGER.error(ie.getMessage(), ie);
+        }
+    }// SnapAuthorization()
+
+    public SnapAuthorization(SnapConfiguration configuration) throws IOException {
+        this();
+        this.configuration = configuration;
     } // SnapAuthorization()
 
     public String getOAuthAuthorizationURI() throws SnapAuthorizationException {

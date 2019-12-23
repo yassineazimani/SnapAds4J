@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * SnapAuditLogs
  *
- * @see {https://developers.snapchat.com/api/docs/#snap-audience-match}
+ * @link https://developers.snapchat.com/api/docs/#snap-audience-match
  */
 @Setter
 public class SnapAuditLogs implements SnapAuditLogsInterface {
@@ -68,7 +68,7 @@ public class SnapAuditLogs implements SnapAuditLogsInterface {
 
     private static final Logger LOGGER = LogManager.getLogger(SnapAuditLogs.class);
 
-    public SnapAuditLogs() {
+    public SnapAuditLogs() throws IOException {
         this.fp = new FileProperties();
         this.apiUrl = (String) fp.getProperties().get("api.url");
         this.endpointFetchByCampaign = this.apiUrl
