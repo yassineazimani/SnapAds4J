@@ -17,7 +17,6 @@ package snapads4j.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -28,7 +27,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import snapads4j.config.SnapConfiguration;
-import snapads4j.config.SnapConfigurationBuilder;
 import snapads4j.exceptions.SnapAuthorizationException;
 import snapads4j.exceptions.SnapExceptionsUtils;
 import snapads4j.exceptions.SnapExecutionException;
@@ -74,11 +72,12 @@ public class SnapAuthorization {
             String clientID = (String) fp.getProperties("snapads4j.properties").get("client.id");
             String redirectUri = (String) fp.getProperties("snapads4j.properties").get("redirect.uri");
             String clientSecret = (String) fp.getProperties("snapads4j.properties").get("client.secret");
-            SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
-            configBuilder.setClientId(clientID);
-            configBuilder.setRedirectUri(redirectUri);
-            configBuilder.setClientSecret(clientSecret);
-            this.configuration = configBuilder.build();
+            SnapConfiguration config = new SnapConfiguration.Builder()
+                    .setClientId(clientID)
+                    .setRedirectUri(redirectUri)
+                    .setClientSecret(clientSecret)
+                    .build();
+            this.configuration = config;
         }catch(IOException ie){
             LOGGER.error(ie.getMessage(), ie);
         }

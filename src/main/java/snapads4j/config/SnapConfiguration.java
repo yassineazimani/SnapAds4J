@@ -41,4 +41,69 @@ public class SnapConfiguration {
      * URLEncoded Redirect URI
      */
     private String redirectUri;
+
+    /**
+     * Build the configuration to use API.
+     *
+     * @author Yassine
+     */
+    public static class Builder {
+
+        /**
+         * Configuration API
+         */
+        private final SnapConfiguration snapConfiguration;
+
+        /**
+         * Constructor
+         */
+        public Builder() {
+            this.snapConfiguration = new SnapConfiguration();
+        } // SnapConfigurationBuilder()
+
+        /**
+         * Save client ID in the configuration
+         *
+         * @param clientId client ID
+         * @return SnapConfigurationBuilder
+         */
+        public Builder setClientId(String clientId) {
+            this.snapConfiguration.setClientId(clientId);
+            return this;
+        } // setClientId()
+
+        /**
+         * Save client Secret in the configuration
+         *
+         * @param clientSecret client secret
+         * @return SnapConfigurationBuilder
+         */
+        public Builder setClientSecret(String clientSecret) {
+            this.snapConfiguration.setClientSecret(clientSecret);
+            return this;
+        } // setClientSecret()
+
+        /**
+         * Save redirect URI in the configuration
+         *
+         * @param redirectUri redirect URI
+         * @return SnapConfigurationBuilder
+         */
+        public Builder setRedirectUri(String redirectUri) {
+            this.snapConfiguration.setRedirectUri(redirectUri);
+            return this;
+        } // setRedirectUri()
+
+        /**
+         * Build an instance of SnapConfiguration.
+         *
+         * @return SnapConfiguration instance
+         */
+        public SnapConfiguration build() {
+            return this.snapConfiguration;
+        } // build()
+    } // SnapConfigurationBuilder
+
+    private SnapConfiguration(){}
+
 } // SnapConfiguration

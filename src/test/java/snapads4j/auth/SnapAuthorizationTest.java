@@ -29,7 +29,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import snapads4j.config.SnapConfiguration;
-import snapads4j.config.SnapConfigurationBuilder;
 import snapads4j.exceptions.SnapAuthorizationException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapResponseErrorException;
@@ -68,11 +67,10 @@ public class SnapAuthorizationTest {
 
     @Before
     public void setUp() {
-        SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
-        configBuilder.setClientId("fake_client_id");
-        configBuilder.setRedirectUri("fake_redirect_uri");
-        configBuilder.setClientSecret("fake_client_secret");
-        SnapConfiguration config = configBuilder.build();
+        SnapConfiguration config = new SnapConfiguration.Builder()
+                .setClientId("fake_client_id")
+                .setRedirectUri("fake_redirect_uri")
+                .setClientSecret("fake_client_secret").build();
         MockitoAnnotations.initMocks(this);
         this.auth.setConfiguration(config);
         this.auth.setHttpClient(httpClient);
@@ -92,9 +90,10 @@ public class SnapAuthorizationTest {
 
     @Test
     public void test_getOAuthAuthorizationURI_should_fail_noClientID() throws IOException {
-        SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
-        configBuilder.setRedirectUri("fake_redirect_uri");
-        SnapAuthorization sp = new SnapAuthorization(configBuilder.build());
+        SnapConfiguration config = new SnapConfiguration.Builder()
+                .setRedirectUri("fake_redirect_uri")
+                .build();
+        SnapAuthorization sp = new SnapAuthorization(config);
         assertThatThrownBy(
                 sp::getOAuthAuthorizationURI)
                 .isInstanceOf(SnapAuthorizationException.class)
@@ -103,9 +102,9 @@ public class SnapAuthorizationTest {
 
     @Test
     public void test_getOAuthAuthorizationURI_should_fail_noRedirectURI() throws IOException {
-        SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
-        configBuilder.setClientId("fake_client_id");
-        SnapAuthorization sp = new SnapAuthorization(configBuilder.build());
+        SnapConfiguration config = new SnapConfiguration.Builder()
+                .setClientId("fake_client_id").build();
+        SnapAuthorization sp = new SnapAuthorization(config);
         assertThatThrownBy(
                 sp::getOAuthAuthorizationURI)
                 .isInstanceOf(SnapAuthorizationException.class)
@@ -172,10 +171,10 @@ public class SnapAuthorizationTest {
 
     @Test
     public void test_getOAuthAccessToken_should_fail_noClientID() throws IOException {
-        SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
-        configBuilder.setClientSecret("tata");
-        configBuilder.setRedirectUri("titi");
-        SnapAuthorization sp = new SnapAuthorization(configBuilder.build());
+        SnapConfiguration config = new SnapConfiguration.Builder()
+                .setClientSecret("tata")
+                .setRedirectUri("titi").build();
+        SnapAuthorization sp = new SnapAuthorization(config);
         assertThatThrownBy(
                 () -> sp.getOAuthAccessToken("code"))
                 .isInstanceOf(SnapAuthorizationException.class)
@@ -184,10 +183,10 @@ public class SnapAuthorizationTest {
 
     @Test
     public void test_getOAuthAccessToken_should_fail_noClientSecret() throws IOException {
-        SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
-        configBuilder.setClientId("tata");
-        configBuilder.setRedirectUri("titi");
-        SnapAuthorization sp = new SnapAuthorization(configBuilder.build());
+        SnapConfiguration config = new SnapConfiguration.Builder()
+                .setClientId("tata")
+                .setRedirectUri("titi").build();
+        SnapAuthorization sp = new SnapAuthorization(config);
         assertThatThrownBy(
                 () -> sp.getOAuthAccessToken("code"))
                 .isInstanceOf(SnapAuthorizationException.class)
@@ -196,10 +195,10 @@ public class SnapAuthorizationTest {
 
     @Test
     public void test_getOAuthAccessToken_should_fail_noRedirectURI() throws IOException {
-        SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
-        configBuilder.setClientId("tata");
-        configBuilder.setClientSecret("tata");
-        SnapAuthorization sp = new SnapAuthorization(configBuilder.build());
+        SnapConfiguration config = new SnapConfiguration.Builder()
+                .setClientId("tata")
+                .setClientSecret("tata").build();
+        SnapAuthorization sp = new SnapAuthorization(config);
         assertThatThrownBy(
                 () -> sp.getOAuthAccessToken("code"))
                 .isInstanceOf(SnapAuthorizationException.class)
@@ -381,10 +380,10 @@ public class SnapAuthorizationTest {
 
     @Test
     public void test_refreshToken_should_fail_noClientID() throws IOException {
-        SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
-        configBuilder.setClientSecret("tata");
-        configBuilder.setRedirectUri("titi");
-        SnapAuthorization sp = new SnapAuthorization(configBuilder.build());
+        SnapConfiguration config = new SnapConfiguration.Builder()
+                .setClientSecret("tata")
+                .setRedirectUri("titi").build();
+        SnapAuthorization sp = new SnapAuthorization(config);
         assertThatThrownBy(
                 () -> sp.refreshToken("code"))
                 .isInstanceOf(SnapAuthorizationException.class)
@@ -393,10 +392,10 @@ public class SnapAuthorizationTest {
 
     @Test
     public void test_refreshToken_should_fail_noClientSecret() throws IOException {
-        SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
-        configBuilder.setClientId("tata");
-        configBuilder.setRedirectUri("titi");
-        SnapAuthorization sp = new SnapAuthorization(configBuilder.build());
+        SnapConfiguration config = new SnapConfiguration.Builder()
+                .setClientId("tata")
+                .setRedirectUri("titi").build();
+        SnapAuthorization sp = new SnapAuthorization(config);
         assertThatThrownBy(
                 () -> sp.refreshToken("code"))
                 .isInstanceOf(SnapAuthorizationException.class)
@@ -405,10 +404,10 @@ public class SnapAuthorizationTest {
 
     @Test
     public void test_refreshToken_should_fail_noRedirectURI() throws IOException {
-        SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
-        configBuilder.setClientId("tata");
-        configBuilder.setClientSecret("tata");
-        SnapAuthorization sp = new SnapAuthorization(configBuilder.build());
+        SnapConfiguration config = new SnapConfiguration.Builder()
+                .setClientId("tata")
+                .setClientSecret("tata").build();
+        SnapAuthorization sp = new SnapAuthorization(config);
         assertThatThrownBy(
                 () -> sp.refreshToken("code"))
                 .isInstanceOf(SnapAuthorizationException.class)
