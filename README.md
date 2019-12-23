@@ -95,6 +95,21 @@ will be opened in a browser...
 
 ```
 
+Note that if you have in your project, a properties file named snapads4j.properties (folder resources) with the entries client.id, client.secret, redirect.uri filled, you don't have to use SnapAuthorization with SnapConfiguration. Instead, do like this : 
+
+```java
+    // Client ID, Redirect URI and Client Secret initialized in snapads4j.properties
+    SnapAuthorization auth = new SnapAuthorization();
+```
+
+Content of snapads4j.properties : 
+
+```java
+client.id={your_client_id}
+client.secret={your_client_secret}
+redirect.uri={your_redirect_url}
+```
+
 Now, in the other endpoint (Our redirect url for snapchat), catch the parameter code,
 and call the function to get the access token...
 
