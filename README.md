@@ -72,11 +72,11 @@ will be opened in a browser...
 
 ```java
     // Initialize Client ID, Redirect URI and Client Secret :
-    SnapConfigurationBuilder configBuilder = new SnapConfigurationBuilder();
-    configBuilder.setClientId("fake_client_id");
-    configBuilder.setRedirectUri("fake_redirect_uri");
-    configBuilder.setClientSecret("fake_client_secret");
-    SnapConfiguration config = configBuilder.build();
+    SnapConfiguration config = new SnapConfiguration.Builder()
+                    .setClientId("fake_client_id")
+                    .setRedirectUri("fake_redirect_uri")
+                    .setClientSecret("fake_client_secret")
+                    .build();
 
     SnapAuthorization auth = new SnapAuthorization(config);
 
