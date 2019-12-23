@@ -171,9 +171,21 @@ It's not enough for you ? You want to see advanced functionnalities ? Go see Cod
 
 ## Code examples
 
-Very soon...
+Coming soon...
 
 ## Wanna join the project ?
+
+### Signal bugs
+
+Coming soon...
+
+### Give new ideas to improve SnapAds4J
+
+Coming soon...
+
+### Help us to develop some features
+
+Coming soon...
 
 ## License
 
