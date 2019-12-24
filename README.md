@@ -254,7 +254,7 @@ It's not enough for you ? You want to see advanced functionnalities ? Go see Cod
 
 ## Code examples
 
-Coming soon...
+[Click here to access our examples](https://github.com/yassineazimani/SnapAds4J-examples)
 
 ## Wanna join the project ?
 
