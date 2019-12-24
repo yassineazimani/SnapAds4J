@@ -189,15 +189,62 @@ Now, we'll create a media which will be using for a creative object.
 
 #### Step 5 : Create Campaign
 
-Coming soon...
+```java
+// Create campaign :
+SnapCampaigns sc = new SnapCampaigns();
+Campaign c = new Campaign();
+c.setName("Cool Campaign");
+c.setAdAccountId(adAccountID);
+c.setStatus(StatusEnum.PAUSED);
+c.setStartTime(new Date());
+try {
+    Optional<Campaign> campaignCreated = sc.createCampaign(oAuthAccessToken, c);
+} catch (Exception e) {
+    e.printStackTrace();
+}
+```
 
 #### Step 6 : Create Ad Squad
 
-Coming soon...
+```java
+    // Create AdSquad :
+    SnapAdSquads sAdSquads = new SnapAdSquads();
+    List<GeoLocation> geos = new ArrayList<>();
+    geos.add(new GeoLocation.Builder().setCountryCode("us").build());
+    AdSquad adSquad = new AdSquad();
+    adSquad.setOptimizationGoal(OptimizationGoalEnum.IMPRESSIONS);
+    adSquad.setPlacement(PlacementEnum.SNAP_ADS);
+    adSquad.setType(AdSquadTypeEnum.SNAP_ADS);
+    adSquad.setCampaignId(campaignCreated.getId());
+    adSquad.setBidMicro(1000000.);
+    adSquad.setDailyBudgetMicro(1000000000.);
+    adSquad.setLifetimeBudgetMicro(300.);
+    adSquad.setName("AdSquad2019");
+    adSquad.setStatus(StatusEnum.PAUSED);
+    adSquad.setTargeting(new Targeting.Builder().setGeolocation(geos).build());
+    try {
+        Optional<AdSquad> optAdSquad = sAdSquads.createAdSquad(oAuthAccessToken, adSquad);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+```
 
 #### Step 7 : Create Ad
 
-Coming soon...
+```java
+    // Create Ad :
+    SnapAd snapAd = new SnapAd();
+    Ad ad = new Ad();
+    ad.setAdSquadId(optAdSquad.get().getId());
+    ad.setCreativeId(creativeCreated.get().getId());
+    ad.setName("Ad one");
+    ad.setStatus(StatusEnum.ACTIVE);
+    try {
+                Optional<Ad> adCreated = snapAd.createAd(oAuthAccessToken, ad);
+    } catch (Exception e) {
+                e.printStackTrace();
+    }
+```
 
 #### And now ?
 
@@ -211,15 +258,15 @@ Coming soon...
 
 ### Signal bugs
 
-Coming soon...
+A project is never perfect, we can found any bugs at any moments. If you find a bug, you could write an issue by following some rules to create a issue.
 
 ### Give new ideas to improve SnapAds4J
 
-Coming soon...
+You think SnapAds4J can have more functionnalities ?! It's great, it'll make SnapAds4J more stronger than ever ! Just create a issue with your idea by following some rules to create a issue.
 
 ### Help us to develop some features
 
-Coming soon...
+This project is open source, so you could contribute by develop some issues. Just respect some rules before to develop these issues.
 
 ## License
 
