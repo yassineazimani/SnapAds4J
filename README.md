@@ -39,14 +39,6 @@ https://adoptopenjdk.net/
 
 ### Download and install SnapAds4J
 
-#### Maven integration
-
-Coming soon...
-
-#### Gradle integration
-
-Coming soon...
-
 #### Download
 
 Latest stable version : 
