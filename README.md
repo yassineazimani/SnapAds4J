@@ -169,7 +169,23 @@ Now, we'll create a media which will be using for a creative object.
 
 #### Step 4 : Creative
 
-Coming soon...
+```java
+    // Create a Creative using the media created :
+    SnapCreative snapCreative = new SnapCreative();
+    Creative creative = new Creative();
+    creative.setAdAccountId(adAccountID);
+    creative.setBrandName("Maxiumum Brand");
+    creative.setName("Creative Creative");
+    creative.setShareable(true);
+    creative.setHeadline("Healthy Living");
+    creative.setType(CreativeTypeEnum.SNAP_AD);
+    creative.setTopSnapMediaId(mediaCreated.get().getId());
+    try {
+        Optional<Creative> creativeCreated = snapCreative.createCreative(oAuthAccessToken, creative);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+```
 
 #### Step 5 : Create Campaign
 
