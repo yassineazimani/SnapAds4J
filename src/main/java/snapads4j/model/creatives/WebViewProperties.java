@@ -32,6 +32,8 @@ import java.util.List;
 @ToString
 public class WebViewProperties {
 
+    private WebViewProperties(){}
+
     /**
      * URL
      */
@@ -60,5 +62,34 @@ public class WebViewProperties {
      */
     @JsonProperty("deep_link_urls")
     private List<String> deepLinkUrls;
+
+    public static class Builder {
+
+        private final WebViewProperties instance;
+
+        public Builder() {
+            this.instance = new WebViewProperties();
+        }// Builder()
+
+        public Builder setUrl(String url) {
+            this.instance.setUrl(url);
+            return this;
+        }// setUrl()
+
+        public Builder setAllowSnapJavascriptSdk(boolean allowSnapJavascriptSdk) {
+            this.instance.setAllowSnapJavascriptSdk(allowSnapJavascriptSdk);
+            return this;
+        }// setAllowSnapJavascriptSdk()
+
+        public Builder setBlockPreload(boolean blockPreload) {
+            this.instance.setBlockPreload(blockPreload);
+            return this;
+        }// setBlockPreload()
+
+        public WebViewProperties build() {
+            return this.instance;
+        }// build()
+
+    }// Builder
 
 }// WebViewProperties

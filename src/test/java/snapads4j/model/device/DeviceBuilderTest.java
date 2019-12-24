@@ -27,25 +27,16 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class DeviceBuilderTest {
 
-    private DeviceBuilder builder;
-
-    @Before
-    public void init() {
-        builder = new DeviceBuilder();
-    }// init()
-
     @Test
     public void test_demographics_builder_1() {
-        builder.setConnectionType("CELL");
-        Device demo = builder.build();
+        Device demo = new Device.Builder().setConnectionType("CELL").build();
         Assertions.assertThat(demo).isNotNull();
         Assertions.assertThat(demo.getConnectionType()).isEqualTo("CELL");
     }// test_demographics_builder_1()
 
     @Test
     public void test_demographics_builder_2() {
-        builder.setId(1L);
-        Device device = builder.build();
+        Device device = new Device.Builder().setId(1L).build();
         Assertions.assertThat(device).isNotNull();
         Assertions.assertThat(device.getId()).isEqualTo(1L);
     }// test_demographics_builder_2()
@@ -54,8 +45,7 @@ public class DeviceBuilderTest {
     public void test_demographics_builder_3() {
         List<String> carrierIds = new ArrayList<>();
         carrierIds.add("US_ATT");
-        builder.setCarrierId(carrierIds);
-        Device device = builder.build();
+        Device device = new Device.Builder().setCarrierId(carrierIds).build();
         Assertions.assertThat(device).isNotNull();
         Assertions.assertThat(device.getCarrierIds()).isNotNull();
         Assertions.assertThat(device.getCarrierIds()).isNotEmpty();
@@ -66,8 +56,7 @@ public class DeviceBuilderTest {
     public void test_demographics_builder_4() {
         List<String> marketingNames = new ArrayList<>();
         marketingNames.add("Apple/iPhone 7 Plus");
-        builder.setMake(marketingNames);
-        Device device = builder.build();
+        Device device = new Device.Builder().setMake(marketingNames).build();
         Assertions.assertThat(device).isNotNull();
         Assertions.assertThat(device.getMarketingNames()).isNotNull();
         Assertions.assertThat(device.getMarketingNames()).isNotEmpty();
@@ -76,39 +65,34 @@ public class DeviceBuilderTest {
 
     @Test
     public void test_demographics_builder_5() {
-        builder.setOSMaxVersion(1.2);
-        Device device = builder.build();
+        Device device = new Device.Builder().setOSMaxVersion(1.2).build();
         Assertions.assertThat(device).isNotNull();
         Assertions.assertThat(device.getOsMaxVersion()).isEqualTo(1.2);
     }// test_demographics_builder_5()
 
     @Test
     public void test_demographics_builder_6() {
-        builder.setOSMinVersion(1.0);
-        Device device = builder.build();
+        Device device = new Device.Builder().setOSMinVersion(1.0).build();
         Assertions.assertThat(device).isNotNull();
         Assertions.assertThat(device.getOsMinVersion()).isEqualTo(1.0);
     }// test_demographics_builder_6()
 
     @Test
     public void test_demographics_builder_7() {
-        builder.setOSType("iOS");
-        Device device = builder.build();
+        Device device = new Device.Builder().setOSType("iOS").build();
         Assertions.assertThat(device).isNotNull();
         Assertions.assertThat(device.getOsType()).isEqualTo("iOS");
     }// test_demographics_builder_7()
 
     public void test_demographics_builder_8() {
-        builder.setOSVersion(7.5);
-        Device device = builder.build();
+        Device device = new Device.Builder().setOSVersion(7.5).build();
         Assertions.assertThat(device).isNotNull();
         Assertions.assertThat(device.getOsVersion()).isEqualTo(7.5);
     }// test_demographics_builder_8()
 
     @Test
     public void test_demographics_builder_9() {
-        builder.setOSType("iOS");
-        Device device = builder.build();
+        Device device = new Device.Builder().setOSType("iOS").build();
         Assertions.assertThat(device).isNotNull();
         Assertions.assertThat(device.toString()).isNotEmpty();
     }// test_demographics_builder_9()

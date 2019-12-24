@@ -16,7 +16,6 @@
 package snapads4j.model.geolocation;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -28,17 +27,9 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class GeoLocationBuilderTest {
 
-    private GeolocationBuilder builder;
-
-    @Before
-    public void init() {
-        builder = new GeolocationBuilder();
-    }// init()
-
     @Test
     public void test_geolocation_builder_1() {
-        builder.setOperation(OperationEnum.EXCLUDE);
-        GeoLocation geo = builder.build();
+        GeoLocation geo = new GeoLocation.Builder().setOperation(OperationEnum.EXCLUDE).build();
         Assertions.assertThat(geo).isNotNull();
         Assertions.assertThat(geo.getOperation()).isEqualTo(OperationEnum.EXCLUDE);
     }// test_geolocation_builder_1()
@@ -47,8 +38,7 @@ public class GeoLocationBuilderTest {
     public void test_geolocation_builder_2() {
         List<Integer> metroIds = new ArrayList<>();
         metroIds.add(1);
-        builder.setMetroIds(metroIds);
-        GeoLocation geo = builder.build();
+        GeoLocation geo = new GeoLocation.Builder().setMetroIds(metroIds).build();
         Assertions.assertThat(geo).isNotNull();
         Assertions.assertThat(geo.getMetroIds()).isNotNull();
         Assertions.assertThat(geo.getMetroIds()).isNotEmpty();
@@ -59,8 +49,7 @@ public class GeoLocationBuilderTest {
     public void test_geolocation_builder_3() {
         List<Integer> postalCodes = new ArrayList<>();
         postalCodes.add(13);
-        builder.setPostalCodes(postalCodes);
-        GeoLocation geo = builder.build();
+        GeoLocation geo = new GeoLocation.Builder().setPostalCodes(postalCodes).build();
         Assertions.assertThat(geo).isNotNull();
         Assertions.assertThat(geo.getPostalCodes()).isNotNull();
         Assertions.assertThat(geo.getPostalCodes()).isNotEmpty();
@@ -69,16 +58,14 @@ public class GeoLocationBuilderTest {
 
     @Test
     public void test_geolocation_builder_4() {
-        builder.setCountryCode("us");
-        GeoLocation geo = builder.build();
+        GeoLocation geo = new GeoLocation.Builder().setCountryCode("us").build();
         Assertions.assertThat(geo).isNotNull();
         Assertions.assertThat(geo.getCountryCode()).isEqualTo("us");
     }// test_geolocation_builder_4()
 
     @Test
     public void test_geolocation_builder_5() {
-        builder.setOperation(OperationEnum.EXCLUDE);
-        GeoLocation geo = builder.build();
+        GeoLocation geo = new GeoLocation.Builder().setOperation(OperationEnum.EXCLUDE).build();
         Assertions.assertThat(geo).isNotNull();
         Assertions.assertThat(geo.toString()).isNotEmpty();
     }// test_geolocation_builder_5()

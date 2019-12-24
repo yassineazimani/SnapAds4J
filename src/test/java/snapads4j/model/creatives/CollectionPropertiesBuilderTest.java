@@ -16,7 +16,6 @@
 package snapads4j.model.creatives;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -24,20 +23,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class CollectionPropertiesBuilderTest {
 
-    private CollectionPropertiesBuilder builder;
-
-    @Before
-    public void init() {
-        builder = new CollectionPropertiesBuilder();
-    }// init()
-
     @Test
     public void test_builder() {
-        builder.setDefaultFallbackInteractionType("defaultFallbackInteractionType");
-        builder.setInteractionZoneId("interactionZoneId");
-        builder.setDeepLinkProperties(new DeepLinkProperties());
-        builder.setWebViewProperties(new WebViewProperties());
-        CollectionProperties properties = builder.build();
+        CollectionProperties properties = new CollectionProperties.Builder()
+                .setDefaultFallbackInteractionType("defaultFallbackInteractionType")
+                .setInteractionZoneId("interactionZoneId")
+                .setDeepLinkProperties(new DeepLinkProperties.Builder().build())
+                .setWebViewProperties(new WebViewProperties.Builder().build())
+                .build();
         Assertions.assertThat(properties).isNotNull();
         Assertions.assertThat(properties.toString()).isNotEmpty();
         Assertions.assertThat(properties.getDefaultFallbackInteractionType()).isEqualTo("defaultFallbackInteractionType");

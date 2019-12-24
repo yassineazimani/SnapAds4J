@@ -16,7 +16,6 @@
 package snapads4j.model.creatives;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -24,23 +23,17 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class DeepLinkPropertiesBuilderTest {
 
-    private DeepLinkPropertiesBuilder builder;
-
-    @Before
-    public void init() {
-        builder = new DeepLinkPropertiesBuilder();
-    }// init()
-
     @Test
     public void test_builder() {
-        builder.setAndroidAppUrl("androidAppUrl");
-        builder.setAppName("appName");
-        builder.setDeepLinkUri("deepLinkUri");
-        builder.setFallbackType("fallbackType");
-        builder.setIconMediaId("iconMediaId");
-        builder.setIosAppId("iosAppId");
-        builder.setWebViewFallbackUrl("webViewFallbackUrl");
-        DeepLinkProperties properties = builder.build();
+        DeepLinkProperties properties = new DeepLinkProperties.Builder()
+            .setAndroidAppUrl("androidAppUrl")
+            .setAppName("appName")
+            .setDeepLinkUri("deepLinkUri")
+            .setFallbackType("fallbackType")
+            .setIconMediaId("iconMediaId")
+            .setIosAppId("iosAppId")
+            .setWebViewFallbackUrl("webViewFallbackUrl")
+            .build();
         Assertions.assertThat(properties).isNotNull();
         Assertions.assertThat(properties.toString()).isNotEmpty();
         Assertions.assertThat(properties.getAndroidAppUrl()).isEqualTo("androidAppUrl");

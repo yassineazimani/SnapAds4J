@@ -18,7 +18,7 @@ import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
-import snapads4j.model.creatives.WebViewPropertiesBuilder;
+import snapads4j.model.creatives.WebViewProperties;
 import snapads4j.model.creatives.elements.ButtonProperties;
 import snapads4j.model.creatives.elements.CreativeElement;
 import snapads4j.model.creatives.elements.InteractionZone;
@@ -663,8 +663,9 @@ public class SnapCreativeElementTest {
     private CreativeElement initCreativeElement() {
         ButtonProperties buttonProperties = new ButtonProperties();
         buttonProperties.setButtonOverlayMediaId("008a5ae9-bcc1-4c2e-a3f1-7e924d582019");
-        WebViewPropertiesBuilder builder = new WebViewPropertiesBuilder();
-        builder.setUrl("https://snapchat.com");
+        WebViewProperties webProperties = new WebViewProperties.Builder()
+        .setUrl("https://snapchat.com")
+                .build();
         CreativeElement c = new CreativeElement();
         c.setName("Product 1 button");
         c.setAdAccountId(adAccountID);
@@ -673,15 +674,15 @@ public class SnapCreativeElementTest {
         c.setTitle("Best title");
         c.setInteractionType(InteractionTypeEnum.WEB_VIEW);
         c.setButtonProperties(buttonProperties);
-        c.setWebViewProperties(builder.build());
+        c.setWebViewProperties(webProperties);
         return c;
     }// initCreativeElement()
 
     private List<CreativeElement> initCreativeElements() {
         ButtonProperties buttonProperties = new ButtonProperties();
         buttonProperties.setButtonOverlayMediaId("008a5ae9-bcc1-4c2e-a3f1-7e924d582019");
-        WebViewPropertiesBuilder builder = new WebViewPropertiesBuilder();
-        builder.setUrl("https://snapchat.com");
+        WebViewProperties webViewProperties = new WebViewProperties.Builder()
+        .setUrl("https://snapchat.com").build();
         List<CreativeElement> results = new ArrayList<>();
         CreativeElement c1 = new CreativeElement();
         c1.setName("Product 1 button");
@@ -690,13 +691,13 @@ public class SnapCreativeElementTest {
         c1.setInteractionType(InteractionTypeEnum.WEB_VIEW);
         c1.setTitle("Best title");
         c1.setButtonProperties(buttonProperties);
-        c1.setWebViewProperties(builder.build());
+        c1.setWebViewProperties(webViewProperties);
         c1.setAdAccountId(adAccountID);
         results.add(c1);
         ButtonProperties buttonProperties2 = new ButtonProperties();
         buttonProperties2.setButtonOverlayMediaId("008a5ae9-bcc1-4c2e-a3f1-7e924d582012");
-        builder = new WebViewPropertiesBuilder();
-        builder.setUrl("https://snapchat2.com");
+        webViewProperties = new WebViewProperties.Builder()
+                .setUrl("https://snapchat2.com").build();
         CreativeElement c2 = new CreativeElement();
         c2.setName("Product 2 button");
         c2.setType(CreativeTypeEnum.BUTTON);
@@ -704,13 +705,13 @@ public class SnapCreativeElementTest {
         c2.setInteractionType(InteractionTypeEnum.WEB_VIEW);
         c2.setTitle("Best title");
         c2.setButtonProperties(buttonProperties2);
-        c2.setWebViewProperties(builder.build());
+        c2.setWebViewProperties(webViewProperties);
         c2.setAdAccountId(adAccountID);
         results.add(c2);
         ButtonProperties buttonProperties3 = new ButtonProperties();
         buttonProperties3.setButtonOverlayMediaId("008a5ae9-bcc1-4c2e-a3f1-7e924d582013");
-        builder = new WebViewPropertiesBuilder();
-        builder.setUrl("https://snapchat3.com");
+        webViewProperties = new WebViewProperties.Builder()
+                .setUrl("https://snapchat3.com").build();
         CreativeElement c3 = new CreativeElement();
         c3.setName("Product 3 button");
         c3.setType(CreativeTypeEnum.BUTTON);
@@ -718,7 +719,7 @@ public class SnapCreativeElementTest {
         c3.setInteractionType(InteractionTypeEnum.WEB_VIEW);
         c3.setTitle("Best title");
         c3.setButtonProperties(buttonProperties3);
-        c3.setWebViewProperties(builder.build());
+        c3.setWebViewProperties(webViewProperties);
         c3.setAdAccountId(adAccountID);
         results.add(c3);
         return results;

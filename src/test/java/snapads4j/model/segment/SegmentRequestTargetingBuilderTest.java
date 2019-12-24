@@ -28,25 +28,16 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class SegmentRequestTargetingBuilderTest {
 
-    private SegmentRequestTargetingBuilder builder;
-
-    @Before
-    public void init() {
-        builder = new SegmentRequestTargetingBuilder();
-    }// init()
-
     @Test
     public void test_segment_request_targeting_builder_1() {
-        builder.setId(1L);
-        SegmentRequestTargeting sTarget = builder.build();
+        SegmentRequestTargeting sTarget = new SegmentRequestTargeting.Builder().setId(1L).build();
         Assertions.assertThat(sTarget).isNotNull();
         Assertions.assertThat(sTarget.getId()).isEqualTo(1L);
     }// test_segment_request_targeting_builder_1()
 
     @Test
     public void test_segment_request_targeting_builder_2() {
-        builder.setOperation(OperationEnum.INCLUDE);
-        SegmentRequestTargeting sTarget = builder.build();
+        SegmentRequestTargeting sTarget = new SegmentRequestTargeting.Builder().setOperation(OperationEnum.INCLUDE).build();
         Assertions.assertThat(sTarget).isNotNull();
         Assertions.assertThat(sTarget.getOperation()).isEqualTo(OperationEnum.INCLUDE);
     }// test_segment_request_targeting_builder_2()
@@ -55,8 +46,7 @@ public class SegmentRequestTargetingBuilderTest {
     public void test_segment_request_targeting_builder_3() {
         List<String> segmentsIds = new ArrayList<>();
         segmentsIds.add("segment-1");
-        builder.setSegmentIds(segmentsIds);
-        SegmentRequestTargeting sTarget = builder.build();
+        SegmentRequestTargeting sTarget = new SegmentRequestTargeting.Builder().setSegmentIds(segmentsIds).build();
         Assertions.assertThat(sTarget).isNotNull();
         Assertions.assertThat(sTarget.getSegmentIds()).isNotNull();
         Assertions.assertThat(sTarget.getSegmentIds()).isNotEmpty();
@@ -66,8 +56,7 @@ public class SegmentRequestTargetingBuilderTest {
 
     @Test
     public void test_segment_request_targeting_builder_4() {
-        builder.setOperation(OperationEnum.INCLUDE);
-        SegmentRequestTargeting sTarget = builder.build();
+        SegmentRequestTargeting sTarget = new SegmentRequestTargeting.Builder().setOperation(OperationEnum.INCLUDE).build();
         Assertions.assertThat(sTarget).isNotNull();
         Assertions.assertThat(sTarget.toString()).isNotEmpty();
     }// test_segment_request_targeting_builder_4()

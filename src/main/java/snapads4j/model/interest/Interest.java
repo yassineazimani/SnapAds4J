@@ -45,4 +45,39 @@ public class Interest {
      */
     @JsonProperty("category_id")
     private List<String> categoryIds;
+
+    /**
+     * Used to build Targeting instance
+     *
+     * @author Yassine
+     */
+    public static class Builder {
+
+        private final Interest interestInstance;
+
+        public Builder() {
+            this.interestInstance = new Interest();
+        }
+
+        public Builder setId(Integer id) {
+            this.interestInstance.setId(id);
+            return this;
+        }
+
+        /**
+         * Example : "SLC_36", "DLXS_1"
+         *
+         * @param categoryIds
+         * @return
+         */
+        public Builder setCategoryIds(List<String> categoryIds) {
+            this.interestInstance.setCategoryIds(categoryIds);
+            return this;
+        } // setCategoryIds()
+
+        public Interest build() {
+            return this.interestInstance;
+        } // build()
+    } // Builder
+
 } // Interest

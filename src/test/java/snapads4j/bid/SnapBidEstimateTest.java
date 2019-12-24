@@ -38,10 +38,8 @@ import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.bid.BidEstimate;
 import snapads4j.model.bid.TargetingSpecBidEstimate;
 import snapads4j.model.demographics.Demographics;
-import snapads4j.model.demographics.DemographicsBuilder;
 import snapads4j.model.geolocation.GeoLocation;
-import snapads4j.model.geolocation.GeolocationBuilder;
-import snapads4j.model.targeting.TargetingBuilder;
+import snapads4j.model.targeting.Targeting;
 import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.SnapResponseUtils;
 
@@ -428,20 +426,17 @@ public class SnapBidEstimateTest {
     } // should_throw_exception_1337_get_bid_estimate_by_squad_spec()
 
     private TargetingSpecBidEstimate initTargetingSpec() {
-        TargetingBuilder targetBuilder = new TargetingBuilder();
         List<GeoLocation> geos = new ArrayList<>();
-        geos.add(new GeolocationBuilder().setCountryCode("us").build());
-        targetBuilder.setGeolocation(geos);
+        geos.add(new GeoLocation.Builder().setCountryCode("us").build());
         List<Demographics> demographics = new ArrayList<>();
         List<String> ageGroups = new ArrayList<>();
         ageGroups.add("13-17");
         ageGroups.add("18-20");
         ageGroups.add("21-24");
-        demographics.add(new DemographicsBuilder().setAgeGroups(ageGroups).build());
-        targetBuilder.setDemographics(demographics);
+        demographics.add(new Demographics.Builder().setAgeGroups(ageGroups).build());
         TargetingSpecBidEstimate targetingSpecBidEstimate = new TargetingSpecBidEstimate();
         targetingSpecBidEstimate.setOptimizationGoal(OptimizationGoalEnum.APP_INSTALLS);
-        targetingSpecBidEstimate.setTargeting(targetBuilder.build());
+        targetingSpecBidEstimate.setTargeting(new Targeting.Builder().setDemographics(demographics).setGeolocation(geos).build());
         return targetingSpecBidEstimate;
     }// initAdSquad()
 }// SnapBidEstimateTest

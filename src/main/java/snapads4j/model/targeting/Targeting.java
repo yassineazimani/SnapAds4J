@@ -71,4 +71,58 @@ public class Targeting {
      * List of Snap Audience Match Segment Targets
      */
     private List<SegmentRequestTargeting> segments;
+
+    /**
+     * Used to build Targeting instance (${@link Targeting})
+     *
+     * @author Yassine
+     */
+    public static class Builder {
+
+        private final Targeting targetingInstance;
+
+        public Builder() {
+            this.targetingInstance = new Targeting();
+        } // Builder()
+
+        public Builder setDemographics(List<Demographics> demographics) {
+            this.targetingInstance.setDemographics(demographics);
+            return this;
+        } // setDemographics()
+
+        public Builder setDevices(List<Device> devices) {
+            this.targetingInstance.setDevices(devices);
+            return this;
+        } // setDevices()
+
+        public Builder setGeolocation(List<GeoLocation> geos) {
+            this.targetingInstance.setGeos(geos);
+            return this;
+        } // setGeolocation()
+
+        public Builder setInterests(List<Interest> interests) {
+            this.targetingInstance.setInterests(interests);
+            return this;
+        } // setDevices()
+
+        public Builder setRegulatedContent(boolean regulatedContent) {
+            this.targetingInstance.setRegulatedContent(regulatedContent);
+            return this;
+        } // setRegulatedContent()
+
+        public Builder setSegments(List<SegmentRequestTargeting> segments) {
+            this.targetingInstance.setSegments(segments);
+            return this;
+        } // setSegments
+
+        public Builder setLocations(List<Map<String, Object>> locations) {
+            this.targetingInstance.setLocations(locations);
+            return this;
+        } // setLocations
+
+        public Targeting build() {
+            return this.targetingInstance;
+        } // build()
+    } // Builder
+
 } // Targeting

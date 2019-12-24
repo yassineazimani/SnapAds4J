@@ -30,42 +30,33 @@ public class LocationBuilderTest {
 
     @Test
     public void test_location_builder_1() {
-        LocationBuilder builder = new LocationBuilder();
-        Location location = builder.build();
+        Location location = new Location.Builder().build();
         Assertions.assertThat(location).isNotNull();
     }// test_location_builder_1()
 
     @Test
     public void test_location_builder_2() {
-        LocationBuilder builder = new LocationBuilder();
-        builder.setOperation(OperationEnum.EXCLUDE);
-        Location location = builder.build();
+        Location location = new Location.Builder().setOperation(OperationEnum.EXCLUDE).build();
         Assertions.assertThat(location.getOperation()).isEqualTo(OperationEnum.EXCLUDE);
     }// test_location_builder_2()
 
     @Test
     public void test_location_builder_3() {
-        LocationBuilder builder = new LocationBuilder();
-        builder.setProximity(18);
-        Location location = builder.build();
+        Location location = new Location.Builder().setProximity(18).build();
         Assertions.assertThat(location.getProximity()).isEqualTo(18);
     }// test_location_builder_2()
 
     @Test
     public void test_location_builder_4() {
-        LocationBuilder builder = new LocationBuilder();
-        builder.setUnit(ProximityUnitEnum.KILOMETERS);
-        Location location = builder.build();
+        Location location = new Location.Builder().setUnit(ProximityUnitEnum.KILOMETERS).build();
         Assertions.assertThat(location.getProximityUnit()).isEqualTo(ProximityUnitEnum.KILOMETERS);
     }// test_location_builder_4()
 
     @Test
     public void test_location_builder_5() {
-        LocationBuilder builder = new LocationBuilder();
         List<String> locationTypes = new ArrayList<>();
         locationTypes.add("country");
-        builder.setLocationTypes(locationTypes);
-        Location location = builder.build();
+        Location location = new Location.Builder().setLocationTypes(locationTypes).build();
         Assertions.assertThat(location.getLocationTypes()).isNotNull();
         Assertions.assertThat(location.getLocationTypes()).isNotEmpty();
         Assertions.assertThat(location.getLocationTypes().size()).isEqualTo(1);
@@ -74,15 +65,13 @@ public class LocationBuilderTest {
 
     @Test
     public void test_location_builder_6() {
-        LocationBuilder builder = new LocationBuilder();
         List<Circle> circles = new ArrayList<>();
         circles.add(new Circle(45.33, 8.99, 14));
         circles.add(new Circle(48.33, 7.99, 12, ProximityUnitEnum.METERS));
         Circle c3 = new Circle(48., 9., 2);
         c3.setUnit(ProximityUnitEnum.MILES);
         circles.add(c3);
-        builder.setCircles(circles);
-        Location location = builder.build();
+        Location location = new Location.Builder().setCircles(circles).build();
         Assertions.assertThat(location.getCircles()).isNotNull();
         Assertions.assertThat(location.getCircles()).isNotEmpty();
         Assertions.assertThat(location.getCircles().size()).isEqualTo(3);

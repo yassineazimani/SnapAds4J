@@ -22,4 +22,33 @@ import lombok.Setter;
 @Setter
 public class PaidImpressionTrackingUrl extends TrackingUrl {
 
+    public static class Builder {
+
+        private final PaidImpressionTrackingUrl instance;
+
+        public Builder() {
+            this.instance = new PaidImpressionTrackingUrl();
+        }// Builder()
+
+        public Builder setExpandedTrackingUrl(String expandedTrackingUrl) {
+            this.instance.setExpandedTrackingUrl(expandedTrackingUrl);
+            return this;
+        }// setExpandedTrackingUrl()
+
+        public Builder setTrackingUrl(String trackingUrl) {
+            this.instance.setTrackingUrl(trackingUrl);
+            return this;
+        }// setTrackingUrl()
+
+        public Builder setTrackingUrlMetadata(String trackingUrlMetadata) {
+            this.instance.setTrackingUrlMetadata(trackingUrlMetadata);
+            return this;
+        }// setTrackingUrlMetadata()
+
+        public PaidImpressionTrackingUrl build() {
+            return this.instance;
+        }// build()
+
+    }// Builder
+
 }// PaidImpressionTrackingUrl

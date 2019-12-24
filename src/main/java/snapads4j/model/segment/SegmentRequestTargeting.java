@@ -49,4 +49,38 @@ public class SegmentRequestTargeting {
      * Operation
      */
     private OperationEnum operation;
+
+    /**
+     * Used to build SegmentRequestTargeting instance (${@link SegmentRequestTargeting})
+     *
+     * @author Yassine
+     */
+    public static class Builder {
+
+        private final SegmentRequestTargeting segmentInstance;
+
+        public Builder() {
+            this.segmentInstance = new SegmentRequestTargeting();
+        }
+
+        public Builder setId(Long id) {
+            this.segmentInstance.setId(id);
+            return this;
+        } // setId()
+
+        public Builder setSegmentIds(List<String> segmentIds) {
+            this.segmentInstance.setSegmentIds(segmentIds);
+            return this;
+        } // setSegmentIds()
+
+        public Builder setOperation(OperationEnum op) {
+            this.segmentInstance.setOperation(op);
+            return this;
+        } // setOperation()
+
+        public SegmentRequestTargeting build() {
+            return this.segmentInstance;
+        } // build()
+    } // Builder
+
 } // SegmentRequestTargeting

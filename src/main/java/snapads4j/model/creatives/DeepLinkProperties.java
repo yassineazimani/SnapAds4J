@@ -32,6 +32,8 @@ import javax.validation.constraints.NotEmpty;
 @ToString
 public class DeepLinkProperties {
 
+    private DeepLinkProperties(){}// DeepLinkProperties()
+
     /**
      * Deep Link URI
      */
@@ -76,4 +78,53 @@ public class DeepLinkProperties {
      */
     @JsonProperty("web_view_fallback_url")
     private String webViewFallbackUrl;
+
+    public static class Builder {
+
+        private final DeepLinkProperties instance;
+
+        public Builder() {
+            this.instance = new DeepLinkProperties();
+        }// Builder()
+
+        public Builder setDeepLinkUri(String deepLinkUri) {
+            this.instance.setDeepLinkUri(deepLinkUri);
+            return this;
+        }// setDeepLinkUri()
+
+        public Builder setAppName(String appName) {
+            this.instance.setAppName(appName);
+            return this;
+        }// setAppName()
+
+        public Builder setIosAppId(String iosAppId) {
+            this.instance.setIosAppId(iosAppId);
+            return this;
+        }// setIosAppId()
+
+        public Builder setAndroidAppUrl(String androidAppUrl) {
+            this.instance.setAndroidAppUrl(androidAppUrl);
+            return this;
+        }// setAndroidAppUrl()
+
+        public Builder setIconMediaId(String iconMediaId) {
+            this.instance.setIconMediaId(iconMediaId);
+            return this;
+        }// setIconMediaId()
+
+        public Builder setFallbackType(String fallbackType) {
+            this.instance.setFallbackType(fallbackType);
+            return this;
+        }// setFallbackType()
+
+        public Builder setWebViewFallbackUrl(String webViewFallbackUrl) {
+            this.instance.setWebViewFallbackUrl(webViewFallbackUrl);
+            return this;
+        }// setWebViewFallbackUrl()
+
+        public DeepLinkProperties build() {
+            return this.instance;
+        }// build()
+    }// DeepLinkPropertiesBuilder
+
 }// DeepLinkProperties

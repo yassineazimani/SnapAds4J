@@ -36,9 +36,7 @@ import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.Pagination;
 import snapads4j.model.adsquads.AdSquad;
 import snapads4j.model.geolocation.GeoLocation;
-import snapads4j.model.geolocation.GeolocationBuilder;
 import snapads4j.model.targeting.Targeting;
-import snapads4j.model.targeting.TargetingBuilder;
 import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.SnapResponseUtils;
 
@@ -1369,10 +1367,8 @@ public class SnapAdSquadsTest {
     } // should_throw_exception_1337_getAllAdSquads_AdAccount()
 
     private AdSquad initFunctionalAdSquad() {
-        TargetingBuilder targetBuilder = new TargetingBuilder();
         List<GeoLocation> geos = new ArrayList<>();
-        geos.add(new GeolocationBuilder().setCountryCode("us").build());
-        targetBuilder.setGeolocation(geos);
+        geos.add(new GeoLocation.Builder().setCountryCode("us").build());
         AdSquad a = new AdSquad();
         a.setOptimizationGoal(OptimizationGoalEnum.IMPRESSIONS);
         a.setPlacement(PlacementEnum.SNAP_ADS);
@@ -1383,7 +1379,7 @@ public class SnapAdSquadsTest {
         a.setLifetimeBudgetMicro(300.);
         a.setName("AdSquad2019");
         a.setStatus(StatusEnum.PAUSED);
-        a.setTargeting(targetBuilder.build());
+        a.setTargeting(new Targeting.Builder().setGeolocation(geos).build());
         return a;
     }// initFunctionalAdSquad()
 } // SnapAdSquadsTest

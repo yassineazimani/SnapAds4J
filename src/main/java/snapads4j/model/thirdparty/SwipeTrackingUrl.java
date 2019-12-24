@@ -22,4 +22,32 @@ import lombok.Setter;
 @Setter
 public class SwipeTrackingUrl extends TrackingUrl {
 
+    public static class Builder {
+
+        private final SwipeTrackingUrl instance;
+
+        public Builder() {
+            this.instance = new SwipeTrackingUrl();
+        }// Builder()
+
+        public Builder setExpandedTrackingUrl(String expandedTrackingUrl) {
+            this.instance.setExpandedTrackingUrl(expandedTrackingUrl);
+            return this;
+        }// setExpandedTrackingUrl()
+
+        public Builder setTrackingUrl(String trackingUrl) {
+            this.instance.setTrackingUrl(trackingUrl);
+            return this;
+        }// setTrackingUrl()
+
+        public Builder setTrackingUrlMetadata(String trackingUrlMetadata) {
+            this.instance.setTrackingUrlMetadata(trackingUrlMetadata);
+            return this;
+        }// setTrackingUrlMetadata()
+
+        public SwipeTrackingUrl build() {
+            return this.instance;
+        }// build()
+    }// Builder
+
 }// SwipeTrackingUrl

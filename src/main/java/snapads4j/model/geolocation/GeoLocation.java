@@ -50,4 +50,43 @@ public class GeoLocation {
     private List<Integer> metroIds;
 
     private OperationEnum operation;
+
+    /**
+     * Used to build Geolocation instance ({@link GeoLocation})
+     *
+     * @author Yassine
+     */
+    public static class Builder {
+
+        private final GeoLocation geoLocationInstance;
+
+        public Builder() {
+            this.geoLocationInstance = new GeoLocation();
+        } // Builder()
+
+        public Builder setCountryCode(String countryCode) {
+            this.geoLocationInstance.setCountryCode(countryCode);
+            return this;
+        } // setCountryCode()
+
+        public Builder setPostalCodes(List<Integer> postalCodes) {
+            this.geoLocationInstance.setPostalCodes(postalCodes);
+            return this;
+        } // setPostalCodes()
+
+        public Builder setMetroIds(List<Integer> metroIds) {
+            this.geoLocationInstance.setMetroIds(metroIds);
+            return this;
+        } // setMetroIds()
+
+        public Builder setOperation(OperationEnum operation) {
+            this.geoLocationInstance.setOperation(operation);
+            return this;
+        } // setOperation()
+
+        public GeoLocation build() {
+            return this.geoLocationInstance;
+        } // build()
+    } // Builder
+
 } // GeoLocation

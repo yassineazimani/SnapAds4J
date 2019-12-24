@@ -16,7 +16,6 @@
 package snapads4j.model.creatives;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -24,18 +23,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class WebViewPropertiesBuilderTest {
 
-    private WebViewPropertiesBuilder builder;
-
-    @Before
-    public void init() {
-        builder = new WebViewPropertiesBuilder();
-    }// init()
-
     @Test
     public void test_web_builder_1() {
         String url = "http://www.snapchat.com";
-        builder.setUrl(url);
-        WebViewProperties properties = builder.build();
+        WebViewProperties properties = new WebViewProperties.Builder().setUrl(url).build();
         Assertions.assertThat(properties).isNotNull();
         Assertions.assertThat(properties.getUrl()).isNotNull();
         Assertions.assertThat(properties.getUrl()).isNotEmpty();
@@ -44,16 +35,14 @@ public class WebViewPropertiesBuilderTest {
 
     @Test
     public void test_web_builder_2() {
-        builder.setAllowSnapJavascriptSdk(true);
-        WebViewProperties properties = builder.build();
+        WebViewProperties properties = new WebViewProperties.Builder().setAllowSnapJavascriptSdk(true).build();
         Assertions.assertThat(properties).isNotNull();
         Assertions.assertThat(properties.isAllowSnapJavascriptSdk()).isTrue();
     }// test_web_builder_2()
 
     @Test
     public void test_web_builder_3() {
-        builder.setBlockPreload(false);
-        WebViewProperties properties = builder.build();
+        WebViewProperties properties = new WebViewProperties.Builder().setBlockPreload(false).build();
         Assertions.assertThat(properties).isNotNull();
         Assertions.assertThat(properties.isBlockPreload()).isFalse();
     }// test_web_builder_3()

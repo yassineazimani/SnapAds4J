@@ -27,26 +27,16 @@ import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DemographicsBuilderTest {
-
-    private DemographicsBuilder builder;
-
-    @Before
-    public void init() {
-        builder = new DemographicsBuilder();
-    }// init()
-
     @Test
     public void test_demographics_builder_1() {
-        builder.setGender(GenderEnum.MALE);
-        Demographics demo = builder.build();
+        Demographics demo = new Demographics.Builder().setGender(GenderEnum.MALE).build();
         Assertions.assertThat(demo).isNotNull();
         Assertions.assertThat(demo.getGender()).isEqualTo(GenderEnum.MALE);
     }// test_demographics_builder_1()
 
     @Test
     public void test_demographics_builder_2() {
-        builder.setId(1L);
-        Demographics demo = builder.build();
+        Demographics demo = new Demographics.Builder().setId(1L).build();
         Assertions.assertThat(demo).isNotNull();
         Assertions.assertThat(demo.getId()).isEqualTo(1L);
     }// test_demographics_builder_2()
@@ -55,8 +45,7 @@ public class DemographicsBuilderTest {
     public void test_demographics_builder_3() {
         List<String> advancedDemographics = new ArrayList<>();
         advancedDemographics.add("DLXD_100");
-        builder.setAdvancedDemographics(advancedDemographics);
-        Demographics demo = builder.build();
+        Demographics demo = new Demographics.Builder().setAdvancedDemographics(advancedDemographics).build();
         Assertions.assertThat(demo).isNotNull();
         Assertions.assertThat(demo.getAdvancedDemographics()).isNotNull();
         Assertions.assertThat(demo.getAdvancedDemographics()).isNotEmpty();
@@ -67,8 +56,7 @@ public class DemographicsBuilderTest {
     public void test_demographics_builder_4() {
         List<String> ageGroups = new ArrayList<>();
         ageGroups.add("18-27");
-        builder.setAgeGroups(ageGroups);
-        Demographics demo = builder.build();
+        Demographics demo = new Demographics.Builder().setAgeGroups(ageGroups).build();
         Assertions.assertThat(demo).isNotNull();
         Assertions.assertThat(demo.getAgeGroups()).isNotNull();
         Assertions.assertThat(demo.getAgeGroups()).isNotEmpty();
@@ -79,8 +67,7 @@ public class DemographicsBuilderTest {
     public void test_demographics_builder_5() {
         List<String> languages = new ArrayList<>();
         languages.add("en");
-        builder.setLanguages(languages);
-        Demographics demo = builder.build();
+        Demographics demo = new Demographics.Builder().setLanguages(languages).build();
         Assertions.assertThat(demo).isNotNull();
         Assertions.assertThat(demo.getLanguages()).isNotNull();
         Assertions.assertThat(demo.getLanguages()).isNotEmpty();
@@ -89,24 +76,21 @@ public class DemographicsBuilderTest {
 
     @Test
     public void test_demographics_builder_6() {
-        builder.setMinAge(16.);
-        Demographics demo = builder.build();
+        Demographics demo = new Demographics.Builder().setMinAge(16.).build();
         Assertions.assertThat(demo).isNotNull();
         Assertions.assertThat(demo.getMinAge()).isEqualTo(16.);
     }// test_demographics_builder_6()
 
     @Test
     public void test_demographics_builder_7() {
-        builder.setMaxAge(28.);
-        Demographics demo = builder.build();
+        Demographics demo = new Demographics.Builder().setMaxAge(28.).build();
         Assertions.assertThat(demo).isNotNull();
         Assertions.assertThat(demo.getMaxAge()).isEqualTo(28.);
     }// test_demographics_builder_7()
 
     @Test
     public void test_demographics_builder_8() {
-        builder.setMaxAge(22.);
-        Demographics demo = builder.build();
+        Demographics demo = new Demographics.Builder().setMaxAge(22.).build();
         Assertions.assertThat(demo).isNotNull();
         Assertions.assertThat(demo.toString()).isNotEmpty();
     }// test_demographics_builder_8()

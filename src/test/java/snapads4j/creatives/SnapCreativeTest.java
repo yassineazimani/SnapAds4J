@@ -177,7 +177,7 @@ public class SnapCreativeTest {
 
     @Test
     public void test_create_creative_should_throw_SnapArgumentException_web_view_properties_is_empty() {
-        creativeForCreation.setWebViewProperties(new WebViewProperties());
+        creativeForCreation.setWebViewProperties(new WebViewProperties.Builder().build());
         assertThatThrownBy(() -> snapCreative.createCreative(oAuthAccessToken, creativeForCreation))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("URL (Web View Properties) is required");
     }// test_create_creative_should_throw_SnapArgumentException_web_view_properties_is_empty()
@@ -220,7 +220,7 @@ public class SnapCreativeTest {
 
     @Test
     public void test_create_creative_should_throw_SnapArgumentException_no_collection_properties_filled() {
-        creativeForCreation.setCollectionProperties(new CollectionProperties());
+        creativeForCreation.setCollectionProperties(new CollectionProperties.Builder().build());
         assertThatThrownBy(() -> snapCreative.createCreative(oAuthAccessToken, creativeForCreation))
                 .isInstanceOf(SnapArgumentException.class)
                 .hasMessageContaining("Interaction Zone ID (Collection Properties) is required")
@@ -229,7 +229,7 @@ public class SnapCreativeTest {
 
     @Test
     public void test_create_creative_should_throw_SnapArgumentException_when_web_view_is_null_for_web_view_interaction() {
-        CollectionProperties collection = new CollectionProperties();
+        CollectionProperties collection = new CollectionProperties.Builder().build();
         collection.setInteractionZoneId("interactionZoneId");
         collection.setDefaultFallbackInteractionType("WEB_VIEW");
         creativeForCreation.setCollectionProperties(collection);
@@ -239,7 +239,7 @@ public class SnapCreativeTest {
 
     @Test
     public void test_create_creative_should_throw_SnapArgumentException_when_deep_link_properties_is_null_for_deep_link_interaction() {
-        CollectionProperties collection = new CollectionProperties();
+        CollectionProperties collection = new CollectionProperties.Builder().build();
         collection.setInteractionZoneId("interactionZoneId");
         collection.setDefaultFallbackInteractionType("DEEP_LINK");
         creativeForCreation.setCollectionProperties(collection);
@@ -438,7 +438,7 @@ public class SnapCreativeTest {
 
     @Test
     public void test_update_creative_should_throw_SnapArgumentException_3() {
-        DeepLinkProperties deepLinkProperties = new DeepLinkProperties();
+        DeepLinkProperties deepLinkProperties = new DeepLinkProperties.Builder().build();
         creative.setDeepLinkProperties(deepLinkProperties);
         assertThatThrownBy(() -> snapCreative.updateCreative(oAuthAccessToken, creative))
                 .isInstanceOf(SnapArgumentException.class)
@@ -1208,7 +1208,7 @@ public class SnapCreativeTest {
         creative.setAdProduct(AdTypeEnum.SNAP_AD);
         creative.setTopSnapMediaId("647e6398-7e44-4ae5-a19d-c400b93bce32");
         creative.setTopSnapCropPosition(TopSnapCropPositionEnum.MIDDLE);
-        WebViewProperties webViewProperties = new WebViewProperties();
+        WebViewProperties webViewProperties = new WebViewProperties.Builder().build();
         webViewProperties.setUrl("https://www.example.com/intro?utm_source=snapchat&utm_medium=paidsocial&utm_campaign=2019_citrus");
         webViewProperties.setAllowSnapJavascriptSdk(false);
         webViewProperties.setBlockPreload(true);

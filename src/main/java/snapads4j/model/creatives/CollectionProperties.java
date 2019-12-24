@@ -32,6 +32,8 @@ import javax.validation.constraints.NotEmpty;
 @ToString
 public class CollectionProperties {
 
+    private CollectionProperties(){}
+
     /**
      * Interaction Zone ID
      */
@@ -57,4 +59,38 @@ public class CollectionProperties {
      */
     @JsonProperty("deep_link_properties")
     private DeepLinkProperties deepLinkProperties;
+
+    public static class Builder {
+
+        private final CollectionProperties instance;
+
+        public Builder() {
+            this.instance = new CollectionProperties();
+        }// DeepLinkPropertiesBuilder()
+
+        public Builder setDeepLinkProperties(DeepLinkProperties deepLinkProperties) {
+            this.instance.setDeepLinkProperties(deepLinkProperties);
+            return this;
+        }// setDeepLinkProperties()
+
+        public Builder setDefaultFallbackInteractionType(String defaultFallbackInteractionType) {
+            this.instance.setDefaultFallbackInteractionType(defaultFallbackInteractionType);
+            return this;
+        }// setDefaultFallbackInteractionType()
+
+        public Builder setInteractionZoneId(String interactionZoneId) {
+            this.instance.setInteractionZoneId(interactionZoneId);
+            return this;
+        }// setInteractionZoneId()
+
+        public Builder setWebViewProperties(WebViewProperties webViewProperties) {
+            this.instance.setWebViewProperties(webViewProperties);
+            return this;
+        }// setWebViewProperties()
+
+        public CollectionProperties build() {
+            return this.instance;
+        }// build()
+    }// Builder
+
 }// CollectionProperties

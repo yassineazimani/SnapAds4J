@@ -43,4 +43,48 @@ public class Location {
     private ProximityUnitEnum proximityUnit;
 
     private Integer proximity;
+
+    /**
+     * Used to build Location instance ({@link Location})
+     *
+     * @author Yassine
+     */
+    public static class Builder {
+
+        private final Location locationInstance;
+
+        public Builder() {
+            this.locationInstance = new Location();
+        } // Builder()
+
+        public Builder setLocationTypes(List<String> locationTypes) {
+            this.locationInstance.setLocationTypes(locationTypes);
+            return this;
+        } // setLocationTypes()
+
+        public Builder setCircles(List<Circle> circles) {
+            this.locationInstance.setCircles(circles);
+            return this;
+        } // setCircles()
+
+        public Builder setOperation(OperationEnum operation) {
+            this.locationInstance.setOperation(operation);
+            return this;
+        } // setOperation()
+
+        public Builder setUnit(ProximityUnitEnum proximityUnit) {
+            this.locationInstance.setProximityUnit(proximityUnit);
+            return this;
+        } // setUnit()
+
+        public Builder setProximity(Integer proximity) {
+            this.locationInstance.setProximity(proximity);
+            return this;
+        } // setProximity()
+
+        public Location build() {
+            return this.locationInstance;
+        } // build()
+    } // Builder
+
 } // Location

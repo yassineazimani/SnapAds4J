@@ -81,4 +81,111 @@ public class Device {
      */
     @JsonProperty("marketing_name")
     private List<String> marketingNames;
+
+    /**
+     * Used to build Device instance (${@link Device})
+     *
+     * @author Yassine
+     */
+    public static class Builder {
+
+        private final Device deviceInstance;
+
+        public Builder() {
+            this.deviceInstance = new Device();
+        } // Builder()
+
+        /**
+         * Set ID
+         *
+         * @param id
+         * @return
+         */
+        public Builder setId(Long id) {
+            this.deviceInstance.setId(id);
+            return this;
+        } // setId()
+
+        /**
+         * Example : "WIFI" or "CELL"
+         *
+         * @param connectionType
+         * @return
+         */
+        public Builder setConnectionType(String connectionType) {
+            this.deviceInstance.setConnectionType(connectionType);
+            return this;
+        } // setConnectionType()
+
+        /**
+         * Example : "ANDROID" or "iOS"
+         *
+         * @param osType
+         * @return
+         */
+        public Builder setOSType(String osType) {
+            this.deviceInstance.setOsType(osType);
+            return this;
+        } // setOSType()
+
+        /**
+         * Example : 10.3.2
+         *
+         * @param osVersion
+         * @return
+         */
+        public Builder setOSVersion(Double osVersion) {
+            this.deviceInstance.setOsVersion(osVersion);
+            return this;
+        } // setOSVersion()
+
+        /**
+         * Example : 10.3.2
+         *
+         * @param osVersion
+         * @return
+         */
+        public Builder setOSMinVersion(Double osVersion) {
+            this.deviceInstance.setOsMinVersion(osVersion);
+            return this;
+        } // setOSMinVersion()
+
+        /**
+         * Example : 10.3.2
+         *
+         * @param osVersion
+         * @return
+         */
+        public Builder setOSMaxVersion(Double osVersion) {
+            this.deviceInstance.setOsMaxVersion(osVersion);
+            return this;
+        } // setOSMaxVersion()
+
+        /**
+         * Example : "US_ATT"
+         *
+         * @param carrierIds
+         * @return
+         */
+        public Builder setCarrierId(List<String> carrierIds) {
+            this.deviceInstance.setCarrierIds(carrierIds);
+            return this;
+        } // setCarrierId()
+
+        /**
+         * Example : "Apple/iPhone 7 Plus/", "Apple/iPhone 6s Plus/"
+         *
+         * @param marketingNames
+         * @return
+         */
+        public Builder setMake(List<String> marketingNames) {
+            this.deviceInstance.setMarketingNames(marketingNames);
+            return this;
+        } // setMake()
+
+        public Device build() {
+            return this.deviceInstance;
+        } // build()
+    } // Builder
+
 } // Device
