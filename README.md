@@ -69,6 +69,8 @@ two endpoints, one to open the authorize link and another which represents a red
 used by SnapChat after successful authorize link. In this redirect url, we'll take the parameter code
 given by SnapChat to get access token.   
 
+![diagram-access-token](https://github.com/yassineazimani/SnapAds4J/blob/develop/img/diagram-access-token.png)
+
 In a controller of your choice, we'll prepare the authorize link to get access token. This link
 will be opened in a browser... 
 
