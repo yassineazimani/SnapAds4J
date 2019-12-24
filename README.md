@@ -57,6 +57,8 @@ Add the jar file to your application classpath.
 
 ### Tutorial
 
+#### Step 1 : Get access token
+
 In first time, we have to get the access token to use SnapChat API Ads
 functionnalities, without the access token, we can't do anything. So we'll follow this Web flow :
 
@@ -139,12 +141,51 @@ access token expires, you can refresh it with refreshtoken :
         e.printStackTrace();
     }
 ```
+#### Step 2 : Create Organization, Funding Source and Ad Account
+
+We have now access token :), let's create [Organization](https://ads.snapchat.com/getstarted?referral_code=IndigoPixie), [Funding Source](https://business.snapchat.com/) and [Ad Account](https://business.snapchat.com/). Once these entities created, we can use SnapAds4J for our tutorial !
+
+#### Step 3 : Media
+
+Coming soon...
+
+#### Step 4 : Creative
+
+Coming soon...
+
+#### Step 5 : Create Campaign
+
+Coming soon...
+
+#### Step 6 : Create Ad Squad
+
+Coming soon...
+
+#### Step 7 : Create Ad
+
+Coming soon...
+
+#### And now ?
+
+It's not enough for you ? You want to see advanced functionnalities ? Go see Code examples :)
 
 ## Code examples
 
-Very soon...
+Coming soon...
 
 ## Wanna join the project ?
+
+### Signal bugs
+
+Coming soon...
+
+### Give new ideas to improve SnapAds4J
+
+Coming soon...
+
+### Help us to develop some features
+
+Coming soon...
 
 ## License
 
