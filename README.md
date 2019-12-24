@@ -278,6 +278,18 @@ When you create a issue to give a new idea to improve SnapAds4J, make sure you s
 
 This project is open source, so you could contribute by develop some issues. Just respect some rules before to develop these issues.
 
+### Rules to develop some features
+
+1. Check if the issue which contains the feature exists, if it doesn't exist, create it.
+
+2. Create a branch from develop branch
+
+3. Make your feature with complete unit tests
+
+4. Don't forget to write your name in contributor.md
+
+5. Once it's done, ask a pull request to merge your branch into develop branch
+
 ## License
 
 Apache License, Version 2.0
