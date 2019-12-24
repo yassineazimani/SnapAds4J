@@ -147,7 +147,25 @@ We have now access token :), let's create [Organization](https://ads.snapchat.co
 
 #### Step 3 : Media
 
-Coming soon...
+Now, we'll create a media which will be using for a creative object.
+
+```java
+    // Create a CreativeMedia which will represents the future file media :
+    CreativeMedia media = new CreativeMedia();
+    media.setAdAccountId(adAccountID);
+    media.setName(name);
+    media.setType(MediaTypeEnum.VIDEO);
+
+    try {
+        Optional<CreativeMedia> mediaCreated = snapMedia.createMedia(oAuthAccessToken, media);
+        if(mediaCreated.isPresent()){
+            File fileVideo = new File("video.mp4");
+            snapMedia.uploadMediaVideo(oAuthAccessToken, mediaCreated.get().getId(), fileVideo);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+```
 
 #### Step 4 : Creative
 
