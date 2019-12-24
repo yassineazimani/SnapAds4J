@@ -240,9 +240,9 @@ try {
     ad.setName("Ad one");
     ad.setStatus(StatusEnum.ACTIVE);
     try {
-                Optional<Ad> adCreated = snapAd.createAd(oAuthAccessToken, ad);
+        Optional<Ad> adCreated = snapAd.createAd(oAuthAccessToken, ad);
     } catch (Exception e) {
-                e.printStackTrace();
+        e.printStackTrace();
     }
 ```
 
@@ -263,6 +263,14 @@ A project is never perfect, we can found any bugs at any moments. If you find a 
 ### Give new ideas to improve SnapAds4J
 
 You think SnapAds4J can have more functionnalities ?! It's great, it'll make SnapAds4J more stronger than ever ! Just create a issue with your idea by following some rules to create a issue.
+
+### Rules to create a issue to signal a bug
+
+When you create a issue for a bug, make sure you selected label bug. You have to describe your problem, how to reproduct it, the OS used and of course keep good behaviour.
+
+### Rules to create a issue for giving a new idea
+
+When you create a issue to give a new idea to improve SnapAds4J, make sure you selected label enhancement. You have to describe your idea with some examples if you could and then write the reason to develop this new idea.
 
 ### Help us to develop some features
 
