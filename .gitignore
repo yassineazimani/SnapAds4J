@@ -1,4 +1,7 @@
 .classpath
-./.settings
-./target
-/target/
+.project
+.settings
+.idea
+api.iml
+target
+bin

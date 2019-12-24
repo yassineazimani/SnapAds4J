@@ -3,31 +3,33 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>snap</groupId>
-	<artifactId>api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<groupId>org.snapads4j</groupId>
+	<artifactId>snapads4j</artifactId>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>api</name>
 	<url>http://maven.apache.org</url>
-	
+
 	<developers>
-	    <developer>
-	      <name>Yassine AZIMANI</name>
-	      <id>yassine.azimani</id>
-	      <email>yassine.azimani@hotmail.fr</email>
-	      <roles>
-	        <role>Java Developer</role>
-	      </roles>
-    	</developer>
-    </developers>
+		<developer>
+			<name>Yassine AZIMANI</name>
+			<id>yassine.azimani</id>
+			<roles>
+				<role>Java Developer</role>
+			</roles>
+		</developer>
+	</developers>
 
 	<properties>
 		<commons.cobertura.version>2.7</commons.cobertura.version>
 		<version.mockito>2.23.4</version.mockito>
 		<version.assertj>3.11.0</version.assertj>
 		<version.lombok>1.18.2</version.lombok>
-		<version.jackson>2.9.10</version.jackson>
+		<version.jackson>2.10.1</version.jackson>
+		<version.log4J2>2.12.1</version.log4J2>
+		<version.httpclient>4.5.10</version.httpclient>
+		<version.codec>1.12</version.codec>
 		<version.apache.commons.collections>4.2</version.apache.commons.collections>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -83,33 +85,74 @@
 			<version>${version.jackson}</version>
 		</dependency>
 		<dependency>
+		   <groupId>com.fasterxml.jackson.datatype</groupId>
+		   <artifactId>jackson-datatype-jdk8</artifactId>
+		   <version>${version.jackson}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
-			<version>2.12.1</version>
+			<version>${version.log4J2}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.12.1</version>
+			<version>${version.log4J2}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.httpcomponents</groupId>
-		    <artifactId>httpclient</artifactId>
-		    <version>4.5.10</version>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${version.httpclient}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>${version.httpclient}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>${version.codec}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>6.0.2.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator-annotation-processor</artifactId>
+			<version>6.0.2.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.el</groupId>
+			<artifactId>javax.el-api</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>javax.el</artifactId>
+			<version>2.2.6</version>
 		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
-	            <groupId>org.codehaus.mojo</groupId>
-	            <artifactId>cobertura-maven-plugin</artifactId>
-	            <version>${commons.cobertura.version}</version>
-	            <configuration>
-	              <formats>
-	                <format>xml</format>
-	              </formats>
-	            </configuration>
-          	</plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>${commons.cobertura.version}</version>
+				<configuration>
+					<formats>
+						<format>xml</format>
+					</formats>
+					<check/>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.eluder.coveralls</groupId>
 				<artifactId>coveralls-maven-plugin</artifactId>
