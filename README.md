@@ -43,7 +43,7 @@ https://adoptopenjdk.net/
 
 Latest stable version : 
 
-[Download](https://github.com/yassineazimani/SnapAds4J/releases/tag/v1.0.0)
+[Download](https://github.com/yassineazimani/SnapAds4J/releases/tag/v1.0.1)
 
 Add the jar file to your application classpath.
 
