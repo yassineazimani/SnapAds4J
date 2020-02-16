@@ -41,6 +41,26 @@ https://adoptopenjdk.net/
 
 #### Download
 
+##### Maven
+
+I choose to don't use Maven Central Repository due to the policy, indeed developers can't
+have full control of the jar published in the central repository, for example : delete jar.
+Meanwhile, i use Github packages. To download and install SnapAds4J with Github packages, you
+have to use a github token (with read packages permission) because we can't download with
+maven without token : 
+
+[See Reason](https://github.community/t5/GitHub-API-Development-and/Download-from-Github-Package-Registry-without-authentication/m-p/35501#M3312) 
+
+```xml
+ <dependency>
+   <groupId>org.snapads4j</groupId>
+   <artifactId>snapads4j</artifactId>
+   <version>1.0.0</version>
+ </dependency>
+```
+
+##### Jar 
+
 Latest stable version : 
 
 [Download](https://github.com/yassineazimani/SnapAds4J/releases/tag/v1.0.1)
