@@ -26,6 +26,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import snapads4j.enums.BidStrategyEnum;
 import snapads4j.enums.CheckAdSquadEnum;
 import snapads4j.exceptions.*;
 import snapads4j.model.Pagination;
@@ -335,12 +336,16 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
                 if (adSquad.getOptimizationGoal() == null) {
                     sb.append("The optimization goal is required,");
                 }
-                if (adSquad.getPlacement() == null) {
+                if (adSquad.getPlacementV2() == null) {
                     sb.append("The placement is required,");
                 }
                 if (adSquad.getType() == null) {
                     sb.append("The type is required,");
                 }
+            }
+            String commonErrors = commonCheckAdSquad(adSquad);
+            if(StringUtils.isNotEmpty(commonErrors)){
+                sb.append(commonErrors);
             }
             ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
             Validator validator = factory.getValidator();
@@ -357,4 +362,17 @@ public class SnapAdSquads implements SnapAdSquadsInterface {
             throw new SnapArgumentException(finalErrors);
         }
     } // checkAdSquad()
+
+    private String commonCheckAdSquad(AdSquad adSquad){
+        StringBuilder sb = new StringBuilder();
+        if(adSquad != null){
+            if(adSquad.getBidStrategy() == BidStrategyEnum.MIN_ROAS && adSquad.getRoasValueMicro() == null){
+                sb.append("The roas value micro is required,");
+            } else if(adSquad.getBidStrategy() == BidStrategyEnum.TARGET_COST ||
+                    adSquad.getBidStrategy() == BidStrategyEnum.LOWEST_COST_WITH_MAX_BID){
+                sb.append("The bid micro is required,");
+            }
+        }
+        return sb.toString();
+    }// commonCheckAdSquad()
 } // SnapAdSquads

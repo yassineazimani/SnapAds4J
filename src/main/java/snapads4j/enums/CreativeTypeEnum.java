@@ -97,5 +97,15 @@ public enum CreativeTypeEnum {
      * COLLECTION
      */
     @JsonProperty("COLLECTION")
-    COLLECTION
+    COLLECTION,
+    /**
+     * AD_TO_CALL
+     */
+    @JsonProperty("AD_TO_CALL")
+    AD_TO_CALL,
+    /**
+     * AD_TO_MESSAGE
+     */
+    @JsonProperty("AD_TO_MESSAGE")
+    AD_TO_MESSAGE
 }// CreativeTypeEnum

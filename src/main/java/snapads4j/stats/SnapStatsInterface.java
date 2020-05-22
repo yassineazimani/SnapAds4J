@@ -33,8 +33,7 @@ public interface SnapStatsInterface {
 
     Optional<TimeSerieStat> getCampaignStats(String oAuthAccessToken, String campaignID, Date startTime, Date endTime,
                                              GranularityEnum granularity, List<String> fields,
-                                             BreakdownEnum breakdown, Boolean test, DimensionEnum dimension,
-                                             PivotEnum pivot, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
+                                             BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                              ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                              Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException, SnapResponseErrorException;
 
@@ -42,8 +41,7 @@ public interface SnapStatsInterface {
                                               GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
 
     Optional<TimeSerieStat> getAdAccountStats(String oAuthAccessToken, String adAccountID, Date startTime, Date endTime,
-                                              GranularityEnum granularity, BreakdownEnum breakdown, Boolean test, DimensionEnum dimension,
-                                              PivotEnum pivot, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
+                                              GranularityEnum granularity, BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                               ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                               Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapExecutionException, SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException;
 
@@ -52,8 +50,7 @@ public interface SnapStatsInterface {
 
     Optional<TimeSerieStat> getAdSquadStats(String oAuthAccessToken, String adSquadID, Date startTime, Date endTime,
                                             GranularityEnum granularity, List<String> fields,
-                                            BreakdownEnum breakdown, Boolean test, DimensionEnum dimension,
-                                            PivotEnum pivot, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
+                                            BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                             ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                             Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapExecutionException, SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException;
 
@@ -62,8 +59,7 @@ public interface SnapStatsInterface {
 
     Optional<TimeSerieStat> getAdStats(String oAuthAccessToken, String adID, Date startTime, Date endTime,
                                        GranularityEnum granularity, List<String> fields,
-                                       BreakdownEnum breakdown, Boolean test, DimensionEnum dimension,
-                                       PivotEnum pivot, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
+                                       BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                        ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                        Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapExecutionException, SnapResponseErrorException;
 
@@ -73,8 +69,7 @@ public interface SnapStatsInterface {
     Optional<TimeSerieStat> getPixelSpecificDomainStats(String oAuthAccessToken, String pixelID, String domain, Date startTime, Date endTime, GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException
     ;
 
-    Optional<TimeSerieStat> getPixelSpecificDomainStats(String oAuthAccessToken, String pixelID, String domain, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, DimensionEnum dimension,
-                                                        PivotEnum pivot, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
+    Optional<TimeSerieStat> getPixelSpecificDomainStats(String oAuthAccessToken, String pixelID, String domain, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                                         ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                                         Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapExecutionException, SnapResponseErrorException
     ;

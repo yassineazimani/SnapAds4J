@@ -35,14 +35,14 @@ import java.util.Map;
 public class TargetingBuilderTest {
 
     @Test
-    public void test_interest_builder_1() {
+    public void test_interest_builder_set_regulated_content() {
         Targeting targeting = new Targeting.Builder().setRegulatedContent(true).build();
         Assertions.assertThat(targeting).isNotNull();
         Assertions.assertThat(targeting.isRegulatedContent()).isEqualTo(true);
-    }// test_interest_new_builder()_1()
+    }// test_interest_builder_set_regulated_content()
 
     @Test
-    public void test_interest_builder_2() {
+    public void test_interest_builder_set_demographics() {
         List<Demographics> demos = new ArrayList<>();
         demos.add(new Demographics.Builder().build());
         Targeting targeting = new Targeting.Builder().setDemographics(demos).build();
@@ -50,28 +50,28 @@ public class TargetingBuilderTest {
         Assertions.assertThat(targeting.getDemographics()).isNotNull();
         Assertions.assertThat(targeting.getDemographics()).isNotEmpty();
         Assertions.assertThat(targeting.getDemographics().get(0)).isNotNull();
-    }// test_interest_new_builder()_2()
+    }// test_interest_builder_set_demographics()_2()
 
     @Test
-    public void test_segment_request_targeting_builder_3() {
+    public void test_segment_request_targeting_builder_set_regulated_content() {
         Targeting targeting = new Targeting.Builder().setRegulatedContent(true).build();
         Assertions.assertThat(targeting).isNotNull();
         Assertions.assertThat(targeting.toString()).isNotEmpty();
-    }// test_segment_request_targeting_builder_3()
+    }// test_segment_request_targeting_builder_set_regulated_content()
 
     @Test
-    public void test_interest_new_builder_4() {
+    public void test_interest_new_builder_set_geolocations() {
         List<GeoLocation> geos = new ArrayList<>();
         geos.add(new GeoLocation());
-        Targeting targeting = new Targeting.Builder().setGeolocation(geos).build();
+        Targeting targeting = new Targeting.Builder().setGeolocations(geos).build();
         Assertions.assertThat(targeting).isNotNull();
         Assertions.assertThat(targeting.getGeos()).isNotNull();
         Assertions.assertThat(targeting.getGeos()).isNotEmpty();
         Assertions.assertThat(targeting.getGeos().get(0)).isNotNull();
-    }// test_interest_new_builder_4()
+    }// test_interest_new_builder_set_geolocations()
 
     @Test
-    public void test_interest_new_builder_5() {
+    public void test_interest_new_builder_set_devices() {
         List<Device> devices = new ArrayList<>();
         devices.add(new Device());
         Targeting targeting = new Targeting.Builder().setDevices(devices).build();
@@ -79,10 +79,10 @@ public class TargetingBuilderTest {
         Assertions.assertThat(targeting.getDevices()).isNotNull();
         Assertions.assertThat(targeting.getDevices()).isNotEmpty();
         Assertions.assertThat(targeting.getDevices().get(0)).isNotNull();
-    }// test_interest_new_builder_5()
+    }// test_interest_new_builder_set_devices()
 
     @Test
-    public void test_interest_new_builder_6() {
+    public void test_interest_new_builder_set_interests() {
         List<Interest> interests = new ArrayList<>();
         interests.add(new Interest());
         Targeting targeting = new Targeting.Builder().setInterests(interests).build();
@@ -90,10 +90,10 @@ public class TargetingBuilderTest {
         Assertions.assertThat(targeting.getInterests()).isNotNull();
         Assertions.assertThat(targeting.getInterests()).isNotEmpty();
         Assertions.assertThat(targeting.getInterests().get(0)).isNotNull();
-    }// test_interest_new_builder_6()
+    }// test_interest_new_builder_set_interests()
 
     @Test
-    public void test_interest_new_builder_7() {
+    public void test_interest_new_builder_set_segments() {
         List<SegmentRequestTargeting> segments = new ArrayList<>();
         segments.add(new SegmentRequestTargeting());
         Targeting targeting = new Targeting.Builder().setSegments(segments).build();
@@ -101,10 +101,10 @@ public class TargetingBuilderTest {
         Assertions.assertThat(targeting.getSegments()).isNotNull();
         Assertions.assertThat(targeting.getSegments()).isNotEmpty();
         Assertions.assertThat(targeting.getSegments().get(0)).isNotNull();
-    }// test_interest_new_builder_7()
+    }// test_interest_new_builder_set_segments()
 
     @Test
-    public void test_interest_new_builder_8() {
+    public void test_interest_new_builder_set_locations() {
         List<Map<String, Object>> locations = new ArrayList<>();
         locations.add(new HashMap<>());
         Targeting targeting = new Targeting.Builder().setLocations(locations).build();
@@ -112,6 +112,13 @@ public class TargetingBuilderTest {
         Assertions.assertThat(targeting.getLocations()).isNotNull();
         Assertions.assertThat(targeting.getLocations()).isNotEmpty();
         Assertions.assertThat(targeting.getLocations().get(0)).isNotNull();
-    }// test_interest_new_builder_8()
+    }// test_interest_new_builder_set_locations()
+
+    @Test
+    public void test_interest_new_builder_set_enable_targeting_expansion() {
+        Targeting targeting = new Targeting.Builder().setEnableTargetingExpansion(true).build();
+        Assertions.assertThat(targeting).isNotNull();
+        Assertions.assertThat(targeting.isEnableTargetingExpansion()).isTrue();
+    }// test_interest_new_builder_set_enable_targeting_expansion()
 
 }// TargetingBuilderTest

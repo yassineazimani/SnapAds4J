@@ -436,7 +436,7 @@ public class SnapBidEstimateTest {
         demographics.add(new Demographics.Builder().setAgeGroups(ageGroups).build());
         TargetingSpecBidEstimate targetingSpecBidEstimate = new TargetingSpecBidEstimate();
         targetingSpecBidEstimate.setOptimizationGoal(OptimizationGoalEnum.APP_INSTALLS);
-        targetingSpecBidEstimate.setTargeting(new Targeting.Builder().setDemographics(demographics).setGeolocation(geos).build());
+        targetingSpecBidEstimate.setTargeting(new Targeting.Builder().setDemographics(demographics).setGeolocations(geos).build());
         return targetingSpecBidEstimate;
     }// initAdSquad()
 }// SnapBidEstimateTest

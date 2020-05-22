@@ -54,8 +54,13 @@ public class AdSquad extends AbstractSnapModel {
      * Max Bid (micro-currency)
      */
     @JsonProperty("bid_micro")
-    @NotNull(message = "The bid micro is required")
     private Double bidMicro;
+
+    /**
+     * Min Roas
+     */
+    @JsonProperty("roas_value_micro")
+    private Double roasValueMicro;
 
     /**
      * Billing Event
@@ -68,7 +73,7 @@ public class AdSquad extends AbstractSnapModel {
      */
     @JsonProperty("daily_budget_micro")
     @NotNull(message = "The daily budget micro is required")
-    @Min(value = 20000000, message = "The daily budget micro minimum value is 20000000")
+    @Min(value = 5000000, message = "The daily budget micro minimum value is 5000000")
     private Double dailyBudgetMicro;
 
     /**
@@ -96,11 +101,6 @@ public class AdSquad extends AbstractSnapModel {
      */
     @JsonProperty("optimization_goal")
     private OptimizationGoalEnum optimizationGoal;
-
-    /**
-     * Placement
-     */
-    private PlacementEnum placement;
 
     /**
      * Start time
@@ -151,17 +151,11 @@ public class AdSquad extends AbstractSnapModel {
     private AdSchedulingConfig adSchedulingConfig;
 
     /**
-     * Allow Snapchat to automatically set the bid to recommended amount
+     * Replaces attributes auto_bid and target_bid.
      */
-    @JsonProperty("auto_bid")
-    private boolean autoBid;
-
-    /**
-     * Allows Snapchat to adjust the bid aiming to keep your average CPA at or below the amount set by
-     * the ad set end date
-     */
-    @JsonProperty("target_bid")
-    private boolean targetBid;
+    @JsonProperty("bid_strategy")
+    @NotNull(message = "Bid Strategy is required")
+    private BidStrategyEnum bidStrategy;
 
     /**
      * Pixel to be associated with the Ad Squad

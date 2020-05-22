@@ -62,6 +62,39 @@ public class SnapResponseUtils {
         return "{\r\n \"request_status\": \"success\",\r\n \"request_id\": \"57b0021900ff06bbfeb44f77240001737e616473617069736300016275696c642d35396264653638322d312d31312d370001010e\",\r\n \"adaccounts\": [\r\n {\r\n \"sub_request_status\": \"success\",\r\n \"adaccount\": {\r\n \"id\": \"8adc3db7-8148-4fbf-999c-8d2266369d74\",\r\n \"updated_at\": \"2016-08-11T22:03:58.869Z\",\r\n \"created_at\": \"2016-08-11T22:03:58.869Z\",\r\n \"name\": \"Hooli Test Ad Account\",\r\n \"type\": \"PARTNER\",\r\n \"status\": \"ACTIVE\",\r\n \"organization_id\": \"40d6719b-da09-410b-9185-0cc9c0dfed1d\",\r\n \"funding_source_ids\": [\r\n \"e703eb9f-8eac-4eda-a9c7-deec3935222d\"\r\n ],\r\n \"currency\": \"USD\",\r\n \"timezone\": \"America\\/Los_Angeles\",\r\n \"advertiser\": \"Hooli\"\r\n }\r\n }\r\n ]\r\n}";
     } // getSnapSpecificAdAccount()
 
+    public static String getSnapAdAccountCreated(){
+        return "{\n" +
+                "    \"request_status\": \"SUCCESS\",\n" +
+                "    \"request_id\": \"5e7b42c900ff0e76f111031c2c0001737e616473617069736300016275696c642d62313763613636652d312d3333372d3200010122\",\n" +
+                "    \"adaccounts\": [\n" +
+                "        {\n" +
+                "            \"sub_request_status\": \"SUCCESS\",\n" +
+                "            \"adaccount\": {\n" +
+                "                \"id\": \"7c6d2e91-3a7c-4230-b048-f724bf217a82\",\n" +
+                "                \"updated_at\": \"2016-08-11T22:03:58.869Z\",\n" +
+                "                \"created_at\": \"2016-08-11T22:03:58.869Z\",\n" +
+                "                \"name\": \"Example Ad Account\",\n" +
+                "                \"type\": \"PARTNER\",\n" +
+                "                \"status\": \"ACTIVE\",\n" +
+                "                \"organization_id\": \"40d6719b-da09-410b-9185-0cc9c0dfed1d\",\n" +
+                "                \"funding_source_ids\": [\n" +
+                "                    \"cdc67eba-a774-4954-9b94-9502bbdac1bc\"\n" +
+                "                ],\n" +
+                "                \"currency\": \"USD\",\n" +
+                "                \"timezone\": \"America/Los_Angeles\",\n" +
+                "                \"advertiser\": \"Example Advertiser Inc\",\n" +
+                "                \"advertiser_organization_id\": \"8fdeefec-f502-4ca8-9a84-6411e0a51058\",\n" +
+                "                \"billing_center_id\": \"9b8db2a8-2b48-42f0-858a-88901a782b27\",\n" +
+                "                \"billing_type\": \"IO\",\n" +
+                "                \"lifetime_spend_cap_micro\": 200000000000,\n" +
+                "                \"agency_representing_client\": false,\n" +
+                "                \"client_paying_invoices\": false\n" +
+                "            }\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}";
+    }// getSnapAdAccountCreated()
+
     public static String getSnapAdAccountUpdated() {
         return "{\r\n" +
                 "  \"request_status\": \"success\",\r\n" +
@@ -83,7 +116,11 @@ public class SnapResponseUtils {
                 "        \"currency\": \"USD\",\r\n" +
                 "        \"timezone\": \"America/Los_Angeles\",\r\n" +
                 "        \"brand_name\":\"Hooli\",\r\n" +
-                "        \"lifetime_spend_cap_micro\":1500000000\r\n" +
+                "        \"billing_center_id\": \"9b8db2a8-2b48-42f0-858a-88901a782b27\",\n" +
+                "        \"billing_type\": \"IO\",\n" +
+                "        \"lifetime_spend_cap_micro\": 200000000000,\n" +
+                "        \"agency_representing_client\": false,\n" +
+                "        \"client_paying_invoices\": false\n" +
                 "      }\r\n" +
                 "    }\r\n" +
                 "  ]\r\n" +
@@ -163,7 +200,7 @@ public class SnapResponseUtils {
                 "            }\r\n" +
                 "          ]\r\n" +
                 "        },\r\n" +
-                "        \"placement\": \"SNAP_ADS\",\r\n" +
+                "        \"placement_v2\": {\"config\": \"AUTOMATIC\"},\r\n" +
                 "        \"billing_event\": \"IMPRESSION\",\r\n" +
                 "        \"bid_micro\": 1000000,\r\n" +
                 "        \"daily_budget_micro\": 1000000000,\r\n" +
@@ -189,7 +226,7 @@ public class SnapResponseUtils {
                 "        \"name\": \"AdSquad2019\",\r\n" +
                 "        \"campaign_id\": \"6cf25572-048b-4447-95d1-eb48231751be\",\r\n" +
                 "        \"type\": \"SNAP_ADS\",\r\n" +
-                "        \"placement\": \"SNAP_ADS\",\r\n" +
+                "        \"placement_v2\": {\"config\": \"AUTOMATIC\"},\r\n" +
                 "        \"optimization_goal\": \"IMPRESSIONS\",\r\n" +
                 "        \"bid_micro\": 1000,\r\n" +
                 "        \"daily_budget_micro\": 5555555\r\n" +
@@ -222,7 +259,7 @@ public class SnapResponseUtils {
                 "            }\r\n" +
                 "          ]\r\n" +
                 "        },\r\n" +
-                "        \"placement\": \"SNAP_ADS\",\r\n" +
+                "        \"placement_v2\": {\"config\": \"AUTOMATIC\"},\r\n" +
                 "        \"billing_event\": \"IMPRESSION\",\r\n" +
                 "        \"bid_micro\": 1000000,\r\n" +
                 "        \"daily_budget_micro\": 1000000000,\r\n" +
@@ -250,7 +287,7 @@ public class SnapResponseUtils {
                 "        \"campaign_id\": \"6cf25572-048b-4447-95d1-eb48231751be\",\r\n" +
                 "        \"type\": \"SNAP_ADS\",\r\n" +
                 "        \"targeting\": {},\r\n" +
-                "        \"placement\": \"SNAP_ADS\",\r\n" +
+                "        \"placement_v2\": {\"config\": \"AUTOMATIC\"},\r\n" +
                 "        \"billing_event\": \"IMPRESSION\",\r\n" +
                 "        \"bid_micro\": 1000000,\r\n" +
                 "        \"daily_budget_micro\": 1000000000,\r\n" +
@@ -275,7 +312,7 @@ public class SnapResponseUtils {
                 "            }\r\n" +
                 "          ]\r\n" +
                 "        },\r\n" +
-                "        \"placement\": \"SNAP_ADS\",\r\n" +
+                "        \"placement_v2\": {\"config\": \"AUTOMATIC\"},\r\n" +
                 "        \"billing_event\": \"IMPRESSION\",\r\n" +
                 "        \"bid_micro\": 1000000,\r\n" +
                 "        \"daily_budget_micro\": 1000000000,\r\n" +
@@ -303,7 +340,7 @@ public class SnapResponseUtils {
                 "        \"campaign_id\": \"6cf25572-048b-4447-95d1-eb48231751be\",\r\n" +
                 "        \"type\": \"SNAP_ADS\",\r\n" +
                 "        \"targeting\": {},\r\n" +
-                "        \"placement\": \"SNAP_ADS\",\r\n" +
+                "        \"placement_v2\": {\"config\": \"AUTOMATIC\"},\r\n" +
                 "        \"billing_event\": \"IMPRESSION\",\r\n" +
                 "        \"bid_micro\": 1000000,\r\n" +
                 "        \"daily_budget_micro\": 1000000000,\r\n" +
@@ -328,7 +365,7 @@ public class SnapResponseUtils {
                 "            }\r\n" +
                 "          ]\r\n" +
                 "        },\r\n" +
-                "        \"placement\": \"SNAP_ADS\",\r\n" +
+                "        \"placement_v2\": {\"config\": \"AUTOMATIC\"},\r\n" +
                 "        \"billing_event\": \"IMPRESSION\",\r\n" +
                 "        \"bid_micro\": 1000000,\r\n" +
                 "        \"daily_budget_micro\": 1000000000,\r\n" +

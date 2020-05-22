@@ -35,6 +35,7 @@ import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.Pagination;
 import snapads4j.model.adsquads.AdSquad;
+import snapads4j.model.adsquads.PlacementV2;
 import snapads4j.model.geolocation.GeoLocation;
 import snapads4j.model.targeting.Targeting;
 import snapads4j.utils.EntityUtilsWrapper;
@@ -123,7 +124,9 @@ public class SnapAdSquadsTest {
             assertThat(adsquad.getStatus()).isEqualTo(StatusEnum.PAUSED);
             assertThat(adsquad.getCampaignId()).isEqualTo(adSquad.getCampaignId());
             assertThat(adsquad.getType()).isEqualTo(AdSquadTypeEnum.SNAP_ADS);
-            assertThat(adsquad.getPlacement()).isEqualTo(PlacementEnum.SNAP_ADS);
+            assertThat(adsquad.getPlacementV2()).isNotNull();
+            assertThat(adsquad.getPlacementV2().getConfig()).isNotNull();
+            assertThat(adsquad.getPlacementV2().getConfig()).isEqualTo(ConfigPlacementEnum.AUTOMATIC);
             assertThat(adsquad.getBillingEvent()).isEqualTo(BillingEventEnum.IMPRESSION);
             assertThat(adsquad.getBidMicro()).isEqualTo(1000000);
             assertThat(adsquad.getDailyBudgetMicro()).isEqualTo(1000000000);
@@ -176,7 +179,7 @@ public class SnapAdSquadsTest {
 
     @Test
     public void test_create_ad_squad_should_throw_SnapArgumentException_when_placement_is_null() {
-        adSquadErrosForCreation.setPlacement(null);
+        adSquadErrosForCreation.setPlacementV2(null);
         assertThatThrownBy(() -> sAdSquads.createAdSquad(oAuthAccessToken, adSquadErrosForCreation))
                 .isInstanceOf(SnapArgumentException.class).hasMessage("The placement is required");
     } // test_create_ad_squad_should_throw_SnapArgumentException_when_placement_is_null()
@@ -196,11 +199,35 @@ public class SnapAdSquadsTest {
     } // test_create_ad_squad_should_throw_SnapArgumentException_when_campaign_id_is_null()
 
     @Test
-    public void test_create_ad_squad_should_throw_SnapArgumentException_when_bid_micro_is_null() {
+    public void test_create_ad_squad_should_throw_SnapArgumentException_when_bid_strategy_is_null() {
+        adSquadErrosForCreation.setBidStrategy(null);
+        assertThatThrownBy(() -> sAdSquads.createAdSquad(oAuthAccessToken, adSquadErrosForCreation))
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Bid Strategy is required");
+    } // test_create_ad_squad_should_throw_SnapArgumentException_when_bid_strategy_is_null()
+
+    @Test
+    public void test_create_ad_squad_should_throw_SnapArgumentException_when_bid_strategy_is_min_roas_and_roas_is_null(){
+        adSquadErrosForCreation.setBidStrategy(BidStrategyEnum.MIN_ROAS);
+        adSquadErrosForCreation.setRoasValueMicro(null);
+        assertThatThrownBy(() -> sAdSquads.createAdSquad(oAuthAccessToken, adSquadErrosForCreation))
+                .isInstanceOf(SnapArgumentException.class).hasMessageContaining("The roas value micro is required");
+    }// test_create_ad_squad_should_throw_SnapArgumentException_when_bid_strategy_is_min_roas_and_roas_is_null()
+
+    @Test
+    public void test_create_ad_squad_should_throw_SnapArgumentException_when_bid_strategy_is_target_cost_and_bid_micro_is_null(){
+        adSquadErrosForCreation.setBidStrategy(BidStrategyEnum.TARGET_COST);
         adSquadErrosForCreation.setBidMicro(null);
         assertThatThrownBy(() -> sAdSquads.createAdSquad(oAuthAccessToken, adSquadErrosForCreation))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("The bid micro is required");
-    } // test_create_ad_squad_should_throw_SnapArgumentException_when_bid_micro_is_null()
+                .isInstanceOf(SnapArgumentException.class).hasMessageContaining("The bid micro is required");
+    }// test_create_ad_squad_should_throw_SnapArgumentException_when_bid_strategy_is_target_cost_and_bid_micro_is_null()
+
+    @Test
+    public void test_create_ad_squad_should_throw_SnapArgumentException_when_bid_strategy_is_lowest_cost_max_bid_and_bid_micro_is_null(){
+        adSquadErrosForCreation.setBidStrategy(BidStrategyEnum.LOWEST_COST_WITH_MAX_BID);
+        adSquadErrosForCreation.setBidMicro(null);
+        assertThatThrownBy(() -> sAdSquads.createAdSquad(oAuthAccessToken, adSquadErrosForCreation))
+                .isInstanceOf(SnapArgumentException.class).hasMessageContaining("The bid micro is required");
+    }// test_create_ad_squad_should_throw_SnapArgumentException_when_bid_strategy_is_lowest_cost_max_bid_and_bid_micro_is_null()
 
     @Test
     public void test_create_ad_squad_should_throw_SnapArgumentException_when_requirements_for_daily_budget_micro_arent_respected() {
@@ -210,7 +237,7 @@ public class SnapAdSquadsTest {
         adSquadErrosForCreation.setDailyBudgetMicro(1.);
         assertThatThrownBy(() -> sAdSquads.createAdSquad(oAuthAccessToken, adSquadErrosForCreation))
                 .isInstanceOf(SnapArgumentException.class)
-                .hasMessage("The daily budget micro minimum value is 20000000");
+                .hasMessage("The daily budget micro minimum value is 5000000");
     } // test_create_ad_squad_should_throw_SnapArgumentException_when_requirements_for_daily_budget_micro_arent_respected()
 
     @Test
@@ -375,7 +402,9 @@ public class SnapAdSquadsTest {
             assertThat(adsquad.getName()).isEqualTo(adSquadForUpdate.getName());
             assertThat(adsquad.getCampaignId()).isEqualTo(adSquadForUpdate.getCampaignId());
             assertThat(adsquad.getType()).isEqualTo(AdSquadTypeEnum.SNAP_ADS);
-            assertThat(adsquad.getPlacement()).isEqualTo(PlacementEnum.SNAP_ADS);
+            assertThat(adsquad.getPlacementV2()).isNotNull();
+            assertThat(adsquad.getPlacementV2().getConfig()).isNotNull();
+            assertThat(adsquad.getPlacementV2().getConfig()).isEqualTo(ConfigPlacementEnum.AUTOMATIC);
             assertThat(adsquad.getBidMicro()).isEqualTo(1000);
             assertThat(adsquad.getDailyBudgetMicro()).isEqualTo(5555555);
             assertThat(adsquad.getOptimizationGoal()).isEqualTo(OptimizationGoalEnum.IMPRESSIONS);
@@ -444,13 +473,37 @@ public class SnapAdSquadsTest {
     } // test_update_ad_squad_should_throw_SnapArgumentException_when_campaign_id_is_null()
 
     @Test
-    public void test_update_ad_squad_should_throw_SnapArgumentException_when_bid_micro_is_null() {
-        adSquadErrosForUpdate.setBidMicro(null);
+    public void test_update_ad_squad_should_throw_SnapArgumentException_when_bid_strategy_is_null() {
+        adSquadErrosForUpdate.setBidStrategy(null);
         adSquadErrosForUpdate.setBillingEvent(BillingEventEnum.IMPRESSION);
         adSquadErrosForUpdate.setId("aeo300");
         assertThatThrownBy(() -> sAdSquads.updateAdSquad(oAuthAccessToken, adSquadErrosForUpdate))
-                .isInstanceOf(SnapArgumentException.class).hasMessage("The bid micro is required");
-    } // test_update_ad_squad_should_throw_SnapArgumentException_when_bid_micro_is_null()
+                .isInstanceOf(SnapArgumentException.class).hasMessage("Bid Strategy is required");
+    } // test_update_ad_squad_should_throw_SnapArgumentException_when_bid_strategy_is_null()
+
+    @Test
+    public void test_update_ad_squad_should_throw_SnapArgumentException_when_bid_strategy_is_min_roas_and_roas_is_null(){
+        adSquadErrosForUpdate.setBidStrategy(BidStrategyEnum.MIN_ROAS);
+        adSquadErrosForUpdate.setRoasValueMicro(null);
+        assertThatThrownBy(() -> sAdSquads.updateAdSquad(oAuthAccessToken, adSquadErrosForUpdate))
+                .isInstanceOf(SnapArgumentException.class).hasMessageContaining("The roas value micro is required");
+    }// test_update_ad_squad_should_throw_SnapArgumentException_when_bid_strategy_is_min_roas_and_roas_is_null()
+
+    @Test
+    public void test_update_ad_squad_should_throw_SnapArgumentException_when_bid_strategy_is_target_cost_and_bid_micro_is_null(){
+        adSquadErrosForUpdate.setBidStrategy(BidStrategyEnum.TARGET_COST);
+        adSquadErrosForUpdate.setBidMicro(null);
+        assertThatThrownBy(() -> sAdSquads.updateAdSquad(oAuthAccessToken, adSquadErrosForUpdate))
+                .isInstanceOf(SnapArgumentException.class).hasMessageContaining("The bid micro is required");
+    }// test_update_ad_squad_should_throw_SnapArgumentException_when_bid_strategy_is_target_cost_and_bid_micro_is_null()
+
+    @Test
+    public void test_update_ad_squad_should_throw_SnapArgumentException_when_bid_strategy_is_lowest_cost_max_bid_and_bid_micro_is_null(){
+        adSquadErrosForUpdate.setBidStrategy(BidStrategyEnum.LOWEST_COST_WITH_MAX_BID);
+        adSquadErrosForUpdate.setBidMicro(null);
+        assertThatThrownBy(() -> sAdSquads.updateAdSquad(oAuthAccessToken, adSquadErrosForUpdate))
+                .isInstanceOf(SnapArgumentException.class).hasMessageContaining("The bid micro is required");
+    }// test_update_ad_squad_should_throw_SnapArgumentException_when_bid_strategy_is_lowest_cost_max_bid_and_bid_micro_is_null()
 
     @Test
     public void test_update_ad_squad_should_throw_SnapArgumentException_when_requirements_for_daily_budget_micro_arent_respected() {
@@ -462,7 +515,7 @@ public class SnapAdSquadsTest {
         adSquadErrosForUpdate.setDailyBudgetMicro(1.);
         assertThatThrownBy(() -> sAdSquads.updateAdSquad(oAuthAccessToken, adSquadErrosForUpdate))
                 .isInstanceOf(SnapArgumentException.class)
-                .hasMessage("The daily budget micro minimum value is 20000000");
+                .hasMessage("The daily budget micro minimum value is 5000000");
     } // test_update_ad_squad_should_throw_SnapArgumentException_when_requirements_for_daily_budget_micro_arent_respected()
 
     @Test
@@ -781,7 +834,9 @@ public class SnapAdSquadsTest {
             assertThat(f.getCampaignId()).isEqualTo(campaignId);
             assertThat(f.getStatus()).isEqualTo(StatusEnum.ACTIVE);
             assertThat(f.getType()).isEqualTo(AdSquadTypeEnum.SNAP_ADS);
-            assertThat(f.getPlacement()).isEqualTo(PlacementEnum.SNAP_ADS);
+            assertThat(f.getPlacementV2()).isNotNull();
+            assertThat(f.getPlacementV2().getConfig()).isNotNull();
+            assertThat(f.getPlacementV2().getConfig()).isEqualTo(ConfigPlacementEnum.AUTOMATIC);
             assertThat(f.getBillingEvent()).isEqualTo(BillingEventEnum.IMPRESSION);
             assertThat(f.getBidMicro()).isEqualTo(1000000);
             assertThat(f.getDailyBudgetMicro()).isEqualTo(1000000000);
@@ -965,7 +1020,9 @@ public class SnapAdSquadsTest {
         assertThat(adSquads.get(0).getCampaignId()).isEqualTo(campaignId);
         assertThat(adSquads.get(0).getDailyBudgetMicro()).isEqualTo(1000000000.);
         assertThat(adSquads.get(0).getType()).isEqualTo(AdSquadTypeEnum.SNAP_ADS);
-        assertThat(adSquads.get(0).getPlacement()).isEqualTo(PlacementEnum.SNAP_ADS);
+        assertThat(adSquads.get(0).getPlacementV2()).isNotNull();
+        assertThat(adSquads.get(0).getPlacementV2().getConfig()).isNotNull();
+        assertThat(adSquads.get(0).getPlacementV2().getConfig()).isEqualTo(ConfigPlacementEnum.AUTOMATIC);
         assertThat(adSquads.get(0).getBillingEvent()).isEqualTo(BillingEventEnum.IMPRESSION);
         assertThat(adSquads.get(0).getOptimizationGoal()).isEqualTo(OptimizationGoalEnum.IMPRESSIONS);
         assertThat(adSquads.get(0).getBidMicro()).isEqualTo(1000000.);
@@ -979,7 +1036,9 @@ public class SnapAdSquadsTest {
         assertThat(adSquads.get(1).getCampaignId()).isEqualTo(campaignId);
         assertThat(adSquads.get(1).getDailyBudgetMicro()).isEqualTo(1000000000.);
         assertThat(adSquads.get(1).getType()).isEqualTo(AdSquadTypeEnum.SNAP_ADS);
-        assertThat(adSquads.get(1).getPlacement()).isEqualTo(PlacementEnum.SNAP_ADS);
+        assertThat(adSquads.get(1).getPlacementV2()).isNotNull();
+        assertThat(adSquads.get(1).getPlacementV2().getConfig()).isNotNull();
+        assertThat(adSquads.get(1).getPlacementV2().getConfig()).isEqualTo(ConfigPlacementEnum.AUTOMATIC);
         assertThat(adSquads.get(1).getBillingEvent()).isEqualTo(BillingEventEnum.IMPRESSION);
         assertThat(adSquads.get(1).getOptimizationGoal()).isEqualTo(OptimizationGoalEnum.IMPRESSIONS);
         assertThat(adSquads.get(1).getBidMicro()).isEqualTo(1000000.);
@@ -1174,7 +1233,9 @@ public class SnapAdSquadsTest {
         assertThat(adSquads.get(0).getCampaignId()).isEqualTo(campaignId);
         assertThat(adSquads.get(0).getDailyBudgetMicro()).isEqualTo(1000000000.);
         assertThat(adSquads.get(0).getType()).isEqualTo(AdSquadTypeEnum.SNAP_ADS);
-        assertThat(adSquads.get(0).getPlacement()).isEqualTo(PlacementEnum.SNAP_ADS);
+        assertThat(adSquads.get(0).getPlacementV2()).isNotNull();
+        assertThat(adSquads.get(0).getPlacementV2().getConfig()).isNotNull();
+        assertThat(adSquads.get(0).getPlacementV2().getConfig()).isEqualTo(ConfigPlacementEnum.AUTOMATIC);
         assertThat(adSquads.get(0).getBillingEvent()).isEqualTo(BillingEventEnum.IMPRESSION);
         assertThat(adSquads.get(0).getOptimizationGoal()).isEqualTo(OptimizationGoalEnum.IMPRESSIONS);
         assertThat(adSquads.get(0).getBidMicro()).isEqualTo(1000000.);
@@ -1188,7 +1249,9 @@ public class SnapAdSquadsTest {
         assertThat(adSquads.get(1).getCampaignId()).isEqualTo(campaignId);
         assertThat(adSquads.get(1).getDailyBudgetMicro()).isEqualTo(1000000000.);
         assertThat(adSquads.get(1).getType()).isEqualTo(AdSquadTypeEnum.SNAP_ADS);
-        assertThat(adSquads.get(1).getPlacement()).isEqualTo(PlacementEnum.SNAP_ADS);
+        assertThat(adSquads.get(1).getPlacementV2()).isNotNull();
+        assertThat(adSquads.get(1).getPlacementV2().getConfig()).isNotNull();
+        assertThat(adSquads.get(1).getPlacementV2().getConfig()).isEqualTo(ConfigPlacementEnum.AUTOMATIC);
         assertThat(adSquads.get(1).getBillingEvent()).isEqualTo(BillingEventEnum.IMPRESSION);
         assertThat(adSquads.get(1).getOptimizationGoal()).isEqualTo(OptimizationGoalEnum.IMPRESSIONS);
         assertThat(adSquads.get(1).getBidMicro()).isEqualTo(1000000.);
@@ -1371,7 +1434,9 @@ public class SnapAdSquadsTest {
         geos.add(new GeoLocation.Builder().setCountryCode("us").build());
         AdSquad a = new AdSquad();
         a.setOptimizationGoal(OptimizationGoalEnum.IMPRESSIONS);
-        a.setPlacement(PlacementEnum.SNAP_ADS);
+        PlacementV2 placement = new PlacementV2();
+        placement.setConfig(ConfigPlacementEnum.AUTOMATIC);
+        a.setPlacementV2(placement);
         a.setType(AdSquadTypeEnum.SNAP_ADS);
         a.setCampaignId(campaignId);
         a.setBidMicro(1000000.);
@@ -1379,7 +1444,8 @@ public class SnapAdSquadsTest {
         a.setLifetimeBudgetMicro(300.);
         a.setName("AdSquad2019");
         a.setStatus(StatusEnum.PAUSED);
-        a.setTargeting(new Targeting.Builder().setGeolocation(geos).build());
+        a.setBidStrategy(BidStrategyEnum.AUTO_BID);
+        a.setTargeting(new Targeting.Builder().setGeolocations(geos).build());
         return a;
     }// initFunctionalAdSquad()
 } // SnapAdSquadsTest

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Yassine AZIMANI
+ * Copyright 2020 Yassine AZIMANI
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,18 @@ package snapads4j.enums;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public enum PivotEnum {
-    @JsonProperty("country")
-    COUNTRY,
-    @JsonProperty("region")
-    REGION,
-    @JsonProperty("dma")
-    DMA,
-    @JsonProperty("gender")
-    GENDER,
-    @JsonProperty("age_bucket")
-    AGE_BUCKET,
-    @JsonProperty("interest_category_id")
-    INTEREST_CATEGORY_ID,
-    @JsonProperty("interest_category_name")
-    INTEREST_CATEGORY_NAME,
-    @JsonProperty("operating_system")
-    OPERATING_SYSTEM,
-    @JsonProperty("make")
-    MAKE,
-    @JsonProperty("model")
-    MODEL
-}// PivotEnum
+/**
+ * BidStrategyEnum
+ *
+ * @author Yassine
+ */
+public enum BidStrategyEnum {
+    @JsonProperty("AUTO_BID")
+    AUTO_BID,
+    @JsonProperty("LOWEST_COST_WITH_MAX_BID")
+    LOWEST_COST_WITH_MAX_BID,
+    @JsonProperty("MIN_ROAS")
+    MIN_ROAS,
+    @JsonProperty("TARGET_COST")
+    TARGET_COST
+}// BidStrategyEnum
