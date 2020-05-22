@@ -36,6 +36,7 @@ import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.adsquads.AdSquad;
+import snapads4j.model.adsquads.PlacementV2;
 import snapads4j.model.audience.size.AudienceSize;
 import snapads4j.model.demographics.Demographics;
 import snapads4j.model.geolocation.GeoLocation;
@@ -416,15 +417,19 @@ public class SnapAudienceSizeTest {
 
         AdSquad adsquad = new AdSquad();
         adsquad.setOptimizationGoal(OptimizationGoalEnum.APP_INSTALLS);
-        adsquad.setPlacement(PlacementEnum.CONTENT);
+        PlacementV2 placement = new PlacementV2();
+        placement.setConfig(ConfigPlacementEnum.AUTOMATIC);
+        placement.setPlatforms(PlatformPlacementEnum.SNAPCHAT);
+        placement.setSnapchatPositions(SnapChatPositionsEnum.FEED);
+        adsquad.setPlacementV2(placement);
         adsquad.setType(AdSquadTypeEnum.SNAP_ADS);
         adsquad.setBidMicro(6000000.);
-        adsquad.setAutoBid(false);
+        adsquad.setBidStrategy(BidStrategyEnum.AUTO_BID);
         adsquad.setDailyBudgetMicro(50000000.);
         adsquad.setName("App Install, United States, All Genders, 13-24");
         adsquad.setStatus(StatusEnum.ACTIVE);
         adsquad.setIncludedContentTypes(ContentTypeEnum.SCIENCE_TECHNOLOGY);
-        adsquad.setTargeting(new Targeting.Builder().setGeolocation(geos).setDemographics(demographics).build());
+        adsquad.setTargeting(new Targeting.Builder().setGeolocations(geos).setDemographics(demographics).build());
 
         return adsquad;
     }// initAdSquad()

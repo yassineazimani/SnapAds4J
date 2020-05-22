@@ -92,12 +92,11 @@ public class SnapStats implements SnapStatsInterface {
 
     @Override
     public Optional<TimeSerieStat> getCampaignStats(String oAuthAccessToken, String campaignID, Date startTime, Date endTime, GranularityEnum granularity) throws SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException, SnapResponseErrorException {
-        return getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, granularity, null, null, null, null, null, null, null, null, null, null);
+        return getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, granularity, null, null, null, null, null, null, null, null, null);
     }// getCampaignStats()
 
     @Override
-    public Optional<TimeSerieStat> getCampaignStats(String oAuthAccessToken, String campaignID, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, DimensionEnum dimension,
-                                                    PivotEnum pivot, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
+    public Optional<TimeSerieStat> getCampaignStats(String oAuthAccessToken, String campaignID, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                                     ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                                     Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException, SnapResponseErrorException {
         checkParams(oAuthAccessToken, startTime, endTime, granularity);
@@ -106,7 +105,7 @@ public class SnapStats implements SnapStatsInterface {
         }
         Optional<TimeSerieStat> result = Optional.empty();
         String url = this.endpointCampaignStats.replace("{campaign_id}", campaignID);
-        url = prepareFinalUrl(url, startTime, endTime, granularity, fields, breakdown, test, dimension, pivot, swipeUpAttributionWindow, viewAttributionWindow, positionStats, omitEmpty, conversionSourceTypes, null);
+        url = prepareFinalUrl(url, startTime, endTime, granularity, fields, breakdown, test, reportDimension, swipeUpAttributionWindow, viewAttributionWindow, positionStats, omitEmpty, conversionSourceTypes, null);
         HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
         try (CloseableHttpResponse response = httpClient.execute(request)) {
             int statusCode = response.getStatusLine().getStatusCode();
@@ -138,12 +137,12 @@ public class SnapStats implements SnapStatsInterface {
 
     @Override
     public Optional<TimeSerieStat> getAdAccountStats(String oAuthAccessToken, String adAccountID, Date startTime, Date endTime, GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
-        return this.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, granularity,null, null, null, null, null, null, null, null, null);
+        return this.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, granularity,null, null, null, null, null, null, null, null);
     }// getAdAccountStats()
 
     @Override
-    public Optional<TimeSerieStat> getAdAccountStats(String oAuthAccessToken, String adAccountID, Date startTime, Date endTime, GranularityEnum granularity, BreakdownEnum breakdown, Boolean test, DimensionEnum dimension,
-                                                     PivotEnum pivot, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
+    public Optional<TimeSerieStat> getAdAccountStats(String oAuthAccessToken, String adAccountID, Date startTime, Date endTime, GranularityEnum granularity, BreakdownEnum breakdown, Boolean test,
+                                                     String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                                      ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                                      Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapExecutionException, SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException {
         checkParams(oAuthAccessToken, startTime, endTime, granularity);
@@ -152,7 +151,7 @@ public class SnapStats implements SnapStatsInterface {
         }
         Optional<TimeSerieStat> result = Optional.empty();
         String url = this.endpointAdAccountStats.replace("{ad_account_id}", adAccountID);
-        url = prepareFinalUrl(url, startTime, endTime, granularity, null, breakdown, test, dimension, pivot, swipeUpAttributionWindow, viewAttributionWindow, positionStats, omitEmpty, conversionSourceTypes, null);
+        url = prepareFinalUrl(url, startTime, endTime, granularity, null, breakdown, test, reportDimension, swipeUpAttributionWindow, viewAttributionWindow, positionStats, omitEmpty, conversionSourceTypes, null);
         HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
         try (CloseableHttpResponse response = httpClient.execute(request)) {
             int statusCode = response.getStatusLine().getStatusCode();
@@ -184,18 +183,18 @@ public class SnapStats implements SnapStatsInterface {
 
     @Override
     public Optional<TimeSerieStat> getAdSquadStats(String oAuthAccessToken, String adSquadID, Date startTime, Date endTime, GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
-        return this.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, granularity, null, null, null, null, null, null, null, null, null, null);
+        return this.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, granularity, null, null, null, null, null, null, null, null, null);
     }// getAdSquadStats()
 
     @Override
-    public Optional<TimeSerieStat> getAdSquadStats(String oAuthAccessToken, String adSquadID, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, DimensionEnum dimension, PivotEnum pivot, SwipeUpAttributionWindowEnum swipeUpAttributionWindow, ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats, Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapExecutionException, SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException {
+    public Optional<TimeSerieStat> getAdSquadStats(String oAuthAccessToken, String adSquadID, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow, ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats, Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapExecutionException, SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException {
         checkParams(oAuthAccessToken, startTime, endTime, granularity);
         if (StringUtils.isEmpty(adSquadID)) {
             throw new SnapArgumentException("AdSquad ID is required");
         }
         Optional<TimeSerieStat> result = Optional.empty();
         String url = this.endpointAdSquadStats.replace("{adsquad_id}", adSquadID);
-        url = prepareFinalUrl(url, startTime, endTime, granularity, fields, breakdown, test, dimension, pivot, swipeUpAttributionWindow, viewAttributionWindow, positionStats, omitEmpty, conversionSourceTypes, null);
+        url = prepareFinalUrl(url, startTime, endTime, granularity, fields, breakdown, test, reportDimension, swipeUpAttributionWindow, viewAttributionWindow, positionStats, omitEmpty, conversionSourceTypes, null);
         HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
         try (CloseableHttpResponse response = httpClient.execute(request)) {
             int statusCode = response.getStatusLine().getStatusCode();
@@ -227,12 +226,12 @@ public class SnapStats implements SnapStatsInterface {
 
     @Override
     public Optional<TimeSerieStat> getAdStats(String oAuthAccessToken, String adID, Date startTime, Date endTime, GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
-        return this.getAdStats(oAuthAccessToken, adID, startTime, endTime, granularity, null, null, null, null, null, null, null, null, null, null);
+        return this.getAdStats(oAuthAccessToken, adID, startTime, endTime, granularity, null, null, null, null, null, null, null, null, null);
     }// getAdStats()
 
     @Override
-    public Optional<TimeSerieStat> getAdStats(String oAuthAccessToken, String adID, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, DimensionEnum dimension,
-                                              PivotEnum pivot, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
+    public Optional<TimeSerieStat> getAdStats(String oAuthAccessToken, String adID, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test,
+                                              String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                               ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                               Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapExecutionException, SnapResponseErrorException {
         checkParams(oAuthAccessToken, startTime, endTime, granularity);
@@ -241,7 +240,7 @@ public class SnapStats implements SnapStatsInterface {
         }
         Optional<TimeSerieStat> result = Optional.empty();
         String url = this.endpointAdStats.replace("{ad_id}", adID);
-        url = prepareFinalUrl(url, startTime, endTime, granularity, fields, breakdown, test, dimension, pivot, swipeUpAttributionWindow, viewAttributionWindow, positionStats, omitEmpty, conversionSourceTypes, null);
+        url = prepareFinalUrl(url, startTime, endTime, granularity, fields, breakdown, test, reportDimension, swipeUpAttributionWindow, viewAttributionWindow, positionStats, omitEmpty, conversionSourceTypes, null);
         HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
         try (CloseableHttpResponse response = httpClient.execute(request)) {
             int statusCode = response.getStatusLine().getStatusCode();
@@ -305,12 +304,12 @@ public class SnapStats implements SnapStatsInterface {
 
     @Override
     public Optional<TimeSerieStat> getPixelSpecificDomainStats(String oAuthAccessToken, String pixelID, String domain, Date startTime, Date endTime, GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
-        return this.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domain, startTime, endTime, granularity, null, null, null, null, null, null, null, null, null, null);
+        return this.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domain, startTime, endTime, granularity, null, null, null, null, null, null, null, null, null);
     }// getPixelSpecificDomainStats()
 
     @Override
-    public Optional<TimeSerieStat> getPixelSpecificDomainStats(String oAuthAccessToken, String pixelID, String domain, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, DimensionEnum dimension,
-                                                               PivotEnum pivot, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
+    public Optional<TimeSerieStat> getPixelSpecificDomainStats(String oAuthAccessToken, String pixelID, String domain, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test,
+                                                               String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                                                ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                                                Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapExecutionException, SnapResponseErrorException {
         checkParams(oAuthAccessToken, startTime, endTime, granularity, domain);
@@ -319,7 +318,7 @@ public class SnapStats implements SnapStatsInterface {
         }
         Optional<TimeSerieStat> result = Optional.empty();
         String url = this.endpointPixelSpecificDomain.replace("{pixel_id}", pixelID);
-        url = prepareFinalUrl(url, startTime, endTime, granularity, fields, breakdown, test, dimension, pivot, swipeUpAttributionWindow, viewAttributionWindow, positionStats, omitEmpty, conversionSourceTypes, domain);
+        url = prepareFinalUrl(url, startTime, endTime, granularity, fields, breakdown, test, reportDimension, swipeUpAttributionWindow, viewAttributionWindow, positionStats, omitEmpty, conversionSourceTypes, domain);
         HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
         try (CloseableHttpResponse response = httpClient.execute(request)) {
             int statusCode = response.getStatusLine().getStatusCode();
@@ -416,8 +415,7 @@ public class SnapStats implements SnapStatsInterface {
      * @param fields
      * @param breakdown
      * @param test
-     * @param dimension
-     * @param pivot
+     * @param reportDimension
      * @param swipeUpAttributionWindow
      * @param viewAttributionWindow
      * @param positionStats
@@ -425,7 +423,7 @@ public class SnapStats implements SnapStatsInterface {
      * @param conversionSourceTypes
      * @return
      */
-    private String prepareFinalUrl(String url, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, DimensionEnum dimension, PivotEnum pivot, SwipeUpAttributionWindowEnum swipeUpAttributionWindow, ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats, Boolean omitEmpty, List<String> conversionSourceTypes, String domain) {
+    private String prepareFinalUrl(String url, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow, ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats, Boolean omitEmpty, List<String> conversionSourceTypes, String domain) {
         StringBuilder sbUrl = new StringBuilder(url);
         sbUrl.append("?granularity=").append(granularity);
         if(startTime != null && endTime != null) {
@@ -444,11 +442,8 @@ public class SnapStats implements SnapStatsInterface {
         if (test != null) {
             sbUrl.append("&test=").append(test);
         }
-        if (dimension != null) {
-            sbUrl.append("&dimension=").append(dimension);
-        }
-        if (pivot != null) {
-            sbUrl.append("&pivot=").append(pivot);
+        if (StringUtils.isNotEmpty(reportDimension)) {
+            sbUrl.append("&report_dimension=").append(reportDimension);
         }
         if (swipeUpAttributionWindow != null) {
             sbUrl.append("&swipe_up_attribution_window=").append(swipeUpAttributionWindow);

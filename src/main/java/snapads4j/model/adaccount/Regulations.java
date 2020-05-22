@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Yassine AZIMANI
+ * Copyright 2020 Yassine AZIMANI
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package snapads4j.enums;
+package snapads4j.model.adaccount;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-public enum DimensionEnum {
-    @JsonProperty("GEO")
-    GEO,
-    @JsonProperty("DEMO")
-    DEMO,
-    @JsonProperty("INTEREST")
-    INTEREST,
-    @JsonProperty("DEVICE")
-    DEVICE
-}// DimensionEnum
+@Getter
+@Setter
+@ToString
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public class Regulations {
+
+    @JsonProperty("restricted_delivery_signals")
+    private boolean restrictedDeliverySignals;
+
+}// Regulations

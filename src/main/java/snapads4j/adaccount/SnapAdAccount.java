@@ -24,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -69,6 +70,8 @@ public class SnapAdAccount implements SnapAdAccountInterface {
 
     private String endpointSpecificAdAccount;
 
+    private String endpointCreateAdAccount;
+
     private String endpointUpdateAdAccount;
 
     private int minLimitPagination;
@@ -89,6 +92,7 @@ public class SnapAdAccount implements SnapAdAccountInterface {
         this.apiUrl = (String) fp.getProperties().get("api.url");
         this.endpointAllAdAccounts = this.apiUrl + fp.getProperties().get("api.url.adaccount.all");
         this.endpointSpecificAdAccount = this.apiUrl + fp.getProperties().get("api.url.adaccount.one");
+        this.endpointCreateAdAccount = this.apiUrl + fp.getProperties().get("api.url.adaccount.create");
         this.endpointUpdateAdAccount = this.apiUrl + fp.getProperties().get("api.url.adaccount.update");
         this.minLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.pagination.limit.min"));
         this.maxLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.pagination.limit.max"));
@@ -206,10 +210,57 @@ public class SnapAdAccount implements SnapAdAccountInterface {
     } // getSpecificAdAccount()
 
     /**
-     * Update a specific ad account
+     * Create an ad-account
      *
      * @param oAuthAccessToken oAuthAccessToken
-     * @param adAccount        ad account to update
+     * @param adAccount        ad-account to create
+     * @return AdAccount created
+     * @throws SnapResponseErrorException
+     * @throws SnapOAuthAccessTokenException
+     * @throws SnapArgumentException
+     * @throws JsonProcessingException
+     * @throws UnsupportedEncodingException
+     * @throws SnapExecutionException
+     * @see <a href="https://developers.snapchat.com/api/docs/#create-an-ad-account">Create Ad Account</a>
+     */
+    public Optional<AdAccount> createAdAccount(String oAuthAccessToken, AdAccount adAccount)
+            throws SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException,
+            JsonProcessingException, UnsupportedEncodingException, SnapExecutionException {
+        if (StringUtils.isEmpty(oAuthAccessToken)) {
+            throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
+        }
+        this.checkAdAccount(adAccount, false);
+        Optional<AdAccount> result = Optional.empty();
+        final String url = this.endpointCreateAdAccount.replace("{organization-id}", adAccount.getOrganizationId());
+        SnapHttpRequestAdAccount reqBody = new SnapHttpRequestAdAccount();
+        reqBody.addAdAccount(adAccount);
+        HttpPost request = HttpUtils.preparePostRequestObject(url, oAuthAccessToken, reqBody);
+        try (CloseableHttpResponse response = httpClient.execute(request)) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                if (statusCode >= 300) {
+                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+                }
+                ObjectMapper mapper = JsonUtils.initMapper();
+                String body = entityUtilsWrapper.toString(entity);
+                SnapHttpResponseAdAccount responseFromJson = mapper.readValue(body, SnapHttpResponseAdAccount.class);
+                if (responseFromJson != null) {
+                    result = responseFromJson.getSpecificAdAccount();
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.error("Impossible to create ad account", e);
+            throw new SnapExecutionException("Impossible to create ad account", e);
+        }
+        return result;
+    }// createAdAccount()
+
+    /**
+     * Update a specific ad-account
+     *
+     * @param oAuthAccessToken oAuthAccessToken
+     * @param adAccount        ad-account to update
      * @return AdAccount updated
      * @throws SnapResponseErrorException
      * @throws SnapOAuthAccessTokenException
@@ -218,8 +269,7 @@ public class SnapAdAccount implements SnapAdAccountInterface {
      * @throws UnsupportedEncodingException
      * @throws SnapExecutionException
      * @see <a href=
-     * "https://developers.snapchat.com/api/docs/#update-an-ad-accounts-lifetime-spend-cap">Update
-     * Ad Account</a>
+     * "https://developers.snapchat.com/api/docs/#update-ad-account">Update Ad Account</a>
      */
     @Override
     public Optional<AdAccount> updateAdAccount(String oAuthAccessToken, AdAccount adAccount)
@@ -228,7 +278,7 @@ public class SnapAdAccount implements SnapAdAccountInterface {
         if (StringUtils.isEmpty(oAuthAccessToken)) {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
         }
-        this.checkAdAccount(adAccount);
+        this.checkAdAccount(adAccount, true);
         Optional<AdAccount> result = Optional.empty();
         final String url = this.endpointUpdateAdAccount.replace("{organization-id}", adAccount.getOrganizationId());
         SnapHttpRequestAdAccount reqBody = new SnapHttpRequestAdAccount();
@@ -263,11 +313,22 @@ public class SnapAdAccount implements SnapAdAccountInterface {
      * @see <a href=
      * "https://developers.snapchat.com/api/docs/#ad-accounts">Requirements</a>
      */
-    private void checkAdAccount(AdAccount adAccount) throws SnapArgumentException {
+    private void checkAdAccount(AdAccount adAccount, boolean isUpdate) throws SnapArgumentException {
         StringBuilder sb = new StringBuilder();
         if (adAccount != null) {
             if (StringUtils.isEmpty(adAccount.getId())) {
                 sb.append("The ad account ID is required,");
+            }
+            if(isUpdate){
+                if(adAccount.getRegulations() == null){
+                    sb.append("Regulations is required,");
+                }
+                if(StringUtils.isEmpty(adAccount.getBillingCenterId())){
+                    sb.append("Billing center ID is required,");
+                }
+                if(adAccount.getLifetimeSpendCapMicro() == null){
+                    sb.append("Lifetime spend cap micro is required,");
+                }
             }
             ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
             Validator validator = factory.getValidator();

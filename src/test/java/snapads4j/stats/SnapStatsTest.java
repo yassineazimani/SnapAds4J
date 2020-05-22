@@ -147,7 +147,7 @@ public class SnapStatsTest {
         Mockito.when(entityUtilsWrapper.toString(httpEntity))
                 .thenReturn(SnapResponseUtils.getStatsCampaignDay());
         List<String> fields = Stream.of(new String[]{"impressions", "swipes", "conversion_purchases", "conversion_save", "conversion_start_checkout", "conversion_add_cart", "conversion_view_content", "conversion_add_billing", "conversion_sign_ups", "conversion_searches", "conversion_level_completes", "conversion_app_opens", "conversion_page_views"}).collect(Collectors.toList());
-        Optional<TimeSerieStat> result = this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY, fields, null, null, null, null, null, null, null, null, null);
+        Optional<TimeSerieStat> result = this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY, fields, null, null, null, null, null, null, null, null);
         assertThat(result).isPresent();
         result.ifPresent(stat -> {
             assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.CAMPAIGN);
@@ -210,7 +210,7 @@ public class SnapStatsTest {
                 .thenReturn(SnapResponseUtils.getStatsCampaignDayOmittingRecords());
         List<String> fields = Stream.of(new String[]{"impressions", "swipes", "spend"}).collect(Collectors.toList());
         List<String> conversionsSourcesTypes = Stream.of(new String[]{"web","app","total"}).collect(Collectors.toList());
-        Optional<TimeSerieStat> result = this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY, fields, BreakdownEnum.AD, false, DimensionEnum.DEMO, PivotEnum.GENDER, SwipeUpAttributionWindowEnum.TWENTY_EIGHT_DAY, ViewAttributionWindowEnum.SEVEN_DAY, true, true, conversionsSourcesTypes);
+        Optional<TimeSerieStat> result = this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY, fields, BreakdownEnum.AD, false, "gender", SwipeUpAttributionWindowEnum.TWENTY_EIGHT_DAY, ViewAttributionWindowEnum.SEVEN_DAY, true, true, conversionsSourcesTypes);
         assertThat(result).isPresent();
         result.ifPresent(stat -> {
             assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.CAMPAIGN);
@@ -1711,7 +1711,7 @@ public class SnapStatsTest {
         Mockito.when(entityUtilsWrapper.toString(httpEntity))
                 .thenReturn(SnapResponseUtils.getStatsSpecificPixelDomain());
         List<String> fields = Stream.of(new String[]{"event_type","os_type","browser_type"}).collect(Collectors.toList());
-        Optional<TimeSerieStat> result = this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY, fields, BreakdownEnum.AD, false, DimensionEnum.DEMO, PivotEnum.GENDER, SwipeUpAttributionWindowEnum.TWENTY_EIGHT_DAY, ViewAttributionWindowEnum.SEVEN_DAY, true, true, null);
+        Optional<TimeSerieStat> result = this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY, fields, BreakdownEnum.AD, false, "country", SwipeUpAttributionWindowEnum.TWENTY_EIGHT_DAY, ViewAttributionWindowEnum.SEVEN_DAY, true, true, null);
         assertThat(result).isPresent();
         result.ifPresent(stat -> {
             assertThat(stat.getId()).isEqualTo(pixelID);

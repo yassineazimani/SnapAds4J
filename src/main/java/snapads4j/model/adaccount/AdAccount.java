@@ -26,6 +26,7 @@ import snapads4j.enums.CurrencyEnum;
 import snapads4j.enums.StatusEnum;
 import snapads4j.model.AbstractSnapModel;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -109,4 +110,29 @@ public class AdAccount extends AbstractSnapModel {
      */
     @JsonProperty("brand_name")
     private String brandName;
+
+    @JsonProperty("paying_advertiser_name")
+    @Max(value = 32, message = "The paying Advertiser name must have to max 32 characters")
+    private String payingAdvertiserName;
+
+    @JsonProperty("regulations")
+    private Regulations regulations;
+
+    @JsonProperty("agency_representing_client")
+    private boolean agencyRepresentingClient;
+
+    @JsonProperty("client_based_in_country")
+    private String clientBasedInCountry;
+
+    @JsonProperty("client_paying_invoices")
+    private boolean clientPayingInvoices;
+
+    @JsonProperty("agency_client_metadata")
+    private AgencyClientMetadata agencyClientMetadata;
+
+    @JsonProperty("billing_center_id")
+    private String billingCenterId;
+
+    @JsonProperty("billing_type")
+    private String billingType;
 } // AdAccount

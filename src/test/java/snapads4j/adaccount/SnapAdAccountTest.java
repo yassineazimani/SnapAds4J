@@ -19,6 +19,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.assertj.core.api.Assertions;
@@ -39,6 +40,7 @@ import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
 import snapads4j.model.Pagination;
 import snapads4j.model.adaccount.AdAccount;
+import snapads4j.model.adaccount.Regulations;
 import snapads4j.utils.EntityUtilsWrapper;
 import snapads4j.utils.SnapResponseUtils;
 
@@ -501,6 +503,40 @@ public class SnapAdAccountTest {
     } // should_throw_exception_1337_getSpecificAdAccount()
 
     @Test
+    public void test_createAdAccount_should_success() throws SnapResponseErrorException, SnapOAuthAccessTokenException,
+            SnapArgumentException, IOException, SnapExecutionException {
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+        Mockito.when(statusLine.getStatusCode()).thenReturn(200);
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+        Mockito.when(httpClient.execute(Mockito.isA(HttpPost.class))).thenReturn(httpResponse);
+        Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+        Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapAdAccountCreated());
+        Assertions.assertThatCode(() -> adAccount.createAdAccount(oAuthAccessToken, this.initAdAccount(false)))
+                .doesNotThrowAnyException();
+        Optional<AdAccount> optAdAccount = adAccount.createAdAccount(oAuthAccessToken, this.initAdAccount(false));
+        assertThat(optAdAccount.isPresent()).isTrue();
+        optAdAccount.ifPresent((a) -> {
+            Assertions.assertThat(a.getId()).isEqualTo("7c6d2e91-3a7c-4230-b048-f724bf217a82");
+            Assertions.assertThat(a.getCurrency()).isEqualTo(CurrencyEnum.USD);
+            Assertions.assertThat(a.getLifetimeSpendCapMicro()).isEqualTo(200000000000.);
+            Assertions.assertThat(a.getName()).isEqualTo("Example Ad Account");
+            Assertions.assertThat(a.getStatus()).isEqualTo(StatusEnum.ACTIVE);
+            Assertions.assertThat(a.getType()).isEqualTo(AdAccountTypeEnum.PARTNER);
+            Assertions.assertThat(a.getOrganizationId()).isEqualTo(organizationId);
+            Assertions.assertThat(a.getFundingSourceIds()).isNotNull();
+            assertThat(a.getFundingSourceIds()).isNotNull();
+            assertThat(a.getFundingSourceIds()).isNotEmpty();
+            assertThat(a.getFundingSourceIds().get(0)).isEqualTo("cdc67eba-a774-4954-9b94-9502bbdac1bc");
+            assertThat(sdf.format(a.getCreatedAt())).isEqualTo("2016-08-11T22:03:58.869Z");
+            assertThat(sdf.format(a.getUpdatedAt())).isEqualTo("2016-08-11T22:03:58.869Z");
+            assertThat(a.getBillingCenterId()).isEqualTo("9b8db2a8-2b48-42f0-858a-88901a782b27");
+            assertThat(a.getBillingType()).isEqualTo("IO");
+            assertThat(a.isAgencyRepresentingClient()).isFalse();
+            assertThat(a.isClientPayingInvoices()).isFalse();
+        });
+    } // test_createAdAccount_should_success()
+
+    @Test
     public void test_updateAdAccount_should_success() throws SnapResponseErrorException, SnapOAuthAccessTokenException,
             SnapArgumentException, IOException, SnapExecutionException {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
@@ -509,15 +545,15 @@ public class SnapAdAccountTest {
         Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(entityUtilsWrapper.toString(httpEntity)).thenReturn(SnapResponseUtils.getSnapAdAccountUpdated());
-        Assertions.assertThatCode(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
+        Assertions.assertThatCode(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount(true)))
                 .doesNotThrowAnyException();
-        Optional<AdAccount> optAdAccount = adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount());
+        Optional<AdAccount> optAdAccount = adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount(true));
         assertThat(optAdAccount.isPresent()).isTrue();
         optAdAccount.ifPresent((a) -> {
             Assertions.assertThat(a.getId()).isEqualTo("123b9ca6-92f2-49c3-a3ed-0ea58afb467e");
             Assertions.assertThat(a.getBrandName()).isEqualTo("Hooli");
             Assertions.assertThat(a.getCurrency()).isEqualTo(CurrencyEnum.USD);
-            Assertions.assertThat(a.getLifetimeSpendCapMicro()).isEqualTo(1500000000.);
+            Assertions.assertThat(a.getLifetimeSpendCapMicro()).isEqualTo(200000000000.);
             Assertions.assertThat(a.getName()).isEqualTo("Hooli Ad Account");
             Assertions.assertThat(a.getStatus()).isEqualTo(StatusEnum.ACTIVE);
             Assertions.assertThat(a.getType()).isEqualTo(AdAccountTypeEnum.PARTNER);
@@ -528,25 +564,29 @@ public class SnapAdAccountTest {
             assertThat(a.getFundingSourceIds().get(0)).isEqualTo("cdc67eba-a774-4954-9b94-9502bbdac1bc");
             assertThat(sdf.format(a.getCreatedAt())).isEqualTo("2016-08-11T22:03:58.869Z");
             assertThat(sdf.format(a.getUpdatedAt())).isEqualTo("2016-08-11T22:03:58.869Z");
+            assertThat(a.getBillingCenterId()).isEqualTo("9b8db2a8-2b48-42f0-858a-88901a782b27");
+            assertThat(a.getBillingType()).isEqualTo("IO");
+            assertThat(a.isAgencyRepresentingClient()).isFalse();
+            assertThat(a.isClientPayingInvoices()).isFalse();
         });
     } // test_updateAdAccount_should_success()
 
     @Test
     public void test_updateAdAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
-        assertThatThrownBy(() -> adAccount.updateAdAccount(null, this.initAdAccount()))
+        assertThatThrownBy(() -> adAccount.updateAdAccount(null, this.initAdAccount(true)))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
     } // test_updateAdAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
     public void test_updateAdAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
-        assertThatThrownBy(() -> adAccount.updateAdAccount("", this.initAdAccount()))
+        assertThatThrownBy(() -> adAccount.updateAdAccount("", this.initAdAccount(true)))
                 .isInstanceOf(SnapOAuthAccessTokenException.class).hasMessage("The OAuthAccessToken is required");
     } // test_updateAdAccount_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
     public void test_updateAdAccount_ad_should_throw_SnapExecutionException() throws IOException {
         Mockito.when(httpClient.execute((Mockito.any(HttpPut.class)))).thenThrow(IOException.class);
-        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
+        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount(true)))
                 .isInstanceOf(SnapExecutionException.class);
     }// test_updateAdAccount_ad_should_throw_SnapExecutionException()
 
@@ -571,7 +611,10 @@ public class SnapAdAccountTest {
                         "The organization ID is required")
                 .hasMessageContaining("The time zone is required")
                 .hasMessageContaining("The name of advertiser is required")
-                .hasMessageContaining("The ad account type is required");
+                .hasMessageContaining("The ad account type is required")
+                .hasMessageContaining("Billing center ID is required")
+                .hasMessageContaining("Lifetime spend cap micro is required")
+                .hasMessageContaining("Regulations is required");
     } // test_updateAdAccount_should_throw_SnapArgumentException_when_no_parameters_filled()
 
     @Test
@@ -589,7 +632,10 @@ public class SnapAdAccountTest {
                         "The organization ID is required")
                 .hasMessageContaining("The time zone is required")
                 .hasMessageContaining("The name of advertiser is required")
-                .hasMessageContaining("The ad account type is required");
+                .hasMessageContaining("The ad account type is required")
+                .hasMessageContaining("Billing center ID is required")
+                .hasMessageContaining("Lifetime spend cap micro is required")
+                .hasMessageContaining("Regulations is required");
     } // test_updateAdAccount_should_throw_SnapArgumentException_when_no_parameters_filled_except_advertiser()
 
     @Test
@@ -608,7 +654,10 @@ public class SnapAdAccountTest {
                 .hasMessageContaining(
                         "The organization ID is required")
                 .hasMessageContaining("The time zone is required")
-                .hasMessageContaining("The ad account type is required");
+                .hasMessageContaining("The ad account type is required")
+                .hasMessageContaining("Billing center ID is required")
+                .hasMessageContaining("Lifetime spend cap micro is required")
+                .hasMessageContaining("Regulations is required");
     } // test_updateAdAccount_should_throw_SnapArgumentException_when_no_parameters_filled_except_advertiser_and_currency()
 
     @Test
@@ -626,7 +675,10 @@ public class SnapAdAccountTest {
                 .hasMessageContaining(
                         "The organization ID is required")
                 .hasMessageContaining("The time zone is required")
-                .hasMessageContaining("The ad account type is required");
+                .hasMessageContaining("The ad account type is required")
+                .hasMessageContaining("Billing center ID is required")
+                .hasMessageContaining("Lifetime spend cap micro is required")
+                .hasMessageContaining("Regulations is required");
     } // test_updateAdAccount_should_throw_SnapArgumentException_when_no_parameters_filled_except_advertiser_and_currency_and_fuding_id()
 
     @Test
@@ -643,7 +695,10 @@ public class SnapAdAccountTest {
                 .hasMessageContaining(
                         "The organization ID is required")
                 .hasMessageContaining("The time zone is required")
-                .hasMessageContaining("The ad account type is required");
+                .hasMessageContaining("The ad account type is required")
+                .hasMessageContaining("Billing center ID is required")
+                .hasMessageContaining("Lifetime spend cap micro is required")
+                .hasMessageContaining("Regulations is required");
     } // test_updateAdAccount_should_throw_SnapArgumentException_when_no_parameters_filled_except_advertiser_and_currency_and_fuding_id_and_id()
 
     @Test
@@ -659,7 +714,10 @@ public class SnapAdAccountTest {
                 .hasMessageContaining(
                         "The organization ID is required")
                 .hasMessageContaining("The time zone is required")
-                .hasMessageContaining("The ad account type is required");
+                .hasMessageContaining("The ad account type is required")
+                .hasMessageContaining("Billing center ID is required")
+                .hasMessageContaining("Lifetime spend cap micro is required")
+                .hasMessageContaining("Regulations is required");
     } // test_updateAdAccount_should_throw_SnapArgumentException_when_parameters_filled_except_organization_id_and_time_zone_and_ad_account_type()
 
     @Test
@@ -674,7 +732,10 @@ public class SnapAdAccountTest {
         assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, ad))
                 .isInstanceOf(SnapArgumentException.class)
                 .hasMessageContaining("The time zone is required")
-                .hasMessageContaining("The ad account type is required");
+                .hasMessageContaining("The ad account type is required")
+                .hasMessageContaining("Billing center ID is required")
+                .hasMessageContaining("Lifetime spend cap micro is required")
+                .hasMessageContaining("Regulations is required");
     } // test_updateAdAccount_should_throw_SnapArgumentException_when_parameters_filled_except_time_zone_and_ad_account_type()
 
     @Test
@@ -689,7 +750,10 @@ public class SnapAdAccountTest {
         ad.setTimezone("America/Los_Angeles");
         assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, ad))
                 .isInstanceOf(SnapArgumentException.class)
-                .hasMessageContaining("The ad account type is required");
+                .hasMessageContaining("The ad account type is required")
+                .hasMessageContaining("Billing center ID is required")
+                .hasMessageContaining("Lifetime spend cap micro is required")
+                .hasMessageContaining("Regulations is required");
     } // test_updateAdAccount_should_throw_SnapArgumentException_when_ad_account_type_is_null()
 
     @Test
@@ -699,7 +763,7 @@ public class SnapAdAccountTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
+        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount(true)))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
     } // should_throw_exception_400_updateAdAccount()
 
@@ -710,7 +774,7 @@ public class SnapAdAccountTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
+        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount(true)))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
     } // should_throw_exception_401_updateAdAccount()
 
@@ -721,7 +785,7 @@ public class SnapAdAccountTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
+        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount(true)))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
     } // should_throw_exception_403_updateAdAccount()
 
@@ -732,7 +796,7 @@ public class SnapAdAccountTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
+        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount(true)))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
     } // should_throw_exception_404_updateAdAccount()
 
@@ -743,7 +807,7 @@ public class SnapAdAccountTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
+        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount(true)))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
     } // should_throw_exception_405_updateAdAccount()
 
@@ -754,7 +818,7 @@ public class SnapAdAccountTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
+        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount(true)))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
     } // should_throw_exception_406_updateAdAccount()
 
@@ -765,7 +829,7 @@ public class SnapAdAccountTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
+        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount(true)))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
     } // should_throw_exception_410_updateAdAccount()
 
@@ -776,7 +840,7 @@ public class SnapAdAccountTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
+        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount(true)))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
     } // should_throw_exception_418_updateAdAccount()
 
@@ -787,7 +851,7 @@ public class SnapAdAccountTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
+        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount(true)))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
     } // should_throw_exception_429_updateAdAccount()
 
@@ -798,7 +862,7 @@ public class SnapAdAccountTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
+        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount(true)))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
     } // should_throw_exception_500_updateAdAccount()
 
@@ -809,7 +873,7 @@ public class SnapAdAccountTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
+        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount(true)))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
     } // should_throw_exception_503_updateAdAccount()
 
@@ -820,11 +884,11 @@ public class SnapAdAccountTest {
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
         Mockito.when(httpClient.execute(Mockito.isA(HttpPut.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount()))
+        assertThatThrownBy(() -> adAccount.updateAdAccount(oAuthAccessToken, this.initAdAccount(true)))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     } // should_throw_exception_1337_updateAdAccount()
 
-    private AdAccount initAdAccount() {
+    private AdAccount initAdAccount(boolean isUpdate) {
         AdAccount ad = new AdAccount();
         ad.setAdvertiser("Advertiser");
         ad.setAdvertiserOrganizationId("123b9ca6-92f2-49c3-a3ed-1ea58afb467e");
@@ -833,11 +897,19 @@ public class SnapAdAccountTest {
         ad.setFundingSourceIds(Collections.singletonList("cdc67eba-a774-4954-9b94-9502bbdac1bc"));
         ad.setId("123b9ca6-92f2-49c3-a3ed-0ea58afb467e");
         ad.setLifetimeSpendCapMicro(1500000000.);
-        ad.setName("Hooli Ad Account");
         ad.setOrganizationId(organizationId);
         ad.setStatus(StatusEnum.ACTIVE);
         ad.setTimezone("America/Los_Angeles");
         ad.setType(AdAccountTypeEnum.PARTNER);
+        if(isUpdate) {
+            ad.setBillingCenterId("9b8db2a8-2b48-42f0-858a-88901a782b27");
+            ad.setName("Hooli Ad Account");
+        }else{
+            ad.setName("Example Ad Account");
+        }
+        Regulations reg = new Regulations();
+        reg.setRestrictedDeliverySignals(false);
+        ad.setRegulations(reg);
         return ad;
     } // initAdAccount()
 } // SnapAdAccountTest

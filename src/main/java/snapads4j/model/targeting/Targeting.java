@@ -62,7 +62,9 @@ public class Targeting {
     private List<Interest> interests;
 
     /**
-     * Flag to mark content within the Ad Squad as Regulated Content
+     * Flag to mark content within the Ad Squad as Regulated Content.
+     * Must be set to True for any type of regulated content such as
+     * Alcohol, Red Band Movie Trailers...
      */
     @JsonProperty("regulated_content")
     private boolean regulatedContent;
@@ -71,6 +73,13 @@ public class Targeting {
      * List of Snap Audience Match Segment Targets
      */
     private List<SegmentRequestTargeting> segments;
+
+    /**
+     * Allows Snapchat to expand the audience beyond the
+     * selected targeting.
+     */
+    @JsonProperty("enable_targeting_expansion")
+    private boolean enableTargetingExpansion;
 
     /**
      * Used to build Targeting instance (${@link Targeting})
@@ -95,10 +104,10 @@ public class Targeting {
             return this;
         } // setDevices()
 
-        public Builder setGeolocation(List<GeoLocation> geos) {
+        public Builder setGeolocations(List<GeoLocation> geos) {
             this.targetingInstance.setGeos(geos);
             return this;
-        } // setGeolocation()
+        } // setGeolocations()
 
         public Builder setInterests(List<Interest> interests) {
             this.targetingInstance.setInterests(interests);
@@ -119,6 +128,11 @@ public class Targeting {
             this.targetingInstance.setLocations(locations);
             return this;
         } // setLocations
+
+        public Builder setEnableTargetingExpansion(boolean enableTargetingExpansion){
+            this.targetingInstance.setEnableTargetingExpansion(enableTargetingExpansion);
+            return this;
+        }// setEnableTargetingExpansion()
 
         public Targeting build() {
             return this.targetingInstance;
