@@ -27,7 +27,7 @@
 		<version.assertj>3.11.0</version.assertj>
 		<version.lombok>1.18.2</version.lombok>
 		<version.jackson>2.10.1</version.jackson>
-		<version.log4J2>2.12.1</version.log4J2>
+		<version.log4J2>2.13.3</version.log4J2>
 		<version.httpclient>4.5.10</version.httpclient>
 		<version.codec>1.12</version.codec>
 		<version.apache.commons.collections>4.2</version.apache.commons.collections>
