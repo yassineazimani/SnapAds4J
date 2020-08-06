@@ -15,3 +15,9 @@
 * Attribute placement removed in favour of placement_v2
 
 * Attributes dimension and pivots (stats) removed, creation of report_dimension attribute
+
+## Version 1.0.3
+
+* Log4J2 2.12.1 -> 2.13.3
+
+* Put pagination for measurement stats + Optional -> List (https://developers.snapchat.com/api/docs/?shell#pagination229)
