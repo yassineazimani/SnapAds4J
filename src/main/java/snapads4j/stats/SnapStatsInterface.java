@@ -20,56 +20,56 @@ import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
+import snapads4j.model.Pagination;
 import snapads4j.model.stats.TimeSerieStat;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public interface SnapStatsInterface {
 
-    Optional<TimeSerieStat> getCampaignStats(String oAuthAccessToken, String campaignID, Date startTime, Date endTime,
-                                             GranularityEnum granularity) throws SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException, SnapResponseErrorException;
+    List<Pagination<TimeSerieStat>> getCampaignStats(String oAuthAccessToken, int limit, String campaignID, Date startTime, Date endTime,
+                                                    GranularityEnum granularity) throws SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException, SnapResponseErrorException;
 
-    Optional<TimeSerieStat> getCampaignStats(String oAuthAccessToken, String campaignID, Date startTime, Date endTime,
+    List<Pagination<TimeSerieStat>> getCampaignStats(String oAuthAccessToken, int limit, String campaignID, Date startTime, Date endTime,
                                              GranularityEnum granularity, List<String> fields,
                                              BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                              ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                              Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException, SnapResponseErrorException;
 
-    Optional<TimeSerieStat> getAdAccountStats(String oAuthAccessToken, String adAccountID, Date startTime, Date endTime,
+    List<Pagination<TimeSerieStat>> getAdAccountStats(String oAuthAccessToken, int limit, String adAccountID, Date startTime, Date endTime,
                                               GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
 
-    Optional<TimeSerieStat> getAdAccountStats(String oAuthAccessToken, String adAccountID, Date startTime, Date endTime,
+    List<Pagination<TimeSerieStat>> getAdAccountStats(String oAuthAccessToken, int limit, String adAccountID, Date startTime, Date endTime,
                                               GranularityEnum granularity, BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                               ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                               Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapExecutionException, SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException;
 
-    Optional<TimeSerieStat> getAdSquadStats(String oAuthAccessToken, String adSquadID, Date startTime, Date endTime,
+    List<Pagination<TimeSerieStat>> getAdSquadStats(String oAuthAccessToken, int limit, String adSquadID, Date startTime, Date endTime,
                                             GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
 
-    Optional<TimeSerieStat> getAdSquadStats(String oAuthAccessToken, String adSquadID, Date startTime, Date endTime,
+    List<Pagination<TimeSerieStat>> getAdSquadStats(String oAuthAccessToken, int limit, String adSquadID, Date startTime, Date endTime,
                                             GranularityEnum granularity, List<String> fields,
                                             BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                             ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                             Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapExecutionException, SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException;
 
-    Optional<TimeSerieStat> getAdStats(String oAuthAccessToken, String adID, Date startTime, Date endTime,
+    List<Pagination<TimeSerieStat>> getAdStats(String oAuthAccessToken, int limit, String adID, Date startTime, Date endTime,
                                        GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException;
 
-    Optional<TimeSerieStat> getAdStats(String oAuthAccessToken, String adID, Date startTime, Date endTime,
+    List<Pagination<TimeSerieStat>> getAdStats(String oAuthAccessToken, int limit, String adID, Date startTime, Date endTime,
                                        GranularityEnum granularity, List<String> fields,
                                        BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                        ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                        Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapExecutionException, SnapResponseErrorException;
 
-    Optional<TimeSerieStat> getPixelDomainsStats(String oAuthAccessToken, String pixelID) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapExecutionException, SnapResponseErrorException
+    List<Pagination<TimeSerieStat>> getPixelDomainsStats(String oAuthAccessToken, int limit, String pixelID) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapExecutionException, SnapResponseErrorException
     ;
 
-    Optional<TimeSerieStat> getPixelSpecificDomainStats(String oAuthAccessToken, String pixelID, String domain, Date startTime, Date endTime, GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException
+    List<Pagination<TimeSerieStat>> getPixelSpecificDomainStats(String oAuthAccessToken, int limit, String pixelID, String domain, Date startTime, Date endTime, GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException
     ;
 
-    Optional<TimeSerieStat> getPixelSpecificDomainStats(String oAuthAccessToken, String pixelID, String domain, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
+    List<Pagination<TimeSerieStat>> getPixelSpecificDomainStats(String oAuthAccessToken, int limit, String pixelID, String domain, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                                         ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                                         Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapExecutionException, SnapResponseErrorException
     ;

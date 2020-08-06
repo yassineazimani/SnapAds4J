@@ -16,22 +16,37 @@
 package snapads4j.model.stats;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+import snapads4j.model.Paging;
 import snapads4j.model.SnapHttpResponse;
+import snapads4j.model.SnapHttpResponsePaging;
+import snapads4j.model.ads.Ad;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Setter
-public class SnapHttpResponseTimeseriesStat extends SnapHttpResponse {
+public class SnapHttpResponseTimeseriesStat extends SnapHttpResponse implements SnapHttpResponsePaging {
+
+    @Getter
+    private Paging paging;
 
     @JsonProperty("timeseries_stats")
     private List<SnapInnerTimeSeriesStats> timeseriesStats;
 
-    public Optional<TimeSerieStat> getStats() {
-        SnapInnerTimeSeriesStats timeSeries = timeseriesStats.get(0);
-        return timeSeries != null && timeSeries.getTimeseriesStat() != null ?
-                Optional.of(timeSeries.getTimeseriesStat()) : Optional.empty();
-    }// getStats()
+    /**
+     * Get all ad from Array Json
+     * @return list of {@link Ad}
+     */
+    public List<TimeSerieStat> getTimeseriesStats() {
+        return timeseriesStats.stream().map(SnapInnerTimeSeriesStats::getTimeseriesStat).collect(Collectors.toList());
+    }// getTimeseriesStats()
+
+    @Override
+    public boolean hasPaging(){
+        return paging != null && StringUtils.isNotEmpty(paging.getNextLink());
+    }// hasPaging()
 
 }// SnapHttpResponseTimeseriesStat

@@ -141,7 +141,7 @@ public class SnapAdSquadsTest {
             assertThat(target.getGeos()).hasSize(1);
             List<GeoLocation> geos = target.getGeos();
             GeoLocation geoUs = geos.get(0);
-            assertThat(geoUs.getCountryCode().equals("us"));
+            assertThat(geoUs.getCountryCode().equals("us")).isTrue();
         });
     }// test_create_ad_squad_should_success()
 
@@ -851,7 +851,7 @@ public class SnapAdSquadsTest {
             assertThat(target.getGeos()).hasSize(1);
             List<GeoLocation> geos = target.getGeos();
             GeoLocation geoUs = geos.get(0);
-            assertThat(geoUs.getCountryCode().equals("us"));
+            assertThat(geoUs.getCountryCode().equals("us")).isTrue();
         });
     } // test_getSpecificAdSquad_should_success()
 

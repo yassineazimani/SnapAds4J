@@ -33,6 +33,7 @@ import snapads4j.exceptions.SnapArgumentException;
 import snapads4j.exceptions.SnapExecutionException;
 import snapads4j.exceptions.SnapOAuthAccessTokenException;
 import snapads4j.exceptions.SnapResponseErrorException;
+import snapads4j.model.Pagination;
 import snapads4j.model.stats.Domain;
 import snapads4j.model.stats.Stat;
 import snapads4j.model.stats.TimeSerie;
@@ -88,6 +89,8 @@ public class SnapStatsTest {
 
     private final String domainUrl = "abc.snapchat.com";
 
+    private final int limitPagination = 1;
+
     private Date startTime;
 
     private Date endTime;
@@ -117,25 +120,32 @@ public class SnapStatsTest {
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(entityUtilsWrapper.toString(httpEntity))
                 .thenReturn(SnapResponseUtils.getStatsCampaignTotal());
-        Optional<TimeSerieStat> result = this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.TOTAL);
-        assertThat(result).isPresent();
-        result.ifPresent(stat -> {
-            assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.CAMPAIGN);
-            assertThat(stat.getGranularity()).isEqualTo(GranularityEnum.TOTAL);
-            assertThat(stat.getId()).isEqualTo(campaignID);
-            assertThat(stat.toString()).isNotEmpty();
+        List<Pagination<TimeSerieStat>> result = this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.TOTAL);
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSize(1);
 
-            Stat stats = stat.getStats();
-            assertThat(stats.toString()).isNotEmpty();
-            assertThat(stats.getImpressions()).isEqualTo(0);
-            assertThat(stats.getSwipes()).isEqualTo(0);
-            assertThat(stats.getSpend()).isEqualTo(0);
-            assertThat(stats.getQuartile1()).isEqualTo(0);
-            assertThat(stats.getQuartile2()).isEqualTo(0);
-            assertThat(stats.getQuartile3()).isEqualTo(0);
-            assertThat(stats.getViewCompletion()).isEqualTo(0);
-            assertThat(stats.getScreenTimeMillis()).isEqualTo(0);
-        });
+        Pagination<TimeSerieStat> page1 = result.get(0);
+        assertThat(page1.getResults()).isNotEmpty();
+        assertThat(page1.getResults()).hasSize(limitPagination);
+
+        TimeSerieStat stat = page1.getResults().get(0);
+        assertThat(stat).isNotNull();
+
+        assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.CAMPAIGN);
+        assertThat(stat.getGranularity()).isEqualTo(GranularityEnum.TOTAL);
+        assertThat(stat.getId()).isEqualTo(campaignID);
+        assertThat(stat.toString()).isNotEmpty();
+
+        Stat stats = stat.getStats();
+        assertThat(stats.toString()).isNotEmpty();
+        assertThat(stats.getImpressions()).isEqualTo(0);
+        assertThat(stats.getSwipes()).isEqualTo(0);
+        assertThat(stats.getSpend()).isEqualTo(0);
+        assertThat(stats.getQuartile1()).isEqualTo(0);
+        assertThat(stats.getQuartile2()).isEqualTo(0);
+        assertThat(stats.getQuartile3()).isEqualTo(0);
+        assertThat(stats.getViewCompletion()).isEqualTo(0);
+        assertThat(stats.getScreenTimeMillis()).isEqualTo(0);
     }// get_campaign_stats_should_success_total()
 
     @Test
@@ -147,57 +157,64 @@ public class SnapStatsTest {
         Mockito.when(entityUtilsWrapper.toString(httpEntity))
                 .thenReturn(SnapResponseUtils.getStatsCampaignDay());
         List<String> fields = Stream.of(new String[]{"impressions", "swipes", "conversion_purchases", "conversion_save", "conversion_start_checkout", "conversion_add_cart", "conversion_view_content", "conversion_add_billing", "conversion_sign_ups", "conversion_searches", "conversion_level_completes", "conversion_app_opens", "conversion_page_views"}).collect(Collectors.toList());
-        Optional<TimeSerieStat> result = this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY, fields, null, null, null, null, null, null, null, null);
-        assertThat(result).isPresent();
-        result.ifPresent(stat -> {
-            assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.CAMPAIGN);
-            assertThat(stat.getGranularity()).isEqualTo(GranularityEnum.DAY);
-            assertThat(sdf.format(stat.getStartTime())).isEqualTo("2017-04-28T07:00:00.000Z");
-            assertThat(sdf.format(stat.getEndTime())).isEqualTo("2017-04-30T07:00:00.000Z");
-            assertThat(xdf.format(stat.getFinalizedDataEndTime())).isEqualTo("2017-05-01T00:00:00.000");
+        List<Pagination<TimeSerieStat>> result = this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY, fields, null, null, null, null, null, null, null, null);
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSize(1);
 
-            List<TimeSerie> timeseries = stat.getTimeseries();
-            assertThat(timeseries).isNotEmpty();
-            assertThat(timeseries).hasSize(2);
+        Pagination<TimeSerieStat> page1 = result.get(0);
+        assertThat(page1.getResults()).isNotEmpty();
+        assertThat(page1.getResults()).hasSize(limitPagination);
 
-            TimeSerie t1 = timeseries.get(0);
-            Stat statsT1 = t1.getStats();
-            assertThat(t1.toString()).isNotEmpty();
-            assertThat(xdf.format(t1.getStartTime())).isEqualTo("2017-04-28T00:00:00.000");
-            assertThat(xdf.format(t1.getEndTime())).isEqualTo("2017-04-29T00:00:00.000");
-            assertThat(statsT1.getImpressions()).isEqualTo(7715);
-            assertThat(statsT1.getSwipes()).isEqualTo(57);
-            assertThat(statsT1.getConversionPurchases()).isEqualTo(200);
-            assertThat(statsT1.getConversionSave()).isEqualTo(150);
-            assertThat(statsT1.getConversionStartCheckout()).isEqualTo(300);
-            assertThat(statsT1.getConversionAddCart()).isEqualTo(500);
-            assertThat(statsT1.getConversionViewContent()).isEqualTo(785);
-            assertThat(statsT1.getConversionAddBilling()).isEqualTo(666);
-            assertThat(statsT1.getConversionSignUps()).isEqualTo(1000);
-            assertThat(statsT1.getConversionSearches()).isEqualTo(1500);
-            assertThat(statsT1.getConversionLevelCompletes()).isEqualTo(450);
-            assertThat(statsT1.getConversionAppOpens()).isEqualTo(800);
-            assertThat(statsT1.getConversionPageViews()).isEqualTo(1500);
+        TimeSerieStat stat = page1.getResults().get(0);
+        assertThat(stat).isNotNull();
 
-            TimeSerie t2 = timeseries.get(1);
-            Stat statsT2 = t2.getStats();
-            assertThat(t2.toString()).isNotEmpty();
-            assertThat(xdf.format(t2.getStartTime())).isEqualTo("2017-04-29T00:00:00.000");
-            assertThat(xdf.format(t2.getEndTime())).isEqualTo("2017-04-30T00:00:00.000");
-            assertThat(statsT2.getImpressions()).isEqualTo(7715);
-            assertThat(statsT2.getSwipes()).isEqualTo(57);
-            assertThat(statsT2.getConversionPurchases()).isEqualTo(200);
-            assertThat(statsT2.getConversionSave()).isEqualTo(150);
-            assertThat(statsT2.getConversionStartCheckout()).isEqualTo(300);
-            assertThat(statsT2.getConversionAddCart()).isEqualTo(500);
-            assertThat(statsT2.getConversionViewContent()).isEqualTo(785);
-            assertThat(statsT2.getConversionAddBilling()).isEqualTo(666);
-            assertThat(statsT2.getConversionSignUps()).isEqualTo(1000);
-            assertThat(statsT2.getConversionSearches()).isEqualTo(1500);
-            assertThat(statsT2.getConversionLevelCompletes()).isEqualTo(450);
-            assertThat(statsT2.getConversionAppOpens()).isEqualTo(800);
-            assertThat(statsT2.getConversionPageViews()).isEqualTo(1500);
-        });
+        assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.CAMPAIGN);
+        assertThat(stat.getGranularity()).isEqualTo(GranularityEnum.DAY);
+        assertThat(sdf.format(stat.getStartTime())).isEqualTo("2017-04-28T07:00:00.000Z");
+        assertThat(sdf.format(stat.getEndTime())).isEqualTo("2017-04-30T07:00:00.000Z");
+        assertThat(xdf.format(stat.getFinalizedDataEndTime())).isEqualTo("2017-05-01T00:00:00.000");
+
+        List<TimeSerie> timeseries = stat.getTimeseries();
+        assertThat(timeseries).isNotEmpty();
+        assertThat(timeseries).hasSize(2);
+
+        TimeSerie t1 = timeseries.get(0);
+        Stat statsT1 = t1.getStats();
+        assertThat(t1.toString()).isNotEmpty();
+        assertThat(xdf.format(t1.getStartTime())).isEqualTo("2017-04-28T00:00:00.000");
+        assertThat(xdf.format(t1.getEndTime())).isEqualTo("2017-04-29T00:00:00.000");
+        assertThat(statsT1.getImpressions()).isEqualTo(7715);
+        assertThat(statsT1.getSwipes()).isEqualTo(57);
+        assertThat(statsT1.getConversionPurchases()).isEqualTo(200);
+        assertThat(statsT1.getConversionSave()).isEqualTo(150);
+        assertThat(statsT1.getConversionStartCheckout()).isEqualTo(300);
+        assertThat(statsT1.getConversionAddCart()).isEqualTo(500);
+        assertThat(statsT1.getConversionViewContent()).isEqualTo(785);
+        assertThat(statsT1.getConversionAddBilling()).isEqualTo(666);
+        assertThat(statsT1.getConversionSignUps()).isEqualTo(1000);
+        assertThat(statsT1.getConversionSearches()).isEqualTo(1500);
+        assertThat(statsT1.getConversionLevelCompletes()).isEqualTo(450);
+        assertThat(statsT1.getConversionAppOpens()).isEqualTo(800);
+        assertThat(statsT1.getConversionPageViews()).isEqualTo(1500);
+
+        TimeSerie t2 = timeseries.get(1);
+        Stat statsT2 = t2.getStats();
+        assertThat(t2.toString()).isNotEmpty();
+        assertThat(xdf.format(t2.getStartTime())).isEqualTo("2017-04-29T00:00:00.000");
+        assertThat(xdf.format(t2.getEndTime())).isEqualTo("2017-04-30T00:00:00.000");
+        assertThat(statsT2.getImpressions()).isEqualTo(7715);
+        assertThat(statsT2.getSwipes()).isEqualTo(57);
+        assertThat(statsT2.getConversionPurchases()).isEqualTo(200);
+        assertThat(statsT2.getConversionSave()).isEqualTo(150);
+        assertThat(statsT2.getConversionStartCheckout()).isEqualTo(300);
+        assertThat(statsT2.getConversionAddCart()).isEqualTo(500);
+        assertThat(statsT2.getConversionViewContent()).isEqualTo(785);
+        assertThat(statsT2.getConversionAddBilling()).isEqualTo(666);
+        assertThat(statsT2.getConversionSignUps()).isEqualTo(1000);
+        assertThat(statsT2.getConversionSearches()).isEqualTo(1500);
+        assertThat(statsT2.getConversionLevelCompletes()).isEqualTo(450);
+        assertThat(statsT2.getConversionAppOpens()).isEqualTo(800);
+        assertThat(statsT2.getConversionPageViews()).isEqualTo(1500);
     }// get_campaign_stats_should_success_day()
 
     @Test
@@ -209,138 +226,159 @@ public class SnapStatsTest {
         Mockito.when(entityUtilsWrapper.toString(httpEntity))
                 .thenReturn(SnapResponseUtils.getStatsCampaignDayOmittingRecords());
         List<String> fields = Stream.of(new String[]{"impressions", "swipes", "spend"}).collect(Collectors.toList());
-        List<String> conversionsSourcesTypes = Stream.of(new String[]{"web","app","total"}).collect(Collectors.toList());
-        Optional<TimeSerieStat> result = this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY, fields, BreakdownEnum.AD, false, "gender", SwipeUpAttributionWindowEnum.TWENTY_EIGHT_DAY, ViewAttributionWindowEnum.SEVEN_DAY, true, true, conversionsSourcesTypes);
-        assertThat(result).isPresent();
-        result.ifPresent(stat -> {
-            assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.CAMPAIGN);
-            assertThat(stat.getGranularity()).isEqualTo(GranularityEnum.DAY);
-            assertThat(stat.getSwipeUpAttributionWindow()).isEqualTo(SwipeUpAttributionWindowEnum.TWENTY_EIGHT_DAY);
-            assertThat(stat.getViewAttributionWindow()).isEqualTo(ViewAttributionWindowEnum.SEVEN_DAY);
-            assertThat(sdf.format(stat.getStartTime())).isEqualTo("2019-11-12T08:00:00.000Z");
-            assertThat(sdf.format(stat.getEndTime())).isEqualTo("2019-11-16T08:00:00.000Z");
-            assertThat(xdf.format(stat.getFinalizedDataEndTime())).contains("2019-11-28T");
+        List<String> conversionsSourcesTypes = Stream.of(new String[]{"web", "app", "total"}).collect(Collectors.toList());
+        List<Pagination<TimeSerieStat>> result = this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY, fields, BreakdownEnum.AD, false, "gender", SwipeUpAttributionWindowEnum.TWENTY_EIGHT_DAY, ViewAttributionWindowEnum.SEVEN_DAY, true, true, conversionsSourcesTypes);
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSize(1);
 
-            List<TimeSerie> timeseries = stat.getTimeseries();
-            assertThat(timeseries).isNotEmpty();
-            assertThat(timeseries).hasSize(4);
+        Pagination<TimeSerieStat> page1 = result.get(0);
+        assertThat(page1.getResults()).isNotEmpty();
+        assertThat(page1.getResults()).hasSize(limitPagination);
 
-            TimeSerie t1 = timeseries.get(0);
-            Stat statsT1 = t1.getStats();
-            assertThat(t1.toString()).isNotEmpty();
-            assertThat(sdf.format(t1.getStartTime())).isEqualTo("2019-11-12T08:00:00.000Z");
-            assertThat(sdf.format(t1.getEndTime())).isEqualTo("2019-11-13T08:00:00.000Z");
-            assertThat(statsT1.getImpressions()).isEqualTo(0);
-            assertThat(statsT1.getSwipes()).isEqualTo(0);
-            assertThat(statsT1.getSpend()).isEqualTo(0);
-            assertThat(statsT1.getConversionPurchases()).isEqualTo(0);
-            assertThat(statsT1.getConversionPurchasesApp()).isEqualTo(0);
-            assertThat(statsT1.getConversionPurchasesWeb()).isEqualTo(0);
+        TimeSerieStat stat = page1.getResults().get(0);
+        assertThat(stat).isNotNull();
+        assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.CAMPAIGN);
+        assertThat(stat.getGranularity()).isEqualTo(GranularityEnum.DAY);
+        assertThat(stat.getSwipeUpAttributionWindow()).isEqualTo(SwipeUpAttributionWindowEnum.TWENTY_EIGHT_DAY);
+        assertThat(stat.getViewAttributionWindow()).isEqualTo(ViewAttributionWindowEnum.SEVEN_DAY);
+        assertThat(sdf.format(stat.getStartTime())).isEqualTo("2019-11-12T08:00:00.000Z");
+        assertThat(sdf.format(stat.getEndTime())).isEqualTo("2019-11-16T08:00:00.000Z");
+        assertThat(xdf.format(stat.getFinalizedDataEndTime())).contains("2019-11-28T");
 
-            TimeSerie t2 = timeseries.get(1);
-            Stat statsT2 = t2.getStats();
-            assertThat(t2.toString()).isNotEmpty();
-            assertThat(sdf.format(t2.getStartTime())).isEqualTo("2019-11-13T08:00:00.000Z");
-            assertThat(sdf.format(t2.getEndTime())).isEqualTo("2019-11-14T08:00:00.000Z");
-            assertThat(statsT2.getImpressions()).isEqualTo(0);
-            assertThat(statsT2.getSwipes()).isEqualTo(0);
-            assertThat(statsT2.getSpend()).isEqualTo(0);
-            assertThat(statsT2.getConversionPurchases()).isEqualTo(0);
-            assertThat(statsT2.getConversionPurchasesApp()).isEqualTo(0);
-            assertThat(statsT2.getConversionPurchasesWeb()).isEqualTo(0);
+        List<TimeSerie> timeseries = stat.getTimeseries();
+        assertThat(timeseries).isNotEmpty();
+        assertThat(timeseries).hasSize(4);
 
-            TimeSerie t3 = timeseries.get(2);
-            Stat statsT3 = t3.getStats();
-            assertThat(t3.toString()).isNotEmpty();
-            assertThat(sdf.format(t3.getStartTime())).isEqualTo("2019-11-14T08:00:00.000Z");
-            assertThat(sdf.format(t3.getEndTime())).isEqualTo("2019-11-15T08:00:00.000Z");
-            assertThat(statsT3.getImpressions()).isEqualTo(599725);
-            assertThat(statsT3.getSwipes()).isEqualTo(3790);
-            assertThat(statsT3.getSpend()).isEqualTo(594736665);
-            assertThat(statsT3.getConversionPurchases()).isEqualTo(62);
-            assertThat(statsT3.getConversionPurchasesApp()).isEqualTo(20);
-            assertThat(statsT3.getConversionPurchasesWeb()).isEqualTo(42);
+        TimeSerie t1 = timeseries.get(0);
+        Stat statsT1 = t1.getStats();
+        assertThat(t1.toString()).isNotEmpty();
+        assertThat(sdf.format(t1.getStartTime())).isEqualTo("2019-11-12T08:00:00.000Z");
+        assertThat(sdf.format(t1.getEndTime())).isEqualTo("2019-11-13T08:00:00.000Z");
+        assertThat(statsT1.getImpressions()).isEqualTo(0);
+        assertThat(statsT1.getSwipes()).isEqualTo(0);
+        assertThat(statsT1.getSpend()).isEqualTo(0);
+        assertThat(statsT1.getConversionPurchases()).isEqualTo(0);
+        assertThat(statsT1.getConversionPurchasesApp()).isEqualTo(0);
+        assertThat(statsT1.getConversionPurchasesWeb()).isEqualTo(0);
 
-            TimeSerie t4 = timeseries.get(3);
-            Stat statsT4 = t4.getStats();
-            assertThat(t4.toString()).isNotEmpty();
-            assertThat(sdf.format(t4.getStartTime())).isEqualTo("2019-11-15T08:00:00.000Z");
-            assertThat(sdf.format(t4.getEndTime())).isEqualTo("2019-11-16T08:00:00.000Z");
-            assertThat(statsT4.getImpressions()).isEqualTo(670692);
-            assertThat(statsT4.getSwipes()).isEqualTo(4189);
-            assertThat(statsT4.getSpend()).isEqualTo(716170632);
-            assertThat(statsT4.getConversionPurchases()).isEqualTo(125);
-            assertThat(statsT4.getConversionPurchasesApp()).isEqualTo(43);
-            assertThat(statsT4.getConversionPurchasesWeb()).isEqualTo(82);
-        });
+        TimeSerie t2 = timeseries.get(1);
+        Stat statsT2 = t2.getStats();
+        assertThat(t2.toString()).isNotEmpty();
+        assertThat(sdf.format(t2.getStartTime())).isEqualTo("2019-11-13T08:00:00.000Z");
+        assertThat(sdf.format(t2.getEndTime())).isEqualTo("2019-11-14T08:00:00.000Z");
+        assertThat(statsT2.getImpressions()).isEqualTo(0);
+        assertThat(statsT2.getSwipes()).isEqualTo(0);
+        assertThat(statsT2.getSpend()).isEqualTo(0);
+        assertThat(statsT2.getConversionPurchases()).isEqualTo(0);
+        assertThat(statsT2.getConversionPurchasesApp()).isEqualTo(0);
+        assertThat(statsT2.getConversionPurchasesWeb()).isEqualTo(0);
+
+        TimeSerie t3 = timeseries.get(2);
+        Stat statsT3 = t3.getStats();
+        assertThat(t3.toString()).isNotEmpty();
+        assertThat(sdf.format(t3.getStartTime())).isEqualTo("2019-11-14T08:00:00.000Z");
+        assertThat(sdf.format(t3.getEndTime())).isEqualTo("2019-11-15T08:00:00.000Z");
+        assertThat(statsT3.getImpressions()).isEqualTo(599725);
+        assertThat(statsT3.getSwipes()).isEqualTo(3790);
+        assertThat(statsT3.getSpend()).isEqualTo(594736665);
+        assertThat(statsT3.getConversionPurchases()).isEqualTo(62);
+        assertThat(statsT3.getConversionPurchasesApp()).isEqualTo(20);
+        assertThat(statsT3.getConversionPurchasesWeb()).isEqualTo(42);
+
+        TimeSerie t4 = timeseries.get(3);
+        Stat statsT4 = t4.getStats();
+        assertThat(t4.toString()).isNotEmpty();
+        assertThat(sdf.format(t4.getStartTime())).isEqualTo("2019-11-15T08:00:00.000Z");
+        assertThat(sdf.format(t4.getEndTime())).isEqualTo("2019-11-16T08:00:00.000Z");
+        assertThat(statsT4.getImpressions()).isEqualTo(670692);
+        assertThat(statsT4.getSwipes()).isEqualTo(4189);
+        assertThat(statsT4.getSpend()).isEqualTo(716170632);
+        assertThat(statsT4.getConversionPurchases()).isEqualTo(125);
+        assertThat(statsT4.getConversionPurchasesApp()).isEqualTo(43);
+        assertThat(statsT4.getConversionPurchasesWeb()).isEqualTo(82);
+
     }// get_campaign_stats_should_success_day_with_extra_params()
 
     @Test
     public void get_campaign_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(null, campaignID, startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(null, limitPagination, campaignID, startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("The OAuthAccessToken is required")
                 .isInstanceOf(SnapOAuthAccessTokenException.class);
     }// get_campaign_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
     public void get_campaign_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats("", campaignID, startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats("", limitPagination, campaignID, startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("The OAuthAccessToken is required")
                 .isInstanceOf(SnapOAuthAccessTokenException.class);
     }// get_campaign_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
+    public void get_campaign_stats_should_throw_SnapArgumentException_when_limit_pagination_is_below_1() {
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, -1, null, startTime, endTime, GranularityEnum.TOTAL))
+                .hasMessage("Minimum limit is 1")
+                .isInstanceOf(SnapArgumentException.class);
+    }// get_campaign_stats_should_throw_SnapArgumentException_when_limit_pagination_is_below_1()
+
+    @Test
+    public void get_campaign_stats_should_throw_SnapArgumentException_when_limit_pagination_is_upper_200() {
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, 250, null, startTime, endTime, GranularityEnum.TOTAL))
+                .hasMessage("Maximum limit is 200")
+                .isInstanceOf(SnapArgumentException.class);
+    }// get_campaign_stats_should_throw_SnapArgumentException_when_limit_pagination_is_upper_200()
+
+    @Test
     public void get_campaign_stats_should_throw_SnapArgumentException_when_campaign_id_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, null, startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, null, startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("Campaign ID is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_campaign_stats_should_throw_SnapArgumentException_when_campaign_id_is_null()
 
     @Test
     public void get_campaign_stats_should_throw_SnapArgumentException_when_campaign_id_is_empty() {
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, "", startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, "", startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("Campaign ID is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_campaign_stats_should_throw_SnapArgumentException_when_campaign_id_is_empty()
 
     @Test
     public void get_campaign_stats_should_throw_SnapArgumentException_when_start_time_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, null, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, null, endTime, GranularityEnum.TOTAL))
                 .hasMessage("StartTime and EndTime are required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_campaign_stats_should_throw_SnapArgumentException_when_start_time_is_null()
 
     @Test
     public void get_campaign_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_day() {
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, null, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, null, endTime, GranularityEnum.DAY))
                 .hasMessage("StartTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_campaign_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_day()
 
     @Test
     public void get_campaign_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_hour() {
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, null, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, null, endTime, GranularityEnum.HOUR))
                 .hasMessage("StartTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_campaign_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_hour()
 
     @Test
     public void get_campaign_stats_should_throw_SnapArgumentException_when_end_time_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, null, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, null, GranularityEnum.TOTAL))
                 .hasMessage("StartTime and EndTime are required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_campaign_stats_should_throw_SnapArgumentException_when_end_time_is_null()
 
     @Test
     public void get_campaign_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_day() {
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, null, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, null, GranularityEnum.DAY))
                 .hasMessage("EndTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_campaign_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_day()
 
     @Test
     public void get_campaign_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_hour() {
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, null, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, null, GranularityEnum.HOUR))
                 .hasMessage("EndTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_campaign_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_hour()
@@ -350,13 +388,13 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_campaign_stats_should_throw_SnapArgumentException_when_start_time_is_not_top_hour_when_granularity_is_hour()
@@ -366,13 +404,13 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_campaign_stats_should_throw_SnapArgumentException_when_start_time_is_not_top_hour_when_granularity_is_day()
@@ -382,13 +420,13 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_campaign_stats_should_throw_SnapArgumentException_when_end_time_is_not_top_hour_when_granularity_is_hour()
@@ -398,20 +436,20 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_campaign_stats_should_throw_SnapArgumentException_when_end_time_is_not_top_hour_when_granularity_is_day()
 
     @Test
     public void get_campaign_stats_should_throw_SnapArgumentException_when_granularity_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, null))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, null))
                 .hasMessage("Granularity is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_campaign_stats_should_throw_SnapArgumentException_when_granularity_is_null()
@@ -419,7 +457,7 @@ public class SnapStatsTest {
     @Test
     public void get_campaign_stats_should_throw_SnapExecutionException_when_IOException_is_occured() throws IOException {
         Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapExecutionException.class);
     }// get_campaign_stats_should_throw_SnapExecutionException_when_IOException_is_occured()
 
@@ -429,7 +467,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(400);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
     }// should_throw_exception_400_get_campaigns_stats()
 
@@ -439,7 +477,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(401);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
     }// should_throw_exception_401_get_campaigns_stats()
 
@@ -450,7 +488,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(403);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
     }// should_throw_exception_403_get_campaigns_stats()
 
@@ -461,7 +499,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(404);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
     }// should_throw_exception_404_get_campaigns_stats()
 
@@ -471,7 +509,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(405);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
     }// should_throw_exception_405_get_campaigns_stats()
 
@@ -482,7 +520,7 @@ public class SnapStatsTest {
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
     }// should_throw_exception_406_get_campaigns_stats()
 
@@ -492,7 +530,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(410);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
     }// should_throw_exception_410_get_campaigns_stats()
 
@@ -502,7 +540,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(418);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
     }// should_throw_exception_418_get_campaigns_stats()
 
@@ -512,7 +550,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(429);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
     }// should_throw_exception_429_get_campaigns_stats()
 
@@ -522,7 +560,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(500);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
     }// should_throw_exception_500_get_campaigns_stats()
 
@@ -532,7 +570,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(503);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
     }// should_throw_exception_503_get_campaigns_stats()
 
@@ -542,7 +580,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getCampaignStats(oAuthAccessToken, limitPagination, campaignID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     }// should_throw_exception_1337_get_campaigns_stats()
 
@@ -554,83 +592,103 @@ public class SnapStatsTest {
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(entityUtilsWrapper.toString(httpEntity))
                 .thenReturn(SnapResponseUtils.getStatsAdAccountStats());
-        Optional<TimeSerieStat> result = this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.TOTAL);
-        assertThat(result).isPresent();
-        result.ifPresent(stat -> {
-            assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.AD_ACCOUNT);
-            assertThat(stat.getGranularity()).isEqualTo(GranularityEnum.TOTAL);
-            assertThat(stat.getStats()).isNotNull();
-            assertThat(stat.getStats().getSpend()).isEqualTo(89196290);
-            assertThat(sdf.format(stat.getFinalizedDataEndTime())).isEqualTo("2019-08-29T10:00:00.000Z");
-        });
+        List<Pagination<TimeSerieStat>> result = this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.TOTAL);
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSize(1);
+
+        Pagination<TimeSerieStat> page1 = result.get(0);
+        assertThat(page1.getResults()).isNotEmpty();
+        assertThat(page1.getResults()).hasSize(limitPagination);
+
+        TimeSerieStat stat = page1.getResults().get(0);
+        assertThat(stat).isNotNull();
+        assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.AD_ACCOUNT);
+        assertThat(stat.getGranularity()).isEqualTo(GranularityEnum.TOTAL);
+        assertThat(stat.getStats()).isNotNull();
+        assertThat(stat.getStats().getSpend()).isEqualTo(89196290);
+        assertThat(sdf.format(stat.getFinalizedDataEndTime())).isEqualTo("2019-08-29T10:00:00.000Z");
     }// get_ad_account_stats_should_success_day()
 
     @Test
     public void get_ad_account_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(null, adAccountID, startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(null, limitPagination, adAccountID, startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("The OAuthAccessToken is required")
                 .isInstanceOf(SnapOAuthAccessTokenException.class);
     }// get_ad_account_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
     public void get_ad_account_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats("", adAccountID, startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats("", limitPagination, adAccountID, startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("The OAuthAccessToken is required")
                 .isInstanceOf(SnapOAuthAccessTokenException.class);
     }// get_ad_account_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
     public void get_ad_account_stats_should_throw_SnapArgumentException_when_ad_account_id_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, null, startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, null, startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("AdAccount ID is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_account_stats_should_throw_SnapArgumentException_when_ad_account_id_is_null()
 
     @Test
     public void get_ad_account_stats_should_throw_SnapArgumentException_when_ad_account_id_is_empty() {
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, "", startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, "", startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("AdAccount ID is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_account_stats_should_throw_SnapArgumentException_when_ad_account_id_is_empty()
 
     @Test
+    public void get_ad_account_stats_should_throw_SnapArgumentException_when_limit_pagination_is_below_1() {
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, -1, null, startTime, endTime, GranularityEnum.TOTAL))
+                .hasMessage("Minimum limit is 1")
+                .isInstanceOf(SnapArgumentException.class);
+    }// get_ad_account_stats_should_throw_SnapArgumentException_when_limit_pagination_is_below_1()
+
+    @Test
+    public void get_ad_account_stats_should_throw_SnapArgumentException_when_limit_pagination_is_upper_200() {
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, 250, null, startTime, endTime, GranularityEnum.TOTAL))
+                .hasMessage("Maximum limit is 200")
+                .isInstanceOf(SnapArgumentException.class);
+    }// get_ad_account_stats_should_throw_SnapArgumentException_when_limit_pagination_is_upper_200()
+
+    @Test
     public void get_ad_account_stats_should_throw_SnapArgumentException_when_start_time_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, null, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, null, endTime, GranularityEnum.TOTAL))
                 .hasMessage("StartTime and EndTime are required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_account_stats_should_throw_SnapArgumentException_when_start_time_is_null()
 
     @Test
     public void get_ad_account_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_day() {
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, null, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, null, endTime, GranularityEnum.DAY))
                 .hasMessage("StartTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_account_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_day()
 
     @Test
     public void get_ad_account_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_hour() {
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, null, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, null, endTime, GranularityEnum.HOUR))
                 .hasMessage("StartTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_account_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_hour()
 
     @Test
     public void get_ad_account_stats_should_throw_SnapArgumentException_when_end_time_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, null, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, null, GranularityEnum.TOTAL))
                 .hasMessage("StartTime and EndTime are required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_account_stats_should_throw_SnapArgumentException_when_end_time_is_null()
 
     @Test
     public void get_ad_account_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_day() {
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, null, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, null, GranularityEnum.DAY))
                 .hasMessage("EndTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_account_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_day()
 
     @Test
     public void get_ad_account_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_hour() {
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, null, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, null, GranularityEnum.HOUR))
                 .hasMessage("EndTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_account_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_hour()
@@ -640,13 +698,13 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_account_stats_should_throw_SnapArgumentException_when_start_time_is_not_top_hour_when_granularity_is_hour()
@@ -656,13 +714,13 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_account_stats_should_throw_SnapArgumentException_when_start_time_is_not_top_hour_when_granularity_is_day()
@@ -672,13 +730,13 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_account_stats_should_throw_SnapArgumentException_when_end_time_is_not_top_hour_when_granularity_is_hour()
@@ -688,20 +746,20 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_account_stats_should_throw_SnapArgumentException_when_end_time_is_not_top_hour_when_granularity_is_day()
 
     @Test
     public void get_ad_account_stats_should_throw_SnapArgumentException_when_granularity_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, null))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, null))
                 .hasMessage("Granularity is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_account_stats_should_throw_SnapArgumentException_when_granularity_is_null()
@@ -709,7 +767,7 @@ public class SnapStatsTest {
     @Test
     public void get_ad_account_stats_should_throw_SnapExecutionException_when_IOException_is_occured() throws IOException {
         Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapExecutionException.class);
     }// get_ad_account_stats_should_throw_SnapExecutionException_when_IOException_is_occured()
 
@@ -719,7 +777,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(400);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
     }// should_throw_exception_400_get_ad_account_stats()
 
@@ -729,7 +787,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(401);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
     }// should_throw_exception_401_get_ad_account_stats()
 
@@ -740,7 +798,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(403);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
     }// should_throw_exception_403_get_ad_account_stats()
 
@@ -751,7 +809,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(404);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
     }// should_throw_exception_404_get_ad_account_stats()
 
@@ -761,7 +819,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(405);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
     }// should_throw_exception_405_get_ad_account_stats()
 
@@ -772,7 +830,7 @@ public class SnapStatsTest {
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
     }// should_throw_exception_406_get_ad_account_stats()
 
@@ -782,7 +840,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(410);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
     }// should_throw_exception_410_get_ad_account_stats()
 
@@ -792,7 +850,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(418);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
     }// should_throw_exception_418_get_ad_account_stats()
 
@@ -802,7 +860,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(429);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
     }// should_throw_exception_429_get_ad_account_stats()
 
@@ -812,7 +870,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(500);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
     }// should_throw_exception_500_get_ad_account_stats()
 
@@ -822,7 +880,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(503);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
     }// should_throw_exception_503_get_ad_account_stats()
 
@@ -832,7 +890,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdAccountStats(oAuthAccessToken, limitPagination, adAccountID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     }// should_throw_exception_1337_get_ad_account_stats()
 
@@ -844,90 +902,111 @@ public class SnapStatsTest {
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(entityUtilsWrapper.toString(httpEntity))
                 .thenReturn(SnapResponseUtils.getStatsAdSquadStats());
-        Optional<TimeSerieStat> result = this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.TOTAL);
-        assertThat(result).isPresent();
-        result.ifPresent(stat -> {
-            assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.AD_SQUAD);
-            assertThat(stat.getGranularity()).isEqualTo(GranularityEnum.TOTAL);
-            assertThat(stat.getStats()).isNotNull();
-            Stat stats = stat.getStats();
-            assertThat(stats.getImpressions()).isEqualTo(0);
-            assertThat(stats.getSwipes()).isEqualTo(0);
-            assertThat(stats.getSpend()).isEqualTo(0);
-            assertThat(stats.getQuartile1()).isEqualTo(0);
-            assertThat(stats.getQuartile2()).isEqualTo(0);
-            assertThat(stats.getQuartile3()).isEqualTo(0);
-            assertThat(stats.getViewCompletion()).isEqualTo(0);
-            assertThat(stats.getScreenTimeMillis()).isEqualTo(0);
-        });
+        List<Pagination<TimeSerieStat>> result = this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.TOTAL);
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSize(1);
+
+        Pagination<TimeSerieStat> page1 = result.get(0);
+        assertThat(page1.getResults()).isNotEmpty();
+        assertThat(page1.getResults()).hasSize(limitPagination);
+
+        TimeSerieStat stat = page1.getResults().get(0);
+        assertThat(stat).isNotNull();
+
+        assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.AD_SQUAD);
+        assertThat(stat.getGranularity()).isEqualTo(GranularityEnum.TOTAL);
+        assertThat(stat.getStats()).isNotNull();
+        Stat stats = stat.getStats();
+        assertThat(stats.getImpressions()).isEqualTo(0);
+        assertThat(stats.getSwipes()).isEqualTo(0);
+        assertThat(stats.getSpend()).isEqualTo(0);
+        assertThat(stats.getQuartile1()).isEqualTo(0);
+        assertThat(stats.getQuartile2()).isEqualTo(0);
+        assertThat(stats.getQuartile3()).isEqualTo(0);
+        assertThat(stats.getViewCompletion()).isEqualTo(0);
+        assertThat(stats.getScreenTimeMillis()).isEqualTo(0);
     }// get_ad_squad_stats_should_success_day()
 
     @Test
     public void get_ad_squad_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(null, adSquadID, startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(null, limitPagination, adSquadID, startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("The OAuthAccessToken is required")
                 .isInstanceOf(SnapOAuthAccessTokenException.class);
     }// get_ad_squad_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
     public void get_ad_squad_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats("", adSquadID, startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats("", limitPagination, adSquadID, startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("The OAuthAccessToken is required")
                 .isInstanceOf(SnapOAuthAccessTokenException.class);
     }// get_ad_squad_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
+    public void get_ad_squad_stats_should_throw_SnapArgumentException_when_limit_pagination_is_below_1() {
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, -1, null, startTime, endTime, GranularityEnum.TOTAL))
+                .hasMessage("Minimum limit is 1")
+                .isInstanceOf(SnapArgumentException.class);
+    }// get_ad_squad_stats_should_throw_SnapArgumentException_when_limit_pagination_is_below_1()
+
+    @Test
+    public void get_ad_squad_stats_should_throw_SnapArgumentException_when_limit_pagination_is_upper_200() {
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, 250, null, startTime, endTime, GranularityEnum.TOTAL))
+                .hasMessage("Maximum limit is 200")
+                .isInstanceOf(SnapArgumentException.class);
+    }// get_ad_squad_stats_should_throw_SnapArgumentException_when_limit_pagination_is_upper_200()
+
+    @Test
     public void get_ad_squad_stats_should_throw_SnapArgumentException_when_ad_squad_id_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, null, startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, null, startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("AdSquad ID is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_squad_stats_should_throw_SnapArgumentException_when_ad_squad_id_is_null()
 
     @Test
     public void get_ad_squad_stats_should_throw_SnapArgumentException_when_ad_squad_id_is_empty() {
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, "", startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, "", startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("AdSquad ID is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_squad_stats_should_throw_SnapArgumentException_when_ad_squad_id_is_empty()
 
     @Test
     public void get_ad_squad_stats_should_throw_SnapArgumentException_when_start_time_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, null, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, null, endTime, GranularityEnum.TOTAL))
                 .hasMessage("StartTime and EndTime are required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_squad_stats_should_throw_SnapArgumentException_when_start_time_is_null()
 
     @Test
     public void get_ad_squad_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_day() {
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, null, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, null, endTime, GranularityEnum.DAY))
                 .hasMessage("StartTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_squad_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_day()
 
     @Test
     public void get_ad_squad_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_hour() {
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, null, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, null, endTime, GranularityEnum.HOUR))
                 .hasMessage("StartTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_squad_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_hour()
 
     @Test
     public void get_ad_squad_stats_should_throw_SnapArgumentException_when_end_time_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, null, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, null, GranularityEnum.TOTAL))
                 .hasMessage("StartTime and EndTime are required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_squad_stats_should_throw_SnapArgumentException_when_end_time_is_null()
 
     @Test
     public void get_ad_squad_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_day() {
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, null, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, null, GranularityEnum.DAY))
                 .hasMessage("EndTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_squad_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_day()
 
     @Test
     public void get_ad_squad_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_hour() {
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, null, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, null, GranularityEnum.HOUR))
                 .hasMessage("EndTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_squad_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_hour()
@@ -937,13 +1016,13 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_squad_stats_should_throw_SnapArgumentException_when_start_time_is_not_top_hour_when_granularity_is_hour()
@@ -953,13 +1032,13 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_squad_stats_should_throw_SnapArgumentException_when_start_time_is_not_top_hour_when_granularity_is_day()
@@ -969,13 +1048,13 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_squad_stats_should_throw_SnapArgumentException_when_end_time_is_not_top_hour_when_granularity_is_hour()
@@ -985,20 +1064,20 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_squad_stats_should_throw_SnapArgumentException_when_end_time_is_not_top_hour_when_granularity_is_day()
 
     @Test
     public void get_ad_squad_stats_should_throw_SnapArgumentException_when_granularity_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, null))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, null))
                 .hasMessage("Granularity is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_squad_stats_should_throw_SnapArgumentException_when_granularity_is_null()
@@ -1006,7 +1085,7 @@ public class SnapStatsTest {
     @Test
     public void get_ad_squad_stats_should_throw_SnapExecutionException_when_IOException_is_occured() throws IOException {
         Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapExecutionException.class);
     }// get_ad_squad_stats_should_throw_SnapExecutionException_when_IOException_is_occured()
 
@@ -1016,7 +1095,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(400);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
     }// should_throw_exception_400_get_ad_squad_stats()
 
@@ -1026,7 +1105,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(401);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
     }// should_throw_exception_401_get_ad_squad_stats()
 
@@ -1037,7 +1116,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(403);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
     }// should_throw_exception_403_get_ad_squad_stats()
 
@@ -1048,7 +1127,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(404);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
     }// should_throw_exception_404_get_ad_squad_stats()
 
@@ -1058,7 +1137,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(405);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
     }// should_throw_exception_405_get_ad_squad_stats()
 
@@ -1069,7 +1148,7 @@ public class SnapStatsTest {
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
     }// should_throw_exception_406_get_ad_squad_stats()
 
@@ -1079,7 +1158,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(410);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
     }// should_throw_exception_410_get_ad_squad_stats()
 
@@ -1089,7 +1168,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(418);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
     }// should_throw_exception_418_get_ad_squad_stats()
 
@@ -1099,7 +1178,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(429);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
     }// should_throw_exception_429_get_ad_squad_stats()
 
@@ -1109,7 +1188,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(500);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
     }// should_throw_exception_500_get_ad_squad_stats()
 
@@ -1119,7 +1198,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(503);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
     }// should_throw_exception_503_get_ad_squad_stats()
 
@@ -1129,7 +1208,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdSquadStats(oAuthAccessToken, limitPagination, adSquadID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     }// should_throw_exception_1337_get_ad_squad_stats()
 
@@ -1141,90 +1220,113 @@ public class SnapStatsTest {
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(entityUtilsWrapper.toString(httpEntity))
                 .thenReturn(SnapResponseUtils.getStatsAdStats());
-        Optional<TimeSerieStat> result = this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.TOTAL);
-        assertThat(result).isPresent();
-        result.ifPresent(stat -> {
-            assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.AD);
-            assertThat(stat.getGranularity()).isEqualTo(GranularityEnum.TOTAL);
-            assertThat(stat.getStats()).isNotNull();
-            Stat stats = stat.getStats();
-            assertThat(stats.getImpressions()).isEqualTo(0);
-            assertThat(stats.getSwipes()).isEqualTo(0);
-            assertThat(stats.getSpend()).isEqualTo(0);
-            assertThat(stats.getQuartile1()).isEqualTo(0);
-            assertThat(stats.getQuartile2()).isEqualTo(0);
-            assertThat(stats.getQuartile3()).isEqualTo(0);
-            assertThat(stats.getViewCompletion()).isEqualTo(0);
-            assertThat(stats.getScreenTimeMillis()).isEqualTo(0);
-        });
+        List<Pagination<TimeSerieStat>> result = this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.TOTAL);
+
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSize(1);
+
+        Pagination<TimeSerieStat> page1 = result.get(0);
+        assertThat(page1.getResults()).isNotEmpty();
+        assertThat(page1.getResults()).hasSize(limitPagination);
+
+        TimeSerieStat stat = page1.getResults().get(0);
+        assertThat(stat).isNotNull();
+
+        assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.AD);
+        assertThat(stat.getGranularity()).isEqualTo(GranularityEnum.TOTAL);
+        assertThat(stat.getStats()).isNotNull();
+        Stat stats = stat.getStats();
+        assertThat(stats.getImpressions()).isEqualTo(0);
+        assertThat(stats.getSwipes()).isEqualTo(0);
+        assertThat(stats.getSpend()).isEqualTo(0);
+        assertThat(stats.getQuartile1()).isEqualTo(0);
+        assertThat(stats.getQuartile2()).isEqualTo(0);
+        assertThat(stats.getQuartile3()).isEqualTo(0);
+        assertThat(stats.getViewCompletion()).isEqualTo(0);
+        assertThat(stats.getScreenTimeMillis()).isEqualTo(0);
+
     }// get_ad_stats_should_success_day()
 
     @Test
     public void get_ad_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getAdStats(null, adID, startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(null, limitPagination, adID, startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("The OAuthAccessToken is required")
                 .isInstanceOf(SnapOAuthAccessTokenException.class);
     }// get_ad_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
     public void get_ad_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
-        assertThatThrownBy(() -> this.snapStats.getAdStats("", adID, startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdStats("", limitPagination, adID, startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("The OAuthAccessToken is required")
                 .isInstanceOf(SnapOAuthAccessTokenException.class);
     }// get_ad_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
+    public void get_ad_stats_should_throw_SnapArgumentException_when_limit_pagination_is_below_1() {
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, -1, null, startTime, endTime, GranularityEnum.TOTAL))
+                .hasMessage("Minimum limit is 1")
+                .isInstanceOf(SnapArgumentException.class);
+    }// get_ad_squad_stats_should_throw_SnapArgumentException_when_limit_pagination_is_below_1()
+
+    @Test
+    public void get_ad_stats_should_throw_SnapArgumentException_when_limit_pagination_is_upper_200() {
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, 250, null, startTime, endTime, GranularityEnum.TOTAL))
+                .hasMessage("Maximum limit is 200")
+                .isInstanceOf(SnapArgumentException.class);
+    }// get_ad_squad_stats_should_throw_SnapArgumentException_when_limit_pagination_is_upper_200()
+
+    @Test
     public void get_ad_stats_should_throw_SnapArgumentException_when_ad_id_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, null, startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, null, startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("Ad ID is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_stats_should_throw_SnapArgumentException_when_ad_id_is_null()
 
     @Test
     public void get_ad_stats_should_throw_SnapArgumentException_when_ad_id_is_empty() {
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, "", startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, "", startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("Ad ID is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_stats_should_throw_SnapArgumentException_when_ad_id_is_empty()
 
     @Test
     public void get_ad_stats_should_throw_SnapArgumentException_when_start_time_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, null, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, null, endTime, GranularityEnum.TOTAL))
                 .hasMessage("StartTime and EndTime are required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_stats_should_throw_SnapArgumentException_when_start_time_is_null()
 
     @Test
     public void get_ad_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_day() {
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, null, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, null, endTime, GranularityEnum.DAY))
                 .hasMessage("StartTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_day()
 
     @Test
     public void get_ad_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_hour() {
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, null, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, null, endTime, GranularityEnum.HOUR))
                 .hasMessage("StartTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_hour()
 
     @Test
     public void get_ad_stats_should_throw_SnapArgumentException_when_end_time_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, null, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, null, GranularityEnum.TOTAL))
                 .hasMessage("StartTime and EndTime are required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_stats_should_throw_SnapArgumentException_when_end_time_is_null()
 
     @Test
     public void get_ad_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_day() {
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, null, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, null, GranularityEnum.DAY))
                 .hasMessage("EndTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_day()
 
     @Test
     public void get_ad_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_hour() {
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, null, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, null, GranularityEnum.HOUR))
                 .hasMessage("EndTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_hour()
@@ -1234,13 +1336,13 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_stats_should_throw_SnapArgumentException_when_start_time_is_not_top_hour_when_granularity_is_hour()
@@ -1250,13 +1352,13 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_stats_should_throw_SnapArgumentException_when_start_time_is_not_top_hour_when_granularity_is_day()
@@ -1266,13 +1368,13 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_stats_should_throw_SnapArgumentException_when_end_time_is_not_top_hour_when_granularity_is_hour()
@@ -1282,20 +1384,20 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_stats_should_throw_SnapArgumentException_when_end_time_is_not_top_hour_when_granularity_is_day()
 
     @Test
     public void get_ad_stats_should_throw_SnapArgumentException_when_granularity_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, null))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, null))
                 .hasMessage("Granularity is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_ad_stats_should_throw_SnapArgumentException_when_granularity_is_null()
@@ -1303,7 +1405,7 @@ public class SnapStatsTest {
     @Test
     public void get_ad_stats_should_throw_SnapExecutionException_when_IOException_is_occured() throws IOException {
         Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapExecutionException.class);
     }// get_ad_stats_should_throw_SnapExecutionException_when_IOException_is_occured()
 
@@ -1313,7 +1415,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(400);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
     }// should_throw_exception_400_get_ad_stats()
 
@@ -1323,7 +1425,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(401);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
     }// should_throw_exception_401_get_ad_stats()
 
@@ -1334,7 +1436,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(403);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
     }// should_throw_exception_403_get_ad_stats()
 
@@ -1345,7 +1447,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(404);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
     }// should_throw_exception_404_get_ad_stats()
 
@@ -1355,7 +1457,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(405);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
     }// should_throw_exception_405_get_ad_stats()
 
@@ -1366,7 +1468,7 @@ public class SnapStatsTest {
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
     }// should_throw_exception_406_get_ad_stats()
 
@@ -1376,7 +1478,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(410);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
     }// should_throw_exception_410_get_ad_stats()
 
@@ -1386,7 +1488,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(418);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
     }// should_throw_exception_418_get_ad_stats()
 
@@ -1396,7 +1498,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(429);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
     }// should_throw_exception_429_get_ad_stats()
 
@@ -1406,7 +1508,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(500);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.HOUR))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
     }// should_throw_exception_500_get_ad_stats()
 
@@ -1416,7 +1518,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(503);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
     }// should_throw_exception_503_get_ad_stats()
 
@@ -1426,7 +1528,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, adID, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getAdStats(oAuthAccessToken, limitPagination, adID, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     }// should_throw_exception_1337_get_ad_stats()
 
@@ -1438,51 +1540,73 @@ public class SnapStatsTest {
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(entityUtilsWrapper.toString(httpEntity))
                 .thenReturn(SnapResponseUtils.getStatsPixelDomains());
-        Optional<TimeSerieStat> result = this.snapStats.getPixelDomainsStats(oAuthAccessToken, pixelID);
-        assertThat(result).isPresent();
-        result.ifPresent(stat -> {
-            assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.PIXEL);
-            assertThat(sdf.format(stat.getStartTime())).isEqualTo("2017-09-01T01:00:00.000Z");
-            assertThat(sdf.format(stat.getEndTime())).isEqualTo("2017-09-08T01:00:00.000Z");
-            assertThat(stat.getDomains()).isNotNull();
-            List<Domain> domainStats = stat.getDomains();
-            assertThat(domainStats).isNotEmpty();
-            assertThat(domainStats).hasSize(4);
-            assertThat(domainStats.get(0).getTotalEvents()).isEqualTo(30);
-            assertThat(domainStats.get(0).getDomainName()).isEqualTo("abc.snapchat.com");
-            assertThat(domainStats.get(1).getTotalEvents()).isEqualTo(8);
-            assertThat(domainStats.get(1).getDomainName()).isEqualTo("xyz.snapchat.com");
-            assertThat(domainStats.get(2).getTotalEvents()).isEqualTo(180886);
-            assertThat(domainStats.get(2).getDomainName()).isEqualTo("snapchat.com");
-            assertThat(domainStats.get(3).getTotalEvents()).isEqualTo(9682034);
-            assertThat(domainStats.get(3).getDomainName()).isEqualTo("www.snapchat.com");
-        });
+        List<Pagination<TimeSerieStat>> result = this.snapStats.getPixelDomainsStats(oAuthAccessToken, limitPagination, pixelID);
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSize(1);
+
+        Pagination<TimeSerieStat> page1 = result.get(0);
+        assertThat(page1.getResults()).isNotEmpty();
+        assertThat(page1.getResults()).hasSize(limitPagination);
+
+        TimeSerieStat stat = page1.getResults().get(0);
+        assertThat(stat).isNotNull();
+
+        assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.PIXEL);
+        assertThat(sdf.format(stat.getStartTime())).isEqualTo("2017-09-01T01:00:00.000Z");
+        assertThat(sdf.format(stat.getEndTime())).isEqualTo("2017-09-08T01:00:00.000Z");
+        assertThat(stat.getDomains()).isNotNull();
+        List<Domain> domainStats = stat.getDomains();
+        assertThat(domainStats).isNotEmpty();
+        assertThat(domainStats).hasSize(4);
+        assertThat(domainStats.get(0).getTotalEvents()).isEqualTo(30);
+        assertThat(domainStats.get(0).getDomainName()).isEqualTo("abc.snapchat.com");
+        assertThat(domainStats.get(1).getTotalEvents()).isEqualTo(8);
+        assertThat(domainStats.get(1).getDomainName()).isEqualTo("xyz.snapchat.com");
+        assertThat(domainStats.get(2).getTotalEvents()).isEqualTo(180886);
+        assertThat(domainStats.get(2).getDomainName()).isEqualTo("snapchat.com");
+        assertThat(domainStats.get(3).getTotalEvents()).isEqualTo(9682034);
+        assertThat(domainStats.get(3).getDomainName()).isEqualTo("www.snapchat.com");
+
     }// get_pixel_domains_stats_should_success_day()
 
     @Test
     public void get_pixel_domains_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(null, pixelID))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(null, limitPagination, pixelID))
                 .hasMessage("The OAuthAccessToken is required")
                 .isInstanceOf(SnapOAuthAccessTokenException.class);
     }// get_pixel_domains_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
     public void get_pixel_domains_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats("", pixelID))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats("", limitPagination, pixelID))
                 .hasMessage("The OAuthAccessToken is required")
                 .isInstanceOf(SnapOAuthAccessTokenException.class);
     }// get_pixel_domains_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
+    public void get_pixel_domains_stats_should_throw_SnapArgumentException_when_limit_pagination_is_below_1() {
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, -1, pixelID))
+                .hasMessage("Minimum limit is 1")
+                .isInstanceOf(SnapArgumentException.class);
+    }// get_pixel_domains_stats_should_throw_SnapArgumentException_when_limit_pagination_is_below_1()
+
+    @Test
+    public void get_pixel_domains_stats_should_throw_SnapArgumentException_when_limit_pagination_is_upper_200() {
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, 250, pixelID))
+                .hasMessage("Maximum limit is 200")
+                .isInstanceOf(SnapArgumentException.class);
+    }// get_pixel_domains_stats_should_throw_SnapArgumentException_when_limit_pagination_is_upper_200()
+
+    @Test
     public void get_pixel_domains_stats_should_throw_SnapArgumentException_when_pixel_id_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, null))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, limitPagination, null))
                 .hasMessage("Pixel ID is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_pixel_domains_stats_should_throw_SnapArgumentException_when_pixel_id_is_null()
 
     @Test
     public void get_pixel_domains_stats_should_throw_SnapArgumentException_when_pixel_id_is_empty() {
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, ""))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, limitPagination, ""))
                 .hasMessage("Pixel ID is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// get_pixel_domains_stats_should_throw_SnapArgumentException_when_pixel_id_is_empty()
@@ -1490,7 +1614,7 @@ public class SnapStatsTest {
     @Test
     public void get_pixel_domains_stats_should_throw_SnapExecutionException_when_IOException_is_occured() throws IOException {
         Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, pixelID))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, limitPagination, pixelID))
                 .isInstanceOf(SnapExecutionException.class);
     }// get_pixel_domains_stats_should_throw_SnapExecutionException_when_IOException_is_occured()
 
@@ -1500,7 +1624,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(400);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, pixelID))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, limitPagination, pixelID))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
     }// should_throw_exception_400_get_pixel_domains_stats()
 
@@ -1510,7 +1634,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(401);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, pixelID))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, limitPagination, pixelID))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
     }// should_throw_exception_401_get_pixel_domains_stats()
 
@@ -1521,7 +1645,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(403);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, pixelID))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, limitPagination, pixelID))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
     }// should_throw_exception_403_get_pixel_domains_stats()
 
@@ -1532,7 +1656,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(404);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, pixelID))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, limitPagination, pixelID))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
     }// should_throw_exception_404_get_pixel_domains_stats()
 
@@ -1542,7 +1666,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(405);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, pixelID))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, limitPagination, pixelID))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
     }// should_throw_exception_405_get_pixel_domains_stats()
 
@@ -1553,7 +1677,7 @@ public class SnapStatsTest {
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, pixelID))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, limitPagination, pixelID))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
     }// should_throw_exception_406_get_pixel_domains_stats()
 
@@ -1563,7 +1687,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(410);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, pixelID))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, limitPagination, pixelID))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
     }// should_throw_exception_410_get_pixel_domains_stats()
 
@@ -1573,7 +1697,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(418);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, pixelID))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, limitPagination, pixelID))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
     }// should_throw_exception_418_get_pixel_domains_stats()
 
@@ -1583,7 +1707,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(429);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, pixelID))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, limitPagination, pixelID))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
     }// should_throw_exception_429_get_pixel_domains_stats()
 
@@ -1593,7 +1717,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(500);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, pixelID))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, limitPagination, pixelID))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
     }// should_throw_exception_500_get_pixel_domains_stats()
 
@@ -1603,7 +1727,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(503);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, pixelID))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, limitPagination, pixelID))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
     }// should_throw_exception_503_get_pixel_domains_stats()
 
@@ -1613,7 +1737,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, pixelID))
+        assertThatThrownBy(() -> this.snapStats.getPixelDomainsStats(oAuthAccessToken, limitPagination, pixelID))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     }// should_throw_exception_1337_get_pixel_domains_stats()
 
@@ -1625,81 +1749,88 @@ public class SnapStatsTest {
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(entityUtilsWrapper.toString(httpEntity))
                 .thenReturn(SnapResponseUtils.getStatsSpecificPixelDomain());
-        Optional<TimeSerieStat> result = this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY);
-        assertThat(result).isPresent();
-        result.ifPresent(stat -> {
-            assertThat(stat.getId()).isEqualTo(pixelID);
-            assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.PIXEL);
-            assertThat(stat.getGranularity()).isEqualTo(GranularityEnum.DAY);
-            assertThat(stat.getDomain()).isEqualTo(domainUrl);
-            assertThat(sdf.format(stat.getStartTime())).isEqualTo("2017-09-01T01:00:00.000Z");
-            assertThat(sdf.format(stat.getEndTime())).isEqualTo("2017-09-08T01:00:00.000Z");
+        List<Pagination<TimeSerieStat>> result = this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY);
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSize(1);
 
-            List<TimeSerie> timeseries = stat.getTimeseries();
-            assertThat(timeseries).isNotEmpty();
-            assertThat(timeseries).hasSize(3);
+        Pagination<TimeSerieStat> page1 = result.get(0);
+        assertThat(page1.getResults()).isNotEmpty();
+        assertThat(page1.getResults()).hasSize(limitPagination);
 
-            TimeSerie t1 = timeseries.get(0);
-            assertThat(t1.toString()).isNotEmpty();
-            assertThat(sdf.format(t1.getStartTime())).isEqualTo("2017-08-31T07:00:00.000Z");
-            assertThat(sdf.format(t1.getEndTime())).isEqualTo("2017-09-01T07:00:00.000Z");
-            assertThat(t1.getTotalEvents()).isEqualTo(253926);
-            assertThat(t1.getEventTypeBreakdown()).isNotNull();
-            assertThat(t1.getEventTypeBreakdown().getPageView()).isEqualTo(240366);
-            assertThat(t1.getEventTypeBreakdown().getViewContent()).isEqualTo(13560);
-            assertThat(t1.getOsTypeBreakdown()).isNotNull();
-            assertThat(t1.getOsTypeBreakdown().getAndroid()).isEqualTo(36170);
-            assertThat(t1.getOsTypeBreakdown().getLinux()).isEqualTo(2);
-            assertThat(t1.getOsTypeBreakdown().getMacOsX()).isEqualTo(1);
-            assertThat(t1.getOsTypeBreakdown().getIos()).isEqualTo(217753);
-            assertThat(t1.getBrowserTypeBreakdown()).isNotNull();
-            assertThat(t1.getBrowserTypeBreakdown().getFirefox()).isEqualTo(4);
-            assertThat(t1.getBrowserTypeBreakdown().getBrowserTypeOther()).isEqualTo(154);
-            assertThat(t1.getBrowserTypeBreakdown().getSafari()).isEqualTo(217747);
-            assertThat(t1.getBrowserTypeBreakdown().getChrome()).isEqualTo(36021);
+        TimeSerieStat stat = page1.getResults().get(0);
+        assertThat(stat).isNotNull();
 
-            TimeSerie t2 = timeseries.get(1);
-            assertThat(sdf.format(t2.getStartTime())).isEqualTo("2017-09-01T07:00:00.000Z");
-            assertThat(sdf.format(t2.getEndTime())).isEqualTo("2017-09-02T07:00:00.000Z");
-            assertThat(t2.getTotalEvents()).isEqualTo(873039);
-            assertThat(t2.getEventTypeBreakdown()).isNotNull();
-            assertThat(t2.getEventTypeBreakdown().getPageView()).isEqualTo(836945);
-            assertThat(t2.getEventTypeBreakdown().getViewContent()).isEqualTo(36094);
-            assertThat(t2.getOsTypeBreakdown()).isNotNull();
-            assertThat(t2.getOsTypeBreakdown().getAndroid()).isEqualTo(134867);
-            assertThat(t2.getOsTypeBreakdown().getLinux()).isEqualTo(2);
-            assertThat(t2.getOsTypeBreakdown().getMacOsX()).isEqualTo(17);
-            assertThat(t2.getOsTypeBreakdown().getIos()).isEqualTo(738139);
-            assertThat(t2.getOsTypeBreakdown().getWindows()).isEqualTo(14);
-            assertThat(t2.getBrowserTypeBreakdown()).isNotNull();
-            assertThat(t2.getBrowserTypeBreakdown().getFirefox()).isEqualTo(22);
-            assertThat(t2.getBrowserTypeBreakdown().getBrowserTypeOther()).isEqualTo(709);
-            assertThat(t2.getBrowserTypeBreakdown().getSafari()).isEqualTo(738135);
-            assertThat(t2.getBrowserTypeBreakdown().getChrome()).isEqualTo(134163);
-            assertThat(t2.getBrowserTypeBreakdown().getInternetExplorer()).isEqualTo(4);
-            assertThat(t2.getBrowserTypeBreakdown().getOpera()).isEqualTo(5);
-            assertThat(t2.getBrowserTypeBreakdown().getEdge()).isEqualTo(1);
+        assertThat(stat.getId()).isEqualTo(pixelID);
+        assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.PIXEL);
+        assertThat(stat.getGranularity()).isEqualTo(GranularityEnum.DAY);
+        assertThat(stat.getDomain()).isEqualTo(domainUrl);
+        assertThat(sdf.format(stat.getStartTime())).isEqualTo("2017-09-01T01:00:00.000Z");
+        assertThat(sdf.format(stat.getEndTime())).isEqualTo("2017-09-08T01:00:00.000Z");
 
-            TimeSerie t3 = timeseries.get(2);
-            assertThat(sdf.format(t3.getStartTime())).isEqualTo("2017-09-07T07:00:00.000Z");
-            assertThat(sdf.format(t3.getEndTime())).isEqualTo("2017-09-08T07:00:00.000Z");
-            assertThat(t3.getTotalEvents()).isEqualTo(1675610);
-            assertThat(t3.getEventTypeBreakdown()).isNotNull();
-            assertThat(t3.getEventTypeBreakdown().getPageView()).isEqualTo(1592779);
-            assertThat(t3.getEventTypeBreakdown().getViewContent()).isEqualTo(82831);
-            assertThat(t3.getOsTypeBreakdown()).isNotNull();
-            assertThat(t3.getOsTypeBreakdown().getAndroid()).isEqualTo(311818);
-            assertThat(t3.getOsTypeBreakdown().getLinux()).isEqualTo(1);
-            assertThat(t3.getOsTypeBreakdown().getMacOsX()).isEqualTo(11);
-            assertThat(t3.getOsTypeBreakdown().getIos()).isEqualTo(1363740);
-            assertThat(t3.getOsTypeBreakdown().getWindows()).isEqualTo(40);
-            assertThat(t3.getBrowserTypeBreakdown()).isNotNull();
-            assertThat(t3.getBrowserTypeBreakdown().getFirefox()).isEqualTo(17);
-            assertThat(t3.getBrowserTypeBreakdown().getBrowserTypeOther()).isEqualTo(570);
-            assertThat(t3.getBrowserTypeBreakdown().getSafari()).isEqualTo(1363719);
-            assertThat(t3.getBrowserTypeBreakdown().getChrome()).isEqualTo(311301);
-            assertThat(t3.getBrowserTypeBreakdown().getOpera()).isEqualTo(3);
-        });
+        List<TimeSerie> timeseries = stat.getTimeseries();
+        assertThat(timeseries).isNotEmpty();
+        assertThat(timeseries).hasSize(3);
+
+        TimeSerie t1 = timeseries.get(0);
+        assertThat(t1.toString()).isNotEmpty();
+        assertThat(sdf.format(t1.getStartTime())).isEqualTo("2017-08-31T07:00:00.000Z");
+        assertThat(sdf.format(t1.getEndTime())).isEqualTo("2017-09-01T07:00:00.000Z");
+        assertThat(t1.getTotalEvents()).isEqualTo(253926);
+        assertThat(t1.getEventTypeBreakdown()).isNotNull();
+        assertThat(t1.getEventTypeBreakdown().getPageView()).isEqualTo(240366);
+        assertThat(t1.getEventTypeBreakdown().getViewContent()).isEqualTo(13560);
+        assertThat(t1.getOsTypeBreakdown()).isNotNull();
+        assertThat(t1.getOsTypeBreakdown().getAndroid()).isEqualTo(36170);
+        assertThat(t1.getOsTypeBreakdown().getLinux()).isEqualTo(2);
+        assertThat(t1.getOsTypeBreakdown().getMacOsX()).isEqualTo(1);
+        assertThat(t1.getOsTypeBreakdown().getIos()).isEqualTo(217753);
+        assertThat(t1.getBrowserTypeBreakdown()).isNotNull();
+        assertThat(t1.getBrowserTypeBreakdown().getFirefox()).isEqualTo(4);
+        assertThat(t1.getBrowserTypeBreakdown().getBrowserTypeOther()).isEqualTo(154);
+        assertThat(t1.getBrowserTypeBreakdown().getSafari()).isEqualTo(217747);
+        assertThat(t1.getBrowserTypeBreakdown().getChrome()).isEqualTo(36021);
+
+        TimeSerie t2 = timeseries.get(1);
+        assertThat(sdf.format(t2.getStartTime())).isEqualTo("2017-09-01T07:00:00.000Z");
+        assertThat(sdf.format(t2.getEndTime())).isEqualTo("2017-09-02T07:00:00.000Z");
+        assertThat(t2.getTotalEvents()).isEqualTo(873039);
+        assertThat(t2.getEventTypeBreakdown()).isNotNull();
+        assertThat(t2.getEventTypeBreakdown().getPageView()).isEqualTo(836945);
+        assertThat(t2.getEventTypeBreakdown().getViewContent()).isEqualTo(36094);
+        assertThat(t2.getOsTypeBreakdown()).isNotNull();
+        assertThat(t2.getOsTypeBreakdown().getAndroid()).isEqualTo(134867);
+        assertThat(t2.getOsTypeBreakdown().getLinux()).isEqualTo(2);
+        assertThat(t2.getOsTypeBreakdown().getMacOsX()).isEqualTo(17);
+        assertThat(t2.getOsTypeBreakdown().getIos()).isEqualTo(738139);
+        assertThat(t2.getOsTypeBreakdown().getWindows()).isEqualTo(14);
+        assertThat(t2.getBrowserTypeBreakdown()).isNotNull();
+        assertThat(t2.getBrowserTypeBreakdown().getFirefox()).isEqualTo(22);
+        assertThat(t2.getBrowserTypeBreakdown().getBrowserTypeOther()).isEqualTo(709);
+        assertThat(t2.getBrowserTypeBreakdown().getSafari()).isEqualTo(738135);
+        assertThat(t2.getBrowserTypeBreakdown().getChrome()).isEqualTo(134163);
+        assertThat(t2.getBrowserTypeBreakdown().getInternetExplorer()).isEqualTo(4);
+        assertThat(t2.getBrowserTypeBreakdown().getOpera()).isEqualTo(5);
+        assertThat(t2.getBrowserTypeBreakdown().getEdge()).isEqualTo(1);
+
+        TimeSerie t3 = timeseries.get(2);
+        assertThat(sdf.format(t3.getStartTime())).isEqualTo("2017-09-07T07:00:00.000Z");
+        assertThat(sdf.format(t3.getEndTime())).isEqualTo("2017-09-08T07:00:00.000Z");
+        assertThat(t3.getTotalEvents()).isEqualTo(1675610);
+        assertThat(t3.getEventTypeBreakdown()).isNotNull();
+        assertThat(t3.getEventTypeBreakdown().getPageView()).isEqualTo(1592779);
+        assertThat(t3.getEventTypeBreakdown().getViewContent()).isEqualTo(82831);
+        assertThat(t3.getOsTypeBreakdown()).isNotNull();
+        assertThat(t3.getOsTypeBreakdown().getAndroid()).isEqualTo(311818);
+        assertThat(t3.getOsTypeBreakdown().getLinux()).isEqualTo(1);
+        assertThat(t3.getOsTypeBreakdown().getMacOsX()).isEqualTo(11);
+        assertThat(t3.getOsTypeBreakdown().getIos()).isEqualTo(1363740);
+        assertThat(t3.getOsTypeBreakdown().getWindows()).isEqualTo(40);
+        assertThat(t3.getBrowserTypeBreakdown()).isNotNull();
+        assertThat(t3.getBrowserTypeBreakdown().getFirefox()).isEqualTo(17);
+        assertThat(t3.getBrowserTypeBreakdown().getBrowserTypeOther()).isEqualTo(570);
+        assertThat(t3.getBrowserTypeBreakdown().getSafari()).isEqualTo(1363719);
+        assertThat(t3.getBrowserTypeBreakdown().getChrome()).isEqualTo(311301);
+        assertThat(t3.getBrowserTypeBreakdown().getOpera()).isEqualTo(3);
     }// _get_pixel_specific_domain_stats_should_success_day()
 
     @Test
@@ -1710,150 +1841,171 @@ public class SnapStatsTest {
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(entityUtilsWrapper.toString(httpEntity))
                 .thenReturn(SnapResponseUtils.getStatsSpecificPixelDomain());
-        List<String> fields = Stream.of(new String[]{"event_type","os_type","browser_type"}).collect(Collectors.toList());
-        Optional<TimeSerieStat> result = this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY, fields, BreakdownEnum.AD, false, "country", SwipeUpAttributionWindowEnum.TWENTY_EIGHT_DAY, ViewAttributionWindowEnum.SEVEN_DAY, true, true, null);
-        assertThat(result).isPresent();
-        result.ifPresent(stat -> {
-            assertThat(stat.getId()).isEqualTo(pixelID);
-            assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.PIXEL);
-            assertThat(stat.getGranularity()).isEqualTo(GranularityEnum.DAY);
-            assertThat(stat.getDomain()).isEqualTo(domainUrl);
-            assertThat(sdf.format(stat.getStartTime())).isEqualTo("2017-09-01T01:00:00.000Z");
-            assertThat(sdf.format(stat.getEndTime())).isEqualTo("2017-09-08T01:00:00.000Z");
+        List<String> fields = Stream.of(new String[]{"event_type", "os_type", "browser_type"}).collect(Collectors.toList());
+        List<Pagination<TimeSerieStat>> result = this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY, fields, BreakdownEnum.AD, false, "country", SwipeUpAttributionWindowEnum.TWENTY_EIGHT_DAY, ViewAttributionWindowEnum.SEVEN_DAY, true, true, null);
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSize(1);
 
-            List<TimeSerie> timeseries = stat.getTimeseries();
-            assertThat(timeseries).isNotEmpty();
-            assertThat(timeseries).hasSize(3);
+        Pagination<TimeSerieStat> page1 = result.get(0);
+        assertThat(page1.getResults()).isNotEmpty();
+        assertThat(page1.getResults()).hasSize(limitPagination);
 
-            TimeSerie t1 = timeseries.get(0);
-            assertThat(t1.toString()).isNotEmpty();
-            assertThat(sdf.format(t1.getStartTime())).isEqualTo("2017-08-31T07:00:00.000Z");
-            assertThat(sdf.format(t1.getEndTime())).isEqualTo("2017-09-01T07:00:00.000Z");
-            assertThat(t1.getTotalEvents()).isEqualTo(253926);
-            assertThat(t1.getEventTypeBreakdown()).isNotNull();
-            assertThat(t1.getEventTypeBreakdown().getPageView()).isEqualTo(240366);
-            assertThat(t1.getEventTypeBreakdown().getViewContent()).isEqualTo(13560);
-            assertThat(t1.getOsTypeBreakdown()).isNotNull();
-            assertThat(t1.getOsTypeBreakdown().getAndroid()).isEqualTo(36170);
-            assertThat(t1.getOsTypeBreakdown().getLinux()).isEqualTo(2);
-            assertThat(t1.getOsTypeBreakdown().getMacOsX()).isEqualTo(1);
-            assertThat(t1.getOsTypeBreakdown().getIos()).isEqualTo(217753);
-            assertThat(t1.getBrowserTypeBreakdown()).isNotNull();
-            assertThat(t1.getBrowserTypeBreakdown().getFirefox()).isEqualTo(4);
-            assertThat(t1.getBrowserTypeBreakdown().getBrowserTypeOther()).isEqualTo(154);
-            assertThat(t1.getBrowserTypeBreakdown().getSafari()).isEqualTo(217747);
-            assertThat(t1.getBrowserTypeBreakdown().getChrome()).isEqualTo(36021);
+        TimeSerieStat stat = page1.getResults().get(0);
+        assertThat(stat).isNotNull();
 
-            TimeSerie t2 = timeseries.get(1);
-            assertThat(sdf.format(t2.getStartTime())).isEqualTo("2017-09-01T07:00:00.000Z");
-            assertThat(sdf.format(t2.getEndTime())).isEqualTo("2017-09-02T07:00:00.000Z");
-            assertThat(t2.getTotalEvents()).isEqualTo(873039);
-            assertThat(t2.getEventTypeBreakdown()).isNotNull();
-            assertThat(t2.getEventTypeBreakdown().getPageView()).isEqualTo(836945);
-            assertThat(t2.getEventTypeBreakdown().getViewContent()).isEqualTo(36094);
-            assertThat(t2.getOsTypeBreakdown()).isNotNull();
-            assertThat(t2.getOsTypeBreakdown().getAndroid()).isEqualTo(134867);
-            assertThat(t2.getOsTypeBreakdown().getLinux()).isEqualTo(2);
-            assertThat(t2.getOsTypeBreakdown().getMacOsX()).isEqualTo(17);
-            assertThat(t2.getOsTypeBreakdown().getIos()).isEqualTo(738139);
-            assertThat(t2.getOsTypeBreakdown().getWindows()).isEqualTo(14);
-            assertThat(t2.getBrowserTypeBreakdown()).isNotNull();
-            assertThat(t2.getBrowserTypeBreakdown().getFirefox()).isEqualTo(22);
-            assertThat(t2.getBrowserTypeBreakdown().getBrowserTypeOther()).isEqualTo(709);
-            assertThat(t2.getBrowserTypeBreakdown().getSafari()).isEqualTo(738135);
-            assertThat(t2.getBrowserTypeBreakdown().getChrome()).isEqualTo(134163);
-            assertThat(t2.getBrowserTypeBreakdown().getInternetExplorer()).isEqualTo(4);
-            assertThat(t2.getBrowserTypeBreakdown().getOpera()).isEqualTo(5);
-            assertThat(t2.getBrowserTypeBreakdown().getEdge()).isEqualTo(1);
+        assertThat(stat.getId()).isEqualTo(pixelID);
+        assertThat(stat.getType()).isEqualTo(TimeSerieTypeEnum.PIXEL);
+        assertThat(stat.getGranularity()).isEqualTo(GranularityEnum.DAY);
+        assertThat(stat.getDomain()).isEqualTo(domainUrl);
+        assertThat(sdf.format(stat.getStartTime())).isEqualTo("2017-09-01T01:00:00.000Z");
+        assertThat(sdf.format(stat.getEndTime())).isEqualTo("2017-09-08T01:00:00.000Z");
 
-            TimeSerie t3 = timeseries.get(2);
-            assertThat(sdf.format(t3.getStartTime())).isEqualTo("2017-09-07T07:00:00.000Z");
-            assertThat(sdf.format(t3.getEndTime())).isEqualTo("2017-09-08T07:00:00.000Z");
-            assertThat(t3.getTotalEvents()).isEqualTo(1675610);
-            assertThat(t3.getEventTypeBreakdown()).isNotNull();
-            assertThat(t3.getEventTypeBreakdown().getPageView()).isEqualTo(1592779);
-            assertThat(t3.getEventTypeBreakdown().getViewContent()).isEqualTo(82831);
-            assertThat(t3.getOsTypeBreakdown()).isNotNull();
-            assertThat(t3.getOsTypeBreakdown().getAndroid()).isEqualTo(311818);
-            assertThat(t3.getOsTypeBreakdown().getLinux()).isEqualTo(1);
-            assertThat(t3.getOsTypeBreakdown().getMacOsX()).isEqualTo(11);
-            assertThat(t3.getOsTypeBreakdown().getIos()).isEqualTo(1363740);
-            assertThat(t3.getOsTypeBreakdown().getWindows()).isEqualTo(40);
-            assertThat(t3.getBrowserTypeBreakdown()).isNotNull();
-            assertThat(t3.getBrowserTypeBreakdown().getFirefox()).isEqualTo(17);
-            assertThat(t3.getBrowserTypeBreakdown().getBrowserTypeOther()).isEqualTo(570);
-            assertThat(t3.getBrowserTypeBreakdown().getSafari()).isEqualTo(1363719);
-            assertThat(t3.getBrowserTypeBreakdown().getChrome()).isEqualTo(311301);
-            assertThat(t3.getBrowserTypeBreakdown().getOpera()).isEqualTo(3);
-        });
+        List<TimeSerie> timeseries = stat.getTimeseries();
+        assertThat(timeseries).isNotEmpty();
+        assertThat(timeseries).hasSize(3);
+
+        TimeSerie t1 = timeseries.get(0);
+        assertThat(t1.toString()).isNotEmpty();
+        assertThat(sdf.format(t1.getStartTime())).isEqualTo("2017-08-31T07:00:00.000Z");
+        assertThat(sdf.format(t1.getEndTime())).isEqualTo("2017-09-01T07:00:00.000Z");
+        assertThat(t1.getTotalEvents()).isEqualTo(253926);
+        assertThat(t1.getEventTypeBreakdown()).isNotNull();
+        assertThat(t1.getEventTypeBreakdown().getPageView()).isEqualTo(240366);
+        assertThat(t1.getEventTypeBreakdown().getViewContent()).isEqualTo(13560);
+        assertThat(t1.getOsTypeBreakdown()).isNotNull();
+        assertThat(t1.getOsTypeBreakdown().getAndroid()).isEqualTo(36170);
+        assertThat(t1.getOsTypeBreakdown().getLinux()).isEqualTo(2);
+        assertThat(t1.getOsTypeBreakdown().getMacOsX()).isEqualTo(1);
+        assertThat(t1.getOsTypeBreakdown().getIos()).isEqualTo(217753);
+        assertThat(t1.getBrowserTypeBreakdown()).isNotNull();
+        assertThat(t1.getBrowserTypeBreakdown().getFirefox()).isEqualTo(4);
+        assertThat(t1.getBrowserTypeBreakdown().getBrowserTypeOther()).isEqualTo(154);
+        assertThat(t1.getBrowserTypeBreakdown().getSafari()).isEqualTo(217747);
+        assertThat(t1.getBrowserTypeBreakdown().getChrome()).isEqualTo(36021);
+
+        TimeSerie t2 = timeseries.get(1);
+        assertThat(sdf.format(t2.getStartTime())).isEqualTo("2017-09-01T07:00:00.000Z");
+        assertThat(sdf.format(t2.getEndTime())).isEqualTo("2017-09-02T07:00:00.000Z");
+        assertThat(t2.getTotalEvents()).isEqualTo(873039);
+        assertThat(t2.getEventTypeBreakdown()).isNotNull();
+        assertThat(t2.getEventTypeBreakdown().getPageView()).isEqualTo(836945);
+        assertThat(t2.getEventTypeBreakdown().getViewContent()).isEqualTo(36094);
+        assertThat(t2.getOsTypeBreakdown()).isNotNull();
+        assertThat(t2.getOsTypeBreakdown().getAndroid()).isEqualTo(134867);
+        assertThat(t2.getOsTypeBreakdown().getLinux()).isEqualTo(2);
+        assertThat(t2.getOsTypeBreakdown().getMacOsX()).isEqualTo(17);
+        assertThat(t2.getOsTypeBreakdown().getIos()).isEqualTo(738139);
+        assertThat(t2.getOsTypeBreakdown().getWindows()).isEqualTo(14);
+        assertThat(t2.getBrowserTypeBreakdown()).isNotNull();
+        assertThat(t2.getBrowserTypeBreakdown().getFirefox()).isEqualTo(22);
+        assertThat(t2.getBrowserTypeBreakdown().getBrowserTypeOther()).isEqualTo(709);
+        assertThat(t2.getBrowserTypeBreakdown().getSafari()).isEqualTo(738135);
+        assertThat(t2.getBrowserTypeBreakdown().getChrome()).isEqualTo(134163);
+        assertThat(t2.getBrowserTypeBreakdown().getInternetExplorer()).isEqualTo(4);
+        assertThat(t2.getBrowserTypeBreakdown().getOpera()).isEqualTo(5);
+        assertThat(t2.getBrowserTypeBreakdown().getEdge()).isEqualTo(1);
+
+        TimeSerie t3 = timeseries.get(2);
+        assertThat(sdf.format(t3.getStartTime())).isEqualTo("2017-09-07T07:00:00.000Z");
+        assertThat(sdf.format(t3.getEndTime())).isEqualTo("2017-09-08T07:00:00.000Z");
+        assertThat(t3.getTotalEvents()).isEqualTo(1675610);
+        assertThat(t3.getEventTypeBreakdown()).isNotNull();
+        assertThat(t3.getEventTypeBreakdown().getPageView()).isEqualTo(1592779);
+        assertThat(t3.getEventTypeBreakdown().getViewContent()).isEqualTo(82831);
+        assertThat(t3.getOsTypeBreakdown()).isNotNull();
+        assertThat(t3.getOsTypeBreakdown().getAndroid()).isEqualTo(311818);
+        assertThat(t3.getOsTypeBreakdown().getLinux()).isEqualTo(1);
+        assertThat(t3.getOsTypeBreakdown().getMacOsX()).isEqualTo(11);
+        assertThat(t3.getOsTypeBreakdown().getIos()).isEqualTo(1363740);
+        assertThat(t3.getOsTypeBreakdown().getWindows()).isEqualTo(40);
+        assertThat(t3.getBrowserTypeBreakdown()).isNotNull();
+        assertThat(t3.getBrowserTypeBreakdown().getFirefox()).isEqualTo(17);
+        assertThat(t3.getBrowserTypeBreakdown().getBrowserTypeOther()).isEqualTo(570);
+        assertThat(t3.getBrowserTypeBreakdown().getSafari()).isEqualTo(1363719);
+        assertThat(t3.getBrowserTypeBreakdown().getChrome()).isEqualTo(311301);
+        assertThat(t3.getBrowserTypeBreakdown().getOpera()).isEqualTo(3);
     }// _get_pixel_specific_domain_stats_should_success_day_with_extra_params()
 
     @Test
     public void get_pixel_specific_domain_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(null, pixelID, domainUrl,startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(null, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("The OAuthAccessToken is required")
                 .isInstanceOf(SnapOAuthAccessTokenException.class);
     }// _get_pixel_specific_domain_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_null()
 
     @Test
     public void get_pixel_specific_domain_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_empty() {
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats("", pixelID, domainUrl, startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats("", limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("The OAuthAccessToken is required")
                 .isInstanceOf(SnapOAuthAccessTokenException.class);
     }// _get_pixel_specific_domain_stats_should_throw_SnapOAuthAccessTokenException_when_token_is_empty()
 
     @Test
+    public void get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_limit_is_below_1() {
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, -1, pixelID, domainUrl, startTime, endTime, GranularityEnum.TOTAL))
+                .hasMessage("Minimum limit is 1")
+                .isInstanceOf(SnapArgumentException.class);
+    }// get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_limit_is_below_1()
+
+    @Test
+    public void get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_limit_is_upper_200() {
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, 250, pixelID, domainUrl, startTime, endTime, GranularityEnum.TOTAL))
+                .hasMessage("Maximum limit is 200")
+                .isInstanceOf(SnapArgumentException.class);
+    }// get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_limit_is_upper_200()
+
+    @Test
     public void get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_campaign_id_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, null, domainUrl, startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, null, domainUrl, startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("Pixel ID is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// _get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_campaign_id_is_null()
 
     @Test
     public void get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_campaign_id_is_empty() {
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, "", domainUrl, startTime, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, "", domainUrl, startTime, endTime, GranularityEnum.TOTAL))
                 .hasMessage("Pixel ID is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// _get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_campaign_id_is_empty()
 
     @Test
     public void get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_start_time_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, null, endTime, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, null, endTime, GranularityEnum.TOTAL))
                 .hasMessage("StartTime and EndTime are required")
                 .isInstanceOf(SnapArgumentException.class);
     }// _get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_start_time_is_null()
 
     @Test
     public void get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_day() {
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, null, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, null, endTime, GranularityEnum.DAY))
                 .hasMessage("StartTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// _get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_day()
 
     @Test
     public void get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_hour() {
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, null, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, null, endTime, GranularityEnum.HOUR))
                 .hasMessage("StartTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// _get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_start_time_is_null_and_granularity_is_hour()
 
     @Test
     public void get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_end_time_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, null, GranularityEnum.TOTAL))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, null, GranularityEnum.TOTAL))
                 .hasMessage("StartTime and EndTime are required")
                 .isInstanceOf(SnapArgumentException.class);
     }// _get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_end_time_is_null()
 
     @Test
     public void get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_day() {
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, null, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, null, GranularityEnum.DAY))
                 .hasMessage("EndTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// _get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_day()
 
     @Test
     public void get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_hour() {
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, null, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, null, GranularityEnum.HOUR))
                 .hasMessage("EndTime is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// _get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_end_time_is_null_and_granularity_is_hour()
@@ -1863,13 +2015,13 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// _get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_start_time_is_not_top_hour_when_granularity_is_hour()
@@ -1879,13 +2031,13 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         startTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("StarTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// _get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_start_time_is_not_top_hour_when_granularity_is_day()
@@ -1895,13 +2047,13 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// _get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_end_time_is_not_top_hour_when_granularity_is_hour()
@@ -1911,20 +2063,20 @@ public class SnapStatsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 15);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 10);
         endTime = cal.getTime();
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.HOUR))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.HOUR))
                 .hasMessage("EndTime must be set to the top of the hour (Example : 22:00:00 not 22:45:11)")
                 .isInstanceOf(SnapArgumentException.class);
     }// _get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_end_time_is_not_top_hour_when_granularity_is_day()
 
     @Test
     public void get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_granularity_is_null() {
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, null))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, null))
                 .hasMessage("Granularity is required")
                 .isInstanceOf(SnapArgumentException.class);
     }// _get_pixel_specific_domain_stats_should_throw_SnapArgumentException_when_granularity_is_null()
@@ -1932,7 +2084,7 @@ public class SnapStatsTest {
     @Test
     public void get_pixel_specific_domain_stats_should_throw_SnapExecutionException_when_IOException_is_occured() throws IOException {
         Mockito.when(httpClient.execute((Mockito.any(HttpGet.class)))).thenThrow(IOException.class);
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapExecutionException.class);
     }// _get_pixel_specific_domain_stats_should_throw_SnapExecutionException_when_IOException_is_occured()
 
@@ -1942,7 +2094,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(400);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Bad Request");
     }// should_throw_exception_400_get_pixel_specific_domain_stats()
 
@@ -1952,7 +2104,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(401);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Unauthorized - Check your API key");
     }// should_throw_exception_401_get_pixel_specific_domain_stats()
 
@@ -1963,7 +2115,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(403);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Access Forbidden");
     }// should_throw_exception_403_get_pixel_specific_domain_stats()
 
@@ -1974,7 +2126,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(404);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Found");
     }// should_throw_exception_404_get_pixel_specific_domain_stats()
 
@@ -1984,7 +2136,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(405);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Method Not Allowed");
     }// should_throw_exception_405_get_pixel_specific_domain_stats()
 
@@ -1995,7 +2147,7 @@ public class SnapStatsTest {
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Not Acceptable");
     }// should_throw_exception_406_get_pixel_specific_domain_stats()
 
@@ -2005,7 +2157,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(410);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Gone");
     }// should_throw_exception_410_get_pixel_specific_domain_stats()
 
@@ -2015,7 +2167,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(418);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("I'm a teapot");
     }// should_throw_exception_418_get_pixel_specific_domain_stats()
 
@@ -2025,7 +2177,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(429);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Too Many Requests / Rate limit reached");
     }// should_throw_exception_429_get_pixel_specific_domain_stats()
 
@@ -2035,7 +2187,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(500);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Internal Server Error");
     }// should_throw_exception_500_get_pixel_specific_domain_stats()
 
@@ -2045,7 +2197,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(503);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Service Unavailable");
     }// should_throw_exception_503_get_pixel_specific_domain_stats()
 
@@ -2055,7 +2207,7 @@ public class SnapStatsTest {
         Mockito.when(statusLine.getStatusCode()).thenReturn(1337);
         Mockito.when(httpClient.execute(Mockito.any(HttpGet.class))).thenReturn(httpResponse);
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
+        assertThatThrownBy(() -> this.snapStats.getPixelSpecificDomainStats(oAuthAccessToken, limitPagination, pixelID, domainUrl, startTime, endTime, GranularityEnum.DAY))
                 .isInstanceOf(SnapResponseErrorException.class).hasMessage("Error 1337");
     }// should_throw_exception_1337_get_pixel_specific_domain_stats()
 
