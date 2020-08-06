@@ -29,6 +29,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import snapads4j.enums.*;
 import snapads4j.exceptions.*;
+import snapads4j.model.Pagination;
 import snapads4j.model.stats.SnapHttpResponseTimeseriesStat;
 import snapads4j.model.stats.SnapHttpResponseTotalStat;
 import snapads4j.model.stats.TimeSerieStat;
@@ -39,10 +40,7 @@ import snapads4j.utils.JsonUtils;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * SnapStats
@@ -69,6 +67,10 @@ public class SnapStats implements SnapStatsInterface {
 
     private String endpointPixelSpecificDomain;
 
+    private int minLimitPagination;
+
+    private int maxLimitPagination;
+
     private CloseableHttpClient httpClient;
 
     private EntityUtilsWrapper entityUtilsWrapper;
@@ -86,271 +88,370 @@ public class SnapStats implements SnapStatsInterface {
         this.endpointAdStats = this.apiUrl + fp.getProperties().get("api.url.stats.ad");
         this.endpointPixelDomains = this.apiUrl + fp.getProperties().get("api.url.stats.pixel.domains");
         this.endpointPixelSpecificDomain = this.apiUrl + fp.getProperties().get("api.url.stats.pixel.specific.domain");
+        this.minLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.stats.pagination.limit.min"));
+        this.maxLimitPagination = Integer.parseInt((String) fp.getProperties().get("api.url.stats.pagination.limit.max"));
         this.httpClient = HttpClients.createDefault();
         this.entityUtilsWrapper = new EntityUtilsWrapper();
     }// SnapStats()
 
     @Override
-    public Optional<TimeSerieStat> getCampaignStats(String oAuthAccessToken, String campaignID, Date startTime, Date endTime, GranularityEnum granularity) throws SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException, SnapResponseErrorException {
-        return getCampaignStats(oAuthAccessToken, campaignID, startTime, endTime, granularity, null, null, null, null, null, null, null, null, null);
+    public List<Pagination<TimeSerieStat>> getCampaignStats(String oAuthAccessToken, int limit, String campaignID, Date startTime, Date endTime, GranularityEnum granularity) throws SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException, SnapResponseErrorException {
+        return getCampaignStats(oAuthAccessToken, limit, campaignID, startTime, endTime, granularity, null, null, null, null, null, null, null, null, null);
     }// getCampaignStats()
 
     @Override
-    public Optional<TimeSerieStat> getCampaignStats(String oAuthAccessToken, String campaignID, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
+    public List<Pagination<TimeSerieStat>> getCampaignStats(String oAuthAccessToken, int limit, String campaignID, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                                     ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                                     Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapOAuthAccessTokenException, SnapArgumentException, SnapExecutionException, SnapResponseErrorException {
-        checkParams(oAuthAccessToken, startTime, endTime, granularity);
+        checkParams(oAuthAccessToken, startTime, endTime, granularity, limit);
         if (StringUtils.isEmpty(campaignID)) {
             throw new SnapArgumentException("Campaign ID is required");
         }
-        Optional<TimeSerieStat> result = Optional.empty();
+        List<Pagination<TimeSerieStat>> results = new ArrayList<>();
         String url = this.endpointCampaignStats.replace("{campaign_id}", campaignID);
         url = prepareFinalUrl(url, startTime, endTime, granularity, fields, breakdown, test, reportDimension, swipeUpAttributionWindow, viewAttributionWindow, positionStats, omitEmpty, conversionSourceTypes, null);
-        HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String body = entityUtilsWrapper.toString(entity);
-                if (statusCode >= 300) {
-                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
-                }
-                ObjectMapper mapper = JsonUtils.initMapper();
-                if (granularity == GranularityEnum.TOTAL) {
-                    SnapHttpResponseTotalStat responseFromJson = mapper.readValue(body, SnapHttpResponseTotalStat.class);
-                    if (responseFromJson != null) {
-                        result = responseFromJson.getStats();
+        url += "&limit=" + limit;
+        boolean hasNextPage = true;
+        int numberPage = 1;
+        while(hasNextPage) {
+            HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String body = entityUtilsWrapper.toString(entity);
+                    if (statusCode >= 300) {
+                        throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
                     }
-                } else {
-                    SnapHttpResponseTimeseriesStat responseFromJson = mapper.readValue(body, SnapHttpResponseTimeseriesStat.class);
-                    if (responseFromJson != null) {
-                        result = responseFromJson.getStats();
+                    ObjectMapper mapper = JsonUtils.initMapper();
+                    if (granularity == GranularityEnum.TOTAL) {
+                        SnapHttpResponseTotalStat responseFromJson = mapper.readValue(body, SnapHttpResponseTotalStat.class);
+                        if (responseFromJson != null) {
+                            results.add(new Pagination<>(numberPage++, responseFromJson.getTotalStats()));
+                            hasNextPage = responseFromJson.hasPaging();
+                            if(hasNextPage){
+                                url = responseFromJson.getPaging().getNextLink();
+                                LOGGER.info("Next url page pagination is {}", url);
+                            }
+                        }
+                    } else {
+                        SnapHttpResponseTimeseriesStat responseFromJson = mapper.readValue(body, SnapHttpResponseTimeseriesStat.class);
+                        if (responseFromJson != null) {
+                            results.add(new Pagination<>(numberPage++,responseFromJson.getTimeseriesStats()));
+                            hasNextPage = responseFromJson.hasPaging();
+                            if(hasNextPage){
+                                url = responseFromJson.getPaging().getNextLink();
+                                LOGGER.info("Next url page pagination is {}", url);
+                            }
+                        }
                     }
                 }
+            } catch (IOException e) {
+                LOGGER.error("Impossible to get campaign stats, campaignId = {}", campaignID, e);
+                throw new SnapExecutionException("Impossible to get campaign stats", e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get campaign stats, campaignId = {}", campaignID, e);
-            throw new SnapExecutionException("Impossible to get campaign stats", e);
         }
-        return result;
+        return results;
     }// getCampaignStats()
 
     @Override
-    public Optional<TimeSerieStat> getAdAccountStats(String oAuthAccessToken, String adAccountID, Date startTime, Date endTime, GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
-        return this.getAdAccountStats(oAuthAccessToken, adAccountID, startTime, endTime, granularity,null, null, null, null, null, null, null, null);
+    public List<Pagination<TimeSerieStat>> getAdAccountStats(String oAuthAccessToken, int limit, String adAccountID, Date startTime, Date endTime, GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+        return this.getAdAccountStats(oAuthAccessToken, limit, adAccountID, startTime, endTime, granularity,null, null, null, null, null, null, null, null);
     }// getAdAccountStats()
 
     @Override
-    public Optional<TimeSerieStat> getAdAccountStats(String oAuthAccessToken, String adAccountID, Date startTime, Date endTime, GranularityEnum granularity, BreakdownEnum breakdown, Boolean test,
+    public List<Pagination<TimeSerieStat>> getAdAccountStats(String oAuthAccessToken, int limit, String adAccountID, Date startTime, Date endTime, GranularityEnum granularity, BreakdownEnum breakdown, Boolean test,
                                                      String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                                      ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                                      Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapExecutionException, SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException {
-        checkParams(oAuthAccessToken, startTime, endTime, granularity);
+        checkParams(oAuthAccessToken, startTime, endTime, granularity, limit);
         if (StringUtils.isEmpty(adAccountID)) {
             throw new SnapArgumentException("AdAccount ID is required");
         }
-        Optional<TimeSerieStat> result = Optional.empty();
+        List<Pagination<TimeSerieStat>> results = new ArrayList<>();
         String url = this.endpointAdAccountStats.replace("{ad_account_id}", adAccountID);
         url = prepareFinalUrl(url, startTime, endTime, granularity, null, breakdown, test, reportDimension, swipeUpAttributionWindow, viewAttributionWindow, positionStats, omitEmpty, conversionSourceTypes, null);
-        HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String body = entityUtilsWrapper.toString(entity);
-                if (statusCode >= 300) {
-                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
-                }
-                ObjectMapper mapper = JsonUtils.initMapper();
-                if (granularity == GranularityEnum.TOTAL) {
-                    SnapHttpResponseTotalStat responseFromJson = mapper.readValue(body, SnapHttpResponseTotalStat.class);
-                    if (responseFromJson != null) {
-                        result = responseFromJson.getStats();
+        url += "&limit=" + limit;
+        boolean hasNextPage = true;
+        int numberPage = 1;
+        while(hasNextPage) {
+            HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String body = entityUtilsWrapper.toString(entity);
+                    if (statusCode >= 300) {
+                        throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
                     }
-                } else {
-                    SnapHttpResponseTimeseriesStat responseFromJson = mapper.readValue(body, SnapHttpResponseTimeseriesStat.class);
-                    if (responseFromJson != null) {
-                        result = responseFromJson.getStats();
+                    ObjectMapper mapper = JsonUtils.initMapper();
+                    if (granularity == GranularityEnum.TOTAL) {
+                        SnapHttpResponseTotalStat responseFromJson = mapper.readValue(body, SnapHttpResponseTotalStat.class);
+                        if (responseFromJson != null) {
+                            results.add(new Pagination<>(numberPage++, responseFromJson.getTotalStats()));
+                            hasNextPage = responseFromJson.hasPaging();
+                            if(hasNextPage){
+                                url = responseFromJson.getPaging().getNextLink();
+                                LOGGER.info("Next url page pagination is {}", url);
+                            }
+                        }
+                    } else {
+                        SnapHttpResponseTimeseriesStat responseFromJson = mapper.readValue(body, SnapHttpResponseTimeseriesStat.class);
+                        if (responseFromJson != null) {
+                            results.add(new Pagination<>(numberPage++,responseFromJson.getTimeseriesStats()));
+                            hasNextPage = responseFromJson.hasPaging();
+                            if(hasNextPage){
+                                url = responseFromJson.getPaging().getNextLink();
+                                LOGGER.info("Next url page pagination is {}", url);
+                            }
+                        }
                     }
                 }
+            } catch (IOException e) {
+                LOGGER.error("Impossible to get ad account stats, adAccountID = {}", adAccountID, e);
+                throw new SnapExecutionException("Impossible to get ad account stats", e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get ad account stats, adAccountID = {}", adAccountID, e);
-            throw new SnapExecutionException("Impossible to get ad account stats", e);
         }
-        return result;
+        return results;
     }// getAdAccountStats()
 
     @Override
-    public Optional<TimeSerieStat> getAdSquadStats(String oAuthAccessToken, String adSquadID, Date startTime, Date endTime, GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
-        return this.getAdSquadStats(oAuthAccessToken, adSquadID, startTime, endTime, granularity, null, null, null, null, null, null, null, null, null);
+    public List<Pagination<TimeSerieStat>> getAdSquadStats(String oAuthAccessToken, int limit, String adSquadID, Date startTime, Date endTime, GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+        return this.getAdSquadStats(oAuthAccessToken, limit, adSquadID, startTime, endTime, granularity, null, null, null, null, null, null, null, null, null);
     }// getAdSquadStats()
 
     @Override
-    public Optional<TimeSerieStat> getAdSquadStats(String oAuthAccessToken, String adSquadID, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow, ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats, Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapExecutionException, SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException {
-        checkParams(oAuthAccessToken, startTime, endTime, granularity);
+    public List<Pagination<TimeSerieStat>> getAdSquadStats(String oAuthAccessToken, int limit, String adSquadID, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test, String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow, ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats, Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapExecutionException, SnapArgumentException, SnapOAuthAccessTokenException, SnapResponseErrorException {
+        checkParams(oAuthAccessToken, startTime, endTime, granularity, limit);
         if (StringUtils.isEmpty(adSquadID)) {
             throw new SnapArgumentException("AdSquad ID is required");
         }
-        Optional<TimeSerieStat> result = Optional.empty();
+        List<Pagination<TimeSerieStat>> results = new ArrayList<>();
         String url = this.endpointAdSquadStats.replace("{adsquad_id}", adSquadID);
         url = prepareFinalUrl(url, startTime, endTime, granularity, fields, breakdown, test, reportDimension, swipeUpAttributionWindow, viewAttributionWindow, positionStats, omitEmpty, conversionSourceTypes, null);
-        HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String body = entityUtilsWrapper.toString(entity);
-                if (statusCode >= 300) {
-                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
-                }
-                ObjectMapper mapper = JsonUtils.initMapper();
-                if (granularity == GranularityEnum.TOTAL) {
-                    SnapHttpResponseTotalStat responseFromJson = mapper.readValue(body, SnapHttpResponseTotalStat.class);
-                    if (responseFromJson != null) {
-                        result = responseFromJson.getStats();
+        url += "&limit=" + limit;
+        boolean hasNextPage = true;
+        int numberPage = 1;
+        while(hasNextPage) {
+            HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String body = entityUtilsWrapper.toString(entity);
+                    if (statusCode >= 300) {
+                        throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
                     }
-                } else {
-                    SnapHttpResponseTimeseriesStat responseFromJson = mapper.readValue(body, SnapHttpResponseTimeseriesStat.class);
-                    if (responseFromJson != null) {
-                        result = responseFromJson.getStats();
+                    ObjectMapper mapper = JsonUtils.initMapper();
+                    if (granularity == GranularityEnum.TOTAL) {
+                        SnapHttpResponseTotalStat responseFromJson = mapper.readValue(body, SnapHttpResponseTotalStat.class);
+                        if (responseFromJson != null) {
+                            results.add(new Pagination<>(numberPage++, responseFromJson.getTotalStats()));
+                            hasNextPage = responseFromJson.hasPaging();
+                            if(hasNextPage){
+                                url = responseFromJson.getPaging().getNextLink();
+                                LOGGER.info("Next url page pagination is {}", url);
+                            }
+                        }
+                    } else {
+                        SnapHttpResponseTimeseriesStat responseFromJson = mapper.readValue(body, SnapHttpResponseTimeseriesStat.class);
+                        if (responseFromJson != null) {
+                            results.add(new Pagination<>(numberPage++,responseFromJson.getTimeseriesStats()));
+                            hasNextPage = responseFromJson.hasPaging();
+                            if(hasNextPage){
+                                url = responseFromJson.getPaging().getNextLink();
+                                LOGGER.info("Next url page pagination is {}", url);
+                            }
+                        }
                     }
                 }
+            } catch (IOException e) {
+                LOGGER.error("Impossible to get ad squad stats, adSquadID = {}", adSquadID, e);
+                throw new SnapExecutionException("Impossible to get ad squad stats", e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get ad squad stats, adSquadID = {}", adSquadID, e);
-            throw new SnapExecutionException("Impossible to get ad squad stats", e);
         }
-        return result;
+        return results;
     }// getAdSquadStats()
 
     @Override
-    public Optional<TimeSerieStat> getAdStats(String oAuthAccessToken, String adID, Date startTime, Date endTime, GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
-        return this.getAdStats(oAuthAccessToken, adID, startTime, endTime, granularity, null, null, null, null, null, null, null, null, null);
+    public List<Pagination<TimeSerieStat>> getAdStats(String oAuthAccessToken, int limit, String adID, Date startTime, Date endTime, GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+        return this.getAdStats(oAuthAccessToken, limit, adID, startTime, endTime, granularity, null, null, null, null, null, null, null, null, null);
     }// getAdStats()
 
     @Override
-    public Optional<TimeSerieStat> getAdStats(String oAuthAccessToken, String adID, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test,
+    public List<Pagination<TimeSerieStat>> getAdStats(String oAuthAccessToken, int limit, String adID, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test,
                                               String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                               ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                               Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapExecutionException, SnapResponseErrorException {
-        checkParams(oAuthAccessToken, startTime, endTime, granularity);
+        checkParams(oAuthAccessToken, startTime, endTime, granularity, limit);
         if (StringUtils.isEmpty(adID)) {
             throw new SnapArgumentException("Ad ID is required");
         }
-        Optional<TimeSerieStat> result = Optional.empty();
+        List<Pagination<TimeSerieStat>> results = new ArrayList<>();
         String url = this.endpointAdStats.replace("{ad_id}", adID);
         url = prepareFinalUrl(url, startTime, endTime, granularity, fields, breakdown, test, reportDimension, swipeUpAttributionWindow, viewAttributionWindow, positionStats, omitEmpty, conversionSourceTypes, null);
-        HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String body = entityUtilsWrapper.toString(entity);
-                if (statusCode >= 300) {
-                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
-                }
-                ObjectMapper mapper = JsonUtils.initMapper();
-                if (granularity == GranularityEnum.TOTAL) {
-                    SnapHttpResponseTotalStat responseFromJson = mapper.readValue(body, SnapHttpResponseTotalStat.class);
-                    if (responseFromJson != null) {
-                        result = responseFromJson.getStats();
+        url += "&limit=" + limit;
+        boolean hasNextPage = true;
+        int numberPage = 1;
+        while(hasNextPage) {
+            HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String body = entityUtilsWrapper.toString(entity);
+                    if (statusCode >= 300) {
+                        throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
                     }
-                } else {
-                    SnapHttpResponseTimeseriesStat responseFromJson = mapper.readValue(body, SnapHttpResponseTimeseriesStat.class);
-                    if (responseFromJson != null) {
-                        result = responseFromJson.getStats();
+                    ObjectMapper mapper = JsonUtils.initMapper();
+                    if (granularity == GranularityEnum.TOTAL) {
+                        SnapHttpResponseTotalStat responseFromJson = mapper.readValue(body, SnapHttpResponseTotalStat.class);
+                        if (responseFromJson != null) {
+                            results.add(new Pagination<>(numberPage++, responseFromJson.getTotalStats()));
+                            hasNextPage = responseFromJson.hasPaging();
+                            if(hasNextPage){
+                                url = responseFromJson.getPaging().getNextLink();
+                                LOGGER.info("Next url page pagination is {}", url);
+                            }
+                        }
+                    } else {
+                        SnapHttpResponseTimeseriesStat responseFromJson = mapper.readValue(body, SnapHttpResponseTimeseriesStat.class);
+                        if (responseFromJson != null) {
+                            results.add(new Pagination<>(numberPage++,responseFromJson.getTimeseriesStats()));
+                            hasNextPage = responseFromJson.hasPaging();
+                            if(hasNextPage){
+                                url = responseFromJson.getPaging().getNextLink();
+                                LOGGER.info("Next url page pagination is {}", url);
+                            }
+                        }
                     }
                 }
+            } catch (IOException e) {
+                LOGGER.error("Impossible to get ad stats, adID = {}", adID, e);
+                throw new SnapExecutionException("Impossible to get ad stats", e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get ad stats, adID = {}", adID, e);
-            throw new SnapExecutionException("Impossible to get ad stats", e);
         }
-        return result;
+        return results;
     }// getAdStats()
 
     @Override
-    public Optional<TimeSerieStat> getPixelDomainsStats(String oAuthAccessToken, String pixelID) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapExecutionException, SnapResponseErrorException {
+    public List<Pagination<TimeSerieStat>> getPixelDomainsStats(String oAuthAccessToken, int limit, String pixelID) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapExecutionException, SnapResponseErrorException {
         if (StringUtils.isEmpty(oAuthAccessToken)) {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
+        }
+        if(limit < minLimitPagination){
+            throw new SnapArgumentException("Minimum limit is " + minLimitPagination);
+        }
+        if(limit > maxLimitPagination){
+            throw new SnapArgumentException("Maximum limit is " + maxLimitPagination);
         }
         if (StringUtils.isEmpty(pixelID)) {
             throw new SnapArgumentException("Pixel ID is required");
         }
-        Optional<TimeSerieStat> result = Optional.empty();
+        List<Pagination<TimeSerieStat>> results = new ArrayList<>();
         String url = this.endpointPixelDomains.replace("{pixel_id}", pixelID);
+        url += "?limit=" + limit;
+        boolean hasNextPage = true;
+        int numberPage = 1;
         HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String body = entityUtilsWrapper.toString(entity);
-                if (statusCode >= 300) {
-                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+        while(hasNextPage) {
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String body = entityUtilsWrapper.toString(entity);
+                    if (statusCode >= 300) {
+                        throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
+                    }
+                    ObjectMapper mapper = JsonUtils.initMapper();
+                    SnapHttpResponseTimeseriesStat responseFromJson = mapper.readValue(body, SnapHttpResponseTimeseriesStat.class);
+                    if (responseFromJson != null) {
+                        results.add(new Pagination<>(numberPage++,responseFromJson.getTimeseriesStats()));
+                        hasNextPage = responseFromJson.hasPaging();
+                        if(hasNextPage){
+                            url = responseFromJson.getPaging().getNextLink();
+                            LOGGER.info("Next url page pagination is {}", url);
+                        }
+                    }
                 }
-                ObjectMapper mapper = JsonUtils.initMapper();
-                SnapHttpResponseTimeseriesStat responseFromJson = mapper.readValue(body, SnapHttpResponseTimeseriesStat.class);
-                if (responseFromJson != null) {
-                    result = responseFromJson.getStats();
-                }
+            } catch (IOException e) {
+                LOGGER.error("Impossible to get pixel domains stats stats, pixelID = {}", pixelID, e);
+                throw new SnapExecutionException("Impossible to get pixel domains stats", e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get pixel domains stats stats, pixelID = {}", pixelID, e);
-            throw new SnapExecutionException("Impossible to get pixel domains stats", e);
         }
-        return result;
+        return results;
     }// getPixelDomainsStats()
 
     @Override
-    public Optional<TimeSerieStat> getPixelSpecificDomainStats(String oAuthAccessToken, String pixelID, String domain, Date startTime, Date endTime, GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
-        return this.getPixelSpecificDomainStats(oAuthAccessToken, pixelID, domain, startTime, endTime, granularity, null, null, null, null, null, null, null, null, null);
+    public List<Pagination<TimeSerieStat>> getPixelSpecificDomainStats(String oAuthAccessToken, int limit, String pixelID, String domain, Date startTime, Date endTime, GranularityEnum granularity) throws SnapExecutionException, SnapResponseErrorException, SnapOAuthAccessTokenException, SnapArgumentException {
+        return this.getPixelSpecificDomainStats(oAuthAccessToken, limit, pixelID, domain, startTime, endTime, granularity, null, null, null, null, null, null, null, null, null);
     }// getPixelSpecificDomainStats()
 
     @Override
-    public Optional<TimeSerieStat> getPixelSpecificDomainStats(String oAuthAccessToken, String pixelID, String domain, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test,
+    public List<Pagination<TimeSerieStat>> getPixelSpecificDomainStats(String oAuthAccessToken, int limit, String pixelID, String domain, Date startTime, Date endTime, GranularityEnum granularity, List<String> fields, BreakdownEnum breakdown, Boolean test,
                                                                String reportDimension, SwipeUpAttributionWindowEnum swipeUpAttributionWindow,
                                                                ViewAttributionWindowEnum viewAttributionWindow, Boolean positionStats,
                                                                Boolean omitEmpty, List<String> conversionSourceTypes) throws SnapArgumentException, SnapOAuthAccessTokenException, SnapExecutionException, SnapResponseErrorException {
-        checkParams(oAuthAccessToken, startTime, endTime, granularity, domain);
+        checkParams(oAuthAccessToken, startTime, endTime, granularity, domain, limit);
         if (StringUtils.isEmpty(pixelID)) {
             throw new SnapArgumentException("Pixel ID is required");
         }
-        Optional<TimeSerieStat> result = Optional.empty();
+        List<Pagination<TimeSerieStat>> results = new ArrayList<>();
         String url = this.endpointPixelSpecificDomain.replace("{pixel_id}", pixelID);
         url = prepareFinalUrl(url, startTime, endTime, granularity, fields, breakdown, test, reportDimension, swipeUpAttributionWindow, viewAttributionWindow, positionStats, omitEmpty, conversionSourceTypes, domain);
-        HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String body = entityUtilsWrapper.toString(entity);
-                if (statusCode >= 300) {
-                    throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
-                }
-                ObjectMapper mapper = JsonUtils.initMapper();
-                if (granularity == GranularityEnum.TOTAL) {
-                    SnapHttpResponseTotalStat responseFromJson = mapper.readValue(body, SnapHttpResponseTotalStat.class);
-                    if (responseFromJson != null) {
-                        result = responseFromJson.getStats();
+        url += "&limit=" + limit;
+        boolean hasNextPage = true;
+        int numberPage = 1;
+        while(hasNextPage) {
+            HttpGet request = HttpUtils.prepareGetRequest(url, oAuthAccessToken);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String body = entityUtilsWrapper.toString(entity);
+                    if (statusCode >= 300) {
+                        throw SnapExceptionsUtils.getResponseExceptionByStatusCode(statusCode);
                     }
-                } else {
-                    SnapHttpResponseTimeseriesStat responseFromJson = mapper.readValue(body, SnapHttpResponseTimeseriesStat.class);
-                    if (responseFromJson != null) {
-                        result = responseFromJson.getStats();
+                    ObjectMapper mapper = JsonUtils.initMapper();
+                    if (granularity == GranularityEnum.TOTAL) {
+                        SnapHttpResponseTotalStat responseFromJson = mapper.readValue(body, SnapHttpResponseTotalStat.class);
+                        if (responseFromJson != null) {
+                            results.add(new Pagination<>(numberPage++, responseFromJson.getTotalStats()));
+                            hasNextPage = responseFromJson.hasPaging();
+                            if(hasNextPage){
+                                url = responseFromJson.getPaging().getNextLink();
+                                LOGGER.info("Next url page pagination is {}", url);
+                            }
+                        }
+                    } else {
+                        SnapHttpResponseTimeseriesStat responseFromJson = mapper.readValue(body, SnapHttpResponseTimeseriesStat.class);
+                        if (responseFromJson != null) {
+                            results.add(new Pagination<>(numberPage++,responseFromJson.getTimeseriesStats()));
+                            hasNextPage = responseFromJson.hasPaging();
+                            if(hasNextPage){
+                                url = responseFromJson.getPaging().getNextLink();
+                                LOGGER.info("Next url page pagination is {}", url);
+                            }
+                        }
                     }
                 }
+            } catch (IOException e) {
+                LOGGER.error("Impossible to get pixel specific domain stats, pixelID = {}", pixelID, e);
+                throw new SnapExecutionException("Impossible to get pixel specific domain stats", e);
             }
-        } catch (IOException e) {
-            LOGGER.error("Impossible to get pixel specific domain stats, pixelID = {}", pixelID, e);
-            throw new SnapExecutionException("Impossible to get pixel specific domain stats", e);
         }
-        return result;
+        return results;
     }// getPixelSpecificDomainStats()
 
-    private void checkParams(String oAuthAccessToken, Date startTime, Date endTime, GranularityEnum granularity) throws SnapOAuthAccessTokenException, SnapArgumentException {
+    private void checkParams(String oAuthAccessToken, Date startTime, Date endTime, GranularityEnum granularity, int limit) throws SnapOAuthAccessTokenException, SnapArgumentException {
         if (StringUtils.isEmpty(oAuthAccessToken)) {
             throw new SnapOAuthAccessTokenException("The OAuthAccessToken is required");
+        }
+        if(limit < minLimitPagination){
+            throw new SnapArgumentException("Minimum limit is " + minLimitPagination);
+        }
+        if(limit > maxLimitPagination){
+            throw new SnapArgumentException("Maximum limit is " + maxLimitPagination);
         }
         if (granularity == null) {
             throw new SnapArgumentException("Granularity is required");
@@ -385,8 +486,8 @@ public class SnapStats implements SnapStatsInterface {
         }
     }// checkParams()
 
-    private void checkParams(String oAuthAccessToken, Date startTime, Date endTime, GranularityEnum granularity, String domain) throws SnapOAuthAccessTokenException, SnapArgumentException {
-        checkParams(oAuthAccessToken, startTime, endTime, granularity);
+    private void checkParams(String oAuthAccessToken, Date startTime, Date endTime, GranularityEnum granularity, String domain, int limit) throws SnapOAuthAccessTokenException, SnapArgumentException {
+        checkParams(oAuthAccessToken, startTime, endTime, granularity, limit);
         if (StringUtils.isEmpty(domain)) {
             throw new SnapOAuthAccessTokenException("Domain is required");
         }
@@ -460,9 +561,9 @@ public class SnapStats implements SnapStatsInterface {
         if(StringUtils.isNotEmpty(domain)){
             sbUrl.append("&domain=").append(domain);
         }
-        String result = sbUrl.toString();
-        LOGGER.info("Url prepared for stats : {}", result);
-        return result;
+        String results = sbUrl.toString();
+        LOGGER.info("Url prepared for stats : {}", results);
+        return results;
     }// prepareFinalUrl()
 
 }// SnapStats
